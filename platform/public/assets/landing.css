@@ -51,7 +51,7 @@ h1, h2, h3, h4 {
   margin: 0 0 0.5em;
   text-wrap: balance;
 }
-h1 { font-size: clamp(32px, 8.6vw, 62px); }
+h1 { font-size: clamp(32px, 8.6vw, 56px); }
 h2 { font-size: clamp(28px, 7vw, 46px); letter-spacing: -0.02em; }
 h3 { font-size: clamp(19px, 5vw, 23px); line-height: 1.25; }
 p { margin: 0 0 1em; }
@@ -182,8 +182,12 @@ button { font: inherit; }
   font: 600 16px/1.3 var(--font-body);
   color: var(--muted-dark);
 }
-.overline b { color: var(--lime); }
-.overline .dot { opacity: 0.6; }
+.overline b { color: var(--lime); display: block; width: 100%; }
+.overline .ov-sep { display: none; }
+@media (min-width: 600px) {
+  .overline b { display: inline; width: auto; }
+  .overline .ov-sep { display: inline; opacity: 0.7; }
+}
 .hero h1 { color: #fff; margin-bottom: 18px; }
 .hl {
   text-decoration: underline;
@@ -260,8 +264,8 @@ button { font: inherit; }
 }
 .scr-top { background: #fff; padding: 48px 16px 12px; border-bottom: 1px solid var(--line); }
 .scr-stage { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
-.scr-stage b { font: 700 16px/1.2 var(--font-head); }
-.scr-stage span { font-size: 13px; color: var(--muted); white-space: nowrap; }
+.scr-stage b { font: 700 16px/1.2 var(--font-head); white-space: nowrap; flex: none; }
+.scr-stage span { font-size: 12px; color: var(--muted); white-space: nowrap; }
 .scr-bar { height: 6px; border-radius: 999px; background: var(--line); margin-top: 10px; overflow: hidden; }
 .scr-bar i { display: block; width: 42%; height: 100%; background: var(--violet); border-radius: inherit; }
 .mrow { background: #fff; padding: 12px 14px; border-bottom: 1px solid var(--line); }
@@ -292,23 +296,23 @@ button { font: inherit; }
   padding: 12px 16px 18px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 10px;
+  justify-content: flex-start;
+  gap: 18px;
   font: 600 12px/1.2 var(--font-body);
 }
 .scr-bottom b { display: block; font: 700 26px/1 var(--font-head); color: var(--lime); margin-top: 3px; }
 .scr-bottom .sep { width: 1px; height: 34px; background: rgba(255, 255, 255, 0.18); }
 .hacz {
   position: absolute;
-  right: max(-10px, calc(50% - 214px));
-  bottom: -6px;
-  width: 132px;
+  right: max(-14px, calc(50% - 236px));
+  bottom: -26px;
+  width: 124px;
   height: auto;
   filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.45));
 }
 @media (min-width: 900px) {
   .phone { width: 320px; }
-  .hacz { width: 176px; right: max(0px, calc(50% - 296px)); bottom: 6px; }
+  .hacz { width: 180px; right: max(-70px, calc(50% - 318px)); bottom: -18px; }
 }
 
 /* ---------- Cards / columns ---------- */
@@ -379,7 +383,9 @@ button { font: inherit; }
 }
 .phases td { padding: 18px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
 .phases .ph-name { font: 700 19px/1.25 var(--font-head); }
-.phases .ph-name i { display: inline-grid; place-items: center; width: 30px; height: 30px; margin-right: 10px; border-radius: 50%; background: var(--violet-soft); color: var(--violet); font: 700 15px/1 var(--font-head); vertical-align: middle; }
+.phases .ph-label { display: flex; align-items: flex-start; gap: 10px; }
+.phases .ph-name i { display: inline-grid; place-items: center; flex: none; width: 30px; height: 30px; border-radius: 50%; background: var(--violet-soft); color: var(--violet); font: 700 16px/1 var(--font-head); font-style: normal; }
+.phases .ph-label > span { padding-top: 3px; }
 .phases .time {
   display: inline-block;
   padding: 5px 11px;
@@ -439,6 +445,7 @@ button { font: inherit; }
 @media (min-width: 720px) { .fit { grid-template-columns: 1fr 1fr; gap: 24px; } }
 
 /* ---------- Demo ---------- */
+.demo-panel h3 { color: var(--ink); }
 .demo-panel {
   max-width: 640px;
   margin: 0 auto;
@@ -464,14 +471,15 @@ button { font: inherit; }
   top: 0;
   z-index: 2;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 18px;
+  gap: 8px 22px;
   padding: 12px 20px;
   background: var(--ink);
   color: #fff;
   font: 600 16px/1.2 var(--font-body);
 }
-.demo-counter span { display: inline-flex; align-items: baseline; gap: 8px; }
+.demo-counter span { display: inline-flex; align-items: baseline; gap: 8px; white-space: nowrap; }
 .demo-counter b { font: 700 28px/1 var(--font-head); color: var(--lime); min-width: 1ch; }
 .demo-counter.has-db .db b { color: #FCA5A5; }
 .demo-list { list-style: none; margin: 0; padding: 0; }

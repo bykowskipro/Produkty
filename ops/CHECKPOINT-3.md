@@ -15,7 +15,7 @@ Kolejność ma znaczenie. Odpisz jednym komunikatem „GOTOWE” + dane z sekcji
 4. `docker compose up -d --build`. Sprawdź, że `https://TWOJA-DOMENA/healthz` zwraca `{"ok":true}`.
 
 ## C. Stripe (15 min)
-1. Ustawienia → Metody płatności: **karty, BLIK, Przelewy24, Link** włączone.
+1. Ustawienia → Metody płatności: **karty, BLIK, Przelewy24, Link** włączone. **Potwierdź mi, że BLIK faktycznie widać w Twoim Checkout** (nie każde konto ma go aktywnego od ręki).
 2. Ustawienia → Dane publiczne (Public details): nazwa „Odhacz”, e-mail wsparcia, **adres URL regulaminu** `https://TWOJA-DOMENA/legal/regulamin.html` (wymagane przez checkbox zgody w Checkout), statement descriptor „ODHACZ”.
 3. Ustawienia → Branding: logo/sygnet z `platform/public/assets/brand/`, kolor `#6D28D9`.
 4. Ustawienia → E-maile klientów: paragony włączone.
@@ -33,7 +33,13 @@ Konto → Domains → dodaj domenę → wklej rekordy DNS (DKIM/SPF/MX) → „V
 5. Ustawienia firmowe → beneficjent i płatnik reklam (DSA) = podmiot z A.1.
 6. Opublikuj 5 pierwszych postów z `social/seed-posty.md` (grafiki w `creatives/out/`), post 6 w dniu startu.
 
-## F. Rolki (poza budżetem, kiedy chcesz)
+## F. Beta za 0 zł (najważniejsze z całej listy, 30 min Twojego czasu)
+Znajdź **10 osób, które w tym tygodniu jadą oglądać używane auto** (znajomi, Wykop, forum-mechanika, grupy FB „kupię/sprzedam auto”). Dostaną darmowy link z `/admin` („Wygeneruj dostęp”). Po ich oględzinach zadaj 5 pytań: co byś zapłacił · czego brakowało · użyłeś zdjęć · pokazałeś listę sprzedawcy · gdzie się zaciąłeś. Jeśli mniej niż 3 z 10 dojdą do etapu „Jazda próbna” — nie odpalamy reklam, poprawiamy produkt. To jest tańsze niż 300 zł na wniosek, którego dane nie uzasadnią.
+
+## G. Mechanik (opcjonalnie, mocno zalecane)
+Jeśli znasz mechanika, który przeczyta 150 punktów (godzina) i zgodzi się na podpis „treść sprawdził: [imię], mechanik z [miasto]” — daj znać. To realizuje Twój pomysł „AI + weryfikacja przez człowieka” i podnosi zaufanie bardziej niż cokolwiek innego na landingu.
+
+## H. Rolki (poza budżetem, kiedy chcesz)
 Scenariusze: `social/rolki.md`. Nagraj wersję bez napisów. B-roll z aplikacji nagrasz po deployu (dam link demo).
 
 ## Co odsyłasz (bez sekretów)

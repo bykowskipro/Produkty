@@ -7,9 +7,16 @@ import path from 'node:path';
 import { chromium } from 'playwright';
 import { createApp } from '../../src/server.js';
 import { openDb } from '../../src/db.js';
-import { testConfig, listen } from '../helpers.js';
+import { testConfig, listen, products } from '../helpers.js';
 
 let browser, srv, config, db;
+
+// Prices come from config/products.json so the flow test does not break when the offer changes.
+const pln = (grosze) => (grosze / 100).toFixed(2).replace('.', ',') + ' zł';
+const mainPrice = products.find((p) => p.id === 'main').price_pln;
+const upsellPrice = products.find((p) => p.id === 'upsell').price_pln;
+const revenue = mainPrice + upsellPrice; // grosze, main + upsell bought in this flow
+const spend = revenue / 200; // zł: half of the revenue -> CPA = spend, ROAS = 2.00
 
 before(async () => {
   config = testConfig();
@@ -35,7 +42,7 @@ test('full mock purchase flow with upsell, access, progress sync and admin funne
   await page.waitForSelector('#consent-banner', { state: 'detached' });
   assert.equal(await page.evaluate(() => window.Consent.granted()), true);
   assert.equal(await page.evaluate(() => JSON.parse(localStorage.getItem('utm_first')).utm_content), 'kreacjaA');
-  assert.equal(await page.locator('[data-price="main"]').textContent(), '49,00 zł');
+  assert.equal(await page.locator('[data-price="main"]').textContent(), pln(mainPrice));
 
   // 2. CTA -> mock checkout
   await page.getByTestId('cta-main').click();
@@ -110,7 +117,7 @@ test('full mock purchase flow with upsell, access, progress sync and admin funne
   await admin.goto(`${srv.base}/admin`);
   assert.equal(await kpi(admin, 'Zakupy'), '1');
   assert.equal(await kpi(admin, 'Upselle'), '1');
-  assert.equal(await kpi(admin, 'Przychód'), '78,00 zł');
+  assert.equal(await kpi(admin, 'Przychód'), pln(revenue));
   assert.equal(await kpi(admin, 'Odwiedzający'), '2', 'buyer + the locked-out anonymous visitor');
   assert.equal(await kpi(admin, 'Kliknięcia CTA'), '1');
   assert.equal(await kpi(admin, 'Start checkoutu'), '1');
@@ -121,11 +128,11 @@ test('full mock purchase flow with upsell, access, progress sync and admin funne
   assert.ok((await admin.textContent('body')).includes('k***@example.com'), 'masked e-mail in orders');
 
   // spend form -> CPA / ROAS
-  await admin.fill('input[name=amount]', '39');
+  await admin.fill('input[name=amount]', String(spend));
   await admin.click('form[action^="/admin/spend"] button');
   await admin.waitForURL(/msg=/);
-  assert.equal(await kpi(admin, 'Wydatki na reklamę'), '39,00 zł');
-  assert.equal(await kpi(admin, 'CPA'), '39,00 zł');
+  assert.equal(await kpi(admin, 'Wydatki na reklamę'), pln(spend * 100));
+  assert.equal(await kpi(admin, 'CPA'), pln(spend * 100));
   assert.equal(await kpi(admin, 'ROAS'), '2.00');
 
   // resend e-mail -> second file in outbox

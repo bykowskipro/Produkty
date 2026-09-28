@@ -5,8 +5,9 @@ Każdy eksperyment: HIPOTEZA · ZMIANA · METRYKA · WYNIK · DECYZJA. Szczegó�
 ## EXP-001 · Odhacz Auto — pierwszy test popytu (Meta, 300 PLN)
 - **HIPOTEZA:** Osoby kupujące używane auto z ogłoszenia zapłacą 39 zł za interaktywną checklistę oględzin na telefon, jeśli reklama trafi w moment „jadę oglądać auto”, a landing pokaże narzędzie (demo), a nie „kolejny PDF”.
 - **ZMIANA:** nowy produkt (Odhacz Auto) + upsell (Po zakupie, 19 zł) + landing + 1 kampania Sprzedaż (1 zestaw, 6–7 kreacji, 45 zł/dzień, limit 300 zł).
-- **METRYKA:** główna: liczba zakupów i CPA (`/admin`); pomocnicze: CTR (link) per kreacja, `checkout_start/page_view`, `purchase/checkout_start`, udział upsellu, przychód.
-- **PROGI:** sygnał „warto” ≥ 3 zakupy (CPA ≤ 100 zł) lub CR landing ≥ 2%; twardy stop: 300 zł wydane albo 200 zł bez zakupu przy ≥ 150 kliknięciach.
+- **METRYKA (drabinka, bo 300 zł nie rozstrzyga o zakupach):** CTR (link) per kreacja → `cta_click/page_view` → `demo_start/page_view`, `demo_done/demo_start` → `checkout_start/page_view` → zakupy (bonus), udział upsellu, przychód.
+- **PROGI:** kontynuuj, gdy CTR ≥ 1%, cta_click ≥ 10%, demo_start ≥ 30% (done ≥ 40%), checkout_start ≥ 4% przy ≥ 120 wejściach; zakupy 0–2 = brak informacji, ≥ 3 = bonus; twardy stop 300 zł; wcześniejszy stop: 150 zł i CTR < 0,6% na wszystkich kreacjach.
+- **PRE-TEST (0 zł):** 10 beta-użytkowników z prawdziwym autem; < 3 z 10 dochodzi do „Jazdy próbnej” = poprawiamy produkt zamiast palić budżet.
 - **WYNIK:** (po zakończeniu)
 - **DECYZJA:** (po zakończeniu)
 - Status: przygotowanie (produkt, landing, kreacje w produkcji; czeka na Checkpoint 3 i 4).

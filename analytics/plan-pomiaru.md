@@ -13,11 +13,15 @@ Zasada: decyzje biznesowe podejmujemy na podstawie `/admin` + faktycznych wydatk
 | Event | Gdzie | Kiedy | Meta |
 |---|---|---|---|
 | `page_view` | landing, app | każde wejście | PageView (po zgodzie) |
+| `demo_start` | landing | pierwsze tapnięcie w demo | — |
+| `demo_done` | landing | wszystkie 5 punktów demo odpowiedziane | — |
 | `cta_click` | landing | klik w dowolny przycisk "Kup" | — |
 | `checkout_start` | landing | tuż przed przekierowaniem do Stripe | InitiateCheckout (eventID) |
 | `purchase` | serwer (webhook / strona sukcesu) | opłacona sesja | Purchase (Pixel + CAPI, ten sam eventID, value/currency PLN) |
 | `upsell_purchase` | serwer | w sesji był dodatek | zawarte w value Purchase |
 | `app_open` | app | pierwsze otwarcie produktu | — |
+| `phase_done` | app | ukończony etap (props: phase id) | — |
+| `summary_viewed` · `list_copied` · `pdf_printed` | app | użycie podsumowania | — |
 | `quick_start_done` | app | ukończony quick start | — |
 
 Atrybucja: każdy event niesie `utm_source / utm_medium / utm_campaign / utm_content / utm_term` (first-touch zapisany w localStorage). `utm_content` = nazwa kreacji, więc lejek da się rozbić na kreację.
@@ -46,3 +50,6 @@ Progi są orientacyjne (do potwierdzenia benchmarkami z `research/05-policy-lega
 
 ## Ręczna czynność właściciela (1 min dziennie w czasie testu)
 Wpisać dzienny wydatek z Ads Managera w `/admin` (formularz "spend"). Dashboard policzy CPA i ROAS.
+
+## Uczciwość statystyczna (po adwokacie diabła)
+Przy 100–250 wejściach zakupy (0–2) **nie** rozstrzygają o produkcie. Sygnał czytamy z góry lejka: CTR ≥ 1% → `cta_click/page_view` ≥ 10% → `demo_start/page_view` ≥ 30% i `demo_done/demo_start` ≥ 40% → `checkout_start/page_view` ≥ 4%. Zakupy ≥ 3 = bonus. Zanim wydamy złotówkę: 10 beta-użytkowników z prawdziwym autem i ich zdarzenia w aplikacji (`app_open`, `phase_done` do „Jazdy próbnej”).
