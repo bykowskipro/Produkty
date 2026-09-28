@@ -11,7 +11,7 @@ Wspólna zasada: hook w pierwszych 2 sekundach = konkret, nie „cześć, dziś 
 - **2–10 s:** Zimny start pokazuje to, czego rozgrzany silnik nie pokaże: stuki, dymienie, nierówną pracę. Dlatego umawiasz się na auto zimne i mówisz to przez telefon, zanim wyjedziesz.
 - **10–20 s (B-roll: ekran aplikacji, etap „Zanim pojedziesz” → punkt „Ustal zimny silnik”):** W Odhacz Auto to jeden z pierwszych punktów. Tapiesz OK, Uwaga albo Problem — a jak sprzedawca „zapomniał”, licznik czerwonych flag rośnie.
 - **20–28 s:** Nie musisz być mechanikiem. Musisz mieć kolejność i wiedzieć, kiedy odpuścić.
-- **28–32 s (CTA):** 7 etapów, 150 punktów, lista uwag do negocjacji. Link w bio. 39 zł.
+- **28–32 s (CTA):** 7 etapów, 160 punktów, lista uwag do negocjacji. Link w bio. 39 zł.
 - Napisy: krótkie linie, max 2 wiersze. Opis posta: „Zimny silnik to nie fanaberia. #autoużywane #otomoto #kupnoauta”.
 
 ## Rolka 2 — „Trzy miejsca na VIN” (angle: prostota / speed)

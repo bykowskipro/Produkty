@@ -5,13 +5,13 @@ Zasady zgodności (z `legal/00-wymogi.md` §9): żadnych zdań o cechach odbiorc
 UTM (w URL parameters kampanii): `utm_source=meta&utm_medium=paid&utm_campaign={{campaign.name}}&utm_content={{ad.name}}&utm_term={{adset.name}}`
 
 ## Angle A — PROBLEM/MOMENT (`problem-static`)
-- Tekst główny: Jedziesz oglądać używane auto? W notatkach masz 10 rzeczy z YouTube. Przy aucie, kiedy sprzedawca mówi bez przerwy, z listy zostają cztery. Odhacz Auto to checklista na telefon: 7 etapów, ok. 150 punktów, każdy z instrukcją „jak sprawdzić” w 2 zdaniach. Tapiesz OK / Uwaga / Problem, a na końcu dostajesz listę uwag do negocjacji. 39 zł, dostęp od razu, 14 dni gwarancji zwrotu.
+- Tekst główny: Jedziesz oglądać używane auto? W notatkach masz 10 rzeczy z YouTube. Przy aucie, kiedy sprzedawca mówi bez przerwy, z listy zostają cztery. Odhacz Auto to checklista na telefon: 7 etapów, 160 punktów, każdy z instrukcją „jak sprawdzić” w 2 zdaniach. Tapiesz OK / Uwaga / Problem, a na końcu dostajesz listę uwag do negocjacji. 39 zł, dostęp od razu, 14 dni gwarancji zwrotu.
 - Nagłówek: Checklista oględzin auta — na telefonie
 - Opis: Bez instalacji. Bez bycia mechanikiem.
 - Wizual: makieta telefonu z 3 rzędami stanów i paskiem „Czerwone flagi: 3”.
 
 ## Angle B — UNIKAJ BŁĘDÓW (`bledy-carousel`)
-- Tekst główny: 5 rzeczy, które ludzie pomijają przy oględzinach używanego auta: zimny start, zgodność VIN w trzech miejscach, daty na szybach, kontrolka airbag przy zapłonie, wilgoć pod dywanikiem w bagażniku. Odhacz Auto prowadzi Cię przez wszystkie 150 punktów w dobrej kolejności i mówi, kiedy odpuścić. 39 zł, 14 dni gwarancji zwrotu.
+- Tekst główny: 5 rzeczy, które ludzie pomijają przy oględzinach używanego auta: zimny start, zgodność VIN w trzech miejscach, daty na szybach, kontrolka airbag przy zapłonie, wilgoć pod dywanikiem w bagażniku. Odhacz Auto prowadzi Cię przez wszystkie 160 punktów w dobrej kolejności i mówi, kiedy odpuścić. 39 zł, 14 dni gwarancji zwrotu.
 - Karuzela (7 kart): 1 karta na etap + karta CTA „39 zł · dostęp od razu”.
 - Nagłówek (na kartach): Etap 1/7: Zanim pojedziesz … Etap 7/7: Negocjacja
 - Opis: 7 etapów · lista uwag do negocjacji

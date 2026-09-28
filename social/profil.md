@@ -10,7 +10,7 @@ Odhacz (FB: „Odhacz — checklisty na ważne momenty”; IG: @odhacz lub @odha
 „Interaktywne checklisty na telefon. Teraz: oględziny używanego auta — 7 etapów, licznik czerwonych flag, lista do negocjacji. Hacz = postać AI.”
 
 ## Opis FB („Informacje”)
-Odhacz robi checklisty na momenty, w których łatwo o wtopę. Pierwsza: **Odhacz Auto** — interaktywna checklista oględzin używanego auta na telefon: 7 etapów, ok. 150 punktów z instrukcją „jak sprawdzić”, licznik czerwonych flag i gotowa lista uwag do negocjacji. Bez instalacji, bez bycia mechanikiem. 39 zł, dostęp od razu. Hacz, nasz przewodnik, to postać AI — nie mechanik i nie człowiek. Za marką stoi [[SPRZEDAWCA_NAZWA]].
+Odhacz robi checklisty na momenty, w których łatwo o wtopę. Pierwsza: **Odhacz Auto** — interaktywna checklista oględzin używanego auta na telefon: 7 etapów, 160 punktów z instrukcją „jak sprawdzić”, licznik czerwonych flag i gotowa lista uwag do negocjacji. Bez instalacji, bez bycia mechanikiem. 39 zł, dostęp od razu. Hacz, nasz przewodnik, to postać AI — nie mechanik i nie człowiek. Za marką stoi [[SPRZEDAWCA_NAZWA]].
 
 ## Kategoria strony FB
 „Strona internetowa” lub „Aplikacja” (nie „Usługa motoryzacyjna” — nie świadczymy usług warsztatowych).

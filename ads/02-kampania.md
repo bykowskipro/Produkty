@@ -5,7 +5,7 @@
 
 ## Zanim wydamy 1 zł (0 zł, tydzień przed startem)
 1. **10 beta-użytkowników z prawdziwym autem do obejrzenia** (znajomi, Wykop, forum-mechanika, grupy FB „kupię/sprzedam auto”): darmowe kody dostępu (generowane w `/admin`), po fakcie 5 pytań (co byś zapłacił, czego brakowało, użyłeś zdjęć, pokazałeś listę sprzedawcy, gdzie się zaciąłeś). W `/admin` patrzymy na `app_open`, `quick_start_done`, `phase_done`. **Jeśli mniej niż 3 z 10 dojdą do „Jazdy próbnej” — nie palimy 300 zł, poprawiamy produkt.** Bonus: 3–5 prawdziwych opinii na landing (za zgodą, z imieniem).
-2. **Jeden mechanik czyta treść** (150 punktów) i podpisuje się jako „treść sprawdził: [imię], mechanik z [miasto]” — jeśli właściciel ma taką osobę. Najtańszy dowód zaufania po gwarancji.
+2. **Jeden mechanik czyta treść** (160 punktów) i podpisuje się jako „treść sprawdził: [imię], mechanik z [miasto]” — jeśli właściciel ma taką osobę. Najtańszy dowód zaufania po gwarancji.
 3. Test BLIK/P24 na żywo z telefonu (w trybie testowym Stripe), e-mail dostępowy dochodzi na Gmail/iCloud/O2/WP.
 
 ## Struktura

@@ -12,7 +12,7 @@ USUNIĘTY. Istnieje darmowe interaktywne narzędzie do sprawdzenia ogłoszenia (
 ## 1. HERO
 - Overline: **Odhacz Auto** · checklista oględzin w telefonie
 - H1: **Obejrzyj używane auto jak fachowiec. Wyjdź z listą uwag do negocjacji.**
-- Lead: Otwierasz link w telefonie przy aucie. Przy każdym z ok. 150 punktów tapiesz OK / Uwaga / Problem, wpisujesz pomiar lakieru, robisz zdjęcie. Na końcu masz decyzję i listę, o co zbić cenę. To strona, nie plik i nie apka. Nie musisz być mechanikiem.
+- Lead: Otwierasz link w telefonie przy aucie. Przy każdym z 160 punktów tapiesz OK / Uwaga / Problem, wpisujesz pomiar lakieru, robisz zdjęcie. Na końcu masz decyzję i listę, o co zbić cenę. To strona, nie plik i nie apka. Nie musisz być mechanikiem.
 - Kotwica paliwowa (pod CTA): 39 zł to mniej niż paliwo na dojazd do jednego auta, które odpada po 5 minutach.
 - CTA główne: **Kupuję za 39 zł** (przycisk `data-buy="main"`)
 - CTA drugie (link): Zobacz, jak działa ↓ (kotwica do demo)
@@ -40,7 +40,7 @@ Trzy kolumny (na mobile: pionowo):
 3. **Na końcu dostajesz podsumowanie.** Decyzja: kup / negocjuj / zawołaj mechanika / odpuść — z uzasadnieniem — i lista uwag gotowa do negocjacji.
 
 ## 5. CO DOKŁADNIE DOSTAJESZ — 7 etapów
-Nagłówek: **7 etapów. Około 150 punktów. Żadnego lania wody.**
+Nagłówek: **7 etapów. 160 punktów. Żadnego lania wody.**
 | Etap | Czas | Co w środku |
 |---|---|---|
 | Zanim pojedziesz | 15 min | czerwone flagi w ogłoszeniu, VIN i historia, skrypt rozmowy telefonicznej ze sprzedawcą, co zabrać |
@@ -78,7 +78,7 @@ Interaktywny fragment etapu **„Nadwozie i lakier”** (5 punktów: grubość l
 ## 10. CENA
 Karta:
 - **Odhacz Auto — 39 zł** · jednorazowo · dostęp od razu
-- ✓ 7 etapów, ok. 150 punktów z instrukcjami ✓ licznik czerwonych flag i dealbreakerów ✓ lista uwag do negocjacji ✓ skrypt rozmowy ze sprzedawcą ✓ zdjęcia, notatki, kilka aut ✓ 24 miesiące dostępu ✓ gwarancja 14 dni
+- ✓ 7 etapów, 160 punktów z instrukcjami ✓ licznik czerwonych flag i dealbreakerów ✓ lista uwag do negocjacji ✓ skrypt rozmowy ze sprzedawcą ✓ zdjęcia, notatki, kilka aut ✓ 24 miesiące dostępu ✓ gwarancja 14 dni
 - Dopisek: W koszyku możesz dodać **„Po zakupie”** (umowa, PCC-3, rejestracja, OC, pierwsze 30 dni) za **19 zł**.
 - Kotwice (drabinka, prawdziwe): sprawdzenie ogłoszenia i VIN w gov.pl: 0 zł → Odhacz przy aucie: 39 zł (kilka aut) → raport historii VIN: ok. 90 zł, gdy auto przeszło oględziny → mechanik/inspekcja: 350–750 zł, gdy chcesz kupić. Odhacz mówi Ci, kiedy wejść na kolejny szczebel.
 - CTA: **Kupuję za 39 zł**
