@@ -6,11 +6,16 @@ import { fileURLToPath } from 'node:url';
 
 export const ROOT_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
-// Default Polish consent text shown in Stripe Checkout (art. 38 pkt 13 ustawy o prawach konsumenta).
+// Default Polish consent text shown in Stripe Checkout (required, unchecked checkbox): explicit request for immediate
+// delivery + acknowledgement of losing the 14-day withdrawal right (art. 38 ust. 1 pkt 13 ustawy o prawach konsumenta)
+// + acceptance of the terms and privacy policy. Final wording: legal/01-teksty.md. Stripe renders Markdown links and
+// allows up to 1200 characters; this text is ~480 so it stays readable on a phone.
 export const DEFAULT_TERMS_TEXT =
-  'Akceptuję [regulamin]({BASE_URL}/legal/regulamin.html) i [politykę prywatności]({BASE_URL}/legal/polityka-prywatnosci.html). ' +
-  'Wyrażam zgodę na natychmiastowe dostarczenie treści cyfrowych po opłaceniu zamówienia i przyjmuję do wiadomości, ' +
-  'że w związku z tym tracę prawo do odstąpienia od umowy w terminie 14 dni (art. 38 pkt 13 ustawy o prawach konsumenta).';
+  'Żądam dostarczenia treści cyfrowej natychmiast po opłaceniu zamówienia i wyrażam na to wyraźną zgodę. ' +
+  'Przyjmuję do wiadomości, że z chwilą dostarczenia (udostępnienia linku dostępowego) tracę prawo odstąpienia od umowy w terminie 14 dni ' +
+  '(art. 38 ust. 1 pkt 13 ustawy o prawach konsumenta). ' +
+  'Akceptuję [Regulamin]({BASE_URL}/legal/regulamin.html) i [Politykę prywatności]({BASE_URL}/legal/polityka-prywatnosci.html). ' +
+  'Masz też naszą 14-dniową gwarancję satysfakcji (§ 9 Regulaminu).';
 
 const PRODUCT_ID_RE = /^[a-z0-9_-]{1,32}$/;
 
