@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 540 110" width="540" height="110" role="img" aria-label="Odhacz">
+  <title>Odhacz</title>
+  <!-- Wordmark drawn as geometry (no font dependency). Letters: #FFFFFF, check: #C6F135. -->
+  <circle cx="53.5" cy="56" r="41.5" fill="none" stroke="#FFFFFF" stroke-width="20"/><polyline points="38.5,57 49.5,68 69.5,46" fill="none" stroke="#C6F135" stroke-width="15" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="157" cy="69" r="28.5" fill="none" stroke="#FFFFFF" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"/><path d="M185.5 12V96" fill="none" stroke="#FFFFFF" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M225 12V96M225 69A25.5 28.5 0 0 1 276 69V96" fill="none" stroke="#FFFFFF" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="339.5" cy="69" r="28.5" fill="none" stroke="#FFFFFF" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"/><path d="M368 42V96" fill="none" stroke="#FFFFFF" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M449.82 47.17A28.5 28.5 0 1 0 449.82 90.83" fill="none" stroke="#FFFFFF" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M482 42H528L482 96H528" fill="none" stroke="#FFFFFF" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

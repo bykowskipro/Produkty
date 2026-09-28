@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" role="img" aria-label="Hacz — asystent AI marki Odhacz">
+  <title>Hacz — asystent AI marki Odhacz</title>
+  <!-- Hacz — poza podstawowa. Kolory: lime #C6F135, ink #0B0F19, violet #6D28D9. Nie przebarwiać. -->
+  <g id="body">
+    <path d="M56 140L104 188L196 70" fill="none" stroke="#0B0F19" stroke-width="74" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M56 140L104 188L196 70" fill="none" stroke="#C6F135" stroke-width="60" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <g id="face">
+    <circle cx="184" cy="64" r="8" fill="#0B0F19"/><circle cx="208" cy="64" r="8" fill="#0B0F19"/><path d="M187 82Q196 91 205 82" fill="none" stroke="#0B0F19" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <polygon points="236,25 238.55,33.45 247,36 238.55,38.55 236,47 233.45,38.55 225,36 233.45,33.45" fill="#6D28D9"/>
+</svg>
