@@ -15,3 +15,4 @@ Każdy eksperyment: HIPOTEZA · ZMIANA · METRYKA · WYNIK · DECYZJA. Szczegó�
 - EXP-002 (iteracja): zmiana JEDNEJ zmiennej wg diagnozy lejka (kreacja / hero / cena 29 zł / optymalizacja InitiateCheckout).
 - EXP-003 (produkt 2 na tej samej platformie): „Odhacz Mieszkanie” — odbiór mieszkania od dewelopera (sezon X–XII; ryzyko klasyfikatora housing; 50/70 w rubryce).
 - EXP-004 (produkt 3): „Lokalny biznes z AI” (58/70, wymaga dopomiaru popytu).
+- EXP-005 (kandydat, sugestia właściciela 2026-09-28): **edukacja B2C „z datą”** (egzamin praktyczny na prawo jazdy, matura/E8, uprawnienia zawodowe, rozmowa kwalifikacyjna) w modelu **treść AI + weryfikacja przez podpisanego specjalistę na udział w przychodzie**. Model naprawia zaufanie (nie polityki Meta). Do zbadania tą samą rubryką co D1; liczby popytu jeszcze niesprawdzone.

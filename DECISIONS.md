@@ -34,3 +34,7 @@ Format: data · decyzja · dlaczego · co odrzucono.
 
 ## 2026-09-28 · Gwarancja satysfakcji 14 dni (dobrowolna) + demo bez bramki e-mail
 - Dlaczego: główna obiekcja = nieznana marka; gwarancja handlowa i klikalne demo usuwają ją taniej niż budowanie „autorytetu”. Lead-gate odrzucony: przy 300 zł liczymy zakupy, nie e-maile.
+
+## 2026-09-28 · Model „treść AI + weryfikacja przez podpisanego specjalistę” — zapisany jako narzędzie na przyszłość, nie na EXP-001
+- Dlaczego: rozwiązuje problem zaufania anonimowej marki (główny hamulec w śnie/finansach/diecie i w edukacji), ale nie zmienia restrykcji Meta (zdrowie/finanse) i wymaga pozyskania eksperta przed sprzedażą — sprzeczne z celem pierwszego testu (szybkość, zero kosztów, minimalny udział właściciela).
+- Zastosowanie: produkt 2/3 w edukacji „z datą” (egzaminy) albo powrót do snu z podpisanym psychologiem/lekarzem, gdy lejek udowodni, że sprzedaje.

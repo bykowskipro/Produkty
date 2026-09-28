@@ -1,0 +1,345 @@
+{
+  "meta": {
+    "product_id": "main",
+    "version": "0.9-sample",
+    "title": "Odhacz Auto",
+    "est_minutes_total": 70,
+    "disclaimer": "Odhacz Auto to narzędzie edukacyjne: pomaga sprawdzić auto po kolei i zebrać uwagi. Nie zastępuje mechanika ani rzeczoznawcy, nie wycenia napraw i nie gwarantuje wykrycia każdej wady. Hacz jest asystentem AI marki Odhacz, nie ekspertem."
+  },
+  "quick_start": {
+    "title": "Quick start (3 minuty)",
+    "steps": [
+      "Nazwij auto, które jedziesz oglądać (ikona auta u góry) – np. „Octavia 2016, srebrna”.",
+      "Otwórz etap „Zanim pojedziesz” i odhacz dwa pierwsze punkty. Tapnij OK, Uwaga, Problem albo Pomiń.",
+      "Zerknij na dół ekranu: licznik czerwonych flag liczy się sam. Na końcu dostaniesz z niego listę uwag."
+    ]
+  },
+  "answer_states": ["ok", "uwaga", "problem", "pomin"],
+  "phases": [
+    {
+      "id": "zanim",
+      "order": 1,
+      "title": "Zanim pojedziesz",
+      "subtitle": "Ogłoszenie, VIN, telefon do sprzedawcy",
+      "est_minutes": 15,
+      "when": "Wieczór przed oględzinami",
+      "intro": "Połowę wtop widać jeszcze z kanapy. Sprawdź VIN i zadzwoń, zanim spalisz bak na dojazd.",
+      "sections": [
+        {
+          "id": "zanim-oglos",
+          "title": "Ogłoszenie i historia",
+          "items": [
+            {
+              "id": "z1",
+              "text": "Sprawdź VIN i przebieg w historiapojazdu.gov.pl",
+              "how": "Poproś sprzedawcę o VIN, numer rejestracyjny i datę pierwszej rejestracji. Wpisz je w bezpłatny serwis historiapojazdu.gov.pl i porównaj przebieg z ostatnich badań technicznych z tym w ogłoszeniu.",
+              "why": "Cofnięty licznik, status „kradziony”, brak ważnego badania albo wiele zmian właściciela widać od razu. Sprzedawca, który nie chce podać VIN, sam odpowiada na pytanie.",
+              "severity": "red",
+              "flag_label": "Przebieg w CEPiK nie zgadza się z ogłoszeniem",
+              "dealbreaker": true,
+              "photo": false,
+              "input": { "type": "number", "label": "Przebieg z ogłoszenia", "unit": "km", "hint": "Wpisz przebieg z ogłoszenia, przy aucie porównasz z licznikiem." },
+              "deadline": null,
+              "tags": ["dokumenty", "przebieg"]
+            },
+            {
+              "id": "z2",
+              "text": "Porównaj zdjęcia z ogłoszenia z opisem",
+              "how": "Powiększ zdjęcia. Szukaj: różnic w odcieniu lakieru między elementami, brakujących ujęć (jeden bok, tył, silnik), zdjęć robionych po deszczu lub o zmroku.",
+              "why": "Ogłoszenia ukrywają to, czego nie ma na zdjęciach. „Bezwypadkowy” w opisie i inny odcień drzwi na zdjęciu to dwie różne historie.",
+              "severity": "yellow",
+              "flag_label": "Zdjęcia ukrywają część auta lub pokazują różnice lakieru",
+              "dealbreaker": false,
+              "photo": false,
+              "input": null,
+              "deadline": null,
+              "tags": ["lakier"]
+            },
+            {
+              "id": "z3",
+              "text": "Zadzwoń i ustal zimny start",
+              "how": "Umów się, że auto ma stać nieuruchamiane od poprzedniego wieczoru. Zapytaj wprost: „Auto będzie zimne, tak?”. Zapisz odpowiedź w notatce.",
+              "why": "Rozgrzany silnik maskuje dymienie, głośną pracę rozrządu i problemy z odpaleniem. Sprzedawca, który „akurat musiał podjechać”, wiedział, po co.",
+              "severity": "yellow",
+              "flag_label": "Sprzedawca unika zimnego startu",
+              "dealbreaker": false,
+              "photo": false,
+              "input": null,
+              "deadline": null,
+              "tags": ["silnik", "rozmowa"]
+            },
+            {
+              "id": "z4",
+              "text": "Umów oględziny za dnia, na suchym aucie",
+              "how": "Poproś o godzinę z dobrym światłem i o to, żeby auta nie myć rano. Weź latarkę, magnes lub miernik lakieru, rękawiczki i szmatkę.",
+              "why": "Mokry lakier ukrywa rysy, zaprawki i różnice odcienia. W ciemności nie ocenisz szczelin ani rdzy.",
+              "severity": "info",
+              "flag_label": "",
+              "dealbreaker": false,
+              "photo": false,
+              "input": null,
+              "deadline": null,
+              "tags": ["logistyka"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "nadwozie",
+      "order": 2,
+      "title": "Nadwozie i lakier",
+      "subtitle": "Grubość lakieru, szczeliny, szyby, rdza, opony",
+      "est_minutes": 25,
+      "when": "Na miejscu, przed jazdą",
+      "intro": "Idź dookoła auta zawsze w tę samą stronę. Lakier mierz na każdym elemencie, nie tylko tam, gdzie pokaże sprzedawca.",
+      "sections": [
+        {
+          "id": "nadwozie-lakier",
+          "title": "Lakier i blacha",
+          "items": [
+            {
+              "id": "n1",
+              "text": "Zmierz grubość lakieru na każdym elemencie",
+              "how": "Miernikiem: 3 punkty na element (góra, środek, dół). Bez miernika: magnes w skarpetce – tam, gdzie nie trzyma, jest szpachla. Zapisz najwyższy odczyt.",
+              "why": "Fabryczny lakier ma zwykle 80–180 µm. 200–300 µm to lakierowanie, powyżej 300 µm szpachla. Jeden element to kosmetyka, kilka to historia kolizji.",
+              "severity": "red",
+              "flag_label": "Gruba warstwa lakieru / szpachla",
+              "dealbreaker": false,
+              "photo": true,
+              "input": { "type": "number", "label": "Najwyższy odczyt", "unit": "µm", "hint": "Fabrycznie zwykle 80–180 µm. Powyżej 300 µm = szpachla." },
+              "deadline": null,
+              "tags": ["lakier", "kolizja"]
+            },
+            {
+              "id": "n2",
+              "text": "Sprawdź szczeliny między elementami",
+              "how": "Porównaj lewą i prawą stronę: maska–błotnik, drzwi–drzwi, klapa–błotnik. Palcem po krawędzi: równa szczelina z obu stron auta.",
+              "why": "Nierówne szczeliny to elementy demontowane po kolizji albo wymieniane. Fabryka składa symetrycznie.",
+              "severity": "yellow",
+              "flag_label": "Nierówne szczeliny – element wymieniany",
+              "dealbreaker": false,
+              "photo": true,
+              "input": null,
+              "deadline": null,
+              "tags": ["kolizja"]
+            },
+            {
+              "id": "n3",
+              "text": "Daty produkcji na szybach",
+              "how": "W rogu każdej szyby jest oznaczenie z rokiem (cyfra) i kropkami. Porównaj wszystkie szyby z rokiem produkcji auta.",
+              "why": "Jedna szyba młodsza od auta to zwykle wymiana po stłuczce lub włamaniu. Kilka młodszych – poważniejsza historia.",
+              "severity": "yellow",
+              "flag_label": "Wymieniona szyba (inna data produkcji)",
+              "dealbreaker": false,
+              "photo": false,
+              "input": null,
+              "deadline": null,
+              "tags": ["kolizja"]
+            },
+            {
+              "id": "n4",
+              "text": "Rdza: progi, nadkola, podłużnice, podłoga",
+              "how": "Latarką pod auto i pod uszczelki drzwi. Naciśnij kciukiem próg od spodu – ma być twardy. Szukaj pęcherzy lakieru i świeżego, błyszczącego zabezpieczenia na starym aucie.",
+              "why": "Korozja powierzchniowa to koszt kosmetyki. Perforacja progów lub podłużnic to konstrukcja auta – to nie jest do negocjacji, to jest do odpuszczenia.",
+              "severity": "red",
+              "flag_label": "Korozja strukturalna (perforacja progu / podłużnicy)",
+              "dealbreaker": true,
+              "photo": true,
+              "input": null,
+              "deadline": null,
+              "tags": ["korozja", "konstrukcja"]
+            }
+          ]
+        },
+        {
+          "id": "nadwozie-opony",
+          "title": "Opony i koła",
+          "items": [
+            {
+              "id": "n5",
+              "text": "Opony: DOT, bieżnik, równomierne zużycie",
+              "how": "Na boku opony znajdź DOT i 4 cyfry (tydzień + rok). Sprawdź bieżnik monetą, porównaj zużycie po wewnętrznej i zewnętrznej stronie.",
+              "why": "Opony starsze niż 6–8 lat nadają się do wymiany niezależnie od bieżnika. Zużycie tylko z jednej strony to zbieżność lub zawieszenie.",
+              "severity": "yellow",
+              "flag_label": "Stare lub nierówno zużyte opony",
+              "dealbreaker": false,
+              "photo": false,
+              "input": { "type": "number", "label": "Najstarszy DOT (rok)", "unit": "rok", "hint": "Np. 2019. Komplet do wymiany to realny koszt do rozmowy." },
+              "deadline": null,
+              "tags": ["opony", "zawieszenie"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "silnik-jazda",
+      "order": 3,
+      "title": "Pod maską i jazda próbna",
+      "subtitle": "Zimny start, płyny, wycieki, skrzynia, hamulce, zawieszenie",
+      "est_minutes": 30,
+      "when": "Silnik zimny, potem 20–30 min jazdy",
+      "intro": "Najpierw odpal na zimno i patrz, nie słuchaj sprzedawcy. Potem jedź tak, jak jeździsz na co dzień: miasto, trasa, ostre hamowanie w bezpiecznym miejscu.",
+      "sections": [
+        {
+          "id": "silnik-zimny",
+          "title": "Zimny silnik",
+          "items": [
+            {
+              "id": "s1",
+              "text": "Zimny start: dym, dźwięki, kontrolki",
+              "how": "Połóż dłoń na masce – ma być zimna. Odpal sam. Patrz na rurę wydechową (kolor dymu) i słuchaj pierwszych 10 sekund. Wszystkie kontrolki mają zgasnąć.",
+              "why": "Niebieski dym = olej, biały gęsty = chłodziwo, czarny = paliwo. Stukanie po odpaleniu i kontrolka silnika to koszty, których nie zobaczysz na ciepłym.",
+              "severity": "red",
+              "flag_label": "Dym lub głośna praca przy zimnym starcie",
+              "dealbreaker": false,
+              "photo": false,
+              "input": null,
+              "deadline": null,
+              "tags": ["silnik"]
+            },
+            {
+              "id": "s2",
+              "text": "Olej i chłodziwo: poziom, kolor, emulsja",
+              "how": "Wyciągnij bagnet i odkręć korek wlewu oleju. Szukaj jasnobrązowej, kremowej mazi pod korkiem. Zajrzyj do zbiorniczka chłodziwa: klarowne, bez oleistej warstwy.",
+              "why": "Emulsja pod korkiem lub olej w chłodziwie to możliwa uszczelka pod głowicą – jedna z najdroższych napraw. Nie ryzykuj bez opinii mechanika.",
+              "severity": "red",
+              "flag_label": "Emulsja w oleju / olej w chłodziwie",
+              "dealbreaker": true,
+              "photo": true,
+              "input": null,
+              "deadline": null,
+              "tags": ["silnik", "głowica"]
+            },
+            {
+              "id": "s3",
+              "text": "Wycieki: pod autem i na silniku",
+              "how": "Zajrzyj pod auto tam, gdzie stało. Latarką po silniku od góry i od dołu: mokre, błyszczące plamy, świeżo umyty silnik na brudnym aucie.",
+              "why": "Mokry silnik na „zadbanym” aucie to zwykle mycie przed sprzedażą. Wyciek oleju z uszczelek to koszt do rozmowy, wyciek chłodziwa to wizyta u mechanika.",
+              "severity": "yellow",
+              "flag_label": "Wycieki oleju lub płynów",
+              "dealbreaker": false,
+              "photo": true,
+              "input": null,
+              "deadline": null,
+              "tags": ["silnik"]
+            }
+          ]
+        },
+        {
+          "id": "jazda",
+          "title": "Jazda próbna",
+          "items": [
+            {
+              "id": "j1",
+              "text": "Skrzynia biegów: płynne zmiany, bez szarpnięć",
+              "how": "Manual: sprzęgło łapie w połowie skoku, biegi wchodzą bez zgrzytów, na 4. biegu dodaj gazu – obroty nie mogą skoczyć bez przyspieszenia. Automat: zmiany bez szarpnięć i zwłoki, także przy cofaniu.",
+              "why": "Ślizgające sprzęgło i szarpiący automat to naprawy liczone w tysiącach. Sprzedawca powie, że „taki ma charakter”.",
+              "severity": "red",
+              "flag_label": "Skrzynia szarpie / sprzęgło się ślizga",
+              "dealbreaker": false,
+              "photo": false,
+              "input": null,
+              "deadline": null,
+              "tags": ["jazda", "skrzynia"]
+            },
+            {
+              "id": "j2",
+              "text": "Hamulce: prosto, bez pulsowania i pisków",
+              "how": "W bezpiecznym miejscu zahamuj mocno z 50 km/h. Auto ma jechać prosto, kierownica i pedał bez wibracji. Sprawdź też hamulec ręczny na wzniesieniu.",
+              "why": "Ściąganie w bok i pulsowanie to tarcze, zaciski lub zawieszenie. Koszt do policzenia, ale też bezpieczeństwo od pierwszego dnia.",
+              "severity": "yellow",
+              "flag_label": "Hamulce ściągają lub pulsują",
+              "dealbreaker": false,
+              "photo": false,
+              "input": null,
+              "deadline": null,
+              "tags": ["jazda", "hamulce"]
+            },
+            {
+              "id": "j3",
+              "text": "Zawieszenie: stuki na nierównościach, prowadzenie",
+              "how": "Przejedź powoli przez progi zwalniające i dziury z otwartym oknem, bez radia. Na prostej puść na sekundę kierownicę – auto ma jechać prosto.",
+              "why": "Stuki to łączniki, tuleje lub amortyzatory. Ściąganie na prostej to geometria albo skutek kolizji.",
+              "severity": "yellow",
+              "flag_label": "Stuki w zawieszeniu / auto ściąga",
+              "dealbreaker": false,
+              "photo": false,
+              "input": null,
+              "deadline": null,
+              "tags": ["jazda", "zawieszenie"]
+            },
+            {
+              "id": "j4",
+              "text": "Po jeździe: kontrolki, temperatura, ponowny rozruch na ciepłym",
+              "how": "Po powrocie zostaw silnik na chwilę na biegu jałowym: wskaźnik temperatury w środku skali, żadnej kontrolki. Zgaś i odpal ponownie – ma zaskoczyć od razu.",
+              "why": "Problemy z rozruchem na ciepłym i pełzająca temperatura wychodzą dopiero po jeździe. To ostatni moment, żeby je złapać przed rozmową o cenie.",
+              "severity": "red",
+              "flag_label": "Kontrolka lub przegrzewanie po jeździe",
+              "dealbreaker": false,
+              "photo": false,
+              "input": null,
+              "deadline": null,
+              "tags": ["silnik", "jazda"]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "seller_call_script": {
+    "intro": "Pięć pytań przez telefon oszczędza dzień i bak paliwa. Zapisuj odpowiedzi – przy aucie porównasz je z tym, co widzisz.",
+    "questions": [
+      { "q": "Jest Pan/Pani właścicielem? Od kiedy i skąd auto (salon, import, komis)?", "watch_for": "„Sprzedaję dla znajomego” lub brak dowodu rejestracyjnego na własne nazwisko – to często handlarz udający osobę prywatną." },
+      { "q": "Poda mi Pan/Pani VIN i numer rejestracyjny do sprawdzenia w historiapojazdu.gov.pl?", "watch_for": "Odmowa albo „wyślę później” – na ogół oznacza, że jest coś do ukrycia." },
+      { "q": "Czy auto było lakierowane lub miało kolizję? Co dokładnie było robione?", "watch_for": "„Tylko zderzak, kosmetyka” – przy aucie zmierz właśnie tam i obok. Ogólniki zamiast konkretów." },
+      { "q": "Czy auto może stać nieodpalane od wieczoru, żebym zobaczył zimny start?", "watch_for": "„Właśnie wracam, będzie ciepłe” – poproś o inny termin albo traktuj zimny start jako niesprawdzony." },
+      { "q": "Jaka jest cena minimalna i czy mogę pojechać z autem do stacji diagnostycznej?", "watch_for": "Zgoda na diagnostykę to dobry znak. Odmowa „bo nie ma czasu” – zły." }
+    ]
+  },
+  "summary_rules": {
+    "walk_away_if": [
+      "Jakikolwiek punkt oznaczony jako dealbreaker jest na „Problem” (przebieg z CEPiK, perforacja konstrukcji, emulsja w oleju).",
+      "Sprzedawca odmawia VIN, dokumentów lub jazdy próbnej.",
+      "Numer VIN w aucie nie zgadza się z dokumentami."
+    ],
+    "get_mechanic_if": [
+      "Co najmniej 2 problemy w obszarze silnik, skrzynia lub jazda próbna.",
+      "Jakakolwiek czerwona flaga, której nie potrafisz jednoznacznie ocenić (dym, hałas, wycieki chłodziwa).",
+      "Auto Ci się podoba mimo 3 lub więcej problemów – niech ktoś policzy, ile to naprawdę kosztuje."
+    ],
+    "negotiate_if": [
+      "Masz tylko uwagi i pojedyncze problemy kosmetyczne lub eksploatacyjne (opony, hamulce, drobne wycieki).",
+      "Zimny start nie był możliwy – to argument za drugim terminem albo niższą ceną."
+    ],
+    "negotiation_phrases": [
+      "„Mam listę 6 uwag, z czego 2 poważne. Nie wyceniam napraw – pytam, jak Pan/Pani widzi cenę przy takim stanie.”",
+      "„Zimny start był częścią umowy. Skoro auto było ciepłe, chcę wrócić jutro rano albo uwzględnić to w cenie.”",
+      "„Lakier na dwóch elementach ma ponad 300 µm. Nie mówię, że auto jest złe – mówię, że nie jest bezwypadkowe z ogłoszenia.”",
+      "„Komplet opon i klocki do wymiany to koszt od pierwszego dnia. To odejmuję od Pana/Pani ceny, nie od mojej.”"
+    ],
+    "safe_deal_rules": [
+      "Płatność dopiero po podpisaniu umowy przez obie strony, z pełnymi danymi i numerem VIN.",
+      "Dane sprzedającego z dowodu osobistego zgadzają się z dowodem rejestracyjnym i kartą pojazdu (jeśli jest).",
+      "Umowa z dokładną datą i godziną – od tej chwili odpowiadasz za auto.",
+      "Duże kwoty przelewem lub w banku, nie gotówką na parkingu.",
+      "Dwa komplety kluczyków, książka serwisowa i faktury – albo wpis w umowie, że ich brak."
+    ]
+  },
+  "glossary": [
+    { "term": "Dealbreaker", "def": "Wada, przy której zwykle nie negocjujesz, tylko odpuszczasz – bo naprawa jest droższa niż korzyść albo dotyczy bezpieczeństwa lub legalności auta." },
+    { "term": "Grubość lakieru (µm)", "def": "Mierzona miernikiem w mikrometrach. Fabrycznie zwykle 80–180 µm; wyższe wartości oznaczają ponowne lakierowanie lub szpachlę." },
+    { "term": "DOT", "def": "Kod na boku opony; ostatnie cztery cyfry to tydzień i rok produkcji, np. 2319 = 23. tydzień 2019 r." },
+    { "term": "Emulsja", "def": "Jasnobrązowa, kremowa maź pod korkiem oleju – możliwy objaw mieszania się oleju z chłodziwem (np. uszczelka pod głowicą)." }
+  ],
+  "sources": [
+    { "claim": "Bezpłatne sprawdzenie historii pojazdu po VIN (przebieg z badań technicznych, status, badania)", "url": "https://historiapojazdu.gov.pl/" },
+    { "claim": "Typowe grubości lakieru fabrycznego i interpretacja odczytów miernika", "url": "https://www.autocentrum.pl/" },
+    { "claim": "Zalecenia dotyczące wieku opon i odczytu kodu DOT", "url": "https://www.pzpo.org.pl/" }
+  ],
+  "facts_to_verify": [
+    "Zakresy grubości lakieru fabrycznego (80–180 µm) dla popularnych modeli – potwierdzić w źródłach branżowych.",
+    "Zalecany maksymalny wiek opon (6–8 lat) – potwierdzić w zaleceniach producentów / PZPO."
+  ]
+}

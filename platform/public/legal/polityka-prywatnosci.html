@@ -1,32 +1,241 @@
 <!doctype html>
+<!--
+  POLITYKA PRYWATNOŚCI I PLIKÓW COOKIE SKLEPU ODHACZ – wersja v1 z 2026-09-28.
+  PLACEHOLDERY DO UZUPEŁNIENIA PRZED PUBLIKACJĄ (wyszukaj „[[”):
+    [[SPRZEDAWCA_NAZWA]]  – administrator danych (ten sam podmiot co w regulaminie)
+    [[SPRZEDAWCA_ADRES]]  – adres administratora
+    [[NIP]]               – NIP
+    [[EMAIL_KONTAKT]]     – e-mail do spraw danych osobowych (może być ten sam co kontaktowy)
+    [[TELEFON]]           – telefon (opcjonalnie; jeśli brak, usuń linię)
+    [[HOSTING]]           – nazwa i kraj dostawcy VPS (np. „Hetzner Online GmbH, Niemcy” / „OVH Sp. z o.o., Polska”) – serwer MUSI być w EOG
+  Opis techniczny odpowiada kodowi platformy (public/assets/consent.js, analytics.js, access.js, src/*.js) na dzień wersji.
+  Jeśli zmieni się zachowanie strony (np. dojdzie newsletter, czcionki z Google, analityka zewnętrzna), zaktualizuj tabele w pkt 3, 5 i 9.
+-->
 <html lang="pl">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Polityka prywatności</title>
-  <style>body{font:16px/1.6 system-ui,sans-serif;margin:0;color:#111}main{max-width:760px;margin:0 auto;padding:40px 16px}.todo{background:#fff3cd;border:1px solid #ffe08a;border-radius:6px;padding:8px 12px}</style>
+  <title>Polityka prywatności i cookies – Odhacz</title>
+  <meta name="description" content="Jak sklep Odhacz przetwarza dane osobowe: zakup, e-mail z dostępem, statystyki własne, Meta Pixel po zgodzie, pliki cookie, Twoje prawa.">
+  <link rel="stylesheet" href="/legal/legal.css">
 </head>
 <body>
-<main>
-  <p class="todo"><strong>TODO (etap prawny):</strong> uzupełnić administratora danych i finalną treść. Poniżej szkielet zgodny z tym, co platforma faktycznie robi.</p>
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="/"><span class="tick">✓</span>Odhacz</a>
+    <a class="back" href="/">← Wróć do sklepu</a>
+  </header>
+
   <h1>Polityka prywatności i plików cookie</h1>
-  <h2>1. Administrator danych</h2>
-  <p>TODO: nazwa, adres, e-mail kontaktowy.</p>
-  <h2>2. Jakie dane przetwarzamy</h2>
+  <p class="meta">Wersja v1 · 28.09.2026 · dotyczy sklepu Odhacz i narzędzi „Odhacz Auto”</p>
+
+  <div class="box">
+    <h2>W skrócie</h2>
+    <ul>
+      <li>Do zakupu potrzebujemy tylko <strong>adresu e-mail</strong> (i danych płatności, które obsługuje Stripe – my nie widzimy numeru karty).</li>
+      <li>Wysyłamy <strong>wyłącznie e-maile dotyczące Twojego zamówienia</strong>. Nie ma newslettera bez osobnej zgody.</li>
+      <li>Mierzymy działanie strony <strong>własnymi statystykami</strong> (losowy identyfikator, bez przekazywania danych podmiotom trzecim).</li>
+      <li><strong>Meta Pixel i Meta Conversions API działają tylko po Twoim „Akceptuję”</strong> w banerze. Bez zgody do Meta nie idzie nic – ani z przeglądarki, ani z naszego serwera.</li>
+      <li>Zgodę zmienisz w każdej chwili: link <strong>„Ustawienia cookies”</strong> w stopce.</li>
+      <li>Masz prawo dostępu, sprostowania, usunięcia, ograniczenia, przenoszenia, sprzeciwu i skargi do Prezesa UODO.</li>
+    </ul>
+  </div>
+
+  <ol class="toc">
+    <li><a href="#p1">Administrator i kontakt</a></li>
+    <li><a href="#p2">Jakie dane, po co, na jakiej podstawie, jak długo</a></li>
+    <li><a href="#p3">Skąd mamy dane i czy musisz je podać</a></li>
+    <li><a href="#p4">Odbiorcy danych</a></li>
+    <li><a href="#p5">Przekazywanie poza EOG</a></li>
+    <li><a href="#p6">Meta Pixel i Conversions API</a></li>
+    <li><a href="#p7">Statystyki własne</a></li>
+    <li><a href="#p8">Pliki cookie i podobne technologie</a></li>
+    <li><a href="#p9">Twoje prawa</a></li>
+    <li><a href="#p10">Profilowanie i decyzje automatyczne</a></li>
+    <li><a href="#p11">Bezpieczeństwo</a></li>
+    <li><a href="#p12">Zmiany polityki</a></li>
+  </ol>
+
+  <h2 id="p1">1. Administrator i kontakt</h2>
+  <p>Administratorem Twoich danych osobowych jest <strong>[[SPRZEDAWCA_NAZWA]]</strong>, [[SPRZEDAWCA_ADRES]], NIP [[NIP]] (dalej: „my”). Kontakt w sprawach danych: <a href="mailto:[[EMAIL_KONTAKT]]">[[EMAIL_KONTAKT]]</a>, tel. [[TELEFON]], listownie na adres powyżej. Nie wyznaczyliśmy inspektora ochrony danych (nie mamy takiego obowiązku).</p>
+
+  <h2 id="p2">2. Jakie dane, po co, na jakiej podstawie, jak długo</h2>
+  <div class="table-wrap">
+    <table>
+      <tr><th>Sytuacja</th><th>Dane</th><th>Cel</th><th>Podstawa prawna (RODO)</th><th>Jak długo</th></tr>
+      <tr>
+        <td><strong>Zakup i dostarczenie dostępu</strong></td>
+        <td>adres e-mail; imię i nazwisko, jeśli podasz je w formularzu płatności; kraj i status płatności (od Stripe); kupiony produkt, kwota, data, numer zamówienia i identyfikator sesji płatności; token dostępu</td>
+        <td>zawarcie i wykonanie umowy: przyjęcie płatności, wygenerowanie linku dostępowego, wysłanie e-maila z dostępem, ponowne wysłanie linku na prośbę</td>
+        <td>art. 6 ust. 1 lit. b (umowa)</td>
+        <td>przez okres dostępu (24 mies.) i do przedawnienia roszczeń – łącznie do <strong>6 lat</strong> od końca roku, w którym zawarto umowę</td>
+      </tr>
+      <tr>
+        <td><strong>Potwierdzenie umowy i dowód zgody</strong> na natychmiastowe dostarczenie treści cyfrowej</td>
+        <td>fakt zaznaczenia zgody w formularzu płatności (zapisywany przez Stripe w sesji), czas płatności, adres IP i przeglądarka (user agent) z chwili rozpoczęcia zakupu, treść wysłanego e-maila potwierdzającego</td>
+        <td>wykonanie obowiązku prawnego (art. 21 i 38 ustawy o prawach konsumenta), wykazanie przebiegu zakupu w razie sporu lub zwrotu</td>
+        <td>art. 6 ust. 1 lit. c (obowiązek prawny); art. 6 ust. 1 lit. f (nasz uzasadniony interes: obrona przed roszczeniami)</td>
+        <td>do <strong>6 lat</strong> od końca roku zakupu</td>
+      </tr>
+      <tr>
+        <td><strong>Księgowość i podatki</strong></td>
+        <td>dane zamówienia i płatności; dane do faktury, jeśli o nią poprosisz (imię i nazwisko / firma, adres, NIP)</td>
+        <td>ewidencja sprzedaży, wystawienie faktury na żądanie, rozliczenia podatkowe</td>
+        <td>art. 6 ust. 1 lit. c (przepisy podatkowe i rachunkowe)</td>
+        <td><strong>5 lat</strong> od końca roku podatkowego</td>
+      </tr>
+      <tr>
+        <td><strong>Reklamacje, gwarancja satysfakcji, pytania</strong></td>
+        <td>adres e-mail, treść korespondencji, numer zamówienia, dane potrzebne do zwrotu (zwrot idzie tą samą metodą przez Stripe)</td>
+        <td>rozpatrzenie zgłoszenia, wykonanie zwrotu, odpowiedź na pytanie</td>
+        <td>art. 6 ust. 1 lit. b (umowa) i lit. c (obowiązki wobec konsumenta); art. 6 ust. 1 lit. f (dokumentowanie rozstrzygnięć)</td>
+        <td>do <strong>6 lat</strong> od końca roku, w którym zamknięto sprawę</td>
+      </tr>
+      <tr>
+        <td><strong>Korzystanie z narzędzia</strong></td>
+        <td>token dostępu, czas ostatniego użycia, zapisany postęp checklisty (odpowiedzi, pomiary, notatki tekstowe), nazwy „Auto 1/2…”</td>
+        <td>zapamiętanie postępu i synchronizacja między urządzeniami (na Twoje żądanie – to funkcja produktu)</td>
+        <td>art. 6 ust. 1 lit. b (umowa)</td>
+        <td>przez okres dostępu; usuwamy w ciągu 90 dni po jego zakończeniu lub wcześniej na Twoją prośbę</td>
+      </tr>
+      <tr>
+        <td><strong>Statystyki własne strony</strong> (pkt 7)</td>
+        <td>losowy identyfikator odwiedzającego, odwiedzone strony, kliknięcia (np. „Kupuję”), rozpoczęcie i zakończenie zakupu, źródło wejścia (parametry UTM), adres strony odsyłającej, typ przeglądarki, <strong>skrócony skrót (hash) adresu IP</strong></td>
+        <td>pomiar działania sklepu i skuteczności kampanii (lejek zakupowy), wykrywanie błędów i nadużyć</td>
+        <td>art. 6 ust. 1 lit. f (uzasadniony interes: prowadzenie i ulepszanie sklepu) <!-- DO WERYFIKACJI: zapis identyfikatora w localStorage/cookie „vid” to dostęp do urządzenia w rozumieniu art. 399 PKE; UODO (poradnik 2025) traktuje analitykę jako wymagającą zgody. Opcja zachowawcza: w analytics.js wysyłać zdarzenia dopiero po zgodzie „analityczne” (patrz README platformy). --></td>
+        <td>do <strong>24 miesięcy</strong> od zapisania zdarzenia</td>
+      </tr>
+      <tr>
+        <td><strong>Pomiar reklam Meta</strong> (pkt 6) – tylko po zgodzie</td>
+        <td>identyfikatory Meta (cookie <code>_fbp</code>, identyfikator kliknięcia <code>_fbc</code>), zdarzenia: wyświetlenie strony, rozpoczęcie zakupu, zakup (wartość, produkt), adres IP i przeglądarka, a przy zakupie także <strong>zahaszowany (SHA-256) adres e-mail</strong></td>
+        <td>mierzenie skuteczności reklam na Facebooku/Instagramie i ich dopasowanie</td>
+        <td>art. 6 ust. 1 lit. a (zgoda) – wyrażona w banerze; art. 399 Prawa komunikacji elektronicznej</td>
+        <td>u nas: identyfikator sesji zakupu do 6 lat (jak dane zamówienia); w Meta – wg polityki Meta; cookie <code>_fbp</code>/<code>_fbc</code> 90 dni</td>
+      </tr>
+      <tr>
+        <td><strong>Bezpieczeństwo i logi serwera</strong></td>
+        <td>adres IP, czas i adres żądania, kod odpowiedzi, przeglądarka</td>
+        <td>ochrona przed atakami i nadużyciami (limity zapytań), diagnoza awarii</td>
+        <td>art. 6 ust. 1 lit. f (uzasadniony interes: bezpieczeństwo)</td>
+        <td>do <strong>30 dni</strong> <!-- DO WERYFIKACJI: ustawić rotację logów Caddy/Docker na 30 dni. --></td>
+      </tr>
+    </table>
+  </div>
+  <p class="small">Wobec przetwarzania na podstawie uzasadnionego interesu (lit. f) możesz w każdej chwili wnieść <strong>sprzeciw</strong> (pkt 9). Zgodę (lit. a) możesz wycofać w każdej chwili – nie wpływa to na zgodność z prawem przetwarzania sprzed wycofania.</p>
+
+  <h2 id="p3">3. Skąd mamy dane i czy musisz je podać</h2>
+  <p>Dane pochodzą od Ciebie (formularz płatności, korespondencja, korzystanie z narzędzia) oraz od Stripe (status i szczegóły płatności). Jeśli wejdziesz z reklamy Meta, w adresie strony może być identyfikator kliknięcia (<code>fbclid</code>) – zapisujemy go w cookie tylko po Twojej zgodzie marketingowej. Podanie adresu e-mail jest <strong>niezbędne do zawarcia umowy</strong> (bez niego nie dostarczymy dostępu). Pozostałe dane są dobrowolne albo zbierane automatycznie w opisanym wyżej zakresie.</p>
+
+  <h2 id="p4">4. Odbiorcy danych</h2>
+  <div class="table-wrap">
+    <table>
+      <tr><th>Odbiorca</th><th>Rola</th><th>Co otrzymuje</th></tr>
+      <tr>
+        <td><strong>Stripe Payments Europe, Ltd.</strong> (Dublin, Irlandia) – operator płatności</td>
+        <td>w zakresie obsługi płatności i zapobiegania oszustwom działa jako <strong>samodzielny administrator</strong>; w pozostałym zakresie – jako podmiot przetwarzający dla nas. Polityka: <a href="https://stripe.com/pl/privacy" rel="noopener">stripe.com/pl/privacy</a></td>
+        <td>adres e-mail, dane płatności (karta / BLIK / Przelewy24), kwota, adres IP i dane urządzenia, fakt zaznaczenia zgody w formularzu; przekazuje nam status płatności i identyfikatory</td>
+      </tr>
+      <tr>
+        <td><strong>Resend, Inc.</strong> (USA) – wysyłka e-maili transakcyjnych</td>
+        <td>podmiot przetwarzający (umowa powierzenia / DPA)</td>
+        <td>adres e-mail odbiorcy, treść wiadomości (w tym link dostępowy i podsumowanie zamówienia), logi doręczeń <!-- DO WERYFIKACJI: sprawdzić w DPA Resend podstawę transferu (SCC / Data Privacy Framework) i możliwość wyboru regionu UE; wpisać w pkt 5. --></td>
+      </tr>
+      <tr>
+        <td><strong>[[HOSTING]]</strong> – dostawca serwera (VPS), na którym działa sklep i baza danych</td>
+        <td>podmiot przetwarzający (umowa powierzenia); serwer zlokalizowany w Europejskim Obszarze Gospodarczym</td>
+        <td>wszystkie dane przechowywane przez sklep (infrastruktura)</td>
+      </tr>
+      <tr>
+        <td><strong>Meta Platforms Ireland Limited</strong> (Dublin, Irlandia) – tylko po zgodzie marketingowej</td>
+        <td>w zakresie <strong>zbierania i przesyłania</strong> danych przez Pixel/Conversions API jesteśmy z Meta <strong>współadministratorami</strong> (art. 26 RODO; zasadnicza treść uzgodnień: <a href="https://www.facebook.com/legal/controller_addendum" rel="noopener">Controller Addendum Meta</a>). Dalsze przetwarzanie w Meta – Meta jako samodzielny administrator: <a href="https://www.facebook.com/privacy/policy" rel="noopener">polityka prywatności Meta</a></td>
+        <td>dane z pkt 6</td>
+      </tr>
+      <tr>
+        <td>Organy publiczne, doradcy (księgowość, prawnik)</td>
+        <td>gdy wymaga tego prawo lub obrona roszczeń; doradcy – na podstawie umów powierzenia lub tajemnicy zawodowej</td>
+        <td>tylko dane niezbędne w danej sprawie</td>
+      </tr>
+    </table>
+  </div>
+  <!-- DO WERYFIKACJI: jeśli landing ładuje czcionki z fonts.googleapis.com / fonts.gstatic.com, dodać wiersz „Google LLC (USA) – czcionki: adres IP, przeglądarka; podstawa lit. f; transfer: Data Privacy Framework”. Zalecenie: hostować czcionki lokalnie (/assets/fonts/), wtedy wiersz zbędny. -->
+
+  <h2 id="p5">5. Przekazywanie poza Europejski Obszar Gospodarczy</h2>
   <ul>
-    <li><strong>Zakup:</strong> adres e-mail, dane płatności (przetwarzane przez Stripe – my nie widzimy numeru karty), kwota i data zamówienia. Cel: realizacja umowy, dostarczenie dostępu, obowiązki podatkowe.</li>
-    <li><strong>Statystyki własne (first-party):</strong> losowy identyfikator odwiedzającego, odwiedzane podstrony, źródło wejścia (parametry UTM), skrócony skrót (hash) adresu IP, typ przeglądarki. Dane te nie są przekazywane podmiotom trzecim i służą wyłącznie do mierzenia działania strony (uzasadniony interes).</li>
-    <li><strong>Meta Pixel / Conversions API</strong> – wyłącznie po kliknięciu „Akceptuję” w banerze: identyfikatory Meta (_fbp/_fbc), zdarzenia (wyświetlenie strony, rozpoczęcie zakupu, zakup) oraz zahaszowany e-mail kupującego. Cel: mierzenie skuteczności reklam.</li>
-    <li><strong>Postęp w narzędziu:</strong> dane zapisane w produkcie (np. ukończone kroki) powiązane z tokenem dostępu, aby działały na wielu urządzeniach.</li>
+    <li><strong>Stripe</strong> – dane mogą być przekazywane do Stripe, Inc. (USA) w ramach grupy Stripe; podstawa: decyzja Komisji Europejskiej w sprawie <strong>EU-U.S. Data Privacy Framework</strong> (Stripe, Inc. jest certyfikowany) oraz standardowe klauzule umowne.</li>
+    <li><strong>Resend</strong> – serwery w USA; podstawa: standardowe klauzule umowne zawarte w umowie powierzenia. <!-- DO WERYFIKACJI: j.w. --></li>
+    <li><strong>Meta</strong> – po zgodzie dane mogą trafić do Meta Platforms, Inc. (USA); podstawa: EU-U.S. Data Privacy Framework (Meta Platforms, Inc. jest certyfikowana) oraz standardowe klauzule umowne.</li>
   </ul>
-  <h2>3. Odbiorcy danych</h2>
-  <p>Stripe (płatności), Resend (wysyłka e-maili), Meta Platforms (po zgodzie), dostawca hostingu (TODO: nazwa).</p>
-  <h2>4. Pliki cookie</h2>
-  <p>Niezbędne: <code>access_*</code> (dostęp do zakupionego produktu, 1 rok), <code>vid</code> (identyfikator odwiedzającego dla statystyk własnych), <code>consent_v1</code> (zapamiętana decyzja). Marketingowe (po zgodzie): <code>_fbp</code>, <code>_fbc</code>. Zgodę można zmienić, czyszcząc dane strony w przeglądarce.</p>
-  <h2>5. Okres przechowywania</h2>
-  <p>Dane zamówień – przez okres wymagany przepisami podatkowymi; statystyki – TODO (np. 24 miesiące).</p>
-  <h2>6. Twoje prawa</h2>
-  <p>Dostęp, sprostowanie, usunięcie, ograniczenie, sprzeciw, przenoszenie danych, skarga do Prezesa UODO. Kontakt: TODO.</p>
-</main>
+  <p>Kopię odpowiednich zabezpieczeń możesz uzyskać, pisząc na [[EMAIL_KONTAKT]]. Lista podmiotów certyfikowanych w DPF: <a href="https://www.dataprivacyframework.gov" rel="noopener">dataprivacyframework.gov</a>.</p>
+
+  <h2 id="p6">6. Meta Pixel i Conversions API – tylko po zgodzie</h2>
+  <ul>
+    <li><strong>Co to jest:</strong> Meta Pixel to skrypt Meta uruchamiany w przeglądarce; Conversions API (CAPI) to przesłanie tego samego zdarzenia zakupu z naszego serwera. Służą do mierzenia, czy reklama na Facebooku/Instagramie doprowadziła do zakupu, oraz do dopasowania reklam.</li>
+    <li><strong>Kiedy działa:</strong> <strong>wyłącznie po kliknięciu „Akceptuję” w banerze</strong>. Przed zgodą (i po jej odrzuceniu) strona nie wykonuje żadnych połączeń z serwerami Meta, nie zapisuje cookies Meta, a nasz serwer nie wysyła zdarzenia zakupu do Meta. Decyzję zapamiętujemy w Twojej przeglądarce.</li>
+    <li><strong>Co jest przesyłane:</strong> zdarzenia <em>PageView</em>, <em>InitiateCheckout</em> (rozpoczęcie zakupu) i <em>Purchase</em> (zakup: kwota, waluta, identyfikatory produktów), identyfikatory <code>_fbp</code>/<code>_fbc</code>, adres IP, przeglądarka, adres strony; przy zakupie z serwera dodatkowo <strong>skrót SHA-256 adresu e-mail</strong> (Meta używa go do dopasowania z kontem – nie odczyta z niego adresu, jeśli go nie zna). To samo zdarzenie z przeglądarki i z serwera ma wspólny identyfikator, żeby nie było liczone podwójnie.</li>
+    <li><strong>Współadministrowanie:</strong> za zbieranie danych na naszej stronie i ich przesłanie do Meta odpowiadamy wspólnie z Meta Platforms Ireland Ltd. (wyrok TSUE C-40/17 „Fashion ID”). Meta odpowiada za dalsze przetwarzanie na własne cele (w tym profilowanie reklamowe) i jest punktem kontaktowym w tym zakresie; swoje prawa możesz wykonywać wobec każdego ze współadministratorów.</li>
+    <li><strong>Jak wycofać zgodę:</strong> kliknij „Ustawienia cookies” w stopce i wybierz „Odrzucam” – od tej chwili Pixel się nie ładuje, a cookies <code>_fbp</code>/<code>_fbc</code> usuwamy. Możesz też usunąć cookies w przeglądarce. Preferencje reklamowe w Meta ustawisz w swoim koncie Facebook/Instagram (<a href="https://www.facebook.com/adpreferences" rel="noopener">Preferencje reklam</a>).</li>
+  </ul>
+
+  <h2 id="p7">7. Statystyki własne (first-party)</h2>
+  <p>Żeby wiedzieć, czy strona działa i które reklamy przynoszą zakupy, prowadzimy <strong>własne, proste statystyki na naszym serwerze</strong>. Nie korzystamy z Google Analytics ani innych zewnętrznych narzędzi analitycznych i <strong>nie przekazujemy tych danych nikomu</strong>.</p>
+  <ul>
+    <li>Przy pierwszej wizycie przeglądarka losuje <strong>identyfikator odwiedzającego</strong> (ciąg znaków bez związku z Twoją tożsamością) i zapisuje go w pamięci lokalnej przeglądarki oraz w cookie <code>vid</code>. Dzięki niemu odróżniamy „wejście” od „powrotu” i łączymy kliknięcie „Kupuję” z zakupem.</li>
+    <li>Zapisujemy zdarzenia: wyświetlenie strony, kliknięcie przycisku zakupu, rozpoczęcie płatności, zakup (numer sesji, kwota), zmianę decyzji o cookies oraz parametry UTM z linku reklamy (pierwsze wejście).</li>
+    <li>Adres IP <strong>nie jest zapisywany w całości</strong> – przechowujemy jego skrócony, solony skrót (hash), którego nie da się odwrócić do adresu.</li>
+    <li>Nie budujemy profili między stronami, nie łączymy tych danych z danymi Meta ani nie używamy ich do reklam. Podstawa: nasz uzasadniony interes (art. 6 ust. 1 lit. f RODO). <strong>Sprzeciw:</strong> napisz na [[EMAIL_KONTAKT]] (podaj datę wizyty; identyfikator znajdziesz w pamięci przeglądarki jako <code>visitor_id</code>) albo usuń dane strony w przeglądarce – wtedy identyfikator zostanie wylosowany od nowa.</li>
+  </ul>
+
+  <h2 id="p8">8. Pliki cookie i podobne technologie</h2>
+  <p>Cookies to małe pliki zapisywane przez przeglądarkę; „podobne technologie” to pamięć lokalna przeglądarki (localStorage/sessionStorage). Przy pierwszej wizycie pokazujemy baner z równorzędnymi przyciskami <strong>„Akceptuję”</strong> i <strong>„Odrzucam”</strong>. Jedyna kategoria wymagająca zgody to <strong>marketing (Meta)</strong>; sklep i zakupy działają bez niej tak samo.</p>
+  <div class="table-wrap">
+    <table>
+      <tr><th>Nazwa</th><th>Rodzaj / kto zapisuje</th><th>Cel</th><th>Kategoria</th><th>Czas</th></tr>
+      <tr><td><code>access_&lt;produkt&gt;</code></td><td>cookie httpOnly / sklep Odhacz</td><td>otwiera zakupione narzędzie bez ponownego klikania linku z e-maila</td><td>niezbędne (wykonanie umowy)</td><td>1 rok</td></tr>
+      <tr><td><code>access_token</code></td><td>localStorage / narzędzie</td><td>token dostępu używany przez aplikację narzędzia (synchronizacja postępu)</td><td>niezbędne</td><td>do usunięcia danych strony</td></tr>
+      <tr><td><code>consent_v1</code>, <code>consent_v1_ts</code></td><td>localStorage / sklep Odhacz</td><td>zapamiętanie Twojej decyzji z banera i jej daty</td><td>niezbędne</td><td>do usunięcia danych strony</td></tr>
+      <tr><td><code>vid</code></td><td>cookie / sklep Odhacz</td><td>identyfikator odwiedzającego dla statystyk własnych (pkt 7)</td><td>statystyczne (własne)</td><td>365 dni</td></tr>
+      <tr><td><code>visitor_id</code>, <code>utm_first</code></td><td>localStorage / sklep Odhacz</td><td>ten sam identyfikator oraz źródło pierwszego wejścia (UTM)</td><td>statystyczne (własne)</td><td>do usunięcia danych strony</td></tr>
+      <tr><td>postęp checklisty</td><td>localStorage/IndexedDB / narzędzie</td><td>Twoje odpowiedzi, pomiary, notatki i zdjęcia zapisane na urządzeniu</td><td>niezbędne (funkcja produktu)</td><td>do usunięcia danych strony</td></tr>
+      <tr><td><code>_fbp</code></td><td>cookie / Meta Pixel</td><td>rozpoznanie przeglądarki na potrzeby pomiaru reklam Meta</td><td><strong>marketingowe – tylko po zgodzie</strong></td><td>90 dni</td></tr>
+      <tr><td><code>_fbc</code></td><td>cookie / Meta Pixel lub sklep (z parametru <code>fbclid</code>)</td><td>identyfikator kliknięcia w reklamę Meta</td><td><strong>marketingowe – tylko po zgodzie</strong></td><td>90 dni</td></tr>
+      <tr><td><code>purchase_fired_&lt;id&gt;</code></td><td>sessionStorage / sklep Odhacz</td><td>zapobiega podwójnemu zgłoszeniu zakupu do Pixela przy odświeżeniu strony „Zakup udany”</td><td>marketingowe – tylko po zgodzie</td><td>do zamknięcia karty</td></tr>
+      <tr><td><code>__stripe_mid</code>, <code>__stripe_sid</code></td><td>cookie / Stripe – na stronie <code>checkout.stripe.com</code> (poza naszą domeną)</td><td>zapobieganie oszustwom płatniczym i obsługa formularza płatności</td><td>niezbędne dla płatności (odpowiada Stripe)</td><td>1 rok / 30 min</td></tr>
+    </table>
+  </div>
+  <p><strong>Jak zmienić zgodę:</strong> kliknij <button type="button" class="linklike" data-consent-open style="color:var(--violet)">Ustawienia cookies</button> (w stopce każdej strony) – baner pojawi się ponownie i możesz wybrać inaczej. Możesz też blokować lub usuwać cookies w ustawieniach przeglądarki; zablokowanie cookies niezbędnych może uniemożliwić otwarcie zakupionego narzędzia (wtedy skorzystaj z linku z e-maila).</p>
+
+  <h2 id="p9">9. Twoje prawa</h2>
+  <p>Masz prawo do: <strong>dostępu</strong> do danych i ich kopii, <strong>sprostowania</strong>, <strong>usunięcia</strong>, <strong>ograniczenia przetwarzania</strong>, <strong>przenoszenia</strong> danych (dane przetwarzane na podstawie umowy lub zgody), <strong>sprzeciwu</strong> wobec przetwarzania opartego na uzasadnionym interesie (np. statystyk własnych) oraz do <strong>wycofania zgody</strong> w dowolnym momencie. Napisz na <a href="mailto:[[EMAIL_KONTAKT]]">[[EMAIL_KONTAKT]]</a> – odpowiemy najpóźniej w ciągu miesiąca. Możemy poprosić o potwierdzenie tożsamości (np. wiadomość z adresu użytego przy zakupie). Usunięcie danych zamówienia przed upływem okresów z pkt 2 może być ograniczone przepisami podatkowymi.</p>
+  <p>Masz też prawo wnieść skargę do organu nadzorczego: <strong>Prezes Urzędu Ochrony Danych Osobowych</strong>, ul. Stawki 2, 00-193 Warszawa, <a href="https://uodo.gov.pl" rel="noopener">uodo.gov.pl</a>.</p>
+
+  <h2 id="p10">10. Profilowanie i decyzje automatyczne</h2>
+  <p>Nie podejmujemy wobec Ciebie decyzji opartych wyłącznie na zautomatyzowanym przetwarzaniu, które wywoływałyby skutki prawne lub podobnie istotnie na Ciebie wpływały (art. 22 RODO). Sami nie profilujemy użytkowników. Po Twojej zgodzie marketingowej <strong>Meta</strong> może wykorzystywać zdarzenia z naszej strony do profilowania reklamowego w swoich serwisach (np. pokazania Ci naszej reklamy ponownie) – zasady i ustawienia opisuje polityka Meta (pkt 6).</p>
+
+  <h2 id="p11">11. Bezpieczeństwo</h2>
+  <p>Strona działa wyłącznie po HTTPS. Linki dostępowe zawierają losowe tokeny (256 bitów), ciasteczka dostępu są oznaczone jako httpOnly/Secure, dane karty nigdy nie przechodzą przez nasz serwer, adres IP w statystykach jest skracany i haszowany, a dostęp do panelu administracyjnego jest chroniony hasłem. Kopie zapasowe bazy przechowujemy w EOG.</p>
+
+  <h2 id="p12">12. Zmiany polityki</h2>
+  <p>Politykę aktualizujemy, gdy zmienia się sposób działania sklepu, dostawcy lub przepisy. Aktualna wersja jest zawsze pod adresem <code>/legal/polityka-prywatnosci.html</code>, a poprzednie – w <a href="/legal/archiwum.html">archiwum wersji</a>. Wersja v1 obowiązuje od 28.09.2026.</p>
+
+  <footer class="bottom">
+    <nav>
+      <a href="/">Sklep</a>
+      <a href="/legal/regulamin.html">Regulamin</a>
+      <a href="/legal/polityka-prywatnosci.html">Polityka prywatności</a>
+      <a href="/legal/o-marce.html">O marce i o Haczu</a>
+      <a href="/legal/archiwum.html">Archiwum wersji</a>
+      <button type="button" class="linklike" data-consent-open>Ustawienia cookies</button>
+    </nav>
+    <p>[[SPRZEDAWCA_NAZWA]] · [[SPRZEDAWCA_ADRES]] · NIP [[NIP]] · <a href="mailto:[[EMAIL_KONTAKT]]">[[EMAIL_KONTAKT]]</a></p>
+    <p>Ilustracje i postać Hacza zostały wygenerowane i zaprojektowane cyfrowo (z użyciem narzędzi AI). Hacz to postać AI, nie ekspert.</p>
+  </footer>
+</div>
+<script src="/assets/consent.js"></script>
+<script>
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-consent-open]');
+    if (b && window.Consent) { e.preventDefault(); window.Consent.show(); }
+  });
+</script>
 </body>
 </html>
