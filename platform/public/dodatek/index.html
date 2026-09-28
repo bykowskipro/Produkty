@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dodatek (placeholder)</title>
+  <meta name="robots" content="noindex">
+  <style>body{font:17px/1.55 system-ui,sans-serif;margin:0;color:#111}main{max-width:640px;margin:0 auto;padding:40px 16px}.badge{display:inline-block;background:#fff3cd;border:1px solid #ffe08a;border-radius:6px;padding:2px 8px;font-size:13px}</style>
+</head>
+<body>
+<main>
+  <span class="badge">PLACEHOLDER – tu trafi treść dodatku (upsell)</span>
+  <h1>Dodatek</h1>
+  <p>Chroniony obszar produktu dodatkowego (ścieżka <code>/dodatek/</code> z <code>config/products.json</code>). Może tu być np. plik PDF, dodatkowy moduł albo lista bonusów.</p>
+  <p>Status dostępu: <strong id="status" data-testid="access-status">sprawdzam…</strong></p>
+</main>
+<script src="/assets/access.js"></script>
+<script>Access.verify().then(function (v) { document.getElementById('status').textContent = v.ok ? 'aktywny' : 'brak'; });</script>
+</body>
+</html>

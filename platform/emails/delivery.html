@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="pl">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Twój dostęp – {{site_name}}</title></head>
+<body style="margin:0;padding:0;background:#f4f5f7;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#111">
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#f4f5f7;padding:24px 12px">
+    <tr><td align="center">
+      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:560px;background:#fff;border-radius:12px;padding:28px 24px">
+        <tr><td style="font-size:22px;font-weight:700;padding-bottom:12px">{{greeting}}</td></tr>
+        <tr><td style="font-size:16px;line-height:1.5;padding-bottom:18px">Dziękujemy za zakup w {{site_name}}. Twój dostęp jest już aktywny – kliknij przycisk poniżej. Link działa na telefonie i komputerze; zachowaj tę wiadomość.</td></tr>
+        <tr><td align="center" style="padding:6px 0 22px">
+          <a href="{{access_url}}" style="display:inline-block;background:#16a34a;color:#fff;text-decoration:none;font-weight:700;font-size:17px;padding:14px 28px;border-radius:10px">Otwórz dostęp</a>
+        </td></tr>
+        <tr><td style="font-size:15px;line-height:1.5;padding-bottom:8px"><strong>Twoje produkty:</strong></td></tr>
+        <tr><td style="font-size:15px;line-height:1.5"><ul style="margin:0;padding-left:20px">{{items}}</ul></td></tr>
+        <tr><td style="font-size:13px;line-height:1.5;color:#666;padding-top:22px;border-top:1px solid #eee;margin-top:20px">
+          Nie udostępniaj linku – jest przypisany do Twojego zakupu. Masz pytanie? Odpowiedz na tę wiadomość.<br>
+          © {{year}} {{site_name}} · <a href="{{base_url}}/legal/regulamin.html" style="color:#666">Regulamin</a> · <a href="{{base_url}}/legal/polityka-prywatnosci.html" style="color:#666">Polityka prywatności</a>
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>

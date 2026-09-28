@@ -1,0 +1,20 @@
+[
+  {
+    "id": "main",
+    "name": "Produkt główny",
+    "description": "Interaktywne narzędzie dostępne od razu po zakupie (placeholder – podmień w config/products.json).",
+    "price_pln": 4900,
+    "stripe_price_id": "",
+    "type": "main",
+    "access_path": "/app/"
+  },
+  {
+    "id": "upsell",
+    "name": "Dodatek",
+    "description": "Bonusowy dodatek do produktu głównego (placeholder).",
+    "price_pln": 2900,
+    "stripe_price_id": "",
+    "type": "upsell",
+    "access_path": "/dodatek/"
+  }
+]

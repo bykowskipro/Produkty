@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Produkt główny – landing (placeholder)</title>
+  <meta name="description" content="Placeholder landing page. Zostanie zastąpiony właściwą stroną sprzedażową.">
+  <style>
+    body{font:17px/1.55 system-ui,sans-serif;margin:0;color:#111;background:#fff}
+    main{max-width:720px;margin:0 auto;padding:48px 16px 96px}
+    .badge{display:inline-block;background:#fff3cd;border:1px solid #ffe08a;border-radius:6px;padding:2px 8px;font-size:13px}
+    h1{font-size:34px;line-height:1.15;margin:16px 0}
+    .cta{display:inline-block;background:#1a56db;color:#fff;font-weight:700;font-size:18px;padding:16px 28px;border:0;border-radius:12px;cursor:pointer}
+    .cta[disabled]{opacity:.7;cursor:wait}
+    footer{margin-top:64px;font-size:13px;color:#666}footer a{color:#666}
+  </style>
+</head>
+<body>
+<main>
+  <span class="badge">PLACEHOLDER – docelowy landing zostanie tu podmieniony</span>
+  <h1>Produkt główny</h1>
+  <p>To jest tymczasowa strona sprzedażowa platformy. Właściwy landing (nagłówek, korzyści, FAQ) zbuduje inny etap projektu – musi tylko zachować kontrakt z README (skrypty poniżej + przycisk wywołujący <code>Shop.buy('main')</code>).</p>
+  <p>Cena: <strong data-price="main">49,00 zł</strong> · dostęp natychmiast po płatności · faktura/paragon w Stripe.</p>
+  <p><button class="cta" data-buy="main" data-testid="cta-main">Kup teraz</button></p>
+  <p style="font-size:14px;color:#555">Płatność obsługuje Stripe (BLIK, karta, Przelewy24). Kupując, akceptujesz <a href="/legal/regulamin.html">regulamin</a> i <a href="/legal/polityka-prywatnosci.html">politykę prywatności</a>.</p>
+  <footer>
+    <a href="/legal/regulamin.html">Regulamin</a> · <a href="/legal/polityka-prywatnosci.html">Polityka prywatności</a>
+  </footer>
+</main>
+<!-- Integration contract: these three scripts + a CTA calling Shop.buy('main') (or data-buy="main"). -->
+<script src="/assets/consent.js"></script>
+<script src="/assets/analytics.js"></script>
+<script src="/assets/shop.js"></script>
+</body>
+</html>

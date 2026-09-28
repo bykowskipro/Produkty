@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dziękujemy za zakup</title>
+  <meta name="robots" content="noindex">
+  <style>
+    body{font:17px/1.55 system-ui,sans-serif;margin:0;color:#111;background:#fff}
+    main{max-width:640px;margin:0 auto;padding:48px 16px 96px}
+    h1{font-size:32px;margin:0 0 8px}
+    .access{display:block;background:#16a34a;color:#fff;text-decoration:none;font-weight:700;font-size:20px;text-align:center;padding:18px 24px;border-radius:14px;margin:14px 0}
+    .access.secondary{background:#1a56db;font-size:17px}
+    .muted{color:#555;font-size:15px}
+    .wait{background:#f6f7f9;border:1px solid #e3e5e8;border-radius:12px;padding:18px}
+    #first-step{margin-top:36px;padding-top:24px;border-top:1px solid #eee}
+    .spinner{display:inline-block;width:18px;height:18px;border:3px solid #ccc;border-top-color:#1a56db;border-radius:50%;animation:spin 1s linear infinite;vertical-align:middle;margin-right:8px}
+    @keyframes spin{to{transform:rotate(360deg)}}
+  </style>
+</head>
+<body>
+<main>
+  <div id="state-loading" class="wait"><span class="spinner"></span> Sprawdzamy status płatności…</div>
+
+  <div id="state-paid" hidden>
+    <h1>Zakup udany 🎉</h1>
+    <p class="muted">Dziękujemy! Twój dostęp jest gotowy.</p>
+    <div id="access-links" data-testid="access-links"></div>
+    <p class="muted">Link wysłaliśmy też na e-mail <strong id="buyer-email"></strong>. Zachowaj go – działa na każdym urządzeniu.</p>
+    <!-- Slot for the product team: "co zrobić najpierw" (first step instructions). Keep the id. -->
+    <section id="first-step">
+      <h2>Co zrobić najpierw?</h2>
+      <p class="muted">PLACEHOLDER – tu pojawi się krótka instrukcja pierwszego kroku (uzupełni etap produktu).</p>
+    </section>
+  </div>
+
+  <div id="state-waiting" class="wait" hidden>
+    <h1>Jeszcze chwila…</h1>
+    <p><span class="spinner"></span> Czekamy na potwierdzenie płatności od operatora. Zwykle trwa to kilka sekund – strona odświeży się sama.</p>
+    <p class="muted">Jeśli płatność została zrealizowana, dostęp otrzymasz również e-mailem. Możesz zamknąć tę stronę.</p>
+  </div>
+
+  <div id="state-error" class="wait" hidden>
+    <h1>Nie udało się potwierdzić płatności</h1>
+    <p>Jeśli pieniądze zostały pobrane, dostęp przyjdzie e-mailem w ciągu kilku minut. W razie problemów napisz do nas (adres w <a href="/legal/regulamin.html">regulaminie</a>).</p>
+    <p><a href="/">Wróć na stronę główną</a></p>
+  </div>
+</main>
+
+<script src="/assets/consent.js"></script>
+<script src="/assets/analytics.js"></script>
+<script>
+(function () {
+  var sessionId = new URLSearchParams(location.search).get('session_id');
+  var states = ['loading', 'paid', 'waiting', 'error'];
+  function show(name) { states.forEach(function (s) { document.getElementById('state-' + s).hidden = s !== name; }); }
+  if (!sessionId) { show('error'); return; }
+
+  function firePurchase(data) {
+    var key = 'purchase_fired_' + sessionId;
+    var tries = 0;
+    function fire() {
+      try {
+        if (sessionStorage.getItem(key)) return;
+        if (typeof window.fbq !== 'function') { if (tries++ < 20) setTimeout(fire, 500); return; } // pixel script may still be loading
+        window.fbq('track', 'Purchase', { value: data.value, currency: data.currency, content_ids: data.items.map(function (i) { return i.product_id; }), content_type: 'product', num_items: data.items.length }, { eventID: data.event_id || undefined });
+        sessionStorage.setItem(key, '1');
+      } catch (e) {}
+    }
+    if (window.Consent && window.Consent.granted()) fire();
+    if (window.Consent) window.Consent.onChange(function (g) { if (g) { tries = 0; fire(); } });
+  }
+
+  function render(data) {
+    var box = document.getElementById('access-links');
+    box.innerHTML = '';
+    data.items.forEach(function (item, i) {
+      var a = document.createElement('a');
+      a.className = 'access' + (i ? ' secondary' : '');
+      a.href = item.access_url;
+      a.setAttribute('data-testid', 'access-link-' + item.product_id);
+      a.textContent = (i ? 'Otwórz: ' : 'Otwórz dostęp: ') + item.name;
+      box.appendChild(a);
+    });
+    document.getElementById('buyer-email').textContent = data.email || '';
+    show('paid');
+    if (window.track) window.track('success_page', { session_id: sessionId, value: data.value });
+    firePurchase(data);
+  }
+
+  var started = Date.now();
+  function poll() {
+    fetch('/api/session/' + encodeURIComponent(sessionId), { credentials: 'same-origin' })
+      .then(function (r) { if (r.status === 404 || r.status === 400) throw new Error('not_found'); return r.json(); })
+      .then(function (data) {
+        if (data.paid) return render(data);
+        show('waiting');
+        if (Date.now() - started < 60000) setTimeout(poll, 3000); else show('error');
+      })
+      .catch(function (err) {
+        if (err.message === 'not_found') return show('error');
+        show('waiting');
+        if (Date.now() - started < 60000) setTimeout(poll, 3000); else show('error');
+      });
+  }
+  poll();
+})();
+</script>
+</body>
+</html>

@@ -8,10 +8,10 @@
     "node": ">=22.13"
   },
   "scripts": {
-    "start": "node src/server.js",
+    "start": "node --env-file-if-exists=.env src/server.js",
     "dev": "node --env-file=.env --watch src/server.js",
-    "test": "node --test tests/unit/",
-    "e2e": "node --test --test-concurrency=1 --test-timeout=180000 tests/e2e/"
+    "test": "node --test 'tests/unit/*.test.js'",
+    "e2e": "node --test --test-concurrency=1 --test-timeout=180000 'tests/e2e/*.test.js'"
   },
   "dependencies": {
     "express": "^5.1.0",

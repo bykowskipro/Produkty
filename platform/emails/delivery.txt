@@ -1,0 +1,15 @@
+{{greeting}}
+
+Dziękujemy za zakup w {{site_name}}. Twój dostęp jest już aktywny.
+
+Otwórz dostęp: {{access_url}}
+
+Twoje produkty:
+{{items}}
+
+Link działa na telefonie i komputerze – zachowaj tę wiadomość i nie udostępniaj linku.
+Masz pytanie? Odpowiedz na tę wiadomość.
+
+© {{year}} {{site_name}}
+Regulamin: {{base_url}}/legal/regulamin.html
+Polityka prywatności: {{base_url}}/legal/polityka-prywatnosci.html
