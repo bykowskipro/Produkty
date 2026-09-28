@@ -14,3 +14,12 @@ Format: data · decyzja · dlaczego · co odrzucono.
 - Dlaczego: darmowy dodatkowy kanał zasięgu + gotowe wideo do reużycia jako reklama (wideo zwykle bije statyki w cold traffic). TikTok tylko organicznie, bez płatnego ruchu.
 - Warunek: scenariusze rolek powstają PO wyborze produktu i persony (rolka = angle produktu, nie luźny content). Ja dostarczam: 3 scenariusze (hook 0–2 s, treść, CTA), napisy, wytyczne wizualne, wersję bez wypalonych napisów do reklam.
 - Odrzucono: robienie rolek przed decyzją o produkcie.
+
+## 2026-09-28 · PRODUKT 1: „Oględziny używanego auta w telefonie” (interaktywna checklista + lista uwag do negocjacji)
+- Dlaczego: jedyny z 4 kierunków, w którym Meta (brak restrykcji, Purchase działa), prawo (zero regulacji) i zaufanie do anonimowej marki (narzędzie, 39 zł) są jednocześnie na zielono; ostry moment zakupu („jutro oglądam auto”), 3,35 mln transakcji/rok, dowód płacenia (checklista PDF 19,90 zł, usługi 449–749 zł), dosłownie „telefon w ręku”. Szczegóły: `research/10-wybor-produktu.md`.
+- Odrzucono w tym teście: B2 chronotyp/sen (restrykcje health & wellness mogą zablokować Purchase; haki objawowe zakazane; brak dowodu sprzedaży bez eksperta), C budżet/finanse (KYC dla reklam finansowych w PL od IX 2026; CPC 5–15 zł; rynek płaci nazwiskom), A1 lokalny biznes z AI (najsłabsze dowody popytu; darmowa konkurencja instytucjonalna) — A1 zostaje kandydatem nr 2, D2 odbiór mieszkania kandydatem sezonowym (X–XII).
+- Marka: parasol dla interaktywnych checklist na wydarzenia życiowe, nie marka motoryzacyjna.
+
+## 2026-09-28 · Cena: 39 zł produkt główny, 19 zł upsell (order bump w checkout)
+- Dlaczego: kotwice — płatna checklista PDF 19,90 zł (statyczna), stacja diagnostyczna 80–200 zł, mobilny mechanik 449–749 zł. 39 zł = „2× cena PDF-a, 10× taniej niż mechanik”. Poniżej limitu 49 zł, impulsowo. Upsell „Kupione — i co dalej” (umowa, PCC-3, rejestracja, OC, pierwsze 30 dni) za 19 zł domyka historię klienta.
+- Odrzucono: 49 zł (mniej sygnału przy 300 zł budżetu), 19–29 zł (za blisko PDF-a, sugeruje „kolejną listę”). Bez przekreślonych cen (Omnibus) — uczciwa cena startowa.
