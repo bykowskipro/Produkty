@@ -4,3 +4,4 @@ node_modules/
 platform/data/
 creatives/shots/
 .DS_Store
+ops/sprzedawca.json
