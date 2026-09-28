@@ -2,20 +2,20 @@
   <title>Hacz — asystent AI marki Odhacz</title>
   <!-- Hacz — uwaga (uniesiona brew, wskazuje). Kolory: lime #C6F135, ink #0B0F19, violet #6D28D9. Nie przebarwiać. -->
   <g id="behind">
-    <path d="M160 150L198 150" fill="none" stroke="#0B0F19" stroke-width="36" stroke-linecap="round" stroke-linejoin="round"/>
-    <circle cx="220" cy="150" r="24" fill="#0B0F19"/>
-    <path d="M226 140L238 116" fill="none" stroke="#0B0F19" stroke-width="28" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M160 150L198 150" fill="none" stroke="#C6F135" stroke-width="22" stroke-linecap="round" stroke-linejoin="round"/>
-    <circle cx="220" cy="150" r="17" fill="#C6F135"/>
-    <path d="M226 140L238 116" fill="none" stroke="#C6F135" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M222 159Q230 160 234 154" fill="none" stroke="#0B0F19" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M150 160L200 164" fill="none" stroke="#0B0F19" stroke-width="36" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="222" cy="166" r="25" fill="#0B0F19"/>
+    <path d="M228 156L240 128" fill="none" stroke="#0B0F19" stroke-width="28" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M150 160L200 164" fill="none" stroke="#C6F135" stroke-width="22" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="222" cy="166" r="18" fill="#C6F135"/>
+    <path d="M228 156L240 128" fill="none" stroke="#C6F135" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M214 176Q222 181 230 175" fill="none" stroke="#0B0F19" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
   </g>
   <g id="body">
     <path d="M56 140L104 188L196 70" fill="none" stroke="#0B0F19" stroke-width="74" stroke-linecap="round" stroke-linejoin="round"/>
     <path d="M56 140L104 188L196 70" fill="none" stroke="#C6F135" stroke-width="60" stroke-linecap="round" stroke-linejoin="round"/>
   </g>
   <g id="face">
-    <circle cx="184" cy="64" r="8" fill="#0B0F19"/><circle cx="208" cy="64" r="8" fill="#0B0F19"/><path d="M188 84H204" fill="none" stroke="#0B0F19" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><path d="M176 48Q184 45 192 48" fill="none" stroke="#0B0F19" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><path d="M200 40Q209 32 218 40" fill="none" stroke="#0B0F19" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="183" cy="67" r="9.5" fill="#0B0F19"/><circle cx="209" cy="67" r="9.5" fill="#0B0F19"/><path d="M187 86H205" fill="none" stroke="#0B0F19" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M173 51Q183 48 192 51" fill="none" stroke="#0B0F19" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M200 48Q209 40 218 48" fill="none" stroke="#0B0F19" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/>
   </g>
   <polygon points="236,25 238.55,33.45 247,36 238.55,38.55 236,47 233.45,38.55 225,36 233.45,33.45" fill="#6D28D9"/>
 </svg>

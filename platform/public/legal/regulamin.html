@@ -1,31 +1,273 @@
 <!doctype html>
+<!--
+  REGULAMIN SKLEPU ODHACZ – wersja v1 z 2026-09-28.
+  PLACEHOLDERY DO UZUPEŁNIENIA PRZED PUBLIKACJĄ (wyszukaj „[[”):
+    [[SPRZEDAWCA_NAZWA]]  – imię i nazwisko / firma sprzedawcy (podmiot z konta Stripe)
+    [[SPRZEDAWCA_ADRES]]  – adres (ulica, kod, miasto) – także adres do korespondencji i reklamacji
+    [[NIP]]               – NIP (przy działalności nierejestrowanej: NIP osoby fizycznej lub PESEL – do decyzji)
+    [[EMAIL_KONTAKT]]     – e-mail do kontaktu, reklamacji i gwarancji (ten sam co EMAIL_REPLY_TO)
+    [[TELEFON]]           – telefon (zalecany; art. 12 ust. 1 pkt 3 UPK) – jeśli brak, usuń całą linię
+  Miejsca oznaczone komentarzem „DO WERYFIKACJI” wymagają potwierdzenia przez właściciela / prawnika.
+  Skróty: UPK = ustawa z dnia 30 maja 2014 r. o prawach konsumenta; u.ś.u.d.e. = ustawa o świadczeniu usług drogą elektroniczną.
+-->
 <html lang="pl">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Regulamin</title>
-  <style>body{font:16px/1.6 system-ui,sans-serif;margin:0;color:#111}main{max-width:760px;margin:0 auto;padding:40px 16px}.todo{background:#fff3cd;border:1px solid #ffe08a;border-radius:6px;padding:8px 12px}</style>
+  <title>Regulamin sklepu Odhacz</title>
+  <meta name="description" content="Regulamin sprzedaży treści cyfrowych Odhacz Auto: zamówienie, płatność, dostawa, prawo odstąpienia, gwarancja satysfakcji, reklamacje.">
+  <link rel="stylesheet" href="/legal/legal.css">
 </head>
 <body>
-<main>
-  <p class="todo"><strong>TODO (etap prawny):</strong> uzupełnić dane sprzedawcy i finalną treść. Poniżej szkielet wymaganych punktów.</p>
-  <h1>Regulamin sklepu</h1>
-  <h2>§1 Sprzedawca</h2>
-  <p>TODO: nazwa firmy / imię i nazwisko, adres, NIP, e-mail kontaktowy.</p>
-  <h2>§2 Przedmiot sprzedaży</h2>
-  <p>Treści cyfrowe dostarczane bez nośnika materialnego: dostęp online do interaktywnego narzędzia oraz ewentualne dodatki (TODO: opis produktów).</p>
-  <h2>§3 Zamówienie i płatność</h2>
-  <p>Zamówienie składa się przez formularz płatności Stripe. Ceny są cenami brutto w PLN. Metody płatności: BLIK, karta, Przelewy24 (wg dostępności w Stripe).</p>
-  <h2>§4 Dostarczenie treści cyfrowych</h2>
-  <p>Dostęp jest udostępniany natychmiast po zaksięgowaniu płatności – na stronie potwierdzenia oraz linkiem wysłanym na podany e-mail.</p>
-  <h2>§5 Prawo odstąpienia od umowy</h2>
-  <p>Konsument wyraża zgodę na natychmiastowe dostarczenie treści cyfrowych przed upływem terminu do odstąpienia od umowy i przyjmuje do wiadomości, że traci przez to prawo odstąpienia (art. 38 pkt 13 ustawy z dnia 30 maja 2014 r. o prawach konsumenta). Zgoda jest odbierana w formularzu płatności.</p>
-  <h2>§6 Reklamacje</h2>
-  <p>TODO: adres e-mail do reklamacji, termin rozpatrzenia (14 dni), odpowiedzialność za zgodność treści cyfrowej z umową (rozdz. 5b ustawy o prawach konsumenta).</p>
-  <h2>§7 Dane osobowe</h2>
-  <p>Zasady przetwarzania danych opisuje <a href="/legal/polityka-prywatnosci.html">Polityka prywatności</a>.</p>
-  <h2>§8 Postanowienia końcowe</h2>
-  <p>TODO: prawo właściwe, pozasądowe rozwiązywanie sporów (platforma ODR), data obowiązywania.</p>
-</main>
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="/"><span class="tick">✓</span>Odhacz</a>
+    <a class="back" href="/">← Wróć do sklepu</a>
+  </header>
+
+  <h1>Regulamin sklepu Odhacz</h1>
+  <p class="meta">Wersja <strong>v1</strong> · data wersji: <strong>28.09.2026</strong> · obowiązuje od 28.09.2026 · <a href="/legal/archiwum.html">archiwum wersji</a></p>
+
+  <div class="box">
+    <h2>W skrócie</h2>
+    <ul>
+      <li>Kupujesz <strong>dostęp do interaktywnej checklisty „Odhacz Auto”</strong> (i ewentualnie dodatku „Odhacz Auto: Po zakupie”) – narzędzia w przeglądarce, bez instalacji, na <strong>24 miesiące</strong>.</li>
+      <li>Płacisz w formularzu Stripe (karta, BLIK, Przelewy24, Link). Ceny są <strong>cenami końcowymi w złotych</strong>.</li>
+      <li>Dostęp dostajesz <strong>od razu po opłaceniu</strong>: link na ekranie i w e-mailu.</li>
+      <li>Ponieważ prosisz o natychmiastowe dostarczenie treści cyfrowej, <strong>tracisz ustawowe prawo odstąpienia w 14 dni</strong> (art. 38 ust. 1 pkt 13 UPK). Zaznaczasz to świadomie w formularzu płatności.</li>
+      <li>Masz za to naszą <strong>dobrowolną gwarancję satysfakcji: 14 dni</strong> na zwrot pieniędzy bez podawania przyczyny (§ 9).</li>
+      <li>Za zgodność narzędzia z umową odpowiadamy przez <strong>2 lata</strong>; na reklamację odpowiadamy w <strong>14 dni</strong> (§ 10).</li>
+    </ul>
+  </div>
+
+  <ol class="toc">
+    <li><a href="#s1">Sprzedawca i kontakt</a></li>
+    <li><a href="#s2">Definicje</a></li>
+    <li><a href="#s3">Co kupujesz – opis treści cyfrowych</a></li>
+    <li><a href="#s4">Jak kupić – krok po kroku</a></li>
+    <li><a href="#s5">Ceny i płatność</a></li>
+    <li><a href="#s6">Dostarczenie dostępu</a></li>
+    <li><a href="#s7">Licencja i zasady korzystania</a></li>
+    <li><a href="#s8">Prawo odstąpienia od umowy</a></li>
+    <li><a href="#s9">Gwarancja satysfakcji 14 dni</a></li>
+    <li><a href="#s10">Zgodność z umową i reklamacje</a></li>
+    <li><a href="#s11">Pozasądowe rozwiązywanie sporów</a></li>
+    <li><a href="#s12">Dane osobowe</a></li>
+    <li><a href="#s13">Zmiany Regulaminu i archiwum wersji</a></li>
+    <li><a href="#s14">Postanowienia końcowe</a></li>
+    <li><a href="#zal1">Załącznik 1: wzór formularza odstąpienia</a></li>
+    <li><a href="#zal2">Załącznik 2: wzór zgłoszenia reklamacji / gwarancji</a></li>
+  </ol>
+
+  <h2 id="s1">§ 1. Sprzedawca i kontakt</h2>
+  <p>Sklep internetowy <strong>Odhacz</strong> (dalej: <strong>Sklep</strong>) prowadzi:</p>
+  <p><strong>[[SPRZEDAWCA_NAZWA]]</strong><br>
+     [[SPRZEDAWCA_ADRES]]<br>
+     NIP: [[NIP]]<br>
+     e-mail: <a href="mailto:[[EMAIL_KONTAKT]]">[[EMAIL_KONTAKT]]</a><br>
+     telefon: [[TELEFON]]</p>
+  <!-- DO WERYFIKACJI: jeśli sprzedawca jest wpisany do CEIDG, dodać linię „wpisany do Centralnej Ewidencji i Informacji o Działalności Gospodarczej (CEIDG)”; przy spółce – KRS, sąd rejestrowy, kapitał zakładowy. Przy działalności nierejestrowanej – bez wpisu, ale pełne dane identyfikacyjne (art. 12 ust. 1 pkt 2–3 UPK, art. 5 u.ś.u.d.e.). -->
+  <p>Najszybciej skontaktujesz się z nami <strong>e-mailem</strong>. Na wiadomości (w tym reklamacje) odpowiadamy najpóźniej w ciągu <strong>14 dni</strong>, zwykle dużo szybciej. Adres pocztowy powyżej jest adresem do korespondencji, w tym do składania oświadczeń o odstąpieniu i reklamacji.</p>
+
+  <h2 id="s2">§ 2. Definicje</h2>
+  <ul>
+    <li><strong>Sprzedawca</strong> – podmiot wskazany w § 1.</li>
+    <li><strong>Klient</strong> – osoba, która składa zamówienie w Sklepie.</li>
+    <li><strong>Konsument</strong> – Klient będący osobą fizyczną, który kupuje w celu niezwiązanym bezpośrednio z działalnością gospodarczą lub zawodową. Postanowienia dotyczące Konsumenta stosujemy także do osoby fizycznej prowadzącej działalność gospodarczą, gdy zakup nie ma dla niej charakteru zawodowego (art. 7aa UPK).</li>
+    <li><strong>Narzędzie</strong> (Treść cyfrowa) – interaktywna checklista dostępna w przeglądarce internetowej, opisana w § 3; obejmuje <strong>Produkt główny</strong> („Odhacz Auto”) oraz opcjonalny <strong>Dodatek</strong> („Odhacz Auto: Po zakupie”). Narzędzie jest treścią cyfrową dostarczaną bez nośnika materialnego w rozumieniu UPK.</li>
+    <li><strong>Link dostępowy</strong> – unikalny adres internetowy (z tokenem), który otwiera Narzędzie bez zakładania konta i logowania; jest przypisany do Twojego zakupu.</li>
+    <li><strong>Okres dostępu</strong> – <strong>24 miesiące</strong> od dnia dostarczenia Narzędzia.</li>
+    <li><strong>Stripe</strong> – operator płatności: Stripe Payments Europe, Ltd. (Irlandia); formularz płatności działa na stronie <code>checkout.stripe.com</code>.</li>
+    <li><strong>Trwały nośnik</strong> – np. wiadomość e-mail, którą możesz zachować i odczytać w przyszłości w niezmienionej postaci.</li>
+    <li><strong>UPK</strong> – ustawa z dnia 30 maja 2014 r. o prawach konsumenta.</li>
+  </ul>
+
+  <h2 id="s3">§ 3. Co kupujesz – opis treści cyfrowych</h2>
+  <h3>3.1. Produkt główny: „Odhacz Auto”</h3>
+  <p>Interaktywna checklista oględzin używanego samochodu, do użycia na telefonie (działa też na komputerze). Główne cechy:</p>
+  <ul>
+    <li><strong>7 etapów</strong> (Zanim pojedziesz · Dokumenty i tożsamość · Nadwozie i lakier · Wnętrze i elektryka · Pod maską · Jazda próbna · Podsumowanie i negocjacja), łącznie ok. <strong>130–160 punktów</strong>; każdy punkt ma krótką instrukcję „co i jak sprawdzić” i wyjaśnienie, dlaczego to ważne.</li>
+    <li>Odpowiedź jednym dotknięciem (<strong>OK / Uwaga / Problem / Pomiń</strong>), pola na pomiary (np. grubość lakieru, DOT opon, przebieg), notatki i zdjęcia przy punktach.</li>
+    <li>Stale widoczny <strong>licznik czerwonych flag i dealbreakerów</strong>; na końcu automatyczna <strong>lista uwag do negocjacji</strong> z gotowymi zdaniami (bez wycen napraw) oraz podpowiedź: kup / negocjuj / zawołaj mechanika / odpuść.</li>
+    <li>Skrypt rozmowy telefonicznej ze sprzedawcą, zasady bezpiecznej transakcji, „Quick start” (3 minuty).</li>
+    <li>Zapis postępu <strong>dla kilku aut naraz</strong> i synchronizacja między urządzeniami przez Link dostępowy z e-maila.</li>
+  </ul>
+  <h3>3.2. Dodatek: „Odhacz Auto: Po zakupie”</h3>
+  <p>Interaktywna checklista z terminami na czas po decyzji o kupnie: zanim zapłacisz (umowa, dokumenty, płatność), wzór umowy kupna-sprzedaży z objaśnieniami, pierwsze 14 dni (PCC-3, rejestracja, OC, CEPiK), pierwszy serwis i pierwsze 30 dni, przypomnienia do kalendarza (pliki <code>.ics</code>). Dodatek można kupić tylko razem z Produktem głównym (jako opcję w formularzu płatności).</p>
+  <h3>3.3. Czym Narzędzie nie jest</h3>
+  <div class="note">
+    <p><strong>Narzędzie ma charakter edukacyjny i informacyjny.</strong> Jest materiałem pomocniczym opracowanym na podstawie powszechnie dostępnej wiedzy i praktyki. <strong>Nie zastępuje przeglądu u mechanika, opinii rzeczoznawcy ani – w razie sporu ze sprzedawcą auta – porady prawnej.</strong> Nie wycenia napraw, nie ocenia stanu konkretnego pojazdu i nie gwarantuje wykrycia każdej wady; efekt zależy od Twojej sytuacji i staranności. Podpowiada za to, kiedy warto zawołać mechanika. Treści Dodatku dotyczące formalności odzwierciedlają stan prawny na dzień wersji Regulaminu; przed załatwieniem sprawy urzędowej sprawdź aktualne wymagania. <strong>„Hacz” to postać AI – wirtualny asystent marki, nie mechanik ani ekspert</strong> (więcej: <a href="/legal/o-marce.html">O marce i o Haczu</a>).</p>
+  </div>
+  <h3>3.4. Wymagania techniczne</h3>
+  <ul>
+    <li>smartfon, tablet lub komputer z <strong>aktualną przeglądarką</strong> (np. Chrome, Safari, Firefox, Edge – bieżąca lub poprzednia wersja) z włączoną obsługą JavaScript oraz plików cookie i pamięci lokalnej przeglądarki;</li>
+    <li><strong>połączenie z internetem</strong> – do otwarcia Linku dostępowego i synchronizacji postępu; <!-- DO WERYFIKACJI (zespół produktu): czy po pierwszym otwarciu treść działa bez internetu (service worker)? Jeśli tak, dopisać: „po pierwszym otwarciu treść punktów działa także bez połączenia; synchronizacja wymaga internetu”. --></li>
+    <li>aktywny adres e-mail (na niego wysyłamy Link dostępowy i potwierdzenie zamówienia).</li>
+  </ul>
+  <h3>3.5. Funkcjonalność, kompatybilność, interoperacyjność i techniczne środki ochrony</h3>
+  <ul>
+    <li><strong>Funkcjonalność:</strong> jak w pkt 3.1–3.2. Narzędzie nie wymaga instalacji ani konta; nie zawiera reklam; nie ma funkcji płatnych wewnątrz.</li>
+    <li><strong>Kompatybilność:</strong> działa w przeglądarkach z pkt 3.4 na systemach Android, iOS/iPadOS, Windows, macOS, Linux. Nie gwarantujemy działania w przeglądarkach wbudowanych w inne aplikacje (np. w komunikatorach) – w razie problemu otwórz link w zwykłej przeglądarce.</li>
+    <li><strong>Interoperacyjność:</strong> Narzędzie nie integruje się z systemami zewnętrznymi; przypomnienia z Dodatku mają format iCalendar (<code>.ics</code>), obsługiwany przez typowe aplikacje kalendarza.</li>
+    <li><strong>Techniczne środki ochrony:</strong> dostęp jest chroniony unikalnym Linkiem dostępowym (tokenem) oraz ciasteczkiem dostępu zapisywanym w przeglądarce; treść nie jest zabezpieczona DRM ani szyfrowaniem plików.</li>
+    <li>Postęp, notatki i pomiary zapisują się w pamięci przeglądarki, a część danych (postęp) synchronizujemy na naszym serwerze, by działały na kilku urządzeniach. <!-- DO WERYFIKACJI (zespół produktu): czy zdjęcia są przechowywane wyłącznie na urządzeniu, czy też na serwerze (limit 32 KB/JSON sugeruje: tylko na urządzeniu). Dostosować zdanie. --></li>
+  </ul>
+  <h3>3.6. Okres dostępu</h3>
+  <p>Dostęp do Narzędzia przysługuje przez <strong>24 miesiące</strong> od dnia dostarczenia. Po tym czasie Link dostępowy wygasa. Jeżeli Narzędzie będzie nadal oferowane, będzie można kupić nowy dostęp w aktualnej cenie. O ile to technicznie możliwe, przed końcem Okresu dostępu umożliwimy Ci zapisanie lub skopiowanie Twoich notatek.</p>
+  <h3>3.7. Aktualizacje</h3>
+  <p>W Okresie dostępu informujemy o aktualizacjach niezbędnych do zachowania zgodności Narzędzia z umową (w tym dotyczących bezpieczeństwa) i dostarczamy je bez dodatkowych opłat – zwykle automatycznie, przy kolejnym otwarciu Narzędzia (art. 43i ust. 3 UPK). Możemy też ulepszać treść i funkcje (np. poprawiać opisy punktów, dostosowywać Dodatek do zmian przepisów). Zmiany wprowadzamy wyłącznie z uzasadnionych przyczyn – takich jak zmiana przepisów, bezpieczeństwo, zgodność z nowymi wersjami przeglądarek lub poprawa użyteczności – i nigdy nie wiążą się one z kosztami po Twojej stronie. Jeżeli zmiana istotnie i negatywnie wpływałaby na Twój dostęp do Narzędzia lub korzystanie z niego, poinformujemy Cię o tym z wyprzedzeniem e-mailem; możesz wtedy wypowiedzieć umowę w ciągu 30 dni od zmiany i otrzymać proporcjonalny zwrot ceny za niewykorzystany Okres dostępu (art. 43o UPK).</p>
+  <!-- DO WERYFIKACJI: numeracja art. 43h–43o UPK (rozdział 5b) potwierdzona w streszczeniach źródeł, nie w tekście jednolitym – sprawdzić w ISAP (Dz.U. 2024 poz. 1796) przed publikacją. -->
+
+  <h2 id="s4">§ 4. Jak kupić – krok po kroku</h2>
+  <ol>
+    <li>Na stronie Sklepu zapoznajesz się z opisem Narzędzia, ceną i tym Regulaminem, a następnie klikasz przycisk zakupu (np. „Kupuję”).</li>
+    <li>Przechodzisz do <strong>formularza płatności Stripe</strong> (jeden ekran). Widzisz tam: nazwę i cenę Produktu głównego, opcję dodania <strong>Dodatku</strong> (domyślnie niezaznaczoną), pole na <strong>adres e-mail</strong>, wybór metody płatności oraz <strong>pole zgody</strong> (domyślnie niezaznaczone, wymagane) o treści:
+      <div class="form" style="margin:10px 0">
+        <p>„Żądam dostarczenia treści cyfrowej natychmiast po opłaceniu zamówienia i wyrażam na to wyraźną zgodę. Przyjmuję do wiadomości, że z chwilą dostarczenia (udostępnienia linku dostępowego) tracę prawo odstąpienia od umowy w terminie 14 dni (art. 38 ust. 1 pkt 13 ustawy o prawach konsumenta). Akceptuję Regulamin i Politykę prywatności. Masz też naszą 14-dniową gwarancję satysfakcji (§ 9 Regulaminu).”</p>
+      </div>
+      Bez zaznaczenia tego pola formularz nie pozwoli zapłacić. Jeśli chcesz kupić Narzędzie <strong>bez rezygnacji z prawa odstąpienia</strong>, napisz do nas na [[EMAIL_KONTAKT]] – przyjmiemy zamówienie w trybie z dostarczeniem po upływie 14-dniowego terminu do odstąpienia (§ 8 ust. 5).</li>
+    <li>Klikasz przycisk płatności (np. „Zapłać”). Kliknięcie oznacza <strong>złożenie zamówienia z obowiązkiem zapłaty</strong> (art. 17 UPK). Do tego momentu możesz przerwać zakup – wystarczy zamknąć formularz.</li>
+    <li><strong>Umowa zostaje zawarta z chwilą potwierdzenia płatności</strong> przez Stripe. Natychmiast po tym widzisz stronę „Zakup udany” z Linkiem dostępowym i otrzymujesz e-mail z potwierdzeniem zawarcia umowy, Linkiem dostępowym oraz informacją o wyrażonej zgodzie na natychmiastowe dostarczenie (art. 21 UPK). Zachowaj tę wiadomość.</li>
+  </ol>
+  <p>Umowę zawieramy w języku polskim. Treść umowy stanowią: Twoje zamówienie (potwierdzone e-mailem) i Regulamin w wersji obowiązującej w chwili zakupu (numer wersji podajemy w e-mailu; archiwum wersji: § 13).</p>
+
+  <h2 id="s5">§ 5. Ceny i płatność</h2>
+  <p>Ceny podajemy w <strong>złotych polskich</strong> jako <strong>ceny końcowe (brutto)</strong> – zawierają wszystkie podatki i opłaty. Nie doliczamy żadnych dodatkowych kosztów. Cenę widzisz przed kliknięciem przycisku płatności.</p>
+  <!-- DO WERYFIKACJI (status VAT właściciela): czynny podatnik VAT → dopisać „w tym 23% VAT”; zwolniony podmiotowo (art. 113 ust. 1 ustawy o VAT) → zostawić bez zmian, na fakturze podać podstawę zwolnienia. -->
+  <div class="table-wrap">
+    <table>
+      <tr><th>Produkt</th><th>Cena na dzień wersji Regulaminu</th></tr>
+      <tr><td>Odhacz Auto (Produkt główny)</td><td><strong>39,00 zł</strong> jednorazowo</td></tr>
+      <tr><td>Odhacz Auto: Po zakupie (Dodatek, opcjonalnie)</td><td><strong>19,00 zł</strong> jednorazowo</td></tr>
+    </table>
+  </div>
+  <p>Aktualne ceny są zawsze widoczne na stronie produktu i w formularzu płatności; w razie różnicy wiąże cena pokazana w formularzu płatności przed zapłatą. Jeżeli obniżymy cenę, obok ceny obniżonej podamy najniższą cenę z 30 dni przed obniżką. Jeżeli udostępnimy kody rabatowe, wpisuje się je w formularzu płatności.</p>
+  <p><strong>Metody płatności</strong> (obsługiwane przez Stripe): karta płatnicza, <strong>BLIK</strong>, <strong>Przelewy24</strong>, Link (portfel Stripe). Płatność jest jednorazowa, z góry. Nie przechowujemy danych Twojej karty – trafiają one wyłącznie do Stripe. Po udanej płatności Stripe może wysłać e-mail z potwierdzeniem płatności (nie jest to faktura).</p>
+  <p><strong>Faktura:</strong> wystawiamy ją na życzenie – napisz na [[EMAIL_KONTAKT]] (podaj numer zamówienia i dane do faktury) w ciągu 3 miesięcy od końca miesiąca, w którym dokonano zakupu. Fakturę wysyłamy e-mailem w formie elektronicznej, na co wyrażasz zgodę, prosząc o nią.</p>
+
+  <h2 id="s6">§ 6. Dostarczenie dostępu</h2>
+  <ol>
+    <li>Narzędzie dostarczamy <strong>niezwłocznie po potwierdzeniu płatności</strong> – zwykle w ciągu kilku sekund (art. 43h UPK): Link dostępowy pojawia się na stronie „Zakup udany” i jest wysyłany na podany adres e-mail. Przy płatnościach potwierdzanych z opóźnieniem (np. niektóre przelewy) dostęp udostępniamy z chwilą potwierdzenia płatności przez Stripe; e-mail z Linkiem przyjdzie wtedy automatycznie.</li>
+    <li>Narzędzie uważa się za dostarczone z chwilą udostępnienia Ci Linku dostępowego (na stronie „Zakup udany” lub w e-mailu) – wtedy możesz z niego korzystać.</li>
+    <li>Jeżeli w ciągu 15 minut od płatności nie masz e-maila: sprawdź folder spam/oferty, upewnij się, że adres był poprawny, a potem napisz do nas na [[EMAIL_KONTAKT]] – wyślemy Link ponownie. Jeśli nie dostarczymy Narzędzia mimo Twojego wezwania, możesz odstąpić od umowy (art. 43h UPK).</li>
+    <li>Link dostępowy działa na wielu urządzeniach. Zachowaj e-mail – to Twój sposób na odzyskanie dostępu (np. po wyczyszczeniu przeglądarki).</li>
+  </ol>
+
+  <h2 id="s7">§ 7. Licencja i zasady korzystania</h2>
+  <ol>
+    <li>Z chwilą dostarczenia otrzymujesz <strong>niewyłączną, nieprzenoszalną licencję</strong> na korzystanie z Narzędzia w Okresie dostępu, <strong>na własny użytek</strong> (np. przy oglądaniu dowolnej liczby samochodów dla siebie lub bliskich). Treści Narzędzia (teksty, struktura checklisty, grafiki, postać Hacza) są chronione prawem autorskim.</li>
+    <li><strong>Nie udostępniaj Linku dostępowego</strong> ani ciasteczka dostępu innym osobom, nie publikuj go i nie odsprzedawaj dostępu. Nie kopiuj, nie rozpowszechniaj i nie publikuj treści Narzędzia (poza własnymi notatkami i listą uwag, którą możesz pokazać sprzedawcy auta). Zakazane jest też obchodzenie zabezpieczeń, automatyczne pobieranie treści i próby zakłócania działania Sklepu.</li>
+    <li>Korzystając z Narzędzia, <strong>nie możesz dostarczać treści bezprawnych</strong> (art. 8 ust. 3 pkt 2 lit. b u.ś.u.d.e.) – dotyczy to notatek i zdjęć, które zapisujesz (np. treści naruszających prawa innych osób). Odpowiadasz za treści, które zapisujesz.</li>
+    <li>W razie rażącego naruszenia (np. masowe udostępnienie Linku) możemy – po uprzednim wezwaniu e-mailem, o ile to możliwe – zablokować dany Link dostępowy. Nie ogranicza to Twoich uprawnień, jeśli naruszenie nie nastąpiło.</li>
+    <li>Korzystanie ze Sklepu jest bezpłatne; płatny jest wyłącznie zakup Narzędzia. Sklep i Narzędzie działają w internecie – typowe zagrożenia (złośliwe oprogramowanie, phishing) ograniczysz, korzystając z aktualnej przeglądarki i nie podając Linku dostępowego osobom trzecim. Nigdy nie prosimy o hasła ani dane karty e-mailem.</li>
+  </ol>
+
+  <h2 id="s8">§ 8. Prawo odstąpienia od umowy</h2>
+  <ol>
+    <li><strong>Zasada:</strong> Konsument może odstąpić od umowy zawartej na odległość w terminie <strong>14 dni</strong> bez podania przyczyny (art. 27 UPK).</li>
+    <li><strong>Wyjątek dla treści cyfrowych:</strong> prawo odstąpienia <strong>nie przysługuje</strong>, jeżeli przedsiębiorca rozpoczął dostarczanie treści cyfrowej (niedostarczanej na nośniku materialnym) <strong>za wyraźną i uprzednią zgodą Konsumenta</strong>, który został poinformowany przed rozpoczęciem świadczenia, że po jego spełnieniu utraci prawo odstąpienia, <strong>przyjął to do wiadomości</strong>, a przedsiębiorca przekazał mu potwierdzenie zawarcia umowy na trwałym nośniku (art. 38 ust. 1 pkt 13 UPK).</li>
+    <li><strong>Jak to działa w Sklepie:</strong> zgodę i przyjęcie informacji do wiadomości wyrażasz, zaznaczając wymagane pole w formularzu płatności (treść w § 4 pkt 2). Fakt zaznaczenia zapisuje Stripe w danych Twojej sesji płatności, a my potwierdzamy go w e-mailu z potwierdzeniem zawarcia umowy (art. 21 UPK), razem z datą dostarczenia Narzędzia. <strong>Z chwilą udostępnienia Linku dostępowego prawo odstąpienia wygasa.</strong></li>
+    <li>Utrata prawa odstąpienia <strong>nie ogranicza</strong> Twoich uprawnień z tytułu niezgodności Narzędzia z umową (§ 10) ani gwarancji satysfakcji (§ 9).</li>
+    <li><strong>Zakup bez rezygnacji z prawa odstąpienia:</strong> jeżeli nie chcesz wyrażać zgody na natychmiastowe dostarczenie, napisz do nas na [[EMAIL_KONTAKT]]. Uzgodnimy zamówienie, w którym Narzędzie dostarczymy po upływie 14 dni od zawarcia umowy; w tym czasie możesz odstąpić od umowy na zasadach ogólnych (pkt 6–7).</li>
+    <li><strong>Jak odstąpić (gdy prawo przysługuje):</strong> wyślij jednoznaczne oświadczenie – najprościej e-mailem na [[EMAIL_KONTAKT]] albo pocztą na adres z § 1. Możesz skorzystać z formularza z Załącznika 1 (nie jest to obowiązkowe). Do zachowania terminu wystarczy wysłanie oświadczenia przed jego upływem. Potwierdzimy otrzymanie oświadczenia e-mailem.</li>
+    <li><strong>Skutki odstąpienia:</strong> zwracamy wszystkie otrzymane od Ciebie płatności niezwłocznie, nie później niż w ciągu 14 dni od otrzymania oświadczenia, <strong>tym samym sposobem płatności</strong>, jakiego użyłeś/-aś (chyba że wyraźnie zgodzisz się na inny, bezpłatny dla Ciebie sposób). Po odstąpieniu nie korzystasz już z Narzędzia, a my możemy dezaktywować Link dostępowy.</li>
+  </ol>
+
+  <h2 id="s9">§ 9. Gwarancja satysfakcji 14 dni („gwarancja spokojnej głowy”)</h2>
+  <ol>
+    <li>Niezależnie od uprawnień ustawowych udzielamy <strong>dobrowolnej gwarancji handlowej</strong>: jeżeli w ciągu <strong>14 dni od zakupu</strong> uznasz, że Narzędzie Ci nie pomogło, <strong>zwrócimy pełną cenę</strong> – bez konieczności podawania przyczyny.</li>
+    <li><strong>Jak skorzystać:</strong> napisz w tym terminie na [[EMAIL_KONTAKT]] (najlepiej z adresu e-mail użytego przy zakupie), podając numer zamówienia z e-maila potwierdzającego i słowo „gwarancja”. Możesz użyć wzoru z Załącznika 2. Chętnie przeczytamy, co nie zagrało, ale nie musisz nic wyjaśniać.</li>
+    <li><strong>Zwrot:</strong> pieniądze zwracamy <strong>na tę samą metodę płatności</strong> (przez Stripe) w ciągu <strong>14 dni</strong> od otrzymania zgłoszenia. Po zwrocie dezaktywujemy Link dostępowy do produktu, którego dotyczy zwrot. Zwrot może dotyczyć Produktu głównego, Dodatku albo obu.</li>
+    <li>Gwarancja obejmuje jeden zakup danego produktu na osobę. <strong>Nie wyłącza, nie ogranicza ani nie zawiesza</strong> Twoich uprawnień wynikających z przepisów o zgodności treści cyfrowej z umową (§ 10). Gwarantem jest Sprzedawca (§ 1); gwarancja obowiązuje na terytorium, na którym Sklep prowadzi sprzedaż.</li>
+  </ol>
+
+  <h2 id="s10">§ 10. Zgodność z umową i reklamacje</h2>
+  <ol>
+    <li>Mamy obowiązek dostarczyć Narzędzie <strong>zgodne z umową</strong> – zgodne z opisem (§ 3), przydatne do celu, w jakim zwykle korzysta się z takich narzędzi, działające w opisanych przeglądarkach i aktualizowane zgodnie z § 3 pkt 3.7 (art. 43i UPK).</li>
+    <li><strong>Odpowiedzialność:</strong> odpowiadamy za brak zgodności z umową, który istniał w chwili dostarczenia i ujawnił się w ciągu <strong>2 lat</strong> od dostarczenia (art. 43j UPK); w zakresie, w jakim dostęp do Narzędzia ma charakter ciągły, odpowiadamy za brak zgodności, który wystąpił lub ujawnił się w Okresie dostępu. Domniemywa się, że brak zgodności ujawniony w ciągu roku od dostarczenia istniał już w chwili dostarczenia.</li>
+    <li><strong>Jak złożyć reklamację:</strong> e-mailem na [[EMAIL_KONTAKT]] (albo pocztą na adres z § 1). Podaj: numer zamówienia lub adres e-mail użyty przy zakupie, opis problemu (co nie działa lub czym Narzędzie różni się od opisu), kiedy problem wystąpił oraz urządzenie i przeglądarkę, z których korzystasz – to przyspieszy naprawę. Wzór: Załącznik 2. Jeśli o to poprosimy, współpracuj z nami w rozsądnym zakresie, aby ustalić, czy problem wynika z Twojego środowiska cyfrowego (np. blokady skryptów w przeglądarce).</li>
+    <li><strong>Termin:</strong> odpowiadamy w ciągu <strong>14 dni</strong> od otrzymania reklamacji, na trwałym nośniku (e-mail). Brak odpowiedzi w tym terminie oznacza uznanie reklamacji (art. 7a UPK).</li>
+    <li><strong>Co możesz żądać:</strong> w pierwszej kolejności <strong>doprowadzenia Narzędzia do zgodności z umową</strong> (naprawy) – zrobimy to w rozsądnym czasie i bez nadmiernych niedogodności dla Ciebie, na nasz koszt (art. 43k UPK). Możesz złożyć oświadczenie o <strong>obniżeniu ceny albo odstąpieniu od umowy</strong>, gdy naprawa jest niemożliwa lub nadmiernie kosztowna, gdy nie naprawiliśmy Narzędzia w rozsądnym czasie, gdy brak zgodności występuje nadal mimo naprawy, gdy jest na tyle istotny, że uzasadnia to od razu, albo gdy z naszego oświadczenia lub okoliczności wynika, że nie naprawimy Narzędzia w rozsądnym czasie (art. 43l UPK). Nie możesz odstąpić od umowy, jeśli brak zgodności jest nieistotny (domniemywa się, że jest istotny).</li>
+    <li><strong>Zwrot pieniędzy</strong> należny wskutek obniżenia ceny lub odstąpienia wypłacamy niezwłocznie, nie później niż w ciągu <strong>14 dni</strong> od otrzymania Twojego oświadczenia, tym samym sposobem płatności (art. 43n UPK).</li>
+    <li>Reklamacje dotyczące działania samego Sklepu (np. nieotrzymanie e-maila, problem z płatnością) składa się tak samo; rozpatrujemy je w tym samym terminie.</li>
+  </ol>
+
+  <h2 id="s11">§ 11. Pozasądowe rozwiązywanie sporów</h2>
+  <p>Jeżeli nie uda się rozwiązać sporu bezpośrednio z nami, Konsument może skorzystać z bezpłatnej pomocy i pozasądowych sposobów rozpatrywania reklamacji i dochodzenia roszczeń, m.in.:</p>
+  <ul>
+    <li><strong>powiatowego (miejskiego) rzecznika konsumentów</strong> – bezpłatna pomoc prawna i występowanie w Twojej sprawie (dane rzeczników: <a href="https://uokik.gov.pl" rel="noopener">uokik.gov.pl</a>);</li>
+    <li><strong>Wojewódzkiego Inspektoratu Inspekcji Handlowej</strong> – wniosek o pozasądowe rozwiązanie sporu (mediacja) lub o rozstrzygnięcie sporu przez stały sąd polubowny przy WIIH;</li>
+    <li><strong>infolinii konsumenckiej</strong> prowadzonej na zlecenie UOKiK oraz organizacji konsumenckich (np. Federacja Konsumentów). <!-- DO WERYFIKACJI: aktualne numery infolinii konsumenckiej (801 440 220 / 22 290 89 16) – potwierdzić na uokik.gov.pl przed dopisaniem. --></li>
+  </ul>
+  <p>Zasady dostępu do tych procedur znajdziesz na stronie <a href="https://uokik.gov.pl" rel="noopener">uokik.gov.pl</a>. Skorzystanie z nich jest dobrowolne. Niezależnie od tego spór może rozstrzygnąć sąd powszechny właściwy według przepisów ogólnych.</p>
+  <!-- Celowo brak linku do unijnej platformy ODR: platforma została zlikwidowana 20.07.2025 r. (rozporządzenie (UE) 2024/3228) – odniesienia do niej należy usunąć z regulaminów. -->
+
+  <h2 id="s12">§ 12. Dane osobowe</h2>
+  <p>Administratorem Twoich danych osobowych jest Sprzedawca. Zasady przetwarzania (cele, podstawy, odbiorcy – w tym Stripe, Resend i Meta – okresy przechowywania, Twoje prawa, pliki cookie) opisuje <a href="/legal/polityka-prywatnosci.html">Polityka prywatności</a>.</p>
+
+  <h2 id="s13">§ 13. Zmiany Regulaminu i archiwum wersji</h2>
+  <ol>
+    <li>Możemy zmienić Regulamin z ważnych przyczyn: zmiana przepisów lub ich wykładni, zmiana zakresu lub sposobu działania Sklepu albo Narzędzia, zmiana metod płatności lub dostawców usług, względy bezpieczeństwa, poprawa czytelności.</li>
+    <li>Do zamówień stosuje się Regulamin w wersji obowiązującej w chwili złożenia zamówienia. Nowa wersja obowiązuje od daty w niej wskazanej, nie wcześniej niż od dnia publikacji w Sklepie.</li>
+    <li>Jeżeli zmiana miałaby dotyczyć Klientów w trakcie Okresu dostępu, poinformujemy ich e-mailem co najmniej 14 dni wcześniej; zmiana nie może pogarszać ich sytuacji, a w razie sprzeciwu Klient może wypowiedzieć umowę i otrzymać proporcjonalny zwrot za niewykorzystany Okres dostępu.</li>
+    <li>Każda wersja ma numer i datę. <strong>Wszystkie wersje</strong> udostępniamy w <a href="/legal/archiwum.html">archiwum wersji</a> oraz na życzenie e-mailem. Regulamin możesz pobrać, wydrukować lub zapisać (np. „Drukuj → zapisz jako PDF”).</li>
+  </ol>
+
+  <h2 id="s14">§ 14. Postanowienia końcowe</h2>
+  <ol>
+    <li>Regulamin jest regulaminem świadczenia usług drogą elektroniczną w rozumieniu art. 8 u.ś.u.d.e. i jest udostępniany nieodpłatnie pod adresem <code>/legal/regulamin.html</code> w sposób umożliwiający jego pozyskanie, odtwarzanie i utrwalanie.</li>
+    <li>Prawem właściwym jest prawo polskie. Wybór prawa nie pozbawia Konsumenta ochrony przyznanej mu przez bezwzględnie obowiązujące przepisy państwa jego zwykłego pobytu.</li>
+    <li>W sprawach nieuregulowanych stosuje się w szczególności UPK, Kodeks cywilny i u.ś.u.d.e. Postanowienia Regulaminu nie wyłączają ani nie ograniczają uprawnień Konsumentów wynikających z przepisów prawa; w razie sprzeczności pierwszeństwo mają przepisy.</li>
+    <li>Jeżeli któreś postanowienie okaże się nieważne lub bezskuteczne, pozostałe pozostają w mocy.</li>
+    <li>Regulamin w wersji v1 obowiązuje od <strong>28.09.2026</strong>.</li>
+  </ol>
+
+  <h2 id="zal1">Załącznik 1. Wzór formularza odstąpienia od umowy</h2>
+  <p class="small">Formularz według załącznika nr 2 do ustawy o prawach konsumenta. Wypełnij i odeślij tylko wtedy, gdy chcesz odstąpić od umowy (i prawo odstąpienia Ci przysługuje – zob. § 8). Skorzystanie z formularza nie jest obowiązkowe.</p>
+  <!-- DO WERYFIKACJI: brzmienie wzoru wg tekstu jednolitego UPK (Dz.U. 2024 poz. 1796) po nowelizacji z 2022 r. – sprawdzić, czy zawiera warianty „towarów” i „o dostarczanie treści cyfrowej lub usługi cyfrowej”. -->
+  <div class="form">
+    <p><strong>WZÓR FORMULARZA ODSTĄPIENIA OD UMOWY</strong><br>(formularz ten należy wypełnić i odesłać tylko w przypadku chęci odstąpienia od umowy)</p>
+    <p>– Adresat: [[SPRZEDAWCA_NAZWA]], [[SPRZEDAWCA_ADRES]], e-mail: [[EMAIL_KONTAKT]]</p>
+    <p>– Ja/My(*) niniejszym informuję/informujemy(*) o moim/naszym odstąpieniu od umowy sprzedaży następujących towarów(*) umowy dostawy następujących towarów(*) umowy o dzieło polegającej na wykonaniu następujących towarów(*)/o świadczenie następującej usługi(*)/o dostarczanie treści cyfrowej lub usługi cyfrowej(*): ……………………………………………………</p>
+    <p>– Data zawarcia umowy(*)/odbioru(*): ……………………</p>
+    <p>– Imię i nazwisko konsumenta(-ów): ……………………</p>
+    <p>– Adres konsumenta(-ów): ……………………</p>
+    <p>– Podpis konsumenta(-ów) (tylko jeżeli formularz jest przesyłany w wersji papierowej): ……………………</p>
+    <p>– Data: ……………………</p>
+    <p>(*) Niepotrzebne skreślić.</p>
+  </div>
+
+  <h2 id="zal2">Załącznik 2. Wzór zgłoszenia reklamacji / skorzystania z gwarancji satysfakcji</h2>
+  <p class="small">Pomocniczy wzór – możesz napisać własnymi słowami. Wyślij na [[EMAIL_KONTAKT]].</p>
+  <div class="form">
+    <p>Temat: Reklamacja / Gwarancja satysfakcji(*) – zamówienie nr ……………</p>
+    <p>Adres e-mail użyty przy zakupie: ……………………</p>
+    <p>Produkt: Odhacz Auto / Odhacz Auto: Po zakupie(*)</p>
+    <p>Czego dotyczy zgłoszenie (przy reklamacji: opis problemu, kiedy wystąpił, urządzenie i przeglądarka; przy gwarancji: wystarczy „proszę o zwrot w ramach gwarancji satysfakcji”): ……………………</p>
+    <p>Czego oczekuję (naprawa / obniżenie ceny / odstąpienie od umowy / zwrot z gwarancji)(*): ……………………</p>
+    <p>(*) Niepotrzebne skreślić.</p>
+  </div>
+
+  <footer class="bottom">
+    <nav>
+      <a href="/">Sklep</a>
+      <a href="/legal/regulamin.html">Regulamin</a>
+      <a href="/legal/polityka-prywatnosci.html">Polityka prywatności</a>
+      <a href="/legal/o-marce.html">O marce i o Haczu</a>
+      <a href="/legal/archiwum.html">Archiwum wersji</a>
+      <button type="button" class="linklike" data-consent-open>Ustawienia cookies</button>
+    </nav>
+    <p>[[SPRZEDAWCA_NAZWA]] · [[SPRZEDAWCA_ADRES]] · NIP [[NIP]] · <a href="mailto:[[EMAIL_KONTAKT]]">[[EMAIL_KONTAKT]]</a></p>
+    <p>Ilustracje i postać Hacza zostały wygenerowane i zaprojektowane cyfrowo (z użyciem narzędzi AI). Hacz to postać AI, nie ekspert.</p>
+  </footer>
+</div>
+<script src="/assets/consent.js"></script>
+<script>
+  // „Ustawienia cookies” – ponownie pokazuje baner zgody (wycofanie zgody równie łatwe jak jej udzielenie).
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-consent-open]');
+    if (b && window.Consent) { e.preventDefault(); window.Consent.show(); }
+  });
+</script>
 </body>
 </html>

@@ -2,19 +2,19 @@
   <title>Hacz — asystent AI marki Odhacz</title>
   <!-- Hacz z czołówką (Odhacz Auto). Kolory: lime #C6F135, ink #0B0F19, violet #6D28D9. Nie przebarwiać. -->
   <g id="behind">
-    <polygon points="170,40 74,20 88,58" fill="#C6F135" fill-opacity="0.32"/>
+    <path d="M161 48L89 45.5A72 72 0 0 1 97.4 14.2Z" fill="#C6F135" fill-opacity="0.35"/>
   </g>
   <g id="body">
     <path d="M56 140L104 188L196 70" fill="none" stroke="#0B0F19" stroke-width="74" stroke-linecap="round" stroke-linejoin="round"/>
     <path d="M56 140L104 188L196 70" fill="none" stroke="#C6F135" stroke-width="60" stroke-linecap="round" stroke-linejoin="round"/>
   </g>
   <g id="face">
-    <circle cx="184" cy="64" r="8" fill="#0B0F19"/><circle cx="208" cy="64" r="8" fill="#0B0F19"/><path d="M187 82Q196 91 205 82" fill="none" stroke="#0B0F19" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="183" cy="67" r="9.5" fill="#0B0F19"/><circle cx="209" cy="67" r="9.5" fill="#0B0F19"/><path d="M185 84Q196 95 207 84" fill="none" stroke="#0B0F19" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/>
   </g>
   <g id="front">
-    <path d="M162 56Q196 66 230 56" fill="none" stroke="#0B0F19" stroke-width="15" stroke-linecap="round"/>
-    <path d="M162 56Q196 66 230 56" fill="none" stroke="#6D28D9" stroke-width="8" stroke-linecap="round"/>
-    <g transform="rotate(-28 176 42)"><rect x="160" y="30" width="32" height="24" rx="7" fill="#0B0F19"/><rect x="164" y="34" width="24" height="16" rx="5" fill="#6D28D9"/><circle cx="163" cy="42" r="5.5" fill="#C6F135"/></g>
+    <path d="M173 43Q196 56 217 43" fill="none" stroke="#0B0F19" stroke-width="14" stroke-linecap="round"/>
+    <path d="M173 43Q196 56 217 43" fill="none" stroke="#6D28D9" stroke-width="7" stroke-linecap="round"/>
+    <g transform="rotate(-15 175 44)"><rect x="160" y="33" width="30" height="22" rx="7" fill="#0B0F19"/><rect x="165" y="37" width="21" height="14" rx="4" fill="#6D28D9"/><circle cx="161" cy="44" r="8" fill="#0B0F19"/><circle cx="161" cy="44" r="5.5" fill="#C6F135"/></g>
   </g>
   <polygon points="236,25 238.55,33.45 247,36 238.55,38.55 236,47 233.45,38.55 225,36 233.45,33.45" fill="#6D28D9"/>
 </svg>

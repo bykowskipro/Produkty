@@ -1,0 +1,61 @@
+/* Wspólny arkusz stron prawnych sklepu Odhacz (regulamin, polityka prywatności, o marce, archiwum).
+   Kolory i fonty z brand/brand.md użyte oszczędnie. Celowo NIE ładujemy czcionek z serwerów Google
+   (żadnych żądań do podmiotów trzecich na stronach prawnych) – jeśli Space Grotesk/Inter są
+   zainstalowane lokalnie, zostaną użyte; w przeciwnym razie czcionka systemowa. */
+:root {
+  --ink: #0B0F19;
+  --paper: #FFFFFF;
+  --mist: #F1F5F9;
+  --line: #E2E8F0;
+  --violet: #6D28D9;
+  --violet-soft: #EDE9FE;
+  --lime: #C6F135;
+  --muted: #475569;
+  --warn-bg: #FFFBEB;
+  --warn-line: #FDE68A;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 17px/1.6 "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+.wrap { max-width: 720px; margin: 0 auto; padding: 20px 16px 72px; }
+header.top {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 8px 0 18px; border-bottom: 1px solid var(--line); margin-bottom: 24px;
+}
+.brand { font: 700 22px/1 "Space Grotesk", "Inter", system-ui, sans-serif; color: var(--ink); text-decoration: none; letter-spacing: -0.01em; }
+.brand .tick { display: inline-block; width: 26px; height: 26px; border-radius: 50%; background: var(--ink); color: var(--lime); font-size: 16px; line-height: 26px; text-align: center; margin-right: 6px; vertical-align: -3px; }
+.back { font-size: 15px; color: var(--violet); text-decoration: none; white-space: nowrap; }
+.back:hover, a:hover { text-decoration: underline; }
+a { color: var(--violet); }
+h1 { font: 700 30px/1.15 "Space Grotesk", "Inter", system-ui, sans-serif; margin: 0 0 8px; letter-spacing: -0.01em; }
+h2 { font: 700 21px/1.25 "Space Grotesk", "Inter", system-ui, sans-serif; margin: 40px 0 12px; padding-top: 8px; border-top: 3px solid var(--violet-soft); }
+h3 { font: 600 17px/1.35 "Inter", system-ui, sans-serif; margin: 22px 0 8px; }
+p, ul, ol, table { margin: 0 0 14px; }
+ul, ol { padding-left: 22px; }
+li { margin: 0 0 6px; }
+.meta { color: var(--muted); font-size: 15px; margin: 0 0 18px; }
+.box { background: var(--violet-soft); border-radius: 12px; padding: 16px 18px; margin: 18px 0 24px; }
+.box h2, .box h3 { margin-top: 0; border: 0; padding-top: 0; }
+.box ul { margin-bottom: 0; }
+.note { background: var(--mist); border-left: 4px solid var(--violet); border-radius: 0 10px 10px 0; padding: 12px 14px; margin: 14px 0; font-size: 16px; }
+.todo { background: var(--warn-bg); border: 1px solid var(--warn-line); border-radius: 10px; padding: 10px 14px; font-size: 15px; }
+.toc { columns: 2; column-gap: 24px; font-size: 15px; padding-left: 20px; }
+@media (max-width: 560px) { .toc { columns: 1; } h1 { font-size: 26px; } body { font-size: 16px; } }
+.table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 0 0 16px; }
+table { border-collapse: collapse; width: 100%; font-size: 15px; }
+th, td { text-align: left; vertical-align: top; padding: 9px 10px; border-bottom: 1px solid var(--line); }
+th { background: var(--mist); font-weight: 600; }
+code { font: 14px/1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; background: var(--mist); padding: 1px 5px; border-radius: 4px; }
+.form { background: var(--mist); border-radius: 12px; padding: 16px 18px; font-size: 15.5px; }
+.form p { margin: 0 0 8px; }
+.small { font-size: 14px; color: var(--muted); }
+footer.bottom { margin-top: 56px; padding-top: 18px; border-top: 1px solid var(--line); font-size: 14px; color: var(--muted); }
+footer.bottom a { color: var(--muted); }
+footer.bottom nav { display: flex; flex-wrap: wrap; gap: 6px 14px; margin: 0 0 10px; }
+button.linklike { background: none; border: 0; padding: 0; font: inherit; color: var(--muted); text-decoration: underline; cursor: pointer; }
+@media print { header.top, footer.bottom nav, .back { display: none; } body { font-size: 12pt; } h2 { border-top-color: #ccc; } }

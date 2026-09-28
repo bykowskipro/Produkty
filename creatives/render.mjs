@@ -22,6 +22,8 @@ try {
     const html = await readFile(path.join(templatesDir, file), 'utf8');
     const m = html.match(/<meta\s+name="sizes"\s+content="([^"]+)"/i);
     const sizes = (m ? m[1] : '1080x1080').split(',').map(s => s.trim()).filter(Boolean);
+    // <meta name="transparent" content="true"> keeps the page background transparent (e.g. rounded icons).
+    const transparent = /<meta\s+name="transparent"\s+content="(1|true|yes)"/i.test(html);
     const base = file.replace(/\.html$/, '');
     for (const size of sizes) {
       const [w, h] = size.split('x').map(Number);
@@ -31,7 +33,7 @@ try {
       await page.evaluate(() => document.fonts ? document.fonts.ready : null);
       await page.waitForTimeout(150);
       const out = path.join(outDir, `${base}.${w}x${h}.png`);
-      await page.screenshot({ path: out, clip: { x: 0, y: 0, width: w, height: h } });
+      await page.screenshot({ path: out, clip: { x: 0, y: 0, width: w, height: h }, omitBackground: transparent });
       console.log('rendered', out);
       await context.close();
     }

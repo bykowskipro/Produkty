@@ -2,44 +2,33 @@
 <html lang="pl">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Produkt główny – aplikacja (placeholder)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Odhacz Auto</title>
+  <meta name="description" content="Interaktywna checklista oględzin używanego auta – odhaczasz punkt po punkcie, wychodzisz z listą uwag do negocjacji.">
   <meta name="robots" content="noindex">
-  <style>
-    body{font:17px/1.55 system-ui,sans-serif;margin:0;color:#111;background:#fafafa}
-    main{max-width:640px;margin:0 auto;padding:40px 16px 96px}
-    .badge{display:inline-block;background:#fff3cd;border:1px solid #ffe08a;border-radius:6px;padding:2px 8px;font-size:13px}
-    .card{background:#fff;border:1px solid #e3e5e8;border-radius:12px;padding:18px;margin:16px 0}
-    button{font:inherit;font-weight:600;padding:10px 16px;border-radius:10px;border:0;background:#1a56db;color:#fff;cursor:pointer}
-    code{background:#eee;padding:1px 5px;border-radius:4px}
-  </style>
+  <meta name="theme-color" content="#0B0F19">
+  <meta name="color-scheme" content="light dark">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Odhacz Auto">
+  <link rel="manifest" href="/app/manifest.webmanifest" crossorigin="use-credentials">
+  <link rel="icon" href="/assets/brand/icon-192.png" type="image/png">
+  <link rel="apple-touch-icon" href="/assets/brand/icon-192.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Space+Grotesk:wght@500;700&display=swap">
+  <link rel="stylesheet" href="/assets/checklist/engine.css">
 </head>
 <body>
-<main>
-  <span class="badge">PLACEHOLDER – tu trafi właściwa aplikacja produktu</span>
-  <h1>Twój produkt</h1>
-  <p>Ta strona jest chroniona: wejście tylko przez link <code>/d/&lt;token&gt;</code> z e-maila (albo z zapisanym ciasteczkiem dostępu).</p>
-  <div class="card">
-    <p>Status dostępu: <strong id="status" data-testid="access-status">sprawdzam…</strong></p>
-    <p>Postęp (demo synchronizacji między urządzeniami): ukończone kroki: <strong id="steps" data-testid="steps">0</strong></p>
-    <p><button id="next" type="button">Zalicz kolejny krok</button> <button id="reset" type="button" style="background:#666">Wyzeruj</button></p>
+  <div id="app">
+    <noscript><p style="padding:24px 16px;font:17px/1.5 system-ui">Odhacz Auto potrzebuje włączonego JavaScriptu. Włącz go w ustawieniach przeglądarki i odśwież stronę.</p></noscript>
   </div>
-  <p style="font-size:14px;color:#555">Dla zespołu produktu: użyj <code>Access.token()</code>, <code>Access.loadProgress()</code>, <code>Access.saveProgress(obj)</code> (zob. README → Kontrakt integracji).</p>
-</main>
-<script src="/assets/access.js"></script>
-<script>
-(function () {
-  var progress = { steps: 0 };
-  var stepsEl = document.getElementById('steps');
-  function render() { stepsEl.textContent = progress.steps; }
-  function save() { return Access.saveProgress(progress).then(render); }
-  Access.verify().then(function (v) {
-    document.getElementById('status').textContent = v.ok ? 'aktywny (' + v.products_owned.join(', ') + ')' : 'brak';
-  }).catch(function () { document.getElementById('status').textContent = 'błąd'; });
-  Access.loadProgress().then(function (p) { if (p && typeof p.steps === 'number') progress = p; render(); }).catch(function () {});
-  document.getElementById('next').addEventListener('click', function () { progress.steps += 1; save(); });
-  document.getElementById('reset').addEventListener('click', function () { progress = { steps: 0 }; save(); });
-})();
-</script>
+  <!-- access.js first: it strips ?t=<token> from the URL before analytics.js records the page view. -->
+  <script src="/assets/access.js"></script>
+  <script src="/assets/analytics.js"></script>
+  <script src="/assets/checklist/engine.js"></script>
+  <script>
+    Checklist.mount({ root: '#app', content: '/app/content/auto.json', product: 'auto', kind: 'main', sw: '/app/sw.js', shopUrl: '/' });
+  </script>
 </body>
 </html>
