@@ -1,0 +1,218 @@
+{
+  "meta": {
+    "product_id": "upsell",
+    "version": "0.9-sample",
+    "title": "Odhacz Auto: Po zakupie",
+    "est_minutes_total": 40,
+    "disclaimer": "Ta checklista ma charakter edukacyjny i porządkuje formalności po zakupie auta. Terminy i wzór umowy sprawdź zawsze w aktualnych przepisach lub u urzędnika – nie zastępujemy porady prawnej ani podatkowej. Hacz jest asystentem AI marki Odhacz."
+  },
+  "quick_start": {
+    "title": "Quick start (2 minuty)",
+    "steps": [
+      "Wpisz datę zakupu w „Terminach po zakupie” – wszystkie daty policzą się same.",
+      "Pobierz plik .ics i dodaj przypomnienia do kalendarza w telefonie.",
+      "Przed spotkaniem ze sprzedającym otwórz „Zanim zapłacisz” i wydrukuj wzór umowy w dwóch egzemplarzach."
+    ]
+  },
+  "answer_states": ["ok", "uwaga", "problem", "pomin"],
+  "phases": [
+    {
+      "id": "zanim-zaplacisz",
+      "order": 1,
+      "title": "Zanim zapłacisz",
+      "subtitle": "Dokumenty, umowa, płatność",
+      "est_minutes": 20,
+      "when": "Przy sprzedającym, przed przelewem",
+      "intro": "Pieniądze idą jako ostatnie. Najpierw dokumenty, potem podpisy, potem przelew – w tej kolejności.",
+      "sections": [
+        {
+          "id": "dokumenty",
+          "title": "Dokumenty i tożsamość",
+          "items": [
+            {
+              "id": "u1",
+              "text": "Dane sprzedającego zgadzają się z dowodem rejestracyjnym",
+              "how": "Porównaj imię, nazwisko i PESEL z dowodu osobistego z danymi właściciela w dowodzie rejestracyjnym. Jeśli właścicieli jest dwóch – umowę podpisują oboje albo jest pełnomocnictwo.",
+              "why": "Umowa od osoby, która nie jest właścicielem, może być nieważna. Wydział komunikacji odeśle Cię po podpis brakującego współwłaściciela.",
+              "severity": "red",
+              "flag_label": "Sprzedający nie jest właścicielem z dowodu rejestracyjnego",
+              "dealbreaker": true,
+              "photo": true,
+              "input": null,
+              "deadline": null,
+              "tags": ["dokumenty"]
+            },
+            {
+              "id": "u2",
+              "text": "VIN w aucie = VIN w dowodzie rejestracyjnym i umowie",
+              "how": "Odczytaj VIN z tabliczki (szyba, słupek drzwi kierowcy, komora silnika) i porównaj znak po znaku z dowodem rejestracyjnym. Ten sam VIN wpisz do umowy.",
+              "why": "Błąd w jednym znaku VIN w umowie to problem przy rejestracji i przy PCC-3.",
+              "severity": "red",
+              "flag_label": "Rozbieżność VIN między autem a dokumentami",
+              "dealbreaker": true,
+              "photo": true,
+              "input": null,
+              "deadline": null,
+              "tags": ["dokumenty"]
+            },
+            {
+              "id": "u3",
+              "text": "Ważna polisa OC i jej numer",
+              "how": "Poproś o polisę OC (lub sprawdź po numerze rejestracyjnym w UFG). Zapisz numer polisy, ubezpieczyciela i datę końca ochrony.",
+              "why": "OC przechodzi na Ciebie razem z autem. Bez ważnego OC nie możesz legalnie jechać do domu, a kara UFG jest liczona za każdy dzień.",
+              "severity": "red",
+              "flag_label": "Brak ważnego OC",
+              "dealbreaker": false,
+              "photo": false,
+              "input": null,
+              "deadline": null,
+              "tags": ["oc"]
+            }
+          ]
+        },
+        {
+          "id": "umowa",
+          "title": "Umowa i płatność",
+          "items": [
+            {
+              "id": "u4",
+              "text": "Umowa w 2 egzemplarzach z datą, godziną, ceną i przebiegiem",
+              "how": "Użyj wzoru z tej aplikacji. Wpisz datę i godzinę wydania auta, cenę cyframi i słownie, przebieg z licznika oraz listę wydanych rzeczy (kluczyki, dokumenty, opony).",
+              "why": "Godzina wydania rozstrzyga, kto odpowiada za mandat lub szkodę z tego dnia. Przebieg w umowie to Twój dowód przy ewentualnym sporze.",
+              "severity": "yellow",
+              "flag_label": "Umowa bez godziny, przebiegu lub listy wydanych rzeczy",
+              "dealbreaker": false,
+              "photo": true,
+              "input": { "type": "number", "label": "Przebieg z licznika przy odbiorze", "unit": "km", "hint": "Wpisz dokładnie tę liczbę do umowy." },
+              "deadline": null,
+              "tags": ["umowa"]
+            },
+            {
+              "id": "u5",
+              "text": "Płatność po podpisaniu, z tytułem przelewu",
+              "how": "Przelew dopiero po podpisaniu obu egzemplarzy. W tytule: „zakup pojazdu [marka], VIN [numer], umowa z [data]”. Gotówkę tylko za pokwitowaniem na umowie.",
+              "why": "Tytuł przelewu jest dowodem zapłaty, gdyby sprzedający zgłosił auto jako niesprzedane lub zaległości.",
+              "severity": "yellow",
+              "flag_label": "Płatność bez potwierdzenia powiązanego z umową",
+              "dealbreaker": false,
+              "photo": false,
+              "input": null,
+              "deadline": null,
+              "tags": ["platnosc"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pierwsze-14-dni",
+      "order": 2,
+      "title": "Pierwsze 14 dni",
+      "subtitle": "PCC-3, OC, rejestracja, zgłoszenie nabycia",
+      "est_minutes": 20,
+      "when": "Od dnia zakupu",
+      "intro": "Trzy terminy, o których ludzie zapominają: podatek, rejestracja, ubezpieczyciel. Ustaw przypomnienia i masz spokój.",
+      "sections": [
+        {
+          "id": "formalnosci",
+          "title": "Formalności",
+          "items": [
+            {
+              "id": "p1",
+              "text": "Złóż PCC-3 i zapłać podatek od czynności cywilnoprawnych",
+              "how": "Deklaracja PCC-3 (elektronicznie w e-Urzędzie Skarbowym lub papierowo). Podatek 2% od wartości rynkowej auta (nie niższej niż realna cena). Nie dotyczy zakupu od firmy na fakturze VAT.",
+              "why": "Po terminie doliczają odsetki, a przy kontroli urząd może zakwestionować zaniżoną wartość.",
+              "severity": "red",
+              "flag_label": "PCC-3 po terminie",
+              "dealbreaker": false,
+              "photo": false,
+              "input": null,
+              "deadline": { "days_from_purchase": 14 },
+              "tags": ["podatek"]
+            },
+            {
+              "id": "p2",
+              "text": "Poinformuj ubezpieczyciela o zakupie i zdecyduj o OC",
+              "how": "Zadzwoń lub napisz do ubezpieczyciela z polisy sprzedającego: przekaż swoje dane. Polisa nie odnowi się automatycznie – przed jej końcem kup własne OC albo zaakceptuj rekalkulację.",
+              "why": "Ubezpieczyciel może przeliczyć składkę pod Ciebie. Luka w OC choćby jednego dnia to kara UFG.",
+              "severity": "yellow",
+              "flag_label": "Brak kontaktu z ubezpieczycielem",
+              "dealbreaker": false,
+              "photo": false,
+              "input": null,
+              "deadline": { "days_from_purchase": 7 },
+              "tags": ["oc"]
+            },
+            {
+              "id": "p3",
+              "text": "Zarejestruj auto w wydziale komunikacji",
+              "how": "Wniosek o rejestrację + umowa + dowód rejestracyjny + ważne badanie techniczne + potwierdzenie OC. Wiele urzędów ma rezerwację wizyt online – umów termin od razu.",
+              "why": "Brak rejestracji w terminie to kara administracyjna. Do czasu przerejestrowania mandaty z fotoradaru trafiają do poprzedniego właściciela – i wracają do Ciebie z opóźnieniem.",
+              "severity": "red",
+              "flag_label": "Rejestracja po terminie",
+              "dealbreaker": false,
+              "photo": false,
+              "input": null,
+              "deadline": { "days_from_purchase": 30 },
+              "tags": ["rejestracja"]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "summary_rules": {
+    "walk_away_if": [
+      "Sprzedający nie jest właścicielem z dowodu rejestracyjnego i nie ma pełnomocnictwa.",
+      "VIN w aucie nie zgadza się z dokumentami."
+    ],
+    "get_mechanic_if": [],
+    "negotiate_if": [
+      "Brakuje drugiego kluczyka, książki serwisowej albo opon z ogłoszenia – wpisz to do umowy lub odejmij od ceny."
+    ],
+    "negotiation_phrases": [
+      "„Płacę po podpisaniu obu egzemplarzy – to standard, nie brak zaufania.”",
+      "„W umowie wpisujemy godzinę wydania i przebieg – chroni to nas oboje.”"
+    ],
+    "safe_deal_rules": [
+      "Nie płać zaliczki „na rezerwację” bez umowy przedwstępnej na piśmie.",
+      "Zrób zdjęcie dowodu osobistego sprzedającego tylko za jego zgodą – albo przepisz dane do umowy w jego obecności.",
+      "Zabierz oba egzemplarze umowy do podpisu i zostaw jeden sprzedającemu."
+    ]
+  },
+  "contract_template": {
+    "title": "Umowa kupna-sprzedaży pojazdu (wzór edukacyjny)",
+    "sections": [
+      { "heading": "Sprzedający", "fields": ["Imię i nazwisko", "Adres zamieszkania", "PESEL", "Seria i numer dowodu osobistego"], "note": "Jeśli współwłaścicieli jest dwóch, wpisz oboje – podpisują oboje." },
+      { "heading": "Kupujący", "fields": ["Imię i nazwisko", "Adres zamieszkania", "PESEL", "Seria i numer dowodu osobistego"], "note": "" },
+      { "heading": "Przedmiot umowy", "fields": ["Marka i model", "Rok produkcji", "Numer VIN", "Numer rejestracyjny", "Przebieg (km) w chwili wydania", "Kolor"], "note": "VIN przepisz znak po znaku z tabliczki w aucie, nie z ogłoszenia." },
+      { "heading": "Cena i wydanie", "fields": ["Cena (cyframi)", "Cena (słownie)", "Forma płatności (przelew / gotówka)", "Data i godzina wydania pojazdu", "Wydane wraz z pojazdem (kluczyki – szt., dokumenty, opony, inne)"], "note": "Godzina wydania rozstrzyga odpowiedzialność za mandaty i szkody z dnia zakupu." }
+    ],
+    "clauses": [
+      { "text": "Sprzedający oświadcza, że pojazd stanowi jego własność, jest wolny od wad prawnych oraz praw osób trzecich i nie jest przedmiotem zabezpieczenia.", "note": "Chroni Cię, gdyby auto było w zastawie lub leasingu." },
+      { "text": "Sprzedający oświadcza, że pojazd nie ma ukrytych wad technicznych, o których wie i których nie ujawnił Kupującemu, oraz że przebieg wskazany w umowie odpowiada stanowi licznika.", "note": "Wpisz znane wady w osobnym punkcie – to jasność dla obu stron." },
+      { "text": "Kupujący oświadcza, że zapoznał się ze stanem technicznym pojazdu i nie wnosi do niego zastrzeżeń poza wymienionymi w umowie.", "note": "Wymień w umowie wady, które ustaliliście – nie zostawiaj tego w domyśle." },
+      { "text": "Strony ustaliły, że wszelkie koszty związane z zawarciem umowy (w tym podatek od czynności cywilnoprawnych) ponosi Kupujący.", "note": "PCC-3 składasz i płacisz Ty." },
+      { "text": "Umowę sporządzono w dwóch jednobrzmiących egzemplarzach, po jednym dla każdej ze stron.", "note": "" }
+    ]
+  },
+  "deadlines": [
+    { "id": "oc-info", "label": "Poinformuj ubezpieczyciela o zakupie", "days_from_purchase": 7, "who": "Kupujący", "how": "Telefon, e-mail lub formularz ubezpieczyciela z polisy sprzedającego", "applies_if": "Przejmujesz OC sprzedającego", "source": "https://www.ufg.pl/" },
+    { "id": "pcc3", "label": "PCC-3 – deklaracja i zapłata 2% podatku", "days_from_purchase": 14, "who": "Kupujący", "how": "e-Urząd Skarbowy (formularz PCC-3) lub papierowo w urzędzie skarbowym", "applies_if": "Zakup od osoby prywatnej na umowę (nie na fakturę VAT)", "source": "https://www.podatki.gov.pl/pcc-sd/" },
+    { "id": "rejestracja", "label": "Rejestracja pojazdu w wydziale komunikacji", "days_from_purchase": 30, "who": "Kupujący", "how": "Wizyta w starostwie / urzędzie miasta – wniosek, umowa, dowód rejestracyjny, badanie techniczne, OC", "applies_if": "Każdy zakup pojazdu zarejestrowanego w Polsce", "source": "https://www.gov.pl/web/gov/zarejestruj-pojazd" }
+  ],
+  "glossary": [
+    { "term": "PCC-3", "def": "Deklaracja podatku od czynności cywilnoprawnych. Przy zakupie auta od osoby prywatnej płaci ją kupujący (2% wartości rynkowej)." },
+    { "term": "UFG", "def": "Ubezpieczeniowy Fundusz Gwarancyjny – nakłada kary za brak ciągłości OC i pozwala sprawdzić ważność polisy po numerze rejestracyjnym." },
+    { "term": "Rekalkulacja składki", "def": "Przeliczenie ceny OC przez ubezpieczyciela po przejęciu polisy przez nowego właściciela." }
+  ],
+  "sources": [
+    { "claim": "Zasady i terminy PCC-3 przy zakupie pojazdu", "url": "https://www.podatki.gov.pl/pcc-sd/" },
+    { "claim": "Obowiązek i termin rejestracji pojazdu", "url": "https://www.gov.pl/web/gov/zarejestruj-pojazd" },
+    { "claim": "Sprawdzenie OC po numerze rejestracyjnym i kary za brak OC", "url": "https://www.ufg.pl/" }
+  ],
+  "facts_to_verify": [
+    "Aktualny termin na rejestrację pojazdu i wysokość kar administracyjnych.",
+    "Termin i stawka PCC-3 oraz zwolnienie dla pojazdów o wartości do 1000 zł."
+  ]
+}
