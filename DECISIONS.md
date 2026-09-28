@@ -23,3 +23,14 @@ Format: data · decyzja · dlaczego · co odrzucono.
 ## 2026-09-28 · Cena: 39 zł produkt główny, 19 zł upsell (order bump w checkout)
 - Dlaczego: kotwice — płatna checklista PDF 19,90 zł (statyczna), stacja diagnostyczna 80–200 zł, mobilny mechanik 449–749 zł. 39 zł = „2× cena PDF-a, 10× taniej niż mechanik”. Poniżej limitu 49 zł, impulsowo. Upsell „Kupione — i co dalej” (umowa, PCC-3, rejestracja, OC, pierwsze 30 dni) za 19 zł domyka historię klienta.
 - Odrzucono: 49 zł (mniej sygnału przy 300 zł budżetu), 19–29 zł (za blisko PDF-a, sugeruje „kolejną listę”). Bez przekreślonych cen (Omnibus) — uczciwa cena startowa.
+
+## 2026-09-28 · Marka: ODHACZ (parasol), awatar AI „Hacz”, violet + lime + ink, Space Grotesk/Inter
+- Dlaczego: nazwa-czasownik działa dla każdej checklisty (auto dziś, mieszkanie jutro), po polsku, bez cudzych znaków; awatar stylizowany (nie fotorealistyczny) omija ryzyka Meta/AI Act i „sugerowania profesji”; paleta nie koliduje ze stanami OK/Uwaga/Problem.
+- Odrzucono: nazwy motoryzacyjne (zamykają parasol), fotorealistyczny awatar (uncanny valley, oznaczenia AI, ryzyko „udawania eksperta”), czerwień/zieleń jako kolory marki (kolizja ze stanami).
+
+## 2026-09-28 · Checkout: zostaje jeden krok w Stripe (bez własnej strony „Zamówienie”)
+- Dlaczego: minimum tarcia „chcę → zapłaciłem”; checkbox Stripe jest domyślnie odznaczony i wymagany, a jego tekst zawiera wyraźne żądanie natychmiastowej dostawy + przyjęcie do wiadomości utraty prawa odstąpienia (art. 38 ust. 1 pkt 13 UPK); Stripe loguje akceptację w sesji; e-mail potwierdzający zawiera blok o zgodzie (art. 21 UPK). Prawnicza rekomendacja „dwa osobne checkboxy na własnej stronie” jest bezpieczniejsza — wdrożymy, jeśli pojawią się spory lub skala.
+- Odrzucono: dodatkowa strona zamówienia (kolejny ekran = mniej zakupów przy 300 zł testu).
+
+## 2026-09-28 · Gwarancja satysfakcji 14 dni (dobrowolna) + demo bez bramki e-mail
+- Dlaczego: główna obiekcja = nieznana marka; gwarancja handlowa i klikalne demo usuwają ją taniej niż budowanie „autorytetu”. Lead-gate odrzucony: przy 300 zł liczymy zakupy, nie e-maile.
