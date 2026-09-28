@@ -162,6 +162,13 @@ ${kpi('Przychód', pln(total.revenue))}${kpi('Wydatki na reklamę', pln(total.sp
 <label>Notatka <input type="text" name="note" placeholder="np. kampania A" maxlength="200"></label><button type="submit">Zapisz</button></form>
 <p class="muted">Wpis dla istniejącej daty nadpisuje poprzednią kwotę.</p></div>
 <h2>Lejek wg utm_content (kreacja)</h2><div class="card">${funnelTable(byUtm, 'utm_content', 'utm_content', false)}</div>
+<h2>Wygeneruj dostęp ręcznie (beta, wsparcie)</h2><div class="card"><form method="post" action="/admin/grant?days=${days}" class="row">
+<input type="email" name="email" placeholder="e-mail odbiorcy" required>
+${(config.products || []).map((p) => `<label><input type="checkbox" name="product_id" value="${esc(p.id)}"${p.type === 'main' ? ' checked' : ''}> ${esc(p.name)}</label>`).join(' ')}
+<input type="text" name="note" placeholder="notatka (np. beta #3)" maxlength="200">
+<label><input type="checkbox" name="send_mail" value="1" checked> wyślij e-mail z linkiem</label>
+<button type="submit">Wygeneruj</button></form>
+<p class="muted">Zamówienie ma kwotę 0 zł i nie liczy się do lejka ani przychodu. Linki dostępu pojawią się w komunikacie u góry strony.</p></div>
 <h2>Ostatnie zamówienia (${orders.length})</h2><div class="card"><table><tr><th>#</th><th>Data (UTC)</th><th>Produkt</th><th>Kwota</th><th>E-mail</th><th>Sesja</th><th>E-mail wysłany</th><th>CAPI</th><th></th></tr>
 ${orders.map((o) => `<tr><td>${o.id}</td><td>${esc(o.created_at.slice(0, 16).replace('T', ' '))}</td><td>${esc(o.product_id)}</td><td>${pln(o.amount)}</td><td>${esc(maskEmail(o.email))}</td><td class="muted">${esc(o.session_id.slice(0, 18))}…</td>
 <td>${o.email_sent_at ? 'tak' : '<b>nie</b>'}</td><td>${o.capi_sent_at ? 'tak' : 'nie'}</td><td><form method="post" action="/admin/resend/${o.id}?days=${days}" style="margin:0"><button class="small" type="submit">Wyślij e-mail ponownie</button></form></td></tr>`).join('') || '<tr><td colspan="9" class="muted">Brak zamówień</td></tr>'}
@@ -181,7 +188,7 @@ export function createAdminRouter({ db, config, fulfillment, log = console }) {
     res.type('html').send(renderDashboard({
       config, days, range,
       total: totals(db, range), byDay: funnelByDay(db, range), byUtm: funnelByUtmContent(db, range), orders: lastOrders(db, 50),
-      msg: typeof req.query.msg === 'string' ? req.query.msg.slice(0, 200) : '', err: typeof req.query.err === 'string' ? req.query.err.slice(0, 200) : '',
+      msg: typeof req.query.msg === 'string' ? req.query.msg.slice(0, 600) : '', err: typeof req.query.err === 'string' ? req.query.err.slice(0, 200) : '',
     }));
   });
 
@@ -205,6 +212,20 @@ export function createAdminRouter({ db, config, fulfillment, log = console }) {
       res.redirect(303, `/admin?days=${days}&msg=${encodeURIComponent(`Wysłano ponownie do ${maskEmail(r.to)}`)}`);
     } catch (err) {
       res.redirect(303, `/admin?days=${days}&err=${encodeURIComponent('Nie udało się wysłać: ' + err.message)}`);
+    }
+  });
+
+  router.post('/grant', sameOrigin, async (req, res) => {
+    const days = parseDays(req.query.days);
+    try {
+      const b = req.body || {};
+      const ids = Array.isArray(b.product_id) ? b.product_id : (b.product_id ? [b.product_id] : []);
+      const r = await fulfillment.grantAccess({ email: b.email, productIds: ids, note: b.note, sendMail: b.send_mail === '1' });
+      log.info?.(`admin: manual access for ${maskEmail(r.email)} (${r.items.map((i) => i.product_id).join(',')})`);
+      const links = r.items.map((i) => `${i.product_id}: ${i.access_url}`).join(' | ');
+      res.redirect(303, `/admin?days=${days}&msg=${encodeURIComponent(`Dostęp dla ${r.email} — ${links}`)}`);
+    } catch (err) {
+      res.redirect(303, `/admin?days=${days}&err=${encodeURIComponent('Nie udało się: ' + err.message)}`);
     }
   });
 

@@ -25,7 +25,7 @@ test('buildCheckoutParams: dynamic price_data with product_id metadata, consent,
   assert.equal(p.success_url, 'https://example.test/sukces?session_id={CHECKOUT_SESSION_ID}');
   assert.equal(p.cancel_url, 'https://example.test/?canceled=1');
   assert.equal(p.client_reference_id, 'v1');
-  assert.equal(p.allow_promotion_codes, true);
+  assert.equal(p.allow_promotion_codes, false);
   assert.deepEqual(p.phone_number_collection, { enabled: false });
   assert.equal(p.billing_address_collection, 'auto');
   assert.equal(p.metadata.visitor_id, 'v1');

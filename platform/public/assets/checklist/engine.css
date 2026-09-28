@@ -225,8 +225,9 @@ img { max-width: 100%; }
 .howwhy p { margin: 0 0 6px; }
 .howwhy p:last-child { margin: 0; }
 .howwhy b { font-family: var(--font-head); }
-.answers { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; padding: 6px 10px 10px 14px; }
-.answers .ans { min-width: 0; overflow: hidden; }
+.answers { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px; padding: 6px 10px 10px 10px; }
+.answers .ans { min-width: 0; overflow: hidden; padding-left: 0; padding-right: 0; letter-spacing: -0.02em; }
+@media (min-width: 400px) { .answers { gap: 6px; padding-left: 14px; } }
 .ans {
   min-height: var(--tap); border-radius: 12px; border: 2px solid var(--card-border); background: var(--card); color: var(--fg);
   font-weight: 700; font-size: 16px; cursor: pointer; padding: 4px 2px; line-height: 1.1; letter-spacing: -0.01em;
@@ -429,7 +430,7 @@ blockquote.phrase { margin: 8px 0; padding: 10px 14px; border-left: 4px solid va
   .hero .mascot { width: 100px; height: 100px; }
   .carchip { max-width: 260px; }
 }
-@media (max-width: 339px) {
+@media (max-width: 349px) {
   .answers { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }

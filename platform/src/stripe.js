@@ -72,7 +72,7 @@ export function buildCheckoutParams({ product, upsells = [], input, ctx }) {
     success_url: `${ctx.baseUrl}/sukces?session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${ctx.baseUrl}/?canceled=1`,
     client_reference_id: input.visitor_id || undefined,
-    allow_promotion_codes: true,
+    allow_promotion_codes: false, // off during the test: a promo field invites code-hunting and abandonment
     phone_number_collection: { enabled: false },
     billing_address_collection: 'auto',
     metadata: buildMetadata({

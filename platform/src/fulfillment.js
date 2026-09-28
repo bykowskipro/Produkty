@@ -1,7 +1,7 @@
 // Idempotent order fulfillment shared by the Stripe webhook and the success page.
 // fulfill(sessionId): session -> orders + access tokens -> ONE e-mail -> CAPI Purchase (only with marketing consent) -> analytics events.
 import { transaction, nowIso } from './db.js';
-import { issueToken } from './access.js';
+import { issueToken, createToken } from './access.js';
 import { recordEvent } from './analytics.js';
 import { renderDeliveryEmail } from './email.js';
 import { retrieveSession } from './stripe.js';
@@ -201,5 +201,33 @@ export function createFulfillment({ db, config, stripe, mockStore, mailer, capi,
     return { to: order.email, items: items.length };
   }
 
-  return { fulfill, resendEmail, storedItems, orderInfo };
+
+  /**
+   * Manual access grant (beta testers, support, goodwill): zero-amount "manual_<id>" session with orders + tokens,
+   * optional delivery e-mail. Records NO purchase/upsell events so the sales funnel stays clean.
+   */
+  async function grantAccess({ email, productIds, note = '', sendMail = true }) {
+    const to = String(email || '').trim().toLowerCase();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(to)) throw new Error('Nieprawidłowy e-mail');
+    const products = (Array.isArray(productIds) ? productIds : [productIds]).map((id) => config.products.find((p) => p.id === id)).filter(Boolean);
+    if (!products.length) throw new Error('Wybierz co najmniej jeden produkt');
+    const sessionId = 'manual_' + createToken().slice(0, 16);
+    transaction(db, () => {
+      db.prepare(`INSERT INTO fulfillments (session_id, status, email, amount_total, currency, metadata) VALUES (?, 'done', ?, 0, 'pln', ?)`)
+        .run(sessionId, to, JSON.stringify({ _manual: true, note: String(note || '').slice(0, 200) }));
+      for (const p of products) {
+        const r = db.prepare(`INSERT INTO orders (session_id, product_id, name, amount, currency, quantity, email) VALUES (?, ?, ?, 0, 'pln', 1, ?)`)
+          .run(sessionId, p.id, p.name, to);
+        issueToken(db, { orderId: Number(r.lastInsertRowid), productId: p.id, email: to });
+      }
+    });
+    const items = storedItems(sessionId);
+    if (sendMail) {
+      await mailer.send({ to, ...renderEmail(sessionId, items, '') });
+      db.prepare('UPDATE fulfillments SET email_sent_at = ?, updated_at = ? WHERE session_id = ?').run(nowIso(), nowIso(), sessionId);
+    }
+    return { session_id: sessionId, email: to, items };
+  }
+
+  return { fulfill, resendEmail, storedItems, orderInfo, grantAccess };
 }
