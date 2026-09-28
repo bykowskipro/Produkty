@@ -2,34 +2,408 @@
 <html lang="pl">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Produkt główny – landing (placeholder)</title>
-  <meta name="description" content="Placeholder landing page. Zostanie zastąpiony właściwą stroną sprzedażową.">
-  <style>
-    body{font:17px/1.55 system-ui,sans-serif;margin:0;color:#111;background:#fff}
-    main{max-width:720px;margin:0 auto;padding:48px 16px 96px}
-    .badge{display:inline-block;background:#fff3cd;border:1px solid #ffe08a;border-radius:6px;padding:2px 8px;font-size:13px}
-    h1{font-size:34px;line-height:1.15;margin:16px 0}
-    .cta{display:inline-block;background:#1a56db;color:#fff;font-weight:700;font-size:18px;padding:16px 28px;border:0;border-radius:12px;cursor:pointer}
-    .cta[disabled]{opacity:.7;cursor:wait}
-    footer{margin-top:64px;font-size:13px;color:#666}footer a{color:#666}
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Odhacz Auto — interaktywna checklista oględzin używanego auta na telefon</title>
+  <meta name="description" content="7 etapów, licznik czerwonych flag i lista uwag do negocjacji. Sprawdź używane auto punkt po punkcie, bez bycia mechanikiem. 39 zł, dostęp od razu.">
+  <meta name="color-scheme" content="light">
+  <meta name="theme-color" content="#0B0F19">
+
+  <!-- Open Graph / Twitter. TODO (po wyborze domeny): og:image i og:url jako adresy absolutne. -->
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="pl_PL">
+  <meta property="og:site_name" content="Odhacz">
+  <meta property="og:title" content="Odhacz Auto — interaktywna checklista oględzin używanego auta na telefon">
+  <meta property="og:description" content="7 etapów, licznik czerwonych flag i lista uwag do negocjacji. Sprawdź używane auto punkt po punkcie, bez bycia mechanikiem. 39 zł, dostęp od razu.">
+  <meta property="og:image" content="/assets/brand/og-1200x630.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Odhacz Auto — interaktywna checklista oględzin używanego auta na telefon">
+  <meta name="twitter:description" content="7 etapów, licznik czerwonych flag i lista uwag do negocjacji. Sprawdź używane auto punkt po punkcie, bez bycia mechanikiem. 39 zł, dostęp od razu.">
+  <meta name="twitter:image" content="/assets/brand/og-1200x630.png">
+
+  <link rel="icon" href="/assets/brand/sygnet.svg" type="image/svg+xml">
+  <link rel="icon" href="/assets/brand/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="/assets/brand/favicon-32.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Space+Grotesk:wght@700&display=swap">
+  <link rel="stylesheet" href="/assets/landing.css">
+
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"Product","name":"Odhacz Auto — interaktywna checklista oględzin używanego auta","description":"7 etapów, licznik czerwonych flag i lista uwag do negocjacji. Sprawdź używane auto punkt po punkcie, bez bycia mechanikiem.","brand":{"@type":"Brand","name":"Odhacz"},"offers":{"@type":"Offer","price":"39.00","priceCurrency":"PLN","availability":"https://schema.org/InStock"}}
+  </script>
 </head>
 <body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M7 7l10 10M17 7L7 17" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></symbol>
+    <symbol id="i-flag" viewBox="0 0 24 24"><path d="M6 21V4m0 0h11l-2.5 4L17 12H6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-list" viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M4 6.5l1 1 2-2M4 12.5l1 1 2-2M4 18.5l1 1 2-2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 016.5 3h11A2.5 2.5 0 0120 5.5v8a2.5 2.5 0 01-2.5 2.5H12l-5 4v-4H6.5A2.5 2.5 0 014 13.5v-8z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/><path d="M8 8h8M8 11.5h5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></symbol>
+    <symbol id="i-arrow-down" viewBox="0 0 24 24"><path d="M12 4v16m0 0l-6-6m6 6l6-6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="sygnet" viewBox="0 0 32 32"><circle cx="16" cy="16" r="12.5" fill="none" stroke="currentColor" stroke-width="4.5"/><path d="M10 16.5l4 4 8-9" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <!-- Hacz z latarką — inline fallback (plik /assets/brand/hacz-latarka.svg nie istniał w chwili budowy). -->
+    <symbol id="hacz" viewBox="0 0 240 170">
+      <defs>
+        <linearGradient id="hacz-beam" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stop-color="#FFF8C2" stop-opacity=".6"/>
+          <stop offset="1" stop-color="#C6F135" stop-opacity="0"/>
+        </linearGradient>
+      </defs>
+      <polygon points="166,30 240,-8 240,64" fill="url(#hacz-beam)"/>
+      <path d="M34 96 L76 136 L156 50" fill="none" stroke="#C6F135" stroke-width="36" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="132" cy="64" r="8" fill="#fff"/><circle cx="134.5" cy="61.5" r="4" fill="#0B0F19"/>
+      <circle cx="152" cy="64" r="8" fill="#fff"/><circle cx="154.5" cy="61.5" r="4" fill="#0B0F19"/>
+      <path d="M134 80 q8 9 18 0" fill="none" stroke="#0B0F19" stroke-width="3" stroke-linecap="round"/>
+      <path d="M143 36 L177 68" stroke="#0B0F19" stroke-width="9" stroke-linecap="round"/>
+      <circle cx="166" cy="30" r="9" fill="#0B0F19"/>
+      <circle cx="166" cy="30" r="5" fill="#FFF8C2"/>
+    </symbol>
+  </defs>
+</svg>
+
+<p class="topbar"><b>Nowość:</b> interaktywna checklista oględzin auta na telefon — bez instalacji.</p>
+
+<header class="hero dark" id="hero">
+  <div class="wrap">
+    <nav class="nav" aria-label="Główna">
+      <!-- Wordmark: sygnet „O z ptaszkiem” + tekst (tekstowy fallback dla /assets/brand/wordmark-light.svg). -->
+      <a class="wordmark" href="/" aria-label="Odhacz — strona główna"><svg class="wm-o" aria-hidden="true"><use href="#sygnet"/></svg><span class="wm-text" aria-hidden="true">dhacz</span></a>
+      <div class="nav-links">
+        <a href="#jak-dziala">Jak działa</a>
+        <a href="#demo">Demo</a>
+        <a href="#faq">FAQ</a>
+        <a href="#cena">39 zł</a>
+      </div>
+    </nav>
+
+    <div class="hero-grid">
+      <div class="hero-copy">
+        <p class="overline"><b>Odhacz Auto</b><span class="dot" aria-hidden="true">·</span><span>checklista oględzin w telefonie</span></p>
+        <h1>Oglądasz używane auto? <span class="hl">Odhacz je</span> punkt po&nbsp;punkcie.</h1>
+        <p class="lead">Interaktywna checklista na telefon: 7 etapów, około 150 punktów, licznik czerwonych flag i&nbsp;gotowa lista uwag do negocjacji. Bez instalacji. Bez bycia mechanikiem.</p>
+        <div class="hero-cta">
+          <button type="button" class="btn btn-lime" data-buy="main" data-testid="cta-main">Kupuję za 39 zł</button>
+          <a class="link-arrow" href="#demo">Zobacz, jak działa <svg aria-hidden="true"><use href="#i-arrow-down"/></svg></a>
+        </div>
+        <ul class="trust" aria-label="Warunki zakupu">
+          <li><svg aria-hidden="true"><use href="#i-check"/></svg>Dostęp od razu po płatności</li>
+          <li><svg aria-hidden="true"><use href="#i-check"/></svg>BLIK, karta, Przelewy24</li>
+          <li><svg aria-hidden="true"><use href="#i-check"/></svg>Gwarancja spokojnej głowy: 14 dni</li>
+        </ul>
+      </div>
+
+      <div class="hero-visual" aria-hidden="true">
+        <div class="phone">
+          <div class="screen">
+            <div class="scr-top">
+              <div class="scr-stage"><b>Nadwozie i lakier</b><span>etap 3 z 7 · 5/12</span></div>
+              <div class="scr-bar"><i></i></div>
+            </div>
+            <div class="mrow">
+              <div class="mrow-h"><div><div class="mrow-t">Grubość lakieru: maska</div><div class="mrow-s">118 µm · jak reszta auta</div></div></div>
+              <div class="mseg"><span class="on-ok">OK</span><span>Uwaga</span><span>Problem</span><span>Pomiń</span></div>
+            </div>
+            <div class="mrow">
+              <div class="mrow-h"><div><div class="mrow-t">Odcień drzwi kierowcy</div><div class="mrow-s">lekko inny niż błotnik</div></div></div>
+              <div class="mseg"><span>OK</span><span class="on-warn">Uwaga</span><span>Problem</span><span>Pomiń</span></div>
+            </div>
+            <div class="mrow is-bad">
+              <div class="mrow-h"><div><div class="mrow-t">Szpachla na tylnym błotniku</div><div class="mrow-s">grubościomierz: 640 µm</div></div><span class="flag"><svg><use href="#i-flag"/></svg>czerwona flaga</span></div>
+              <div class="mseg"><span>OK</span><span>Uwaga</span><span class="on-bad">Problem</span><span>Pomiń</span></div>
+            </div>
+            <div class="scr-more">Dalej: spasowanie, śruby, szyby, rdza, opony…</div>
+            <div class="scr-bottom">
+              <div>Czerwone flagi<b>3</b></div>
+              <span class="sep"></span>
+              <div>Dealbreaker<b>0</b></div>
+            </div>
+          </div>
+        </div>
+        <svg class="hacz"><use href="#hacz"/></svg>
+      </div>
+    </div>
+  </div>
+</header>
+
 <main>
-  <span class="badge">PLACEHOLDER – docelowy landing zostanie tu podmieniony</span>
-  <h1>Produkt główny</h1>
-  <p>To jest tymczasowa strona sprzedażowa platformy. Właściwy landing (nagłówek, korzyści, FAQ) zbuduje inny etap projektu – musi tylko zachować kontrakt z README (skrypty poniżej + przycisk wywołujący <code>Shop.buy('main')</code>).</p>
-  <p>Cena: <strong data-price="main">49,00 zł</strong> · dostęp natychmiast po płatności · faktura/paragon w Stripe.</p>
-  <p><button class="cta" data-buy="main" data-testid="cta-main">Kup teraz</button></p>
-  <p style="font-size:14px;color:#555">Płatność obsługuje Stripe (BLIK, karta, Przelewy24). Kupując, akceptujesz <a href="/legal/regulamin.html">regulamin</a> i <a href="/legal/polityka-prywatnosci.html">politykę prywatności</a>.</p>
-  <footer>
-    <a href="/legal/regulamin.html">Regulamin</a> · <a href="/legal/polityka-prywatnosci.html">Polityka prywatności</a>
-  </footer>
+
+  <!-- 2. PROBLEM -->
+  <section class="section" id="problem" aria-labelledby="h-problem">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker">Znasz to?</span>
+        <h2 id="h-problem">Przy sprzedawcy pamiętasz połowę. Reszta wychodzi po&nbsp;tygodniu.</h2>
+      </div>
+      <div class="cards">
+        <article class="card"><span class="num" aria-hidden="true">1</span><p>Masz w notatkach 10 rzeczy z YouTube. Przy aucie pamiętasz cztery, a sprzedawca mówi bez przerwy.</p></article>
+        <article class="card"><span class="num" aria-hidden="true">2</span><p>„Bezwypadkowy” w ogłoszeniu, a drzwi mają inny odcień. Dealbreaker czy 1500 zł do negocjacji? Nie wiesz.</p></article>
+        <article class="card"><span class="num" aria-hidden="true">3</span><p>Auto stoi 120 km od domu. Masz jedną szansę i 40 minut.</p></article>
+      </div>
+      <div class="stat">
+        <div class="stat-num">65%</div>
+        <p class="stat-text">tyle z ok. 80 tys. aut badanych rocznie przez techników sieci AAA AUTO nie nadaje się do bezpiecznego zakupu.<sup><a href="#zrodlo-1" aria-label="Przypis 1" style="color:inherit;text-decoration:none">¹</a></sup></p>
+        <p class="footnote" id="zrodlo-1">¹ Źródło: rp.pl / Polskie Radio 24, dane AAA AUTO za 2025 (dotyczą aut zgłaszanych do skupu tej sieci, nie całego rynku).</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. REZULTAT -->
+  <section class="section bg-mist" id="rezultat" aria-labelledby="h-rezultat">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker">Rezultat</span>
+        <h2 id="h-rezultat">Wychodzisz z&nbsp;decyzją, nie z&nbsp;wrażeniem.</h2>
+      </div>
+      <div class="cols">
+        <article class="col">
+          <div class="icon"><svg aria-hidden="true"><use href="#i-list"/></svg></div>
+          <h3>Wiesz, co sprawdzać i&nbsp;w&nbsp;jakiej kolejności.</h3>
+          <p>Od ogłoszenia po jazdę próbną. Każdy punkt: co, jak i dlaczego — w dwóch zdaniach.</p>
+        </article>
+        <article class="col">
+          <div class="icon"><svg aria-hidden="true"><use href="#i-flag"/></svg></div>
+          <h3>Widzisz, co jest poważne.</h3>
+          <p>Licznik czerwonych flag i oznaczone dealbreakery. Zimny silnik, zgodność VIN, kontrolka airbag — to nie są „uwagi”, to koniec oglądania.</p>
+        </article>
+        <article class="col">
+          <div class="icon"><svg aria-hidden="true"><use href="#i-chat"/></svg></div>
+          <h3>Masz argumenty.</h3>
+          <p>Na końcu dostajesz listę uwag do negocjacji: do skopiowania, wysłania sobie, pokazania sprzedawcy.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. JAK DZIAŁA -->
+  <section class="section" id="jak-dziala" aria-labelledby="h-jak">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker">Jak działa</span>
+        <h2 id="h-jak">Trzy kroki. Zero zgadywania.</h2>
+      </div>
+      <ol class="steps">
+        <li class="step"><span class="step-n" aria-hidden="true">1</span><h3>Kupujesz, dostajesz link.</h3><p>Otwierasz na telefonie. Bez aplikacji, bez logowania. Możesz dodać do ekranu głównego.</p></li>
+        <li class="step"><span class="step-n" aria-hidden="true">2</span><h3>Przy aucie tapiesz.</h3><p>OK / Uwaga / Problem / Pomiń. Wpisujesz pomiary (np. lakier w µm), robisz zdjęcia, dopisujesz notatki.</p></li>
+        <li class="step"><span class="step-n" aria-hidden="true">3</span><h3>Na końcu dostajesz podsumowanie.</h3><p>Decyzja: kup / negocjuj / zawołaj mechanika / odpuść — z uzasadnieniem — i lista uwag gotowa do negocjacji.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- 5. CO DOSTAJESZ -->
+  <section class="section bg-mist" id="etapy" aria-labelledby="h-etapy">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker">Co dokładnie dostajesz</span>
+        <h2 id="h-etapy">7 etapów. Około 150 punktów. Żadnego lania wody.</h2>
+      </div>
+      <table class="phases">
+        <thead><tr><th scope="col">Etap</th><th scope="col">Czas</th><th scope="col">Co w środku</th></tr></thead>
+        <tbody>
+          <tr><td class="ph-name"><i aria-hidden="true">1</i>Zanim pojedziesz</td><td class="ph-time"><span class="time">15 min</span></td><td class="ph-what">czerwone flagi w ogłoszeniu, VIN i historia, skrypt rozmowy telefonicznej ze sprzedawcą, co zabrać</td></tr>
+          <tr><td class="ph-name"><i aria-hidden="true">2</i>Dokumenty i tożsamość</td><td class="ph-time"><span class="time">5 min</span></td><td class="ph-what">dowód rejestracyjny, zgodność VIN w 3 miejscach, czy sprzedający jest właścicielem, serwis, import</td></tr>
+          <tr><td class="ph-name"><i aria-hidden="true">3</i>Nadwozie i lakier</td><td class="ph-time"><span class="time">15 min</span></td><td class="ph-what">pomiar lakieru element po elemencie, spasowanie, śruby, szyby, rdza, opony</td></tr>
+          <tr><td class="ph-name"><i aria-hidden="true">4</i>Wnętrze i elektryka</td><td class="ph-time"><span class="time">10 min</span></td><td class="ph-what">kontrolki przy zapłonie, wilgoć, przebieg vs zużycie, klimatyzacja, airbag</td></tr>
+          <tr><td class="ph-name"><i aria-hidden="true">5</i>Pod maską — tylko na zimnym</td><td class="ph-time"><span class="time">10 min</span></td><td class="ph-what">wycieki, olej, płyn, paski, zimny start, kolor dymu</td></tr>
+          <tr><td class="ph-name"><i aria-hidden="true">6</i>Jazda próbna</td><td class="ph-time"><span class="time">15 min</span></td><td class="ph-what">skrzynia, sprzęgło, hamulce, zawieszenie, hałasy, kierownica</td></tr>
+          <tr><td class="ph-name"><i aria-hidden="true">7</i>Podsumowanie i negocjacja</td><td class="ph-time"><span class="time">5 min</span></td><td class="ph-what">decyzja, lista uwag, gotowe zdania, zasady bezpiecznej transakcji</td></tr>
+        </tbody>
+      </table>
+      <p class="extras-label">Poza tym:</p>
+      <ul class="extras">
+        <li><svg aria-hidden="true"><use href="#i-check"/></svg>zdjęcia i notatki przy punktach</li>
+        <li><svg aria-hidden="true"><use href="#i-check"/></svg>kilka aut naraz (Auto 1, Auto 2…)</li>
+        <li><svg aria-hidden="true"><use href="#i-check"/></svg>działa offline po pierwszym otwarciu</li>
+        <li><svg aria-hidden="true"><use href="#i-check"/></svg>dostęp 24 miesiące</li>
+        <li><svg aria-hidden="true"><use href="#i-check"/></svg>synchronizacja między telefonem a komputerem</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 6. DLA KOGO -->
+  <section class="section" id="dla-kogo" aria-labelledby="h-dla-kogo">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker">Dla kogo</span>
+        <h2 id="h-dla-kogo">Dla Ciebie — albo nie.</h2>
+      </div>
+      <div class="fit">
+        <div class="fit-card fit-yes">
+          <h3>Dla Ciebie, jeśli:</h3>
+          <ul>
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg><span>kupujesz auto z ogłoszenia (10–60 tys. zł),</span></li>
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg><span>nie jesteś mechanikiem,</span></li>
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg><span>chcesz obejrzeć sam albo wiedzieć, kiedy wołać fachowca.</span></li>
+          </ul>
+        </div>
+        <div class="fit-card fit-no">
+          <h3>Nie dla Ciebie, jeśli:</h3>
+          <ul>
+            <li><svg aria-hidden="true"><use href="#i-x"/></svg><span>jesteś mechanikiem,</span></li>
+            <li><svg aria-hidden="true"><use href="#i-x"/></svg><span>kupujesz w salonie z gwarancją,</span></li>
+            <li><svg aria-hidden="true"><use href="#i-x"/></svg><span>albo szukasz wyceny napraw — nie wyceniamy, pokazujemy fakty.</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. DEMO -->
+  <section class="section dark" id="demo" aria-labelledby="h-demo">
+    <div class="wrap">
+      <div class="section-head" style="margin-left:auto;margin-right:auto;text-align:center">
+        <span class="kicker">Demo</span>
+        <h2 id="h-demo">Sprawdź, jak to działa. Bez rejestracji.</h2>
+        <p>Fragment etapu „Zanim pojedziesz”. Tapnij odpowiedzi — licznik liczy na żywo.</p>
+      </div>
+      <div class="demo-panel">
+        <div class="demo-top">
+          <span class="demo-stage">Etap 1 · Zanim pojedziesz</span>
+          <span class="demo-progress">odhaczone: <span id="demo-progress">0/6</span></span>
+        </div>
+        <div class="demo-counter" id="demo-counter" aria-live="polite" aria-atomic="true">
+          <span>Czerwone flagi: <b id="demo-flags">0</b></span>
+          <span class="db">Dealbreaker: <b id="demo-db">0</b></span>
+        </div>
+        <ol class="demo-list" id="demo-list"></ol>
+        <noscript><p class="demo-noscript">Demo wymaga włączonej obsługi JavaScript.</p></noscript>
+        <div class="demo-done" id="demo-done" hidden>
+          <p id="demo-done-text"></p>
+          <button type="button" class="demo-reset" id="demo-reset">Zacznij od nowa</button>
+        </div>
+        <div class="demo-cta">
+          <button type="button" class="btn btn-violet" data-buy="main">Odblokuj wszystkie 7 etapów — 39 zł</button>
+          <p>Dostęp od razu po płatności · gwarancja spokojnej głowy 14 dni</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. OBIEKCJE -->
+  <section class="section" id="obiekcje" aria-labelledby="h-obiekcje">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker">Zanim zapytasz</span>
+        <h2 id="h-obiekcje">Cztery rzeczy, które i&nbsp;tak byś sprawdził.</h2>
+      </div>
+      <div class="obj">
+        <article class="obj-card">
+          <h3>„Są darmowe checklisty PDF.”</h3>
+          <p>Są, i są OK do wydruku. PDF nie policzy flag, nie zrobi zdjęć, nie powie, co jest dealbreakerem, nie napisze listy do negocjacji i nie zapamięta trzech aut. Za 39 zł kupujesz narzędzie, nie kartkę.</p>
+        </article>
+        <article class="obj-card">
+          <h3>„Wolę zapłacić mechanikowi.”</h3>
+          <p>My też — przy autach, które przejdą pierwsze 20 minut. Odhacz mówi Ci, kiedy go zawołać, żebyś nie płacił 500 zł za auto, które odpada przy dokumentach.</p>
+        </article>
+        <article class="obj-card">
+          <h3>„Nie mam grubościomierza.”</h3>
+          <p>Każdy punkt ma wersję bez narzędzi. Grubościomierz kosztuje tyle co tankowanie i pokazujemy, jak go użyć w 60 sekund.</p>
+        </article>
+        <article class="obj-card">
+          <h3>„Nie znam Was.”</h3>
+          <p>Odhacz to nowa marka. Hacz jest postacią AI, a za sklepem stoi [[SPRZEDAWCA_NAZWA]] (dane w stopce). Dlatego: demo wyżej, płatność przez Stripe i gwarancja spokojnej głowy — 14 dni na zwrot, bez tłumaczenia się.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9. FAQ -->
+  <section class="section bg-mist" id="faq" aria-labelledby="h-faq">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker">FAQ</span>
+        <h2 id="h-faq">Pytania, zanim klikniesz.</h2>
+      </div>
+      <div class="faq">
+        <details><summary>Czy to aplikacja do pobrania?</summary><p>Nie. Otwierasz link w przeglądarce (iPhone, Android, komputer). Możesz dodać do ekranu głównego jak aplikację.</p></details>
+        <details><summary>Czy działa bez zasięgu?</summary><p>Po pierwszym otwarciu treść zapisuje się w telefonie. Zdjęcia i notatki też zostają w telefonie.</p></details>
+        <details><summary>Ile aut mogę sprawdzić?</summary><p>Ile chcesz. Każde auto ma osobną listę.</p></details>
+        <details><summary>Jak długo mam dostęp?</summary><p>24 miesiące od zakupu, z aktualizacjami treści w tym czasie.</p></details>
+        <details><summary>Czy dostanę fakturę?</summary><p>Tak, na życzenie — odpisz na e-mail z zamówieniem.</p></details>
+        <details><summary>Co z prawem do zwrotu?</summary><p>Treść cyfrową dostarczamy od razu po płatności, więc ustawowe 14 dni na odstąpienie nie ma zastosowania (potwierdzasz to w checkout). Zamiast tego masz naszą gwarancję: 14 dni, zwrot bez tłumaczenia.</p></details>
+        <details><summary>Czy to zastępuje mechanika?</summary><p>Nie. To narzędzie edukacyjne: porządkuje oględziny i mówi, kiedy zawołać fachowca. Decyzja jest Twoja.</p></details>
+        <details><summary>Co to jest „Po zakupie” za 19 zł?</summary><p>Drugi krok: umowa kupna-sprzedaży z objaśnieniami, PCC-3, rejestracja, OC, pierwszy serwis, przypomnienia do kalendarza. Dodajesz w koszyku jednym kliknięciem.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10. CENA -->
+  <section class="section" id="cena" aria-labelledby="h-cena">
+    <div class="wrap">
+      <div class="section-head" style="margin-left:auto;margin-right:auto;text-align:center">
+        <span class="kicker">Cena</span>
+        <h2 id="h-cena">Jedna cena. Bez gwiazdek.</h2>
+      </div>
+      <div class="price-card">
+        <div class="price-head">
+          <span class="price-name">Odhacz Auto</span>
+          <span class="price-big" data-price="main">39 zł</span>
+          <span class="price-meta">jednorazowo · dostęp od razu</span>
+        </div>
+        <ul class="price-list">
+          <li><svg aria-hidden="true"><use href="#i-check"/></svg><span>7 etapów, ok. 150 punktów z instrukcjami</span></li>
+          <li><svg aria-hidden="true"><use href="#i-check"/></svg><span>licznik czerwonych flag i dealbreakerów</span></li>
+          <li><svg aria-hidden="true"><use href="#i-check"/></svg><span>lista uwag do negocjacji</span></li>
+          <li><svg aria-hidden="true"><use href="#i-check"/></svg><span>skrypt rozmowy ze sprzedawcą</span></li>
+          <li><svg aria-hidden="true"><use href="#i-check"/></svg><span>zdjęcia, notatki, kilka aut</span></li>
+          <li><svg aria-hidden="true"><use href="#i-check"/></svg><span>24 miesiące dostępu</span></li>
+          <li><svg aria-hidden="true"><use href="#i-check"/></svg><span>gwarancja 14 dni</span></li>
+        </ul>
+        <div class="bump"><p>W koszyku możesz dodać <strong>„Po zakupie”</strong> (umowa, PCC-3, rejestracja, OC, pierwsze 30 dni) za <strong>19 zł</strong>.</p></div>
+        <p class="anchors-l">Dla porównania:</p>
+        <ul class="anchors">
+          <li><span>statyczna checklista PDF</span><b>ok. 20 zł</b></li>
+          <li><span>stacja diagnostyczna</span><b>80–200 zł</b></li>
+          <li><span>mechanik mobilny</span><b>449–749 zł</b></li>
+        </ul>
+        <button type="button" class="btn btn-lime" data-buy="main">Kupuję za 39 zł</button>
+        <p class="micro">Cena brutto. Treść cyfrowa dostarczana natychmiast po płatności — w checkout potwierdzasz, że chcesz dostęp od razu i wiesz, że tracisz ustawowe prawo odstąpienia. <a href="/legal/regulamin.html" style="color:inherit">Regulamin</a> · <a href="/legal/polityka-prywatnosci.html" style="color:inherit">Polityka prywatności</a></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 11. CTA KOŃCOWE -->
+  <section class="section dark final" id="start" aria-labelledby="h-start">
+    <div class="wrap">
+      <svg class="hacz-sm" aria-hidden="true"><use href="#hacz"/></svg>
+      <h2 id="h-start">Jutro oglądasz auto? Dziś zajmie Ci to 3&nbsp;minuty.</h2>
+      <p class="lead">Kup, otwórz link, przejdź quick start. Jutro przy aucie po prostu tapiesz.</p>
+      <button type="button" class="btn btn-lime" data-buy="main">Kupuję za 39 zł</button>
+      <p class="guarantee">Gwarancja spokojnej głowy 14 dni.</p>
+    </div>
+  </section>
+
 </main>
-<!-- Integration contract: these three scripts + a CTA calling Shop.buy('main') (or data-buy="main"). -->
+
+<footer class="footer">
+  <div class="wrap">
+    <a class="wordmark" href="/" aria-label="Odhacz — strona główna"><svg class="wm-o" aria-hidden="true"><use href="#sygnet"/></svg><span class="wm-text" aria-hidden="true">dhacz</span></a>
+    <p class="seller">[[SPRZEDAWCA_NAZWA]] · [[SPRZEDAWCA_ADRES]] · NIP [[NIP]] · [[EMAIL_KONTAKT]]</p>
+    <ul class="footer-links">
+      <li><a href="/legal/regulamin.html">Regulamin</a></li>
+      <li><a href="/legal/polityka-prywatnosci.html">Polityka prywatności</a></li>
+      <li><a href="/legal/o-marce.html">O marce i o Haczu</a></li>
+      <li><button type="button" data-cookie-settings>Ustawienia cookies</button></li>
+    </ul>
+    <p>Hacz to postać AI — wirtualny asystent marki, nie mechanik. Ilustracje zaprojektowane cyfrowo.</p>
+    <p>Odhacz Auto to narzędzie edukacyjne i pomocnicze: nie zastępuje mechanika ani rzeczoznawcy, nie wycenia napraw i nie gwarantuje wykrycia każdej wady.</p>
+  </div>
+</footer>
+
+<!-- Sticky pasek mobile (po przewinięciu poza hero) -->
+<div class="sticky" id="sticky-cta">
+  <div class="sticky-l"><b>Odhacz Auto</b><span aria-hidden="true">·</span><span>39 zł</span></div>
+  <button type="button" class="btn btn-lime" data-buy="main">Kupuję</button>
+</div>
+
+<!-- Kontrakt integracji (platform/README.md): te trzy skrypty w tej kolejności, potem skrypt landingu. -->
 <script src="/assets/consent.js"></script>
 <script src="/assets/analytics.js"></script>
 <script src="/assets/shop.js"></script>
+<script src="/assets/landing.js"></script>
 </body>
 </html>

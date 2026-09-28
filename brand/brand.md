@@ -44,3 +44,11 @@ Wordmark „Odhacz” w Space Grotesk 700 z „✓” wpisanym w literę „O”
 
 ## Ton głosu (skrót)
 Krótko. Konkret zamiast przymiotników. „Odhaczasz 17 punktów” zamiast „kompleksowe rozwiązanie”. Żadnych „rewolucji”, „sekretów”, „gwarancji sukcesu”. Humor: suchy, jedno zdanie, nigdy kosztem klienta.
+
+## Zasoby (pliki)
+Źródła SVG: `brand/assets/` (generator `gen-svg.mjs`); kopie + PNG serwowane przez aplikację: `platform/public/assets/brand/` (`/assets/brand/…`). Szczegóły i 6 zasad użycia: `brand/assets/README.md`.
+- Logotyp: `wordmark.svg` (ink + violet, jasne tła), `wordmark-light.svg` (paper + lime, tło ink).
+- Sygnet „O z ptaszkiem”: `sygnet.svg`, `sygnet-light.svg` (kwadrat, czytelny od 16 px).
+- Hacz (viewBox 256×256, wymienne pozy): `hacz.svg`, `hacz-latarka.svg` (Auto), `hacz-kciuk.svg` (OK), `hacz-uwaga.svg` (ostrzeżenia).
+- PNG: `avatar-1024.png`, `icon-192.png`, `icon-512.png`, `favicon-32.png`, `og-1200x630.png`, `cover-fb-820x312.png`, `cover-fb-1640x624.png` — szablony w `creatives/brand-templates/`, eksport `cd creatives && node brand-export.mjs`.
+- Podpis maskotki zawsze: „Hacz — asystent AI marki Odhacz”. Nie przebarwiać, bez fartucha/stetoskopu.

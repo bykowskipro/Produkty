@@ -14,6 +14,9 @@
     .muted{color:#555;font-size:15px}
     .wait{background:#f6f7f9;border:1px solid #e3e5e8;border-radius:12px;padding:18px}
     #first-step{margin-top:36px;padding-top:24px;border-top:1px solid #eee}
+    .first-steps{padding-left:22px;margin:0}
+    .first-steps li{margin:0 0 14px}
+    .first-steps .hint{color:#555;font-size:15px;margin:6px 0 0}
     .spinner{display:inline-block;width:18px;height:18px;border:3px solid #ccc;border-top-color:#1a56db;border-radius:50%;animation:spin 1s linear infinite;vertical-align:middle;margin-right:8px}
     @keyframes spin{to{transform:rotate(360deg)}}
   </style>
@@ -29,8 +32,15 @@
     <p class="muted">Link wysłaliśmy też na e-mail <strong id="buyer-email"></strong>. Zachowaj go – działa na każdym urządzeniu.</p>
     <!-- Slot for the product team: "co zrobić najpierw" (first step instructions). Keep the id. -->
     <section id="first-step">
-      <h2>Co zrobić najpierw?</h2>
-      <p class="muted">PLACEHOLDER – tu pojawi się krótka instrukcja pierwszego kroku (uzupełni etap produktu).</p>
+      <h2>Co zrobić najpierw</h2>
+      <ol class="first-steps">
+        <li><strong>Otwórz Odhacz Auto</strong> — przycisk „Otwórz dostęp” wyżej. Link działa na telefonie i komputerze, bez logowania.</li>
+        <li><strong>Przejdź Quick start (3 minuty)</strong> — zobaczysz, jak tapać OK / Uwaga / Problem / Pomiń, gdzie jest licznik czerwonych flag i skąd bierze się lista uwag.</li>
+        <li><strong>Dodaj do ekranu głównego</strong> — przy aucie będzie pod ręką jak aplikacja.
+          <p class="hint">iPhone (Safari): przycisk „Udostępnij” (kwadrat ze strzałką) → „Do ekranu początkowego”.<br>Android (Chrome): menu ⋮ → „Dodaj do ekranu głównego” (lub „Zainstaluj aplikację”).</p>
+        </li>
+        <li><strong>Dokupiłeś/aś „Po zakupie”?</strong> Jego link jest wyżej (drugi przycisk) i w e-mailu — otwórz go, kiedy powiesz „biorę”.</li>
+      </ol>
     </section>
   </div>
 
