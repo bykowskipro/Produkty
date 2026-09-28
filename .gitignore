@@ -2,6 +2,5 @@ node_modules/
 .env
 *.log
 platform/data/
-creatives/out/
 creatives/shots/
 .DS_Store
