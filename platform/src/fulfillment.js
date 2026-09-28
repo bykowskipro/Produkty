@@ -109,7 +109,7 @@ export function createFulfillment({ db, config, stripe, mockStore, mailer, capi,
     await capi.sendPurchase({
       email: session.customer_details?.email,
       eventId: md.event_id,
-      eventTime: session.created || Math.floor(Date.now() / 1000),
+      eventTime: Math.floor(Date.now() / 1000), // payment confirmation time (close to the browser Purchase event)
       sourceUrl: md.landing_url,
       clientIp: md.client_ip,
       userAgent: md.user_agent,

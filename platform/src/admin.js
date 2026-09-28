@@ -151,7 +151,7 @@ export function renderDashboard({ config, days, range, total, byDay, byUtm, orde
   const today = new Date(Date.now() + tzOffsetMinutes(REPORT_TZ) * 60000).toISOString().slice(0, 10);
   return `<!doctype html><html lang="pl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Admin – ${esc(config.siteName)}</title><style>${CSS}</style></head><body>
 <h1>Panel – ${esc(config.siteName)} ${config.mock ? '<span class="muted">(TRYB TESTOWY – bez Stripe)</span>' : ''}</h1>
-<nav class="muted">Zakres: ${[7, 14, 30, 90].map((d) => (d === days ? `<b>${d} dni</b>` : `<a href="/admin?days=${d}">${d} dni</a>`)).join(' · ')} · <a href="/admin/export.csv?days=${days}">Eksport zdarzeń CSV</a> · <a href="/">Strona</a></nav>
+<nav class="muted">Zakres: ${[7, 14, 30, 90].map((d) => (d === days ? `<b>${d} dni</b>` : `<a href="/admin?days=${d}">${d} dni</a>`)).join(' · ')} · <a href="/admin/export.csv?days=${days}">Eksport zdarzeń CSV</a> (<a href="/admin/export.csv?days=all">wszystko</a>) · <a href="/">Strona</a></nav>
 ${msg ? `<p class="msg">${esc(msg)}</p>` : ''}${err ? `<p class="msg err">${esc(err)}</p>` : ''}
 <h2>Podsumowanie (${esc(range.fromDay)} – ${esc(range.toDay)})</h2>
 <div class="kpis">${kpi('Odwiedzający', total.visitors)}${kpi('Kliknięcia CTA', total.cta_clicks)}${kpi('Start checkoutu', total.checkout_starts)}${kpi('Zakupy', total.purchases)}${kpi('Upselle', total.upsell_purchases)}
@@ -209,7 +209,9 @@ export function createAdminRouter({ db, config, fulfillment, log = console }) {
   });
 
   router.get('/export.csv', (req, res) => {
-    const range = reportRange(parseDays(req.query.days));
+    const range = req.query.days === 'all'
+      ? { fromIso: '1970-01-01T00:00:00.000Z', toIso: '9999-12-31T23:59:59.999Z', fromDay: 'all', toDay: 'all' }
+      : reportRange(parseDays(req.query.days));
     res.set('Content-Disposition', `attachment; filename="events-${range.fromDay}-${range.toDay}.csv"`);
     res.type('text/csv').send('﻿' + eventsCsv(db, range));
   });
