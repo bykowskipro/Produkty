@@ -1,0 +1,21 @@
+{
+  "name": "produkty-platform",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Minimalna platforma sprzedazy produktow cyfrowych (Stripe Checkout, dostawa, analityka, admin).",
+  "type": "module",
+  "engines": { "node": ">=22.13" },
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --env-file=.env --watch src/server.js",
+    "test": "node --test tests/unit/",
+    "e2e": "node --test --test-concurrency=1 --test-timeout=180000 tests/e2e/"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "stripe": "^18.0.0"
+  },
+  "devDependencies": {
+    "playwright": "^1.55.0"
+  }
+}
