@@ -234,6 +234,7 @@ img { max-width: 100%; }
   transition: transform .08s ease, background .12s ease, border-color .12s ease;
 }
 .ans:active { transform: scale(.96); }
+.ans.is-on { background: var(--faint); border-color: var(--faint); color: #fff; } /* fallback for custom answer states */
 .ans--ok { border-color: color-mix(in srgb, var(--ok) 45%, transparent); color: var(--ok); }
 .ans--uwaga { border-color: color-mix(in srgb, var(--warn) 55%, transparent); color: #B45309; }
 .ans--problem { border-color: color-mix(in srgb, var(--bad) 45%, transparent); color: var(--bad); }

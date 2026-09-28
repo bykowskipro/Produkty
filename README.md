@@ -1,6 +1,6 @@
 # Produkty — system: POMYSŁ → RESEARCH → PRODUKT → SKLEP → ADS → DANE → DECYZJA
 
-Eksperyment: prosty produkt cyfrowy (interaktywne narzędzie na telefon), szybka sprzedaż przez Meta Ads, pomiar, iteracja.
+Eksperyment EXP-001: **Odhacz Auto** — interaktywna checklista oględzin używanego auta na telefon (39 zł) + dodatek „Po zakupie” (19 zł), marka **Odhacz** z AI-awatarem Hacz, sprzedaż przez Meta Ads (300 zł testu), pomiar, iteracja.
 Infrastruktura jest wielokrotnego użytku: kolejny produkt = nowa treść w `product/` i `platform/public/app/`, reszta zostaje.
 
 ## Struktura
@@ -23,6 +23,14 @@ Infrastruktura jest wielokrotnego użytku: kolejny produkt = nowa treść w `pro
 ## Pliki decyzyjne
 - `DECISIONS.md` — co wybraliśmy, dlaczego, co odrzuciliśmy.
 - `EXPERIMENTS.md` — HIPOTEZA · ZMIANA · METRYKA · WYNIK · DECYZJA.
+
+## Szybki start (lokalnie, tryb testowy bez kluczy)
+```bash
+cd platform && npm install && cp .env.example .env && npm run dev   # http://localhost:3000, /admin (ADMIN_USER/ADMIN_PASS z .env)
+npm test && npm run e2e                                              # testy jednostkowe + pełna ścieżka zakupu w przeglądarce
+cd ../creatives && npm install && node render.mjs templates out      # kreacje HTML → PNG
+```
+Wdrożenie: `ops/DEPLOY.md`. Konta: `ops/KONTA.md`. Lista dla właściciela: `ops/CHECKPOINT-3.md`.
 
 ## Checkpointy właściciela
 1. Ankieta startowa (zrobione, `research/00-brief.md`).

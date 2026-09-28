@@ -624,6 +624,12 @@
     out.push(nav);
     return out;
   };
+  /** Item row element by id (attribute comparison – content ids are never interpolated into selectors). */
+  App.prototype.itemEl = function (itemId) {
+    const rows = this.root.querySelectorAll('.item[data-item]');
+    for (let i = 0; i < rows.length; i++) if (rows[i].getAttribute('data-item') === itemId) return rows[i];
+    return null;
+  };
   App.prototype.photoKey = function (itemId) { return this.opts.product + '|' + this.state.active + '|' + itemId; };
   App.prototype.itemRow = function (it) {
     const self = this; const a = this.ans(it.id) || [];
@@ -883,7 +889,7 @@
           li.append(el('div', { class: 'negoitem s-' + r.state }, el('span', { class: 'dot' }), el('div', null,
             el('div', null, el('b', { text: (STATE_LABEL[r.state] || r.state) + ': ' }), r.state === 'problem' && r.item.flag_label ? r.item.flag_label : r.item.text, r.item.dealbreaker && r.state === 'problem' ? el('span', { class: 'db' }, ' · dealbreaker') : null),
             meta.length ? el('div', { class: 'meta', text: meta.join(' · ') }) : null,
-            el('button', { class: 'linkbtn', style: 'min-height:32px;padding:2px 0;font-size:16px', type: 'button', onclick: () => { self.openItems[r.item.id] = true; self.go('phase/' + encodeURIComponent(g.phase.id)); setTimeout(() => { const n = $('[data-item="' + r.item.id + '"]', self.root); if (n) n.scrollIntoView({ block: 'center' }); }, 50); } }, 'otwórz punkt'))));
+            el('button', { class: 'linkbtn', style: 'min-height:32px;padding:2px 0;font-size:16px', type: 'button', onclick: () => { self.openItems[r.item.id] = true; self.go('phase/' + encodeURIComponent(g.phase.id)); setTimeout(() => { const n = self.itemEl(r.item.id); if (n) n.scrollIntoView({ block: 'center' }); }, 50); } }, 'otwórz punkt'))));
         });
         ul.append(li);
       });
@@ -1025,7 +1031,7 @@
   App.prototype.openItem = function (itemId) {
     const ph = this.content.phaseOfItem[itemId]; if (!ph) return;
     this.openItems[itemId] = true; this.go('phase/' + encodeURIComponent(ph.id));
-    setTimeout(() => { const n = $('[data-item="' + itemId + '"]', this.root); if (n) n.scrollIntoView({ block: 'center' }); }, 60);
+    setTimeout(() => { const n = this.itemEl(itemId); if (n) n.scrollIntoView({ block: 'center' }); }, 60);
   };
   App.prototype.buildIcs = function (rows) {
     const c = this.content; const stamp = nowIso().replace(/[-:]/g, '').replace(/\.\d+Z$/, 'Z');
