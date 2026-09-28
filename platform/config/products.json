@@ -1,18 +1,18 @@
 [
   {
     "id": "main",
-    "name": "Produkt główny",
-    "description": "Interaktywne narzędzie dostępne od razu po zakupie (placeholder – podmień w config/products.json).",
-    "price_pln": 4900,
+    "name": "Odhacz Auto — checklista oględzin używanego auta",
+    "description": "Interaktywna checklista w telefonie: 7 etapów, licznik czerwonych flag, lista uwag do negocjacji. Dostęp linkiem od razu po płatności, 24 miesiące.",
+    "price_pln": 3900,
     "stripe_price_id": "",
     "type": "main",
     "access_path": "/app/"
   },
   {
     "id": "upsell",
-    "name": "Dodatek",
-    "description": "Bonusowy dodatek do produktu głównego (placeholder).",
-    "price_pln": 2900,
+    "name": "Odhacz Auto: Po zakupie — umowa, PCC-3, rejestracja, OC, pierwsze 30 dni",
+    "description": "Dodatek: co zrobić po powiedzeniu „biorę” — checklista z terminami, wzór umowy, przypomnienia do kalendarza.",
+    "price_pln": 1900,
     "stripe_price_id": "",
     "type": "upsell",
     "access_path": "/dodatek/"
