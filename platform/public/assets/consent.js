@@ -58,9 +58,9 @@
     el.setAttribute('role', 'dialog');
     el.setAttribute('aria-label', 'Zgoda na pliki cookie');
     el.innerHTML =
-      '<style>#consent-banner{position:fixed;left:0;right:0;bottom:0;z-index:9999;background:#111;color:#fff;padding:14px 16px;font:14px/1.45 system-ui,sans-serif;box-shadow:0 -4px 20px rgba(0,0,0,.25)}' +
+      '<style>#consent-banner{position:fixed;left:0;right:0;bottom:0;z-index:9999;background:#111;color:#fff;padding:14px 16px;font:16px/1.45 system-ui,sans-serif;box-shadow:0 -4px 20px rgba(0,0,0,.25)}' +
       '#consent-banner .cb-in{max-width:960px;margin:0 auto;display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}#consent-banner p{margin:0;flex:1 1 320px}' +
-      '#consent-banner a{color:#9cf}#consent-banner button{font:inherit;font-weight:600;padding:9px 16px;border-radius:8px;border:1px solid #fff;cursor:pointer;background:transparent;color:#fff}#consent-banner button.ok{background:#fff;color:#111}</style>' +
+      '#consent-banner a{color:#9cf}#consent-banner button{font:inherit;font-weight:600;min-height:48px;padding:10px 18px;border-radius:10px;border:1px solid #fff;cursor:pointer;background:transparent;color:#fff}#consent-banner button.ok{background:#fff;color:#111}</style>' +
       '<div class="cb-in"><p>Używamy Meta Pixel i Meta Conversions API (pliki cookie i dane o zakupie przesyłane do Meta), żeby mierzyć skuteczność naszych reklam na Facebooku/Instagramie. Możesz odmówić – strona i zakupy działają bez tego tak samo. Decyzję zmienisz w każdej chwili („Ustawienia cookies” w stopce). <a href="/legal/polityka-prywatnosci.html">Polityka prywatności</a></p>' +
       '<span><button type="button" class="ok" data-consent="granted">Akceptuję</button> <button type="button" data-consent="denied">Odrzucam</button></span></div>';
     el.addEventListener('click', function (e) { var b = e.target.closest('[data-consent]'); if (b) decide(b.getAttribute('data-consent')); });
