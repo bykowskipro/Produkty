@@ -1,0 +1,13 @@
+{
+  "name": "creatives",
+  "private": true,
+  "type": "module",
+  "version": "0.1.0",
+  "description": "Render HTML creative templates to PNG (Meta ads, social posts) with Playwright/Chromium.",
+  "scripts": {
+    "render": "node render.mjs templates out"
+  },
+  "devDependencies": {
+    "playwright": "^1.50.0"
+  }
+}
