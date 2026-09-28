@@ -45,7 +45,7 @@ p{text-wrap:pretty}
 .sig{display:flex;align-items:center;gap:14px;font-size:22px;line-height:1.3;color:rgba(255,255,255,.58)}
 .sig svg{width:30px;height:30px;flex:none}
 /* states */
-.st{display:inline-flex;align-items:center;justify-content:center;flex:none;height:54px;min-width:112px;padding:0 16px;border-radius:14px;font:700 26px/1 var(--inter)}
+.st{display:inline-flex;align-items:center;justify-content:center;flex:none;height:54px;min-width:108px;padding:0 14px;border-radius:14px;font:700 25px/1 var(--inter)}
 .st.ok{background:var(--ok);color:#fff}.st.warn{background:var(--warn);color:var(--ink)}.st.bad{background:var(--bad);color:#fff}.st.skip{background:var(--mist);color:#475569}
 /* phone mockup */
 .phone{position:relative;display:flex;flex-direction:column;width:440px;height:820px;border-radius:64px;background:#171e30;border:3px solid rgba(255,255,255,.18);padding:14px;box-shadow:0 40px 100px rgba(0,0,0,.6),0 0 0 1px rgba(0,0,0,.7)}
@@ -57,7 +57,7 @@ p{text-wrap:pretty}
 .ph-top b{display:block;font:700 34px/1.1 var(--sg);letter-spacing:-.02em;margin-top:6px}
 .prog{height:10px;border-radius:999px;background:var(--mist);margin-top:14px;overflow:hidden}
 .prog i{display:block;height:100%;background:var(--violet)}
-.row{flex:none;display:flex;align-items:center;gap:16px;padding:18px 22px;border-bottom:2px solid var(--line);background:#fff}
+.row{flex:none;display:flex;align-items:center;gap:12px;padding:20px 22px;border-bottom:2px solid var(--line);background:#fff}
 .row-t{flex:1;min-width:0;font:600 28px/1.2 var(--inter)}
 .row-t small{display:block;font:400 22px/1.25 var(--inter);color:#64748B;margin-top:4px}
 .row.xtra{display:none}
@@ -65,8 +65,9 @@ p{text-wrap:pretty}
 .ans{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .ans span{display:flex;align-items:center;justify-content:center;height:52px;border-radius:12px;font:700 24px/1 var(--inter);background:#fff;border:2px solid var(--line);color:#475569}
 .ans span.ok{border-color:var(--ok);color:var(--ok)}.ans span.warn{border-color:var(--warn);color:#B45309}.ans span.bad{border-color:var(--bad);color:var(--bad)}
-.ph-bar{margin-top:auto;flex:none;background:var(--ink);color:#fff;padding:22px 26px;display:flex;align-items:center;gap:12px;font:600 26px/1.2 var(--inter);white-space:nowrap}
+.ph-bar{margin-top:auto;flex:none;background:var(--ink);color:#fff;padding:20px 26px;display:flex;align-items:center;gap:16px;font:600 26px/1.25 var(--inter)}
 .ph-bar .dot{flex:none;width:18px;height:18px;border-radius:50%;background:var(--bad);box-shadow:0 0 0 6px rgba(220,38,38,.25)}
+.ph-bar b{display:block}
 .ph-bar b{color:#FCA5A5;font-weight:700}
 .ph-bar .sep{opacity:.4}
 /* mascot with inline fallback */
@@ -90,18 +91,18 @@ h1{font-size:88px;margin-top:28px}
 .btns{position:relative;display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:22px}
 .b{display:flex;align-items:center;justify-content:center;height:136px;border-radius:26px;font:700 40px/1 var(--sg);letter-spacing:-.01em;color:#fff}
 .b.ok{background:var(--ok)}.b.warn{background:var(--warn);color:var(--ink)}.b.bad{background:var(--bad)}.b.skip{background:var(--mist);color:#475569;border:3px solid var(--line)}
-.finger{position:absolute;left:66px;top:66px;width:170px;height:200px;pointer-events:none}
+.finger{position:absolute;left:52px;top:96px;width:170px;height:200px;pointer-events:none}
 .finger .rip{position:absolute;left:82px;top:8px;width:70px;height:70px;border:5px solid var(--ink);border-radius:50%;transform:translate(-50%,-50%);opacity:.9}
 .finger .rip.r2{width:120px;height:120px;border-width:4px;opacity:.5}
 .finger .rip.r3{width:170px;height:170px;border-width:3px;opacity:.25}
 .finger svg{position:absolute;left:0;top:0;width:150px;height:190px}
-.counter{margin:22px -28px 0;background:var(--ink);color:#fff;border-radius:0 0 40px 40px;padding:22px 36px;display:flex;align-items:center;justify-content:flex-end;gap:14px;font:600 28px/1.2 var(--inter);white-space:nowrap}
+.counter{margin:22px -28px 0;background:var(--ink);color:#fff;border-radius:0 0 40px 40px;padding:22px 36px;display:flex;align-items:center;justify-content:flex-end;gap:12px;font:600 26px/1.2 var(--inter);white-space:nowrap}
 .counter .dot{flex:none;width:18px;height:18px;border-radius:50%;background:var(--bad);box-shadow:0 0 0 6px rgba(220,38,38,.25)}
 .counter b{color:#FCA5A5}.counter .sep{opacity:.4}
 .bottom{margin-top:auto;display:flex;align-items:center;gap:14px;flex-wrap:nowrap}
 .bottom .pill{font-size:36px;padding:0 38px}
 .bottom .chip{font-size:26px;padding:0 22px}
-@media (min-height:1300px){h1{font-size:104px;margin-top:40px}.sub{font-size:36px;margin-top:24px}.deck{margin-top:44px;padding-top:36px}.b{height:180px;font-size:46px}.q b{font-size:38px}.finger{top:90px;left:70px}.btns{margin-top:28px}.counter{margin-top:30px;padding:26px 36px;font-size:30px}}
+@media (min-height:1300px){h1{font-size:104px;margin-top:40px}.sub{font-size:36px;margin-top:24px}.deck{margin-top:44px;padding-top:36px}.b{height:180px;font-size:46px}.q b{font-size:38px}.finger{top:122px;left:52px}.btns{margin-top:28px}.counter{margin-top:30px;padding:26px 36px;font-size:28px}}
 
 </style>
 </head>
@@ -115,7 +116,7 @@ h1{font-size:88px;margin-top:28px}
   <div class="q"><small>Punkt 47 · Pod maską — tylko na zimnym</small><b>Zimny start: stuki, dym, nierówna praca?</b></div>
   <div class="btns">
     <span class="b ok">OK</span><span class="b warn">Uwaga</span><span class="b bad">Problem</span><span class="b skip">Pomiń</span>
-    <div class="finger" aria-hidden="true"><i class="rip r3"></i><i class="rip r2"></i><i class="rip"></i>
+    <div class="finger" aria-hidden="true" data-bleed><i class="rip r3"></i><i class="rip r2"></i><i class="rip"></i>
       <svg viewBox="0 0 120 150"><g fill="#0B0F19" stroke="#fff" stroke-width="7" stroke-linejoin="round"><rect x="22" y="58" width="92" height="86" rx="32"/><rect x="52" y="4" width="30" height="92" rx="15"/><rect x="2" y="72" width="30" height="62" rx="15" transform="rotate(-32 17 103)"/></g><g fill="#0B0F19"><rect x="22" y="58" width="92" height="86" rx="32"/><rect x="52" y="4" width="30" height="92" rx="15"/><rect x="2" y="72" width="30" height="62" rx="15" transform="rotate(-32 17 103)"/></g><g fill="none" stroke="rgba(255,255,255,.35)" stroke-width="4" stroke-linecap="round"><path d="M84 78v22M100 84v22"/></g></svg>
     </div>
   </div>

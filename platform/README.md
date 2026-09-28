@@ -73,8 +73,8 @@ Wdrożenie na VPS: **`ops/DEPLOY.md`** (krok po kroku, Docker Compose + Caddy z 
 | `PORT` / `NODE_ENV` | Port aplikacji (3000) / `production` na serwerze |
 | `STRIPE_SECRET_KEY` | Klucz `sk_live_…`/`sk_test_…`; brak = tryb testowy (w produkcji wymagany) |
 | `STRIPE_WEBHOOK_SECRET` | `whsec_…` z endpointu webhooka `https://DOMENA/webhook/stripe` |
-| `CHECKOUT_TERMS_TEXT` | (opcjonalnie) własny tekst zgody w Checkout; `{BASE_URL}` jest podmieniane |
-| `CHECKOUT_SUBMIT_TEXT` | (opcjonalnie) tekst nad przyciskiem płatności |
+| `CHECKOUT_TERMS_TEXT` | (opcjonalnie) własny tekst zgody w Checkout; `{BASE_URL}` i `{SITE_NAME}` są podmieniane; domyślny (żądanie natychmiastowej dostawy + art. 38 ust. 1 pkt 13 UPK + gwarancja zwrotu) w `src/config.js`, uzasadnienie w `legal/01-teksty.md` |
+| `CHECKOUT_SUBMIT_TEXT` | (opcjonalnie) tekst nad przyciskiem płatności; domyślnie „Dostęp wyślemy od razu na e-mail. 14 dni gwarancji zwrotu.” |
 | `MOCK_MODE` | `1` wymusza tryb testowy (także z kluczem Stripe) |
 | `RESEND_API_KEY` | Klucz Resend; brak = e-maile zapisywane do `data/outbox/` |
 | `EMAIL_FROM` / `EMAIL_REPLY_TO` | Nadawca (domena zweryfikowana w Resend) / adres na odpowiedzi |

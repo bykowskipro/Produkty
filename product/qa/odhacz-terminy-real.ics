@@ -6,7 +6,7 @@ METHOD:PUBLISH
 X-WR-CALNAME:Kupione — i co dalej – terminy
 BEGIN:VEVENT
 UID:pcc3-20261004@odhacz
-DTSTAMP:20260928T191937Z
+DTSTAMP:20260928T192039Z
 DTSTART;VALUE=DATE:20261004
 DTEND;VALUE=DATE:20261005
 SUMMARY:Odhacz: PCC-3 — deklaracja i zapłata 2%
@@ -30,7 +30,7 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:oc-sprzedajacy-20261004@odhacz
-DTSTAMP:20260928T191937Z
+DTSTAMP:20260928T192039Z
 DTSTART;VALUE=DATE:20261004
 DTEND;VALUE=DATE:20261005
 SUMMARY:Odhacz: Zgłoszenie sprzedaży do ubezpieczyciela
@@ -54,7 +54,7 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:przeglad-startowy-20261004@odhacz
-DTSTAMP:20260928T191937Z
+DTSTAMP:20260928T192039Z
 DTSTART;VALUE=DATE:20261004
 DTEND;VALUE=DATE:20261005
 SUMMARY:Odhacz: Przegląd „na start” (olej\, filtry\, płyny\, diagnos
@@ -79,7 +79,7 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:rejestracja-20261020@odhacz
-DTSTAMP:20260928T191937Z
+DTSTAMP:20260928T192039Z
 DTSTART;VALUE=DATE:20261020
 DTEND;VALUE=DATE:20261021
 SUMMARY:Odhacz: Rejestracja pojazdu — złożenie wniosku
@@ -103,7 +103,7 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:zbycie-sprzedajacy-20261020@odhacz
-DTSTAMP:20260928T191937Z
+DTSTAMP:20260928T192039Z
 DTSTART;VALUE=DATE:20261020
 DTEND;VALUE=DATE:20261021
 SUMMARY:Odhacz: Zawiadomienie o zbyciu pojazdu (wydział komunikacji)
@@ -126,7 +126,7 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:obserwacja-30-20261020@odhacz
-DTSTAMP:20260928T191937Z
+DTSTAMP:20260928T192039Z
 DTSTART;VALUE=DATE:20261020
 DTEND;VALUE=DATE:20261021
 SUMMARY:Odhacz: Koniec 30-dniowej obserwacji — podsumowanie dziennika
@@ -144,6 +144,36 @@ BEGIN:VALARM
 ACTION:DISPLAY
 TRIGGER;VALUE=DURATION:PT9H
 DESCRIPTION:Dziś: Koniec 30-dniowej obserwacji — podsumowanie dziennika
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:oc-koniec-20270310@odhacz
+DTSTAMP:20260928T192039Z
+DTSTART;VALUE=DATE:20270310
+DTEND;VALUE=DATE:20270311
+SUMMARY:Odhacz: Koniec przejętej polisy OC — kup własną
+DESCRIPTION:Kto: kupujący\nJak: Data z polisy sprzedającego. Przejęta p
+ olisa nie odnawia się automatycznie\; nowa musi zaczynać się najpóźn
+ iej dzień po końcu starej (albo w dniu wypowiedzenia).\nDotyczy\, gdy: 
+ Zawsze\, gdy kontynuujesz polisę sprzedającego. Kary UFG 2026 (osobowe)
+ : 1 920 / 4 810 / 9 610 zł.\nhttps://www.ufg.pl/infoportal/faces/oracle/
+ webcenter/portalapp/pagehierarchy/Page259.jspx\nZ aplikacji Kupione — i
+  co dalej.
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER;VALUE=DURATION:-P6DT15H
+DESCRIPTION:Za 7 dni: Koniec przejętej polisy OC — kup własną
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER;VALUE=DURATION:-PT15H
+DESCRIPTION:Jutro: Koniec przejętej polisy OC — kup własną
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER;VALUE=DURATION:PT9H
+DESCRIPTION:Dziś: Koniec przejętej polisy OC — kup własną
 END:VALARM
 END:VEVENT
 END:VCALENDAR

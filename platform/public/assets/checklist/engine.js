@@ -83,6 +83,7 @@
     edit: svg('<path d="M4 20h4l11-11-4-4L4 16z"/>'),
     home: svg('<path d="M3 11l9-8 9 8v10h-6v-6H9v6H3z"/>'),
     bolt: svg('<path d="M13 2L4 14h7l-1 8 9-12h-7z"/>'),
+    alert: svg('<circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/>'),
   };
 
   /* ------------------------------------------------------------------ mascot (Hacz) */
@@ -189,13 +190,55 @@
       });
     });
     if (c.quick_start && Array.isArray(c.quick_start.steps)) c.quick_start.steps = c.quick_start.steps.map((s) => (typeof s === 'string' ? { text: s } : (s || {})));
+    // Deadlines: top-level entries (days_from_purchase | date_from_input(+remind_days_before) | days_from_input(+days)) and
+    // item-level ones (days_from_purchase | days_before_input+input_ref | days_from_input+input_ref). Item rows duplicating a
+    // top-level rule (same anchor, same "who", same hardness) are dropped – the top-level entry carries the richer info.
     c.deadlineRows = [];
-    (Array.isArray(c.deadlines) ? c.deadlines : []).forEach((d, i) => { if (d && typeof d.days_from_purchase === 'number') c.deadlineRows.push({ id: d.id || 'dl' + i, label: d.label || '', days: d.days_from_purchase, who: d.who, how: d.how, applies_if: d.applies_if, source: d.source }); });
-    c.items.forEach((it) => { if (it.deadline && typeof it.deadline.days_from_purchase === 'number' && !c.deadlineRows.some((r) => r.id === 'item-' + it.id)) c.deadlineRows.push({ id: 'item-' + it.id, label: it.text, days: it.deadline.days_from_purchase, who: 'Ty', how: it.how, itemId: it.id }); });
-    c.deadlineRows.sort((a, b) => a.days - b.days);
+    const whoNorm = (w) => { w = String(w || 'kupujący').toLowerCase(); return /sprzeda/.test(w) ? 's' : (/kupuj|^ty$|nabyw/.test(w) ? 'k' : 'o'); };
+    const rowKey = (r) => (r.anchor === 'pd' ? 'pd|' + r.days + '|' + whoNorm(r.who) + '|' + (r.soft ? 1 : 0) : 'in|' + r.ref + '|' + whoNorm(r.who));
+    (Array.isArray(c.deadlines) ? c.deadlines : []).forEach((d, i) => {
+      if (!d || typeof d !== 'object') return;
+      const base = { id: d.id || 'dl' + i, label: d.label || '', who: d.who, how: d.how, applies_if: d.applies_if, source: d.source, soft: d.hard === false || d.soft === true, confidence: d.confidence, remind: typeof d.remind_days_before === 'number' ? d.remind_days_before : null, top: true };
+      if (typeof d.days_from_purchase === 'number') c.deadlineRows.push(Object.assign(base, { anchor: 'pd', days: d.days_from_purchase }));
+      else if (typeof d.date_from_input === 'string') c.deadlineRows.push(Object.assign(base, { anchor: 'input', ref: d.date_from_input, days: 0 }));
+      else if (typeof d.days_from_input === 'string') c.deadlineRows.push(Object.assign(base, { anchor: 'input', ref: d.days_from_input, days: typeof d.days === 'number' ? d.days : 0 }));
+      else if (typeof d.input_ref === 'string' && typeof d.days_from_input === 'number') c.deadlineRows.push(Object.assign(base, { anchor: 'input', ref: d.input_ref, days: d.days_from_input }));
+      else if (typeof d.input_ref === 'string' && typeof d.days_before_input === 'number') c.deadlineRows.push(Object.assign(base, { anchor: 'input', ref: d.input_ref, days: -d.days_before_input }));
+    });
+    const keys = new Set(c.deadlineRows.map(rowKey));
+    c.items.forEach((it) => {
+      const d = it.deadline; if (!d || typeof d !== 'object') return;
+      const base = { id: 'item-' + it.id, label: d.label || it.text, who: d.who, how: it.how, soft: !!d.soft, itemId: it.id, top: false };
+      let row = null;
+      if (typeof d.days_from_purchase === 'number') row = Object.assign(base, { anchor: 'pd', days: d.days_from_purchase });
+      else if (typeof d.input_ref === 'string' && typeof d.days_before_input === 'number') row = Object.assign(base, { anchor: 'input', ref: d.input_ref, days: -d.days_before_input });
+      else if (typeof d.input_ref === 'string' && typeof d.days_from_input === 'number') row = Object.assign(base, { anchor: 'input', ref: d.input_ref, days: d.days_from_input });
+      if (!row) return;
+      it.deadlineRow = row;
+      const k = rowKey(row); if (keys.has(k)) return; keys.add(k);
+      c.deadlineRows.push(row);
+    });
+    c.deadlineRows.sort((a, b) => (a.anchor === b.anchor ? a.days - b.days : a.anchor === 'pd' ? -1 : 1));
     return c;
   }
   const HEAVY_RE = /silnik|mask|jazd|prób|napęd|naped|skrzyn|engine|drive|gearbox|turbo|rozrz|sprzęg|sprzeg|głowic|glowic/i;
+  const DATE_TYPES = { date: 1, datetime: 1 };
+  /** Short display of an input value (badges). */
+  function fmtInput(it, v) {
+    if (v == null || v === '') return '';
+    const t = it.input && it.input.type;
+    if (Array.isArray(v)) return v.length + ' ' + plural(v.length, 'wpis', 'wpisy', 'wpisów');
+    if (t === 'date') return fmtPl(String(v)) || String(v);
+    if (t === 'datetime') { const str = String(v); return parseDate(str) ? fmtPl(str) + (str.length > 10 ? ' ' + str.slice(11, 16) : '') : str; }
+    if (t === 'number') return v + (it.input && it.input.unit ? ' ' + it.input.unit : '');
+    const str = String(v); return str.length > 60 ? str.slice(0, 57) + '…' : str;
+  }
+  /** Full text of an input value (lists, print, clipboard). */
+  function inputText(it, v) {
+    if (Array.isArray(v)) return v.map((e) => fmtPl(e.d, { day: 'numeric', month: 'short' }) + ': ' + e.t).join('; ');
+    if (it.input && (it.input.type === 'text' || it.input.type === 'choice')) return String(v == null ? '' : v);
+    return fmtInput(it, v);
+  }
 
   /* ------------------------------------------------------------------ mount */
   const Checklist = {
@@ -295,29 +338,37 @@
   /* ------------------------------------------------------------------ sync (Access.*) */
   App.prototype.buildPayload = function (limit) {
     const cars = {}; const s = this.state;
+    // Synced blob = ids, states, inputs, notes only (+ car name, creation time, purchase date, call-script ticks). Never photos or UI flags.
     const order = Object.keys(s.cars).sort((x, y) => String(s.cars[y].u || s.cars[y].created || '').localeCompare(String(s.cars[x].u || s.cars[x].created || '')));
-    const make = (noteLen, maxCars) => {
+    const shrinkInput = (v, lvl) => {
+      if (Array.isArray(v)) { const keep = lvl >= 2 ? 3 : 10; return v.slice(-keep).map((e) => ({ d: e.d, t: String(e.t || '').slice(0, lvl >= 2 ? 60 : 120) })); }
+      if (typeof v === 'string' && v.length > 200) return v.slice(0, lvl >= 1 ? 80 : 200);
+      return v;
+    };
+    const make = (noteLen, maxCars, lvl) => {
       const out = { v: 1, t: s.t, active: s.active, cars: {} };
       order.slice(0, maxCars).forEach((id) => {
         const car = s.cars[id]; const a = {};
         Object.keys(car.a || {}).forEach((k) => {
-          const v = car.a[k].slice(); if (v[2] && noteLen >= 0) v[2] = noteLen === 0 ? undefined : String(v[2]).slice(0, noteLen);
+          const v = car.a[k].slice();
+          if (v[1] != null && lvl >= 1) v[1] = shrinkInput(v[1], lvl);
+          if (v[2] && noteLen >= 0) v[2] = noteLen === 0 ? undefined : String(v[2]).slice(0, noteLen);
           while (v.length && (v[v.length - 1] == null || v[v.length - 1] === '')) v.pop();
           if (v.length) a[k] = v;
         });
-        const row = { name: car.name, created: car.created, u: car.u, a: a };
+        const row = { name: car.name, created: car.created, a: a };
         if (car.q && Object.keys(car.q).length) row.q = car.q;
         if (car.pd) row.pd = car.pd;
         out.cars[id] = row;
       });
       return out;
     };
-    const plans = [[-1, 99], [200, 99], [80, 99], [0, 99], [0, 5], [0, 3], [0, 1]];
-    for (const [noteLen, maxCars] of plans) {
-      const p = make(noteLen, maxCars); const bytes = new Blob([JSON.stringify(p)]).size;
-      if (bytes <= limit) { if (noteLen >= 0) p.trunc = 1; return p; }
+    const plans = [[-1, 99, 0], [200, 99, 1], [80, 99, 2], [0, 99, 2], [0, 5, 2], [0, 3, 2], [0, 1, 2]];
+    for (const [noteLen, maxCars, lvl] of plans) {
+      const p = make(noteLen, maxCars, lvl); const bytes = new Blob([JSON.stringify(p)]).size;
+      if (bytes <= limit) { if (lvl > 0) p.trunc = 1; return p; }
     }
-    return make(0, 1);
+    return make(0, 1, 2);
   };
   App.prototype.scheduleSync = function () {
     if (!this.hasAccess) return;
@@ -345,7 +396,7 @@
       const localT = this.state.t || ''; const remoteT = remote.t || '';
       if (remoteT && remoteT > localT) {
         const merged = {}; let keptLocal = false;
-        Object.keys(remote.cars).forEach((id) => { const rc = remote.cars[id]; merged[id] = { name: rc.name || 'Auto', created: rc.created || remoteT, u: rc.u, a: rc.a || {}, q: rc.q, pd: rc.pd }; });
+        Object.keys(remote.cars).forEach((id) => { const rc = remote.cars[id]; merged[id] = { name: rc.name || 'Auto', created: rc.created || remoteT, a: rc.a || {}, q: rc.q, pd: rc.pd }; });
         Object.keys(this.state.cars).forEach((id) => { const lc = this.state.cars[id]; if (!merged[id] && lc.created && lc.created > remoteT && Object.keys(lc.a || {}).length) { merged[id] = lc; keptLocal = true; } });
         this.state.cars = merged; this.state.t = remoteT; this.state.dirty = keptLocal ? 1 : 0;
         if (remote.active && merged[remote.active]) this.state.active = remote.active;
@@ -441,9 +492,11 @@
     const self = this; const c = this.counts();
     const bar = el('div', { class: 'flagbar', role: 'status' });
     const inner = el('div', { class: 'flagbar__in' });
-    inner.append(el('div', { class: 'flagbar__count' + (c.problem ? ' is-bad' : '') }, el('b', { text: String(c.problem) }), el('small', { text: plural(c.problem, 'czerwona flaga', 'czerwone flagi', 'czerwonych flag') })));
-    inner.append(el('div', { class: 'flagbar__count' + (c.uwaga ? ' is-warn' : ''), style: 'margin-left:6px' }, el('b', { text: String(c.uwaga) }), el('small', { text: plural(c.uwaga, 'uwaga', 'uwagi', 'uwag') })));
-    if (c.db) inner.append(el('div', { class: 'flagbar__db', text: c.db + ' ' + plural(c.db, 'dealbreaker', 'dealbreakery', 'dealbreakerów') }));
+    const fc = (cls, icon, n, word, aria) => el('span', { class: 'fc fc--' + cls + (n ? ' is-on' : ''), role: 'img', 'aria-label': aria, title: aria }, el('span', { class: 'fc__i', html: icon }), el('b', { text: String(n) }), el('small', { text: word }));
+    inner.append(el('div', { class: 'flagbar__counts' },
+      fc('bad', ICON.flag, c.problem, plural(c.problem, 'flaga', 'flagi', 'flag'), c.problem + ' ' + plural(c.problem, 'czerwona flaga', 'czerwone flagi', 'czerwonych flag')),
+      fc('warn', ICON.alert, c.uwaga, plural(c.uwaga, 'uwaga', 'uwagi', 'uwag'), c.uwaga + ' ' + plural(c.uwaga, 'uwaga', 'uwagi', 'uwag')),
+      c.db ? fc('db', ICON.warn, c.db, 'dealbreaker', c.db + ' ' + plural(c.db, 'dealbreaker', 'dealbreakery', 'dealbreakerów')) : null));
     if (this.route.view !== 'summary') inner.append(el('button', { class: 'btn', type: 'button', onclick: () => self.go('summary') }, 'Podsumowanie', el('span', { html: ICON.chev, style: 'transform:rotate(-90deg);display:inline-flex' })));
     else inner.append(el('button', { class: 'btn', type: 'button', onclick: () => self.go('') }, el('span', { html: ICON.home }), 'Start'));
     bar.append(inner);
@@ -554,9 +607,9 @@
     if (ph.subtitle) out.push(el('p', { class: 'muted' }, ph.subtitle));
     const chips = el('div', { class: 'chips' });
     if (ph.est_minutes) chips.append(el('span', { class: 'chip' }, el('span', { html: ICON.clock }), '~' + ph.est_minutes + ' min'));
-    if (ph.when) chips.append(el('span', { class: 'chip' }, el('span', { html: ICON.pin }), ph.when));
     chips.append(el('span', { class: 'chip', id: 'phase-progress' }, p.answered + '/' + p.total + ' odhaczone'));
     out.push(chips);
+    if (ph.when) out.push(el('p', { class: 'when' }, el('span', { html: ICON.pin }), el('span', null, el('b', null, 'Kiedy: '), ph.when)));
     if (ph.intro) out.push(el('div', { class: 'phase-intro' }, mascot(), el('div', { class: 'bubble' }, el('b', null, 'Hacz: '), ph.intro, el('span', { class: 'sign' }, 'Hacz – asystent AI marki Odhacz'))));
     ph.sections.forEach((sec) => {
       if (sec.title) out.push(el('div', { class: 'section-title' }, sec.title));
@@ -580,7 +633,7 @@
     if (it.dealbreaker) badges.append(el('span', { class: 'badge badge--db' }, el('span', { html: ICON.warn, style: 'width:16px;height:16px;display:inline-flex' }), 'dealbreaker'));
     if (it.severity === 'red' && !it.dealbreaker) badges.append(el('span', { class: 'badge badge--red' }, 'czerwona flaga'));
     if (it.severity === 'info') badges.append(el('span', { class: 'badge badge--info' }, 'info'));
-    if (it.input && a[1] != null && a[1] !== '') badges.append(el('span', { class: 'badge' }, a[1] + (it.input.unit ? ' ' + it.input.unit : '')));
+    if (it.input && a[1] != null && a[1] !== '') badges.append(el('span', { class: 'badge badge--val' }, fmtInput(it, a[1])));
     if (a[2]) badges.append(el('span', { class: 'badge badge--note' }, el('span', { html: ICON.note, style: 'width:14px;height:14px;display:inline-flex' }), el('span', { text: a[2] })));
     const thumbs = el('span', { class: 'row', style: 'gap:4px;display:inline-flex' });
     badges.append(thumbs);
@@ -593,15 +646,11 @@
     if (it.how) hw.append(el('p', null, el('b', null, 'Jak sprawdzić: '), it.how));
     if (it.why) hw.append(el('p', null, el('b', null, 'Dlaczego: '), it.why));
     if (it.flag_label && it.severity !== 'info') hw.append(el('p', null, el('b', null, 'Czerwona flaga: '), it.flag_label));
-    if (it.deadline && typeof it.deadline.days_from_purchase === 'number') hw.append(el('p', null, el('b', null, 'Termin: '), it.deadline.days_from_purchase + ' ' + plural(it.deadline.days_from_purchase, 'dzień', 'dni', 'dni') + ' od zakupu' + (self.car().pd ? ' → ' + fmtPl(addDays(self.car().pd, it.deadline.days_from_purchase)) : '')));
+    if (it.deadlineRow) { const dtxt = this.deadlineText(it.deadlineRow); if (dtxt) hw.append(el('p', { class: 'dl-inline' }, el('b', null, 'Termin: '), dtxt)); }
     if (hw.childNodes.length) body.append(hw);
     row.append(body);
-    // input
-    if (it.input) {
-      const inp = el('input', { type: it.input.type === 'number' ? 'number' : 'text', inputmode: it.input.type === 'number' ? 'decimal' : 'text', step: 'any', placeholder: it.input.type === 'number' ? '0' : '', value: a[1] != null ? a[1] : '', 'aria-label': it.input.label || 'Pomiar' });
-      inp.addEventListener('input', () => { const v = inp.value === '' ? null : (it.input.type === 'number' ? Number(inp.value) : inp.value); self.setAnswer(it.id, { input: v }); self.refreshBadges(it, row); });
-      row.append(el('div', { class: 'field' }, it.input.label ? el('label', { text: it.input.label }) : null, el('div', { class: 'inwrap', style: 'grid-column:1/-1' }, inp, it.input.unit ? el('span', { class: 'unit', text: it.input.unit }) : null), it.input.hint ? el('span', { class: 'hint', text: it.input.hint }) : null));
-    }
+    // input (number | text | date | datetime | choice | log; unknown -> text)
+    if (it.input && typeof it.input === 'object') row.append(this.inputField(it, a, row));
     // answers
     const answers = el('div', { class: 'answers' });
     this.content.answer_states.forEach((st) => {
@@ -624,6 +673,83 @@
     row.append(tools, noteBox, photosBox);
     if (it.photo) this.loadPhotos(it, row, true);
     return row;
+  };
+  App.prototype.inputField = function (it, a, row) {
+    const self = this; const inp = it.input; const type = inp.type || 'text'; const val = a[1];
+    const wrap = el('div', { class: 'field' }); if (inp.label) wrap.append(el('label', { text: inp.label }));
+    const save = (v) => { self.setAnswer(it.id, { input: v }); self.refreshBadges(it, row); if (DATE_TYPES[type]) self.refreshDeadlineTexts(); };
+    if (type === 'choice' && Array.isArray(inp.options) && inp.options.length) {
+      const box = el('div', { class: 'choices', role: 'group', 'aria-label': inp.label || 'Wybór' });
+      inp.options.forEach((opt) => {
+        const label = typeof opt === 'string' ? opt : (opt && (opt.label || opt.value)) || ''; const value = typeof opt === 'string' ? opt : (opt && (opt.value || opt.label)) || '';
+        const b = el('button', { type: 'button', class: 'choice' + (val === value ? ' is-on' : ''), 'aria-pressed': val === value ? 'true' : 'false', 'data-value': value, text: label });
+        b.addEventListener('click', () => { const cur = (self.ans(it.id) || [])[1]; const next = cur === value ? null : value; save(next); box.querySelectorAll('.choice').forEach((x) => { const on = next != null && x.getAttribute('data-value') === next; x.classList.toggle('is-on', on); x.setAttribute('aria-pressed', on ? 'true' : 'false'); }); });
+        box.append(b);
+      });
+      wrap.append(box);
+    } else if (type === 'log') {
+      wrap.append(this.logField(it, row));
+    } else {
+      const htmlType = type === 'number' ? 'number' : type === 'date' ? 'date' : type === 'datetime' ? 'datetime-local' : 'text';
+      const field = el('input', { type: htmlType, inputmode: type === 'number' ? 'decimal' : null, step: type === 'number' ? 'any' : null, placeholder: type === 'number' ? '0' : null, value: val != null && !Array.isArray(val) ? val : '', 'aria-label': inp.label || 'Pomiar', maxlength: htmlType === 'text' ? '300' : null });
+      let last = field.value;
+      const onChange = () => { if (field.value === last) return; last = field.value; const v = field.value === '' ? null : (type === 'number' ? Number(field.value) : field.value); save(v); };
+      field.addEventListener('input', onChange); field.addEventListener('change', onChange);
+      wrap.append(el('div', { class: 'inwrap', style: 'grid-column:1/-1' }, field, inp.unit ? el('span', { class: 'unit', text: inp.unit }) : null));
+    }
+    if (inp.hint) wrap.append(el('span', { class: 'hint', text: inp.hint }));
+    return wrap;
+  };
+  App.prototype.logField = function (it, row) {
+    const self = this; const box = el('div', { class: 'log', style: 'grid-column:1/-1' });
+    const render = () => {
+      box.innerHTML = '';
+      const cur = (self.ans(it.id) || [])[1]; const entries = Array.isArray(cur) ? cur : [];
+      if (entries.length) {
+        const ul = el('ul', { class: 'log__list' });
+        entries.forEach((e, i) => ul.append(el('li', null, el('span', { class: 'log__d', text: fmtPl(e.d, { day: 'numeric', month: 'short' }) || e.d }), el('span', { class: 'grow', text: e.t }),
+          el('button', { type: 'button', class: 'iconbtn', 'aria-label': 'Usuń wpis', onclick: () => { const arr = entries.slice(); arr.splice(i, 1); self.setAnswer(it.id, { input: arr.length ? arr : null }); render(); self.refreshBadges(it, row); } }, el('span', { html: ICON.close })))));
+        box.append(ul);
+      }
+      const date = el('input', { type: 'date', value: todayStr(), 'aria-label': 'Data wpisu' });
+      const txt = el('input', { type: 'text', placeholder: 'Np. 12 400 km – stuk z przodu na progach', 'aria-label': 'Treść wpisu', maxlength: '200' });
+      const add = () => { const t = txt.value.trim(); if (!t) return; const arr = entries.concat([{ d: parseDate(date.value) ? date.value : todayStr(), t: t.slice(0, 200) }]); self.setAnswer(it.id, { input: arr }); render(); self.refreshBadges(it, row); };
+      txt.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); add(); } });
+      box.append(el('div', { class: 'log__add' }, date, txt, el('button', { type: 'button', class: 'btn btn--small btn--primary', onclick: add }, 'Dodaj wpis')));
+    };
+    render(); return box;
+  };
+  /** Date value typed in an item's date/datetime input (YYYY-MM-DD) or null. */
+  App.prototype.dateInput = function (itemId) {
+    const it = this.content.itemById[itemId]; const a = this.ans(itemId);
+    if (!it || !a || a[1] == null || typeof a[1] !== 'string') return null;
+    const m = /^(\d{4}-\d{2}-\d{2})/.exec(a[1]); return m && parseDate(m[1]) ? m[1] : null;
+  };
+  /** Purchase date: set by the user in Deadlines, or derived from a date/datetime item about the contract, or null. */
+  App.prototype.purchaseDate = function () {
+    const car = this.car(); if (car.pd) return car.pd;
+    const it = this.content.items.find((x) => x.input && DATE_TYPES[x.input.type] && /umow|zakup|nabyc/i.test((x.input.label || '') + ' ' + x.text) && this.dateInput(x.id));
+    return it ? this.dateInput(it.id) : null;
+  };
+  /** Rows with a computed `due` date (YYYY-MM-DD) or a `pendingRef` item whose date is still missing. */
+  App.prototype.resolveDeadlines = function (pd) {
+    return this.content.deadlineRows.map((r) => {
+      let due = null, pendingRef = null;
+      if (r.anchor === 'pd') due = pd ? addDays(pd, r.days) : null;
+      else { const d = this.dateInput(r.ref); if (d) due = addDays(d, r.days); else pendingRef = this.content.itemById[r.ref] || { id: r.ref, text: r.ref }; }
+      return Object.assign({}, r, { due: due, pendingRef: pendingRef });
+    }).sort((x, y) => (x.due && y.due ? x.due.localeCompare(y.due) : x.due ? -1 : y.due ? 1 : 0));
+  };
+  App.prototype.deadlineText = function (r) {
+    const abs = Math.abs(r.days); const dni = abs + ' ' + plural(abs, 'dzień', 'dni', 'dni');
+    if (r.anchor === 'pd') { const pd = this.purchaseDate(); return dni + ' od zakupu' + (pd ? ' → ' + fmtPl(addDays(pd, r.days)) : ' (datę zakupu ustawisz w „Terminach”)'); }
+    const ref = this.content.itemById[r.ref]; const refLabel = ref ? ((ref.input && ref.input.label) || ref.text) : r.ref; const d = this.dateInput(r.ref);
+    const rel = r.days === 0 ? 'w dniu: ' + refLabel : dni + (r.days < 0 ? ' przed: ' : ' po: ') + refLabel;
+    return rel + (d ? ' → ' + fmtPl(addDays(d, r.days)) : ' (wpisz tę datę, żeby policzyć)');
+  };
+  App.prototype.refreshDeadlineTexts = function () {
+    const self = this;
+    this.root.querySelectorAll('.item[data-item]').forEach((rowEl) => { const it = self.content.itemById[rowEl.getAttribute('data-item')]; const n = $('.dl-inline', rowEl); if (it && it.deadlineRow && n) { n.innerHTML = ''; n.append(el('b', null, 'Termin: '), self.deadlineText(it.deadlineRow)); } });
   };
   App.prototype.refreshBadges = function (it, row) {
     const fresh = this.itemRow(it); const oldB = $('.item__badges', row); const newB = $('.item__badges', fresh);
@@ -705,15 +831,16 @@
     });
     return groups;
   };
+  App.prototype.listTitle = function () { return this.content.meta.list_title || (this.opts.kind === 'upsell' ? 'Lista uwag i braków' : 'Lista uwag do negocjacji'); };
   App.prototype.negoText = function () {
     const c = this.content; const car = this.car(); const cnt = this.counts(); const groups = this.negoGroups(); const rules = c.summary_rules || {};
-    const lines = ['Lista uwag do negocjacji – ' + car.name + ' (' + fmtPl(todayStr()) + ')', 'Problemy: ' + cnt.problem + ' · Uwagi: ' + cnt.uwaga + ' · Dealbreakery: ' + cnt.db, ''];
+    const lines = [this.listTitle() + ' – ' + car.name + ' (' + fmtPl(todayStr()) + ')', 'Problemy: ' + cnt.problem + ' · Uwagi: ' + cnt.uwaga + ' · Dealbreakery: ' + cnt.db, ''];
     groups.forEach((g) => {
       lines.push(g.phase.title.toUpperCase());
       g.rows.forEach((r) => {
         let l = '- [' + (STATE_LABEL[r.state] || r.state).toUpperCase() + '] ' + (r.item.flag_label && r.state === 'problem' ? r.item.flag_label : r.item.text);
         if (r.item.dealbreaker && r.state === 'problem') l += ' (DEALBREAKER)';
-        if (r.input != null && r.input !== '') l += ' – ' + r.input + (r.item.input && r.item.input.unit ? ' ' + r.item.input.unit : '');
+        if (r.input != null && r.input !== '') l += ' – ' + inputText(r.item, r.input);
         if (r.note) l += ' – ' + r.note;
         lines.push(l);
       });
@@ -743,7 +870,7 @@
     if (d.rules.length) dec.append(el('p', { style: 'margin:10px 0 0;font-weight:600' }, d.kind === 'walk' ? 'Zasada: odpuść, gdy…' : d.kind === 'mech' ? 'Zasada: mechanik, gdy…' : 'Zasada: negocjuj, gdy…'), el('ul', null, d.rules.map((r) => el('li', null, r))));
     out.push(dec);
     // list
-    const listCard = el('div', { class: 'card' }, el('h2', null, 'Lista uwag do negocjacji'));
+    const listCard = el('div', { class: 'card' }, el('h2', null, this.listTitle()));
     if (!groups.length) listCard.append(el('p', { class: 'empty' }, 'Jeszcze pusto. Każdy punkt oznaczony „Uwaga” lub „Problem” trafi tu automatycznie.'));
     else {
       const ul = el('ul', { class: 'negolist' });
@@ -751,7 +878,7 @@
         const li = el('li', null, el('div', { class: 'ph', text: g.phase.title }));
         g.rows.forEach((r) => {
           const meta = [];
-          if (r.input != null && r.input !== '') meta.push('pomiar: ' + r.input + (r.item.input && r.item.input.unit ? ' ' + r.item.input.unit : ''));
+          if (r.input != null && r.input !== '') meta.push((r.item.input && r.item.input.label ? r.item.input.label : 'pomiar') + ': ' + inputText(r.item, r.input));
           if (r.note) meta.push(r.note);
           li.append(el('div', { class: 'negoitem s-' + r.state }, el('span', { class: 'dot' }), el('div', null,
             el('div', null, el('b', { text: (STATE_LABEL[r.state] || r.state) + ': ' }), r.state === 'problem' && r.item.flag_label ? r.item.flag_label : r.item.text, r.item.dealbreaker && r.state === 'problem' ? el('span', { class: 'db' }, ' · dealbreaker') : null),
@@ -767,6 +894,7 @@
     if (navigator.share) actions.append(el('button', { class: 'btn', type: 'button', onclick: async () => { try { await navigator.share({ title: 'Lista uwag – ' + car.name, text: self.negoText() }); track('list_shared', { items: groups.reduce((n, g) => n + g.rows.length, 0) }); } catch (e) { /* cancelled */ } } }, el('span', { html: ICON.share }), 'Udostępnij'));
     actions.append(el('button', { class: 'btn', type: 'button', onclick: async () => { await self.preparePrint('summary'); track('pdf_printed', { items: groups.reduce((n, g) => n + g.rows.length, 0) }); window.print(); } }, el('span', { html: ICON.print }), 'Pobierz PDF'));
     listCard.append(actions);
+    listCard.append(el('p', { class: 'photo-warn' }, el('span', { html: ICON.camera, style: 'width:18px;height:18px;display:inline-flex;flex:none;margin-top:3px' }), el('span', null, 'Zdjęcia zostają tylko w tym telefonie (Safari może wyczyścić dane strony po ok. 7 dniach bez otwierania) – pobierz PDF albo skopiuj listę od razu po oględzinach.')));
     out.push(listCard);
     if (Array.isArray(rules.negotiation_phrases) && rules.negotiation_phrases.length) {
       const card = el('div', { class: 'card' }, el('h2', null, 'Gotowe zdania do rozmowy'), el('p', { class: 'muted' }, 'Bez wyceniania napraw – mówisz o faktach, sprzedawca mówi o cenie.'));
@@ -788,7 +916,7 @@
       root.append(this.contractDom(true)); return;
     }
     const cnt = this.counts(); const d = this.decide(cnt); const groups = this.negoGroups(); const rules = c.summary_rules || {};
-    root.append(el('h1', { text: (c.meta.title || 'Odhacz') + ' – lista uwag do negocjacji' }));
+    root.append(el('h1', { text: (c.meta.title || 'Odhacz') + ' – ' + this.listTitle().toLowerCase() }));
     root.append(el('div', { class: 'p-meta' }, car.name + ' · ' + fmtPl(todayStr()) + ' · ' + cnt.answered + '/' + cnt.total + ' punktów'));
     root.append(el('div', { class: 'p-counts' }, el('span', null, el('b', { text: String(cnt.ok) }), ' OK'), el('span', null, el('b', { text: String(cnt.uwaga) }), ' Uwaga'), el('span', null, el('b', { text: String(cnt.problem) }), ' Problem'), el('span', null, el('b', { text: String(cnt.db) }), ' Dealbreakery')));
     root.append(el('div', { class: 'p-decision' }, el('b', { text: d.title }), el('div', null, d.lead), d.reasons.length ? el('ul', null, d.reasons.map((r) => el('li', null, r))) : null));
@@ -799,7 +927,7 @@
       g.rows.forEach((r) => {
         const it = r.item; const box = el('div', { class: 'p-item' });
         box.append(el('div', null, el('span', { class: 'p-state s-' + r.state, text: (STATE_LABEL[r.state] || r.state).toUpperCase() + ': ' }), r.state === 'problem' && it.flag_label ? it.flag_label + ' (' + it.text + ')' : it.text, it.dealbreaker && r.state === 'problem' ? ' · DEALBREAKER' : ''));
-        const meta = []; if (r.input != null && r.input !== '') meta.push('pomiar: ' + r.input + (it.input && it.input.unit ? ' ' + it.input.unit : '')); if (r.note) meta.push('notatka: ' + r.note);
+        const meta = []; if (r.input != null && r.input !== '') meta.push((it.input && it.input.label ? it.input.label : 'pomiar') + ': ' + inputText(it, r.input)); if (r.note) meta.push('notatka: ' + r.note);
         if (meta.length) box.append(el('div', null, meta.join(' · ')));
         const ph = photos[this.photoKey(it.id)];
         if (ph && ph.length) box.append(el('div', { class: 'p-photos' }, ph.map((u) => el('img', { src: u, alt: '' }))));
@@ -855,40 +983,60 @@
 
   /* ------------------------------------------------------------------ view: deadlines (upsell) */
   App.prototype.viewDeadlines = function () {
-    const self = this; const rows = this.content.deadlineRows; const car = this.car();
+    const self = this; const car = this.car();
     const out = [this.topbar('Terminy po zakupie', '')];
-    if (!rows.length) { out.push(this.lockedCard('Moduł terminów jest częścią dodatku „Odhacz Auto: Po zakupie”.', true)); return out; }
-    if (!car.pd) { car.pd = todayStr(); this.persist(); }
+    if (!this.content.deadlineRows.length) { out.push(this.lockedCard('Moduł terminów jest częścią dodatku „Odhacz Auto: Po zakupie”.', true)); return out; }
+    const derived = !car.pd && this.purchaseDate(); const pd = this.purchaseDate() || todayStr();
     out.push(el('h1', { style: 'font-size:26px;margin-top:4px' }, 'Twoje terminy'));
-    const dateInp = el('input', { type: 'date', value: car.pd, 'aria-label': 'Data zakupu' });
+    const dateInp = el('input', { type: 'date', value: pd, 'aria-label': 'Data zakupu' });
     dateInp.addEventListener('change', () => { if (parseDate(dateInp.value)) { car.pd = dateInp.value; self.persist(); self.render(); } });
-    out.push(el('div', { class: 'card' }, el('label', { class: 'muted', style: 'display:block;margin-bottom:6px', text: 'Data zakupu (z umowy)' }), el('div', { class: 'dateinput' }, dateInp, el('button', { class: 'btn btn--small', type: 'button', onclick: () => { car.pd = todayStr(); self.persist(); self.render(); } }, 'dzisiaj'))));
+    out.push(el('div', { class: 'card' }, el('label', { class: 'muted', style: 'display:block;margin-bottom:6px', text: 'Data zakupu (z umowy)' }), el('div', { class: 'dateinput' }, dateInp, el('button', { class: 'btn btn--small', type: 'button', onclick: () => { car.pd = todayStr(); self.persist(); self.render(); } }, 'dzisiaj')),
+      el('p', { class: 'small muted', style: 'margin:8px 0 0' }, derived ? 'Wzięta z punktu z datą umowy. Zmień tutaj, jeśli inna.' : (car.pd ? 'Od tej daty liczymy terminy poniżej.' : 'Domyślnie dziś – ustaw datę z umowy.'))));
+    const rows = this.resolveDeadlines(pd); const today = todayStr(); const ready = rows.filter((r) => r.due); const pending = rows.filter((r) => !r.due);
     const card = el('div', { class: 'card' });
-    const today = todayStr();
-    rows.forEach((r) => {
-      const due = addDays(car.pd, r.days); const left = daysBetween(today, due);
-      const when = el('div', { class: 'when' + (left < 0 ? ' is-past' : left <= 3 ? ' is-soon' : '') }, fmtPl(due, { day: 'numeric', month: 'short' }), el('small', null, left < 0 ? 'po terminie' : left === 0 ? 'dziś' : 'za ' + left + ' ' + plural(left, 'dzień', 'dni', 'dni')));
+    ready.forEach((r) => {
+      const left = daysBetween(today, r.due);
+      const when = el('div', { class: 'when' + (left < 0 ? ' is-past' : left <= 3 ? ' is-soon' : '') }, fmtPl(r.due, { day: 'numeric', month: 'short' }), el('small', null, left < 0 ? 'po terminie' : left === 0 ? 'dziś' : 'za ' + left + ' ' + plural(left, 'dzień', 'dni', 'dni')));
+      const tags = el('div', { class: 'row', style: 'gap:6px;margin-top:4px' });
+      if (r.soft) tags.append(el('span', { class: 'badge' }, 'zalecenie')); else if (r.top) tags.append(el('span', { class: 'badge badge--red' }, 'termin'));
+      if (r.who && /sprzeda/i.test(r.who)) tags.append(el('span', { class: 'badge badge--info' }, 'po stronie sprzedającego'));
+      if (r.remind) tags.append(el('span', { class: 'badge' }, 'przypomnienie ' + r.remind + ' dni wcześniej'));
       const details = el('div', { class: 'details' });
-      if (r.who) details.append(el('span', null, el('b', null, 'Kto: '), r.who, ' · '));
+      if (r.who && !/sprzeda/i.test(r.who)) details.append(el('span', null, el('b', null, 'Kto: '), r.who, ' · '));
       if (r.how) details.append(el('span', null, el('b', null, 'Jak: '), r.how));
       if (r.applies_if) details.append(el('div', null, el('b', null, 'Dotyczy, gdy: '), r.applies_if));
+      if (r.confidence && !/wysok|n\/d/i.test(String(r.confidence))) details.append(el('div', null, el('b', null, 'Pewność: '), r.confidence, ' – potwierdź w urzędzie.'));
       if (r.source) details.append(el('div', null, el('a', { href: r.source, target: '_blank', rel: 'noopener noreferrer', text: 'źródło' })));
-      card.append(el('div', { class: 'dl-row' }, el('div', null, el('b', { text: r.label }), el('div', { class: 'muted small', text: r.days + ' ' + plural(r.days, 'dzień', 'dni', 'dni') + ' od zakupu' })), when, details));
+      if (r.itemId) details.append(el('div', null, el('button', { class: 'linkbtn', style: 'min-height:32px;padding:2px 0;font-size:16px', type: 'button', onclick: () => self.openItem(r.itemId) }, 'otwórz punkt')));
+      card.append(el('div', { class: 'dl-row' }, el('div', null, el('b', { text: r.label }), el('div', { class: 'muted small', text: self.deadlineText(r).replace(/ → .*$/, '') }), tags), when, details));
     });
+    if (!ready.length) card.append(el('p', { class: 'empty' }, 'Brak terminów do policzenia.'));
     out.push(card);
-    out.push(el('button', { class: 'btn btn--primary btn--block', type: 'button', onclick: () => { download('odhacz-terminy.ics', 'text/calendar;charset=utf-8', self.buildIcs(rows, car.pd)); track('ics_downloaded', { events: rows.length }); self.toast('Plik .ics pobrany – otwórz go w kalendarzu'); } }, el('span', { html: ICON.calendar }), 'Dodaj do kalendarza (.ics)'));
-    out.push(el('p', { class: 'small muted', style: 'margin-top:8px' }, 'Każde wydarzenie ma przypomnienie dzień wcześniej o 9:00 i w dniu terminu.'));
+    if (pending.length) {
+      const pc = el('div', { class: 'card card--soft' }, el('h3', null, 'Do policzenia po wpisaniu daty'), el('p', { class: 'muted' }, 'Te terminy zależą od dat, które wpisujesz w punktach checklisty.'));
+      pending.forEach((r) => pc.append(el('div', { class: 'dl-row' }, el('div', null, el('b', { text: r.label }), el('div', { class: 'muted small', text: self.deadlineText(r) })), el('div', null, el('button', { class: 'btn btn--small', type: 'button', onclick: () => self.openItem(r.pendingRef.id) }, 'Wpisz datę')))));
+      out.push(pc);
+    }
+    out.push(el('button', { class: 'btn btn--primary btn--block', type: 'button', disabled: !ready.length, onclick: () => { download('odhacz-terminy.ics', 'text/calendar;charset=utf-8', self.buildIcs(ready)); track('ics_downloaded', { events: ready.length }); self.toast('Plik .ics pobrany – otwórz go w kalendarzu'); } }, el('span', { html: ICON.calendar }), 'Dodaj do kalendarza (.ics)' + (ready.length ? ' – ' + ready.length + ' ' + plural(ready.length, 'termin', 'terminy', 'terminów') : '')));
+    out.push(el('p', { class: 'small muted', style: 'margin-top:8px' }, 'Każdy termin ma przypomnienie dzień wcześniej o 9:00 i w dniu terminu' + (ready.some((r) => r.remind) ? ' (a gdzie trzeba – kilka dni wcześniej)' : '') + '. Terminy z brakującą datą dojdą, gdy ją wpiszesz i pobierzesz plik ponownie.'));
     out.push(this.disclaimer());
     return out;
   };
-  App.prototype.buildIcs = function (rows, pd) {
+  App.prototype.openItem = function (itemId) {
+    const ph = this.content.phaseOfItem[itemId]; if (!ph) return;
+    this.openItems[itemId] = true; this.go('phase/' + encodeURIComponent(ph.id));
+    setTimeout(() => { const n = $('[data-item="' + itemId + '"]', this.root); if (n) n.scrollIntoView({ block: 'center' }); }, 60);
+  };
+  App.prototype.buildIcs = function (rows) {
     const c = this.content; const stamp = nowIso().replace(/[-:]/g, '').replace(/\.\d+Z$/, 'Z');
     const L = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Odhacz//' + (c.meta.title || 'Odhacz') + '//PL', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH', 'X-WR-CALNAME:' + icsEsc((c.meta.title || 'Odhacz') + ' – terminy')];
     rows.forEach((r) => {
-      const due = addDays(pd, r.days).replace(/-/g, ''); const next = addDays(pd, r.days + 1).replace(/-/g, '');
-      const desc = [r.who ? 'Kto: ' + r.who : '', r.how ? 'Jak: ' + r.how : '', r.applies_if ? 'Dotyczy, gdy: ' + r.applies_if : '', r.source || '', 'Z aplikacji ' + (c.meta.title || 'Odhacz') + '.'].filter(Boolean).join('\n');
-      L.push('BEGIN:VEVENT', 'UID:' + r.id + '-' + due + '@odhacz', 'DTSTAMP:' + stamp, 'DTSTART;VALUE=DATE:' + due, 'DTEND;VALUE=DATE:' + next, 'SUMMARY:' + icsEsc('Odhacz: ' + r.label), 'DESCRIPTION:' + icsEsc(desc), 'TRANSP:TRANSPARENT',
-        'BEGIN:VALARM', 'ACTION:DISPLAY', 'TRIGGER;VALUE=DURATION:-PT15H', 'DESCRIPTION:' + icsEsc('Jutro: ' + r.label), 'END:VALARM',
+      if (!r.due) return;
+      const due = r.due.replace(/-/g, ''); const next = addDays(r.due, 1).replace(/-/g, '');
+      const desc = [r.who ? 'Kto: ' + r.who : '', r.how ? 'Jak: ' + r.how : '', r.applies_if ? 'Dotyczy, gdy: ' + r.applies_if : '', r.soft ? 'Zalecenie (nie termin ustawowy).' : '', r.source || '', 'Z aplikacji ' + (c.meta.title || 'Odhacz') + '.'].filter(Boolean).join('\n');
+      L.push('BEGIN:VEVENT', 'UID:' + r.id + '-' + due + '@odhacz', 'DTSTAMP:' + stamp, 'DTSTART;VALUE=DATE:' + due, 'DTEND;VALUE=DATE:' + next, 'SUMMARY:' + icsEsc('Odhacz: ' + r.label), 'DESCRIPTION:' + icsEsc(desc), 'TRANSP:TRANSPARENT');
+      if (r.remind && r.remind > 1) L.push('BEGIN:VALARM', 'ACTION:DISPLAY', 'TRIGGER;VALUE=DURATION:-P' + (r.remind - 1) + 'DT15H', 'DESCRIPTION:' + icsEsc('Za ' + r.remind + ' dni: ' + r.label), 'END:VALARM');
+      L.push('BEGIN:VALARM', 'ACTION:DISPLAY', 'TRIGGER;VALUE=DURATION:-PT15H', 'DESCRIPTION:' + icsEsc('Jutro: ' + r.label), 'END:VALARM',
         'BEGIN:VALARM', 'ACTION:DISPLAY', 'TRIGGER;VALUE=DURATION:PT9H', 'DESCRIPTION:' + icsEsc('Dziś: ' + r.label), 'END:VALARM', 'END:VEVENT');
     });
     L.push('END:VCALENDAR');
@@ -915,6 +1063,7 @@
   App.prototype.contractDom = function (forPrint) {
     const t = this.content.contract_template; const wrap = el('div', { class: 'contract' });
     wrap.append(el(forPrint ? 'h1' : 'h2', { text: t.title || 'Umowa kupna-sprzedaży pojazdu' }));
+    if (!forPrint && t.intro) wrap.append(el('p', { class: 'muted' }, t.intro));
     if (forPrint) wrap.append(el('div', { class: 'p-meta' }, 'zawarta dnia ………………… w …………………………'));
     (t.sections || []).forEach((s) => {
       wrap.append(el('h3', { text: s.heading || '' }));
@@ -923,7 +1072,8 @@
     });
     if (Array.isArray(t.clauses) && t.clauses.length) {
       wrap.append(el('h3', null, 'Postanowienia'));
-      wrap.append(el('ol', { class: 'clauses' }, t.clauses.map((cl) => el('li', null, el('div', { text: typeof cl === 'string' ? cl : (cl.text || '') }), cl && cl.note && !forPrint ? el('p', { class: 'note' }, cl.note) : null))));
+      const hasIds = t.clauses.some((cl) => cl && typeof cl === 'object' && cl.id);
+      wrap.append(el('ol', { class: 'clauses' + (hasIds ? ' clauses--ids' : '') }, t.clauses.map((cl) => el('li', null, el('div', null, cl && cl.id ? el('b', null, cl.id + '. ') : null, typeof cl === 'string' ? cl : (cl.text || '')), cl && cl.note && !forPrint ? el('p', { class: 'note' }, cl.note) : null))));
     }
     if (forPrint) wrap.append(el('div', { class: 'sig' }, el('div', null, 'Sprzedający'), el('div', null, 'Kupujący')), el('div', { class: 'p-foot' }, (this.content.meta.disclaimer || '') + ' Wzór edukacyjny z ' + (this.content.meta.title || 'Odhacz') + '.'));
     return wrap;
@@ -1044,10 +1194,14 @@
   };
   App.prototype.showOnboarding = function () {
     const self = this; let step = 0;
+    const phs = this.content.phases; const upsell = this.opts.kind === 'upsell';
+    const path = phs.length > 1 ? 'od „' + phs[0].title + '” po „' + phs[phs.length - 1].title + '”' : '';
     const screens = [
-      { title: 'Jak to działa', text: 'Etapy po kolei: od ogłoszenia po jazdę próbną. Każdy punkt mówi, co sprawdzić i jak – bez bycia mechanikiem.', demo: 'phases' },
-      { title: 'Odpowiadasz jednym tapnięciem', text: 'OK, Uwaga, Problem albo Pomiń. Dealbreakery są oznaczone – gdy trafisz, powiemy, że to zwykle koniec oglądania.', demo: 'answers' },
-      { title: 'Na końcu dostajesz listę', text: 'Licznik czerwonych flag cały czas na dole. W podsumowaniu: decyzja z uzasadnieniem i gotowa lista uwag do negocjacji – do skopiowania lub PDF.', demo: 'flags' },
+      { title: 'Jak to działa', text: phs.length + ' ' + plural(phs.length, 'etap', 'etapy', 'etapów') + ' po kolei' + (path ? ', ' + path : '') + '. Każdy punkt mówi, co sprawdzić i jak' + (upsell ? ' – bez prawnika.' : ' – bez bycia mechanikiem.'), demo: 'phases' },
+      { title: 'Odpowiadasz jednym tapnięciem', text: 'OK, Uwaga, Problem albo Pomiń. Dealbreakery są oznaczone – gdy trafisz, powiemy, że to zwykle koniec' + (upsell ? ' rozmowy o zakupie.' : ' oglądania.'), demo: 'answers' },
+      upsell && this.content.deadlineRows.length
+        ? { title: 'Terminy liczą się same', text: 'Wpisujesz datę z umowy, dostajesz daty PCC-3, rejestracji i końca OC – z plikiem do kalendarza. Na końcu lista braków do skopiowania lub PDF.', demo: 'flags' }
+        : { title: 'Na końcu dostajesz listę', text: 'Licznik czerwonych flag cały czas na dole. W podsumowaniu: decyzja z uzasadnieniem i gotowa lista uwag do negocjacji – do skopiowania lub PDF.', demo: 'flags' },
     ];
     const ov = el('div', { class: 'onb', role: 'dialog', 'aria-modal': 'true' });
     // Returning user on a new device (progress pulled from the server): land on Home, not Quick start.

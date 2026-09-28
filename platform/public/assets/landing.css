@@ -118,18 +118,6 @@ button { font: inherit; }
 .btn-violet:hover { background: var(--violet-deep); }
 @media (min-width: 600px) { .btn { width: auto; } }
 
-/* ---------- Top bar ---------- */
-.topbar {
-  margin: 0;
-  background: var(--violet);
-  color: #fff;
-  text-align: center;
-  padding: 9px var(--gutter);
-  font-size: 16px;
-  line-height: 1.35;
-}
-.topbar b { color: var(--lime); font-weight: 700; }
-
 /* ---------- Hero ---------- */
 .hero {
   position: relative;
@@ -210,6 +198,7 @@ button { font: inherit; }
 }
 .link-arrow:hover { color: var(--lime); }
 .link-arrow svg { width: 20px; height: 20px; }
+.fuel { margin: 14px 0 0; font-size: 16px; line-height: 1.45; color: var(--muted-dark); max-width: 560px; }
 .trust {
   list-style: none;
   margin: 22px 0 0;
@@ -481,7 +470,7 @@ button { font: inherit; }
 }
 .demo-counter span { display: inline-flex; align-items: baseline; gap: 8px; white-space: nowrap; }
 .demo-counter b { font: 700 28px/1 var(--font-head); color: var(--lime); min-width: 1ch; }
-.demo-counter.has-db .db b { color: #FCA5A5; }
+.demo-counter.has-flags b#demo-flags { color: #FCA5A5; }
 .demo-list { list-style: none; margin: 0; padding: 0; }
 .demo-item { padding: 18px 20px; border-bottom: 1px solid var(--line); transition: background 0.15s ease; }
 .demo-item.is-bad { background: var(--bad-soft); box-shadow: inset 4px 0 0 var(--bad); }
@@ -512,6 +501,39 @@ button { font: inherit; }
   color: var(--bad-text);
   font: 700 16px/1.3 var(--font-body);
 }
+.demo-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; margin-bottom: 12px; }
+.demo-field { display: inline-flex; align-items: center; gap: 10px; font: 600 16px/1.2 var(--font-body); color: var(--text-2); }
+.demo-field input {
+  width: 118px;
+  min-height: 48px;
+  padding: 0 12px;
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  font: 600 18px/1 var(--font-body);
+  color: var(--ink);
+  background: #fff;
+}
+.demo-field input:focus { border-color: var(--violet); outline: none; box-shadow: 0 0 0 3px var(--violet-soft); }
+.demo-field .unit { color: var(--muted); font-weight: 600; }
+.demo-photo {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 0 16px;
+  border: 2px solid var(--violet);
+  border-radius: 12px;
+  background: #fff;
+  color: var(--violet);
+  font: 600 16px/1 var(--font-body);
+  cursor: pointer;
+}
+.demo-photo svg { width: 20px; height: 20px; }
+.demo-photo[aria-pressed="true"] { background: var(--violet-soft); }
+.chip-photo { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 999px; background: var(--mist); color: var(--text-2); font: 600 16px/1.2 var(--font-body); }
+.chip-photo svg { width: 16px; height: 16px; color: var(--violet); }
+.demo-item.is-warn { background: #FFFBEB; box-shadow: inset 4px 0 0 var(--warn); }
+.demo-note.is-warn { box-shadow: inset 4px 0 0 var(--warn); }
 .states { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
 .st {
   min-height: 48px;
@@ -621,9 +643,13 @@ button { font: inherit; }
 }
 .bump p { margin: 0; }
 .anchors-l { font-size: 16px; color: var(--muted-dark); margin: 0 0 8px; }
-.anchors { list-style: none; margin: 0 0 24px; padding: 0; display: grid; gap: 8px; color: var(--muted-dark); font-size: 16px; }
-.anchors li { display: flex; justify-content: space-between; gap: 12px; padding-bottom: 8px; border-bottom: 1px dashed rgba(255, 255, 255, 0.16); }
-.anchors b { color: #fff; font-weight: 600; white-space: nowrap; }
+.ladder { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; color: var(--muted-dark); font-size: 16px; counter-reset: rung; }
+.ladder li { counter-increment: rung; display: grid; grid-template-columns: 26px minmax(0, 1fr) auto; align-items: baseline; gap: 10px; padding-bottom: 8px; border-bottom: 1px dashed rgba(255, 255, 255, 0.16); }
+.ladder li::before { content: counter(rung); font: 700 16px/1 var(--font-head); color: var(--muted-dark); }
+.ladder b { color: #fff; font-weight: 600; white-space: nowrap; }
+.ladder .is-us { color: #fff; }
+.ladder .is-us::before, .ladder .is-us b { color: var(--lime); }
+.ladder-note { margin: 12px 0 24px; font-size: 16px; color: var(--muted-dark); }
 .price-card .btn { width: 100%; }
 .micro { margin: 16px 0 0; font-size: 16px; line-height: 1.45; color: var(--muted-dark); }
 @media (min-width: 600px) { .price-card { padding: 40px; } }

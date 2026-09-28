@@ -22,7 +22,7 @@ test('renderDeliveryEmail: consented order -> confirmation with order number, pr
     assert.ok(!s.includes('Masz prawo odstąpić od tej umowy'), 'no statutory 14-day instruction when consent was given');
     assert.ok(s.includes('https://example.test/d/aaa') && s.includes('https://example.test/d/bbb'));
     assert.ok(s.includes('Odpowiemy w ciągu 14 dni'), 'complaints block');
-    assert.ok(s.includes('Gwarancja satysfakcji 14 dni') || s.includes('GWARANCJA SATYSFAKCJI 14 DNI'));
+    assert.match(s, /gwarancja zwrotu 14 dni/i, 'one-line mention of the money-back guarantee');
     assert.ok(s.includes('Fakturę wystawimy na życzenie'));
     assert.ok(s.includes('Wiadomość transakcyjna'));
   }

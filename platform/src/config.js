@@ -6,16 +6,20 @@ import { fileURLToPath } from 'node:url';
 
 export const ROOT_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
-// Default Polish consent text shown in Stripe Checkout (required, unchecked checkbox): explicit request for immediate
-// delivery + acknowledgement of losing the 14-day withdrawal right (art. 38 ust. 1 pkt 13 ustawy o prawach konsumenta)
-// + acceptance of the terms and privacy policy. Final wording: legal/01-teksty.md. Stripe renders Markdown links and
-// allows up to 1200 characters; this text is ~480 so it stays readable on a phone.
+// Default Polish consent text shown in Stripe Checkout (required, unchecked checkbox): acceptance of the terms and
+// privacy policy + explicit request/consent for immediate delivery + acknowledgement of losing the 14-day withdrawal
+// right (art. 38 ust. 1 pkt 13 ustawy o prawach konsumenta), ending with the voluntary money-back guarantee so the last
+// thing before "Zapłać" is not only the loss of a right. Final wording and rationale: legal/01-teksty.md.
+// Stripe renders Markdown links and allows up to 1200 characters; this text is ~460 so it stays readable on a phone.
+// {BASE_URL} and {SITE_NAME} are substituted in loadConfig().
 export const DEFAULT_TERMS_TEXT =
-  'Żądam dostarczenia treści cyfrowej natychmiast po opłaceniu zamówienia i wyrażam na to wyraźną zgodę. ' +
-  'Przyjmuję do wiadomości, że z chwilą dostarczenia (udostępnienia linku dostępowego) tracę prawo odstąpienia od umowy w terminie 14 dni ' +
-  '(art. 38 ust. 1 pkt 13 ustawy o prawach konsumenta). ' +
   'Akceptuję [Regulamin]({BASE_URL}/legal/regulamin.html) i [Politykę prywatności]({BASE_URL}/legal/polityka-prywatnosci.html). ' +
-  'Masz też naszą 14-dniową gwarancję satysfakcji (§ 9 Regulaminu).';
+  'Żądam dostarczenia treści cyfrowej od razu po zapłacie, wyrażam na to wyraźną zgodę i przyjmuję do wiadomości, ' +
+  'że z chwilą dostarczenia tracę ustawowe prawo odstąpienia od umowy w terminie 14 dni (art. 38 ust. 1 pkt 13 ustawy o prawach konsumenta). ' +
+  'Niezależnie od tego przysługuje mi 14-dniowa gwarancja zwrotu {SITE_NAME} opisana w Regulaminie.';
+
+// Default text above the pay button (pre-contractual information about immediate delivery, art. 12 ust. 1 pkt 12 UPK).
+export const DEFAULT_SUBMIT_TEXT = 'Dostęp wyślemy od razu na e-mail. 14 dni gwarancji zwrotu.';
 
 const PRODUCT_ID_RE = /^[a-z0-9_-]{1,32}$/;
 
@@ -62,6 +66,7 @@ function bool(v, dflt) {
 export function loadConfig(env = process.env, { products } = {}) {
   const isProduction = env.NODE_ENV === 'production';
   const baseUrl = String(env.BASE_URL || `http://localhost:${env.PORT || 3000}`).replace(/\/+$/, '');
+  const siteName = env.SITE_NAME || 'Sklep';
   const stripeKey = String(env.STRIPE_SECRET_KEY || '').trim();
   const mockForced = bool(env.MOCK_MODE, false);
   const mock = mockForced || !stripeKey;
@@ -76,15 +81,15 @@ export function loadConfig(env = process.env, { products } = {}) {
     isProduction,
     port: Number(env.PORT || 3000),
     baseUrl,
-    siteName: env.SITE_NAME || 'Sklep',
+    siteName,
     dataDir: path.resolve(env.DATA_DIR || path.join(ROOT_DIR, 'data')),
     trustProxy: env.TRUST_PROXY === undefined || env.TRUST_PROXY === '' ? 1 : (/^\d+$/.test(env.TRUST_PROXY) ? Number(env.TRUST_PROXY) : bool(env.TRUST_PROXY, true)),
     mock,
     stripe: {
       secretKey: stripeKey,
       webhookSecret: String(env.STRIPE_WEBHOOK_SECRET || '').trim(),
-      termsText: (env.CHECKOUT_TERMS_TEXT || DEFAULT_TERMS_TEXT).replaceAll('{BASE_URL}', baseUrl),
-      submitText: env.CHECKOUT_SUBMIT_TEXT || '',
+      termsText: (env.CHECKOUT_TERMS_TEXT || DEFAULT_TERMS_TEXT).replaceAll('{BASE_URL}', baseUrl).replaceAll('{SITE_NAME}', siteName),
+      submitText: (env.CHECKOUT_SUBMIT_TEXT || DEFAULT_SUBMIT_TEXT).replaceAll('{SITE_NAME}', siteName),
     },
     email: {
       resendApiKey: String(env.RESEND_API_KEY || '').trim(),

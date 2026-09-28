@@ -31,7 +31,7 @@ Regulamin dla tego zamówienia: wersja v1 z 28.09.2026 – {{base_url}}/legal/re
 
 {{withdrawal_block}}
 
-GWARANCJA SATYSFAKCJI 14 DNI
+GWARANCJA ZWROTU 14 DNI (GWARANCJA SATYSFAKCJI)
 Niezależnie od przepisów masz 14 dni od zakupu na zwrot pieniędzy bez podawania przyczyny. Wystarczy e-mail na [[EMAIL_KONTAKT]] z numerem zamówienia {{order_id}} i słowem „gwarancja”. Zwrot na tę samą metodę płatności w ciągu 14 dni (§ 9 Regulaminu).
 
 REKLAMACJE / NIEZGODNOŚĆ Z UMOWĄ

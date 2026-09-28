@@ -67,28 +67,38 @@ test('full mock purchase flow with upsell, access, progress sync and admin funne
   assert.ok((await page.textContent('body')).includes('Link wysłaliśmy też na e-mail'));
   assert.ok((await page.textContent('#buyer-email')).includes('kupujacy@example.com'));
 
-  // 5. Follow the main link -> product app with token
+  // 5. Follow the main link -> product app (Odhacz Auto checklist) with token; first visit shows the onboarding
   await page.getByTestId('access-link-main').click();
   await page.waitForURL(/\/app\/$/);
   const token = await page.evaluate(() => window.Access.token());
   assert.match(token, /^[A-Za-z0-9_-]{43}$/);
   assert.equal(token, mainHref.split('/d/')[1]);
+  assert.ok(!page.url().includes('t='), '?t= stripped from the URL');
+  await page.locator('.onb__skip').click();
+  await page.goto(`${srv.base}/app/#/settings`);
   await page.getByTestId('access-status').filter({ hasText: 'aktywny' }).waitFor();
   assert.ok((await page.getByTestId('access-status').textContent()).includes('upsell'), 'products_owned lists the upsell too');
 
-  // 6. Progress sync: save, read back, survives reload
-  const saved = await page.evaluate(() => window.Access.saveProgress({ steps: 2, note: 'e2e' }));
-  assert.equal(saved.ok, true);
-  assert.deepEqual(await page.evaluate(() => window.Access.loadProgress()), { steps: 2, note: 'e2e' });
+  // 6. Progress sync: answer an item (localStorage + debounced Access.saveProgress), read back, survives reload
+  await page.goto(`${srv.base}/app/#/`);
+  await page.locator('.phase-row').first().click();
+  await page.locator('.item').first().locator('.ans--ok').click();
+  await page.evaluate(() => window.OdhaczApp.flushSync());
+  const remote = await page.evaluate(() => window.Access.loadProgress());
+  assert.equal(remote.v, 1);
+  assert.deepEqual(Object.values(Object.values(remote.cars)[0].a), [['ok']], 'compact [state, input, note] tuples per item id');
   await page.reload();
-  await page.getByTestId('steps').filter({ hasText: '2' }).waitFor();
-  await page.getByRole('button', { name: 'Zalicz kolejny krok' }).click();
-  await page.getByTestId('steps').filter({ hasText: '3' }).waitFor();
-  assert.equal((await page.evaluate(() => window.Access.loadProgress())).steps, 3);
+  await page.locator('.item.is-ok').first().waitFor();
+  await page.locator('.item').nth(1).locator('.ans--uwaga').click();
+  await page.locator('.item.is-uwaga').first().waitFor();
+  await page.evaluate(() => window.OdhaczApp.flushSync());
+  assert.equal(Object.keys(Object.values((await page.evaluate(() => window.Access.loadProgress())).cars)[0].a).length, 2);
 
   // 7. Upsell area opens with its own link; cookie keeps /app/ open without ?t=
   await page.goto(upsellHref);
   await page.waitForURL(/\/dodatek\/$/);
+  await page.locator('.onb__skip').click();
+  await page.goto(`${srv.base}/dodatek/#/settings`);
   await page.getByTestId('access-status').filter({ hasText: 'aktywny' }).waitFor();
   const r = await page.goto(`${srv.base}/app/`);
   assert.equal(r.status(), 200);
