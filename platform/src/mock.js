@@ -85,6 +85,7 @@ ${upsells.map((u) => `<div class="bump"><label style="margin:0"><input type="che
       payment_status: 'paid',
       amount_total: items.reduce((s, p) => s + p.price_pln, 0),
       customer_details: { email, name: null },
+      consent: { terms_of_service: 'accepted' }, // the consent checkbox is `required` in the mock form, like consent_collection in Stripe
       line_items: { data: items.map(lineItem) },
     });
     log.info?.(`mock-checkout: paid ${session.id} items=${items.map((p) => p.id).join(',')}`);

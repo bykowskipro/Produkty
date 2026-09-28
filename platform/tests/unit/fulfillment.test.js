@@ -34,7 +34,9 @@ test('fulfill(): paid session with an optional item -> 2 orders, 2 tokens, 1 ema
   // one e-mail listing both links
   assert.equal(mailer.sent.length, 1);
   assert.equal(mailer.sent[0].to, 'Anna.Kowalska@Example.com');
-  assert.match(mailer.sent[0].subject, /Produkt główny \+ Dodatek/);
+  const mainName = products.find((p) => p.id === 'main').name;
+  const upsellName = products.find((p) => p.id === 'upsell').name;
+  assert.ok(mailer.sent[0].subject.includes(`${mainName} + ${upsellName}`), `subject lists both products: ${mailer.sent[0].subject}`);
   assert.match(mailer.sent[0].html, /Cześć, Anna!/);
   for (const item of r.items) assert.ok(mailer.sent[0].html.includes(item.access_url) && mailer.sent[0].text.includes(item.access_url));
 
@@ -124,6 +126,30 @@ test('matchProduct: by stripe_price_id, then metadata.product_id, then name', ()
   assert.equal(matchProduct(withPrice, { price: { id: 'price_live_main', product: 'prod_x' } }).id, 'main');
   assert.equal(matchProduct(products, { price: { id: 'price_x', product: { metadata: { product_id: 'upsell' } } } }).id, 'upsell');
   assert.equal(matchProduct(products, { price: { id: 'price_x', metadata: { product_id: 'upsell' } } }).id, 'upsell');
-  assert.equal(matchProduct(products, { price: { id: 'price_x', product: { name: 'Dodatek', metadata: {} } } }).id, 'upsell');
+  assert.equal(matchProduct(products, { price: { id: 'price_x', product: { name: products.find((p) => p.id === 'upsell').name, metadata: {} } } }).id, 'upsell');
   assert.equal(matchProduct(products, { price: { id: 'price_x', product: { name: 'Nope', metadata: {} } } }), null);
+});
+
+test('fulfill(): CAPI Purchase is skipped without marketing consent; e-mail carries the legal confirmation', async () => {
+  const noConsent = paidSession({ metadata: { ...paidSession().metadata, marketing_consent: 'false' } });
+  const { capi, mailer, f } = setup(noConsent);
+  const r = await f.fulfill(noConsent.id);
+  assert.equal(r.paid, true);
+  assert.equal(mailer.sent.length, 1, 'delivery e-mail still goes out');
+  assert.equal(capi.calls.length, 0, 'no server-side event to Meta without consent');
+  // Confirmation content (art. 21 UPK): order number, consent block with art. 38 ust. 1 pkt 13, complaints, seller placeholders
+  const mail = mailer.sent[0];
+  assert.match(mail.subject, /potwierdzenie zamówienia nr 000001/);
+  assert.match(mail.html, /art\. 38 ust\. 1 pkt 13/);
+  assert.match(mail.html, /prawo odstąpienia nie przysługuje/, 'session.consent.terms_of_service = accepted -> withdrawal right lost');
+  assert.match(mail.text, /Odpowiemy w ciągu 14 dni/);
+  assert.match(mail.html, /78,00 zł/);
+});
+
+test('fulfill(): session without the Stripe consent flag -> e-mail falls back to the 14-day withdrawal instruction', async () => {
+  const s = paidSession({ consent: null });
+  const { mailer, f } = setup(s);
+  await f.fulfill(s.id);
+  assert.match(mailer.sent[0].html, /Masz prawo odstąpić od tej umowy w terminie 14 dni/);
+  assert.doesNotMatch(mailer.sent[0].html, /prawo odstąpienia nie przysługuje/);
 });

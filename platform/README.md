@@ -27,8 +27,8 @@ Wdrożenie na VPS: **`ops/DEPLOY.md`** (krok po kroku, Docker Compose + Caddy z 
 | `public/app/` | Aplikacja produktu głównego (placeholder – do podmiany), chroniona |
 | `public/dodatek/` | Obszar dodatku (upsell), chroniony |
 | `public/assets/*.js` | `consent.js` (baner cookie + Pixel), `analytics.js` (visitor_id, UTM, `track`), `shop.js` (`Shop.buy`), `access.js` (`Access.*`) |
-| `public/legal/` | Regulamin i polityka prywatności (szkielety z TODO) |
-| `emails/delivery.{html,txt}` | Szablon e-maila z dostępem (`{{greeting}}`, `{{name}}`, `{{items}}`, `{{access_url}}`, `{{site_name}}`, `{{base_url}}`) |
+| `public/legal/` | Regulamin (v1), polityka prywatności i cookies, „O marce i o Haczu”, archiwum wersji, `legal.css` – placeholdery `[[SPRZEDAWCA_NAZWA]]` itd. do uzupełnienia (lista i teksty: `legal/01-teksty.md`) |
+| `emails/delivery.{html,txt}` | E-mail z dostępem + potwierdzenie zawarcia umowy (art. 21 UPK): `{{greeting}}`, `{{name}}`, `{{items}}`, `{{access_url}}`, `{{site_name}}`, `{{base_url}}`, `{{year}}`, `{{order_id}}`, `{{order_date}}`, `{{items_table}}`, `{{amount}}`, `{{payment_method}}`, `{{withdrawal_block}}` (wariant zależny od zgody zapisanej w sesji Stripe), `{{consent_ts}}`, `{{delivered_at}}`; placeholdery `[[SPRZEDAWCA_*]]` do uzupełnienia |
 | `src/` | Serwer: `server.js` (routing), `stripe.js`, `fulfillment.js`, `access.js`, `analytics.js`, `admin.js`, `email.js`, `meta-capi.js`, `mock.js`, `db.js`, `config.js` |
 | `data/` | Baza `platform.sqlite` + `outbox/` (poza gitem; **to jest Twoja kopia zapasowa**) |
 | `tests/` | `unit/` (node:test) i `e2e/` (Playwright) |
@@ -37,7 +37,7 @@ Wdrożenie na VPS: **`ops/DEPLOY.md`** (krok po kroku, Docker Compose + Caddy z 
 
 1. Landing → `Shop.buy('main')` → `POST /api/checkout` → sesja Stripe Checkout (PLN, po polsku, zgoda na regulamin + zgoda na natychmiastową dostawę treści cyfrowych i utratę prawa odstąpienia, dodatek jako **order bump** przez `optional_items`).
 2. Po płatności Stripe wraca na `/sukces?session_id=…`. Strona pyta `GET /api/session/:id`, a serwer uruchamia `fulfill()` – **ten sam kod** co webhook (`POST /webhook/stripe`, zdarzenia `checkout.session.completed` i `checkout.session.async_payment_succeeded`). Dzięki temu dostęp działa nawet, gdy webhook się spóźnia; wszystko jest idempotentne (tabela `fulfillments` + unikalność `(session_id, product_id)`).
-3. `fulfill()`: tworzy zamówienia (jedno na produkt), tokeny dostępu, wysyła **jeden** e-mail z wszystkimi linkami, wysyła `Purchase` do Meta CAPI (dedup z Pixelem po `event_id`), zapisuje zdarzenia `purchase` / `upsell_purchase` z atrybucją UTM.
+3. `fulfill()`: tworzy zamówienia (jedno na produkt), tokeny dostępu, wysyła **jeden** e-mail z wszystkimi linkami (jest zarazem potwierdzeniem zawarcia umowy: numer i data zamówienia, ceny, blok o zgodzie na natychmiastową dostawę wg `session.consent.terms_of_service`), wysyła `Purchase` do Meta CAPI **tylko gdy `metadata.marketing_consent=true`** (dedup z Pixelem po `event_id`), zapisuje zdarzenia `purchase` / `upsell_purchase` z atrybucją UTM.
 4. Link `/d/<token>` ustawia ciasteczko `access_<product_id>` (httpOnly, rok) i przekierowuje do `access_path?t=<token>`. Middleware chroni całą ścieżkę `access_path` (ciasteczko **lub** `?t=`), inaczej `/?locked=1`.
 
 ## KONTRAKT INTEGRACJI (dla zespołów: landing, produkt, prawo)
@@ -104,7 +104,7 @@ Wdrożenie na VPS: **`ops/DEPLOY.md`** (krok po kroku, Docker Compose + Caddy z 
 ## Analityka i zgody – decyzja projektowa
 
 - **Statystyki własne (first-party) działają zawsze**: losowy `visitor_id` (localStorage + ciasteczko `vid`), zdarzenia lejka (`page_view`, `cta_click`, `checkout_start`, `purchase`, `upsell_purchase`), UTM pierwszego wejścia, skrócony hash IP. Nic nie trafia do podmiotów trzecich, nie ma profilowania między stronami – traktujemy to jak niezbędny pomiar działania sklepu (uzasadniony interes) i opisujemy w polityce prywatności. **Alternatywa** (bardziej zachowawcza): wysyłać `/api/events` dopiero po zgodzie – wystarczy w `analytics.js` owinąć `track` warunkiem `Consent.granted()`; kosztem będzie utrata większości danych lejka przy 300 zł budżetu testu.
-- **Meta Pixel ładuje się wyłącznie po „Akceptuję”.** Bez zgody Purchase idzie tylko przez CAPI z zahaszowanym e-mailem (Meta traktuje to jako dane z serwera; decyzja o tym, czy CAPI też uzależnić od zgody, należy do etapu prawnego – wyłącza się jedną linią w `src/fulfillment.js`, `sendCapi`).
+- **Meta Pixel ładuje się wyłącznie po „Akceptuję”, a CAPI `Purchase` wysyłamy tylko, gdy w metadata sesji jest `marketing_consent=true`** (`shop.js` przekazuje `Consent.granted()` do `/api/checkout`). Decyzja etapu prawnego (2026-09-28, art. 399 PKE + RODO): bez zgody żadne dane nie trafiają do Meta – ani z przeglądarki, ani z serwera. Cookie `_fbc` z `fbclid` zapisujemy też dopiero po zgodzie, „Odrzucam” usuwa `_fbp`/`_fbc`, a każda decyzja w banerze jest logowana jako zdarzenie `cookie_consent` (dowód zgody: visitor_id, czas, wybór, wersja banera).
 - Deduplikacja Pixel/CAPI: to samo `event_id` (generowane w `shop.js` przy starcie checkoutu, przekazywane w `metadata` sesji Stripe).
 
 ## Bezpieczeństwo

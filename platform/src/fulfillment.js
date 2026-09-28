@@ -1,5 +1,5 @@
 // Idempotent order fulfillment shared by the Stripe webhook and the success page.
-// fulfill(sessionId): session -> orders + access tokens -> ONE e-mail -> CAPI Purchase -> analytics events.
+// fulfill(sessionId): session -> orders + access tokens -> ONE e-mail -> CAPI Purchase (only with marketing consent) -> analytics events.
 import { transaction, nowIso } from './db.js';
 import { issueToken } from './access.js';
 import { recordEvent } from './analytics.js';
@@ -38,6 +38,25 @@ export function createFulfillment({ db, config, stripe, mockStore, mailer, capi,
       .map((r) => ({ order_id: r.order_id, product_id: r.product_id, name: r.name, amount: r.amount, access_url: accessUrl(r.token) }));
   }
 
+  /**
+   * Order-level facts for the confirmation e-mail (art. 21 UPK): order number (= first order row id), time of payment
+   * confirmation (= delivery time), total, and whether the buyer ticked the Stripe consent checkbox (stored with the session metadata).
+   */
+  function orderInfo(sessionId) {
+    const f = db.prepare('SELECT created_at, amount_total, currency, metadata FROM fulfillments WHERE session_id = ?').get(sessionId);
+    const first = db.prepare('SELECT MIN(id) AS id FROM orders WHERE session_id = ?').get(sessionId);
+    let md = {};
+    try { md = JSON.parse(f?.metadata || '{}') || {}; } catch { md = {}; }
+    return {
+      id: first?.id || null,
+      created_at: f?.created_at || nowIso(),
+      amount_total: f?.amount_total ?? null,
+      currency: f?.currency || 'pln',
+      consent_tos: md._consent_tos || null,
+      payment_method: md._payment_method || null,
+    };
+  }
+
   function buildResult(session, items) {
     return {
       paid: true,
@@ -58,9 +77,15 @@ export function createFulfillment({ db, config, stripe, mockStore, mailer, capi,
     return transaction(db, () => {
       const email = session.customer_details?.email || null;
       const md = session.metadata || {};
+      // Session metadata + facts we need later for the legal confirmation (consent checkbox, payment method type when known).
+      const stored = {
+        ...md,
+        _consent_tos: session.consent?.terms_of_service || null,
+        _payment_method: session.payment_intent?.latest_charge?.payment_method_details?.type || null,
+      };
       const inserted = db.prepare(`INSERT INTO fulfillments (session_id, status, email, amount_total, currency, metadata)
                                    VALUES (?, 'processing', ?, ?, ?, ?) ON CONFLICT(session_id) DO NOTHING`)
-        .run(session.id, email, session.amount_total || 0, session.currency || 'pln', JSON.stringify(md));
+        .run(session.id, email, session.amount_total || 0, session.currency || 'pln', JSON.stringify(stored));
       let created = false;
       for (const line of lines) {
         const r = db.prepare(`INSERT INTO orders (session_id, product_id, name, amount, currency, quantity, email)
@@ -97,11 +122,22 @@ export function createFulfillment({ db, config, stripe, mockStore, mailer, capi,
     db.prepare(`UPDATE fulfillments SET ${column} = NULL, error = ?, updated_at = ? WHERE session_id = ?`).run(String(err?.message || err).slice(0, 500), nowIso(), sessionId);
   }
 
+  function renderEmail(sessionId, items, name) {
+    return renderDeliveryEmail({
+      name,
+      items,
+      siteName: config.siteName,
+      baseUrl: config.baseUrl,
+      order: orderInfo(sessionId),
+      products: config.products,
+      contactEmail: config.email?.replyTo || '',
+    });
+  }
+
   async function sendEmail(session, items) {
     const to = session.customer_details?.email;
     if (!to) { log.warn?.(`fulfill ${session.id}: no customer e-mail, skipping delivery mail`); return; }
-    const msg = renderDeliveryEmail({ name: session.customer_details?.name, items, siteName: config.siteName, baseUrl: config.baseUrl });
-    await mailer.send({ to, ...msg });
+    await mailer.send({ to, ...renderEmail(session.id, items, session.customer_details?.name) });
   }
 
   async function sendCapi(session, items) {
@@ -143,7 +179,11 @@ export function createFulfillment({ db, config, stripe, mockStore, mailer, capi,
     if (claim(session.id, 'email_sent_at')) {
       try { await sendEmail(session, items); } catch (err) { release(session.id, 'email_sent_at', err); log.error?.(`fulfill ${session.id}: email failed: ${err.message}`); }
     }
-    if (claim(session.id, 'capi_sent_at')) {
+    // Legal decision (2026-09-28): server-side Meta events only when the visitor accepted marketing cookies
+    // (shop.js passes Consent.granted() as metadata.marketing_consent). No consent -> nothing goes to Meta.
+    if ((session.metadata || {}).marketing_consent !== 'true') {
+      log.info?.(`fulfill ${session.id}: CAPI skipped (no marketing consent)`);
+    } else if (claim(session.id, 'capi_sent_at')) {
       try { await sendCapi(session, items); } catch (err) { release(session.id, 'capi_sent_at', err); log.error?.(`fulfill ${session.id}: capi failed: ${err.message}`); }
     }
     db.prepare(`UPDATE fulfillments SET status = 'done', updated_at = ? WHERE session_id = ?`).run(nowIso(), session.id);
@@ -156,11 +196,10 @@ export function createFulfillment({ db, config, stripe, mockStore, mailer, capi,
     if (!order) throw new Error('order not found');
     if (!order.email) throw new Error('order has no e-mail');
     const items = storedItems(order.session_id);
-    const msg = renderDeliveryEmail({ name: '', items, siteName: config.siteName, baseUrl: config.baseUrl });
-    await mailer.send({ to: order.email, ...msg });
+    await mailer.send({ to: order.email, ...renderEmail(order.session_id, items, '') });
     db.prepare('UPDATE fulfillments SET email_sent_at = ?, updated_at = ? WHERE session_id = ?').run(nowIso(), nowIso(), order.session_id);
     return { to: order.email, items: items.length };
   }
 
-  return { fulfill, resendEmail, storedItems };
+  return { fulfill, resendEmail, storedItems, orderInfo };
 }

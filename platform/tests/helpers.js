@@ -38,7 +38,8 @@ export function paidSession(overrides = {}) {
     created: 1700000000,
     client_reference_id: 'visitor-1',
     customer_details: { email: 'Anna.Kowalska@Example.com', name: 'Anna Kowalska' },
-    metadata: { product_id: 'main', visitor_id: 'visitor-1', event_id: 'evt-123', utm_source: 'fb', utm_medium: 'cpc', utm_campaign: 'test', utm_content: 'kreacjaA', fbp: 'fb.1.1.2', fbc: 'fb.1.1.abc', landing_url: 'https://example.test/?utm_content=kreacjaA', client_ip: '1.2.3.4', user_agent: 'UA' },
+    consent: { terms_of_service: 'accepted' },
+    metadata: { product_id: 'main', visitor_id: 'visitor-1', event_id: 'evt-123', utm_source: 'fb', utm_medium: 'cpc', utm_campaign: 'test', utm_content: 'kreacjaA', fbp: 'fb.1.1.2', fbc: 'fb.1.1.abc', landing_url: 'https://example.test/?utm_content=kreacjaA', client_ip: '1.2.3.4', user_agent: 'UA', marketing_consent: 'true' },
     line_items: {
       data: [
         { quantity: 1, amount_total: 4900, description: 'Produkt główny', price: { id: 'price_dyn_1', unit_amount: 4900, product: { id: 'prod_1', name: 'Produkt główny', metadata: { product_id: 'main' } } } },

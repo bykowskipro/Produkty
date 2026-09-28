@@ -96,17 +96,18 @@
     + '<path d="M44 66 q6 6 12 0" fill="none" stroke="#0B0F19" stroke-width="3" stroke-linecap="round"/>'
     + '</svg>';
   let haczReady = null; // null = unknown, true = external svg exists, false = use placeholder
+  let haczSrc = '/assets/brand/hacz.svg'; // overridable per product via mount({ mascot })
   const haczWaiters = [];
   function probeHacz() {
     if (haczReady !== null) return;
     const img = new Image();
     img.onload = () => { haczReady = true; haczWaiters.splice(0).forEach((fn) => fn()); };
     img.onerror = () => { haczReady = false; haczWaiters.length = 0; };
-    img.src = '/assets/brand/hacz.svg';
+    img.src = haczSrc;
   }
   function mascot(cls) {
     const wrap = el('span', { class: 'mascot ' + (cls || ''), html: HACZ_SVG });
-    const swap = () => { wrap.innerHTML = ''; wrap.append(el('img', { src: '/assets/brand/hacz.svg', alt: 'Hacz – asystent AI marki Odhacz' })); };
+    const swap = () => { wrap.innerHTML = ''; wrap.append(el('img', { src: haczSrc, alt: 'Hacz – asystent AI marki Odhacz' })); };
     if (haczReady === true) swap(); else if (haczReady === null) { haczWaiters.push(swap); probeHacz(); }
     return wrap;
   }
@@ -204,7 +205,8 @@
   window.Checklist = Checklist;
 
   function App(opts) {
-    this.opts = Object.assign({ root: '#app', product: 'auto', kind: 'main', shopUrl: '/', content: '', sw: null, homeTitle: null }, opts || {});
+    this.opts = Object.assign({ root: '#app', product: 'auto', kind: 'main', shopUrl: '/', content: '', sw: null, mascot: null }, opts || {});
+    if (this.opts.mascot) haczSrc = this.opts.mascot;
     this.root = typeof this.opts.root === 'string' ? $(this.opts.root) : this.opts.root;
     this.key = 'odhacz:' + this.opts.product + ':v1';
     this.state = null; this.content = null; this.route = { view: 'home' };
@@ -906,7 +908,7 @@
     if (!t) { out.push(this.lockedCard('Wzór umowy jest częścią dodatku „Odhacz Auto: Po zakupie”.', true)); return out; }
     out.push(el('div', { class: 'bubble bubble--inline' }, mascot(), el('div', null, el('b', null, 'Hacz: '), 'Wydrukuj dwa egzemplarze albo przepisz do dokumentu. Pola z kropkami wypełniasz długopisem przy sprzedawcy. To wzór edukacyjny, nie porada prawna.', el('span', { class: 'sign' }, 'Hacz – asystent AI marki Odhacz'))));
     out.push(el('button', { class: 'btn btn--primary btn--block mb', type: 'button', onclick: async () => { await self.preparePrint('contract'); track('contract_printed', {}); window.print(); } }, el('span', { html: ICON.print }), 'Drukuj wzór umowy'));
-    out.push(el('div', { class: 'card contract' }, this.contractDom(false)));
+    out.push(el('div', { class: 'card' }, this.contractDom(false)));
     out.push(this.disclaimer());
     return out;
   };
@@ -1048,7 +1050,8 @@
       { title: 'Na końcu dostajesz listę', text: 'Licznik czerwonych flag cały czas na dole. W podsumowaniu: decyzja z uzasadnieniem i gotowa lista uwag do negocjacji – do skopiowania lub PDF.', demo: 'flags' },
     ];
     const ov = el('div', { class: 'onb', role: 'dialog', 'aria-modal': 'true' });
-    const finish = () => { self.state.ui.onb = 1; self.persist(false); ov.remove(); self.go('quick'); };
+    // Returning user on a new device (progress pulled from the server): land on Home, not Quick start.
+    const finish = () => { self.state.ui.onb = 1; self.persist(false); ov.remove(); self.go(self.counts().answered > 0 ? '' : 'quick'); };
     const render = () => {
       const s = screens[step]; ov.innerHTML = '';
       ov.append(el('button', { class: 'onb__skip', type: 'button', onclick: finish }, 'Pomiń'));

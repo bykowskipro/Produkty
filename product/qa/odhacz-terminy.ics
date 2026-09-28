@@ -1,0 +1,141 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Odhacz//Odhacz Auto: Po zakupie//PL
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:Odhacz Auto: Po zakupie – terminy
+BEGIN:VEVENT
+UID:oc-info-20260927@odhacz
+DTSTAMP:20260928T190849Z
+DTSTART;VALUE=DATE:20260927
+DTEND;VALUE=DATE:20260928
+SUMMARY:Odhacz: Poinformuj ubezpieczyciela o zakupie
+DESCRIPTION:Kto: Kupujący\nJak: Telefon\, e-mail lub formularz ubezpieczy
+ ciela z polisy sprzedającego\nDotyczy\, gdy: Przejmujesz OC sprzedające
+ go\nhttps://www.ufg.pl/\nZ aplikacji Odhacz Auto: Po zakupie.
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER;VALUE=DURATION:-PT15H
+DESCRIPTION:Jutro: Poinformuj ubezpieczyciela o zakupie
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER;VALUE=DURATION:PT9H
+DESCRIPTION:Dziś: Poinformuj ubezpieczyciela o zakupie
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:item-p2-20260927@odhacz
+DTSTAMP:20260928T190849Z
+DTSTART;VALUE=DATE:20260927
+DTEND;VALUE=DATE:20260928
+SUMMARY:Odhacz: Poinformuj ubezpieczyciela o zakupie i zdecyduj o OC
+DESCRIPTION:Kto: Ty\nJak: Zadzwoń lub napisz do ubezpieczyciela z polisy 
+ sprzedającego: przekaż swoje dane. Polisa nie odnowi się automatycznie
+  – przed jej końcem kup własne OC albo zaakceptuj rekalkulację.\nZ a
+ plikacji Odhacz Auto: Po zakupie.
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER;VALUE=DURATION:-PT15H
+DESCRIPTION:Jutro: Poinformuj ubezpieczyciela o zakupie i zdecyduj o OC
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER;VALUE=DURATION:PT9H
+DESCRIPTION:Dziś: Poinformuj ubezpieczyciela o zakupie i zdecyduj o OC
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:pcc3-20261004@odhacz
+DTSTAMP:20260928T190849Z
+DTSTART;VALUE=DATE:20261004
+DTEND;VALUE=DATE:20261005
+SUMMARY:Odhacz: PCC-3 – deklaracja i zapłata 2% podatku
+DESCRIPTION:Kto: Kupujący\nJak: e-Urząd Skarbowy (formularz PCC-3) lub p
+ apierowo w urzędzie skarbowym\nDotyczy\, gdy: Zakup od osoby prywatnej n
+ a umowę (nie na fakturę VAT)\nhttps://www.podatki.gov.pl/pcc-sd/\nZ apl
+ ikacji Odhacz Auto: Po zakupie.
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER;VALUE=DURATION:-PT15H
+DESCRIPTION:Jutro: PCC-3 – deklaracja i zapłata 2% podatku
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER;VALUE=DURATION:PT9H
+DESCRIPTION:Dziś: PCC-3 – deklaracja i zapłata 2% podatku
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:item-p1-20261004@odhacz
+DTSTAMP:20260928T190849Z
+DTSTART;VALUE=DATE:20261004
+DTEND;VALUE=DATE:20261005
+SUMMARY:Odhacz: Złóż PCC-3 i zapłać podatek od czynności cywilnopraw
+ nych
+DESCRIPTION:Kto: Ty\nJak: Deklaracja PCC-3 (elektronicznie w e-Urzędzie S
+ karbowym lub papierowo). Podatek 2% od wartości rynkowej auta (nie niżs
+ zej niż realna cena). Nie dotyczy zakupu od firmy na fakturze VAT.\nZ ap
+ likacji Odhacz Auto: Po zakupie.
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER;VALUE=DURATION:-PT15H
+DESCRIPTION:Jutro: Złóż PCC-3 i zapłać podatek od czynności cywilnop
+ rawnych
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER;VALUE=DURATION:PT9H
+DESCRIPTION:Dziś: Złóż PCC-3 i zapłać podatek od czynności cywilnop
+ rawnych
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:rejestracja-20261020@odhacz
+DTSTAMP:20260928T190849Z
+DTSTART;VALUE=DATE:20261020
+DTEND;VALUE=DATE:20261021
+SUMMARY:Odhacz: Rejestracja pojazdu w wydziale komunikacji
+DESCRIPTION:Kto: Kupujący\nJak: Wizyta w starostwie / urzędzie miasta 
+ – wniosek\, umowa\, dowód rejestracyjny\, badanie techniczne\, OC\nDot
+ yczy\, gdy: Każdy zakup pojazdu zarejestrowanego w Polsce\nhttps://www.g
+ ov.pl/web/gov/zarejestruj-pojazd\nZ aplikacji Odhacz Auto: Po zakupie.
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER;VALUE=DURATION:-PT15H
+DESCRIPTION:Jutro: Rejestracja pojazdu w wydziale komunikacji
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER;VALUE=DURATION:PT9H
+DESCRIPTION:Dziś: Rejestracja pojazdu w wydziale komunikacji
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:item-p3-20261020@odhacz
+DTSTAMP:20260928T190849Z
+DTSTART;VALUE=DATE:20261020
+DTEND;VALUE=DATE:20261021
+SUMMARY:Odhacz: Zarejestruj auto w wydziale komunikacji
+DESCRIPTION:Kto: Ty\nJak: Wniosek o rejestrację + umowa + dowód rejestra
+ cyjny + ważne badanie techniczne + potwierdzenie OC. Wiele urzędów ma 
+ rezerwację wizyt online – umów termin od razu.\nZ aplikacji Odhacz Au
+ to: Po zakupie.
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER;VALUE=DURATION:-PT15H
+DESCRIPTION:Jutro: Zarejestruj auto w wydziale komunikacji
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER;VALUE=DURATION:PT9H
+DESCRIPTION:Dziś: Zarejestruj auto w wydziale komunikacji
+END:VALARM
+END:VEVENT
+END:VCALENDAR

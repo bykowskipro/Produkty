@@ -81,6 +81,8 @@ export function validateCheckoutInput(body, products) {
   for (const k of ['fbp', 'fbc', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term']) value[k] = s(body[k], 200);
   value.landing_url = s(body.landing_url, 2048);
   if (value.landing_url && !/^https?:\/\//i.test(value.landing_url)) return { error: 'invalid landing_url' };
+  // Marketing (Meta) consent as given in the cookie banner; anything but an explicit true counts as "no consent".
+  value.marketing_consent = body.marketing_consent === true || body.marketing_consent === 'true' ? 'true' : 'false';
   return { value, product };
 }
 

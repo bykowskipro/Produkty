@@ -2,14 +2,55 @@
 
 Dziękujemy za zakup w {{site_name}}. Twój dostęp jest już aktywny.
 
-Otwórz dostęp: {{access_url}}
+OTWÓRZ DOSTĘP: {{access_url}}
 
-Twoje produkty:
+Dodaj do ekranu głównego, żeby mieć checklistę pod ręką przy aucie:
+iPhone (Safari): Udostępnij -> „Do ekranu początkowego”. Android (Chrome): menu -> „Dodaj do ekranu głównego”.
+
+Twoje produkty i linki dostępu:
 {{items}}
 
-Link działa na telefonie i komputerze – zachowaj tę wiadomość i nie udostępniaj linku.
-Masz pytanie? Odpowiedz na tę wiadomość.
+Link działa na telefonie i komputerze. Zachowaj tę wiadomość (to Twoje potwierdzenie zamówienia) i nie udostępniaj linku.
 
+==================================================
+POTWIERDZENIE ZAMÓWIENIA NR {{order_id}}
+==================================================
+Umowa zawarta na odległość dnia {{order_date}} (czas polski).
+Sprzedawca: [[SPRZEDAWCA_NAZWA]] (pełne dane niżej).
+
+{{items_table}}
+Razem zapłacono (cena końcowa, brutto): {{amount}}
+
+Sposób płatności: {{payment_method}} – płatność jednorazowa, z góry.
+Sposób i termin dostarczenia: treść cyfrowa bez nośnika materialnego, dostarczona natychmiast po potwierdzeniu płatności – link na stronie „Zakup udany” i w tym e-mailu.
+Okres dostępu: 24 miesiące od dostarczenia.
+Główne cechy: interaktywna checklista w przeglądarce (bez instalacji i logowania); odpowiedzi jednym dotknięciem, pola na pomiary, notatki i zdjęcia, licznik czerwonych flag, lista uwag do negocjacji; zapis postępu dla kilku aut i synchronizacja między urządzeniami przez link z tego e-maila. Szczegółowy opis produktów: § 3 Regulaminu.
+Wymagania techniczne, funkcjonalność, kompatybilność: smartfon, tablet lub komputer z aktualną przeglądarką (Chrome, Safari, Firefox, Edge) z włączonym JavaScript i pamięcią lokalną; internet do otwarcia linku i synchronizacji; e-mail do odbioru linku. Brak DRM; dostęp chroniony unikalnym linkiem. Aktualizacje niezbędne do zachowania zgodności z umową dostarczamy w okresie dostępu bez opłat.
+Licencja: użytek własny, bez udostępniania linku innym osobom (§ 7 Regulaminu).
+Regulamin dla tego zamówienia: wersja v1 z 28.09.2026 – {{base_url}}/legal/regulamin.html (archiwum wersji: {{base_url}}/legal/archiwum.html). Zapisz lub wydrukuj regulamin; wyślemy go też na życzenie.
+
+{{withdrawal_block}}
+
+GWARANCJA SATYSFAKCJI 14 DNI
+Niezależnie od przepisów masz 14 dni od zakupu na zwrot pieniędzy bez podawania przyczyny. Wystarczy e-mail na [[EMAIL_KONTAKT]] z numerem zamówienia {{order_id}} i słowem „gwarancja”. Zwrot na tę samą metodę płatności w ciągu 14 dni (§ 9 Regulaminu).
+
+REKLAMACJE / NIEZGODNOŚĆ Z UMOWĄ
+Odpowiadamy za zgodność treści cyfrowej z umową przez 2 lata od dostarczenia. Reklamację prześlij na [[EMAIL_KONTAKT]]: opisz problem (urządzenie, przeglądarka, kiedy wystąpił) i podaj numer zamówienia {{order_id}}. Odpowiemy w ciągu 14 dni. Możesz żądać naprawy, a gdy to nie pomoże – obniżenia ceny lub odstąpienia od umowy (§ 10 Regulaminu). Możesz też skorzystać z bezpłatnej pomocy rzecznika konsumentów lub Inspekcji Handlowej.
+
+FAKTURA
+Fakturę wystawimy na życzenie – odpowiedz na tego maila z danymi do faktury (w ciągu 3 miesięcy od końca miesiąca zakupu). E-mail od Stripe z potwierdzeniem płatności nie jest fakturą.
+
+SPRZEDAWCA
+[[SPRZEDAWCA_NAZWA]]
+[[SPRZEDAWCA_ADRES]]
+NIP [[NIP]]
+e-mail: [[EMAIL_KONTAKT]] · tel. [[TELEFON]]
+Na wiadomości odpowiadamy najpóźniej w ciągu 14 dni.
+
+--
+Nie udostępniaj linku dostępu – jest przypisany do Twojego zakupu. Masz pytanie? Odpowiedz na tę wiadomość – odpisze człowiek.
+Wiadomość transakcyjna dotycząca Twojego zamówienia nr {{order_id}}. Nie jest to newsletter – bez osobnej zgody nie wysyłamy wiadomości marketingowych.
 © {{year}} {{site_name}}
 Regulamin: {{base_url}}/legal/regulamin.html
 Polityka prywatności: {{base_url}}/legal/polityka-prywatnosci.html
+O marce i o Haczu: {{base_url}}/legal/o-marce.html

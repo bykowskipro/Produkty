@@ -49,6 +49,8 @@
       visitor_id: window.Analytics ? window.Analytics.visitorId() : '',
       event_id: eventId,
       fbp: fb.fbp, fbc: fb.fbc,
+      // Marketing consent state travels with the order (Stripe metadata) so the server sends Meta CAPI only when allowed.
+      marketing_consent: !!(window.Consent && window.Consent.granted() === true),
       utm_source: utm.utm_source || '', utm_medium: utm.utm_medium || '', utm_campaign: utm.utm_campaign || '', utm_content: utm.utm_content || '', utm_term: utm.utm_term || '',
       landing_url: utm.landing_url || location.href
     };

@@ -110,7 +110,7 @@ img { max-width: 100%; }
 .card__title { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
 
 /* Hero (home) */
-.hero { display: grid; grid-template-columns: 84px 1fr; gap: 14px; align-items: center; padding: 8px 0 16px; }
+.hero { display: grid; grid-template-columns: 84px minmax(0, 1fr); gap: 14px; align-items: center; padding: 8px 0 16px; }
 .hero .mascot { width: 84px; height: 84px; }
 .hero h1 { margin: 0; }
 .tagline { color: var(--muted); margin: 2px 0 0; font-size: 16px; }
@@ -142,7 +142,7 @@ img { max-width: 100%; }
 /* Phase list (home) */
 .phases { list-style: none; margin: 0; padding: 0; }
 .phase-row {
-  display: grid; grid-template-columns: 40px 1fr auto; gap: 12px; align-items: center; width: 100%; text-align: left;
+  display: grid; grid-template-columns: 40px minmax(0, 1fr) auto; gap: 12px; align-items: center; width: 100%; text-align: left;
   padding: 14px 14px; margin: 0 0 10px; background: var(--card); border: 1px solid var(--card-border); border-radius: var(--radius);
   box-shadow: var(--shadow); cursor: pointer; color: inherit;
 }
@@ -157,7 +157,8 @@ img { max-width: 100%; }
 .is-done .progress > i { background: var(--ok); }
 
 /* Home menu grid */
-.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.grid2 { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px; }
+.tile { min-width: 0; }
 .tile { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; padding: 14px; min-height: 72px; text-align: left; background: var(--card); border: 1px solid var(--card-border); border-radius: var(--radius); cursor: pointer; color: inherit; font-weight: 600; box-shadow: var(--shadow); }
 .tile svg { width: 24px; height: 24px; color: var(--violet); }
 :root[data-theme="dark"] .tile svg { color: var(--lime); }
@@ -198,7 +199,7 @@ img { max-width: 100%; }
 .item.is-uwaga { border-left: 5px solid var(--warn); }
 .item.is-problem { border-left: 5px solid var(--bad); }
 .item.is-pomin { border-left: 5px solid var(--faint); opacity: .8; }
-.item__head { display: grid; grid-template-columns: 1fr 32px; gap: 8px; width: 100%; padding: 12px 10px 6px 14px; background: none; border: 0; text-align: left; cursor: pointer; color: inherit; min-height: var(--tap); align-items: start; }
+.item__head { display: grid; grid-template-columns: minmax(0, 1fr) 32px; gap: 8px; width: 100%; padding: 12px 10px 6px 14px; background: none; border: 0; text-align: left; cursor: pointer; color: inherit; min-height: var(--tap); align-items: start; }
 .item__text { font-weight: 600; font-size: 17px; line-height: 1.35; }
 .item__badges { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
 .badge { display: inline-flex; align-items: center; gap: 4px; padding: 1px 8px; border-radius: 999px; font-size: 16px; font-weight: 600; line-height: 1.5; background: var(--surface-2); color: var(--muted); }
@@ -219,7 +220,8 @@ img { max-width: 100%; }
 .howwhy p { margin: 0 0 6px; }
 .howwhy p:last-child { margin: 0; }
 .howwhy b { font-family: var(--font-head); }
-.answers { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; padding: 6px 10px 10px 14px; }
+.answers { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; padding: 6px 10px 10px 14px; }
+.answers .ans { min-width: 0; overflow: hidden; }
 .ans {
   min-height: var(--tap); border-radius: 12px; border: 2px solid var(--card-border); background: var(--card); color: var(--fg);
   font-weight: 700; font-size: 16px; cursor: pointer; padding: 4px 2px; line-height: 1.1; letter-spacing: -0.01em;
@@ -257,8 +259,9 @@ img { max-width: 100%; }
 .addphoto input { display: none; }
 
 /* Phase nav */
-.phasenav { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 20px 0 8px; }
-.phasenav .btn { padding-left: 10px; padding-right: 10px; }
+.phasenav { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px; margin: 20px 0 8px; }
+.phasenav .btn { padding-left: 10px; padding-right: 10px; min-width: 0; max-width: 100%; }
+.phasenav .btn > .grow { min-width: 0; }
 .phasenav .btn:only-child { grid-column: 1 / -1; }
 .phase-intro { display: grid; grid-template-columns: 52px 1fr; gap: 10px; align-items: start; margin-bottom: 14px; }
 .phase-intro .mascot { width: 52px; height: 52px; }
@@ -269,7 +272,7 @@ img { max-width: 100%; }
 .chip svg { width: 16px; height: 16px; }
 
 /* Summary */
-.counts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 12px; }
+.counts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin-bottom: 12px; }
 .count { background: var(--card); border: 1px solid var(--card-border); border-radius: var(--radius); padding: 10px 6px; text-align: center; box-shadow: var(--shadow); }
 .count b { display: block; font-family: var(--font-head); font-size: 28px; line-height: 1; }
 .count span { display: block; font-size: 16px; color: var(--muted); margin-top: 4px; line-height: 1.1; }

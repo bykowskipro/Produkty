@@ -2,8 +2,10 @@
  * - persistent visitor_id (localStorage, cookie fallback)
  * - first-touch UTM persistence (localStorage "utm_first")
  * - window.track(event, props) -> POST /api/events (keepalive)
- * - auto page_view
+ * - auto page_view; cookie-consent decisions are logged as "cookie_consent" (proof of consent, no third parties)
  * - window.Analytics = { visitorId, utm, track, fbCookies, eventId }
+ * Legal note: the Meta click id (fbclid -> _fbc cookie) is stored ONLY after marketing consent (art. 399 PKE);
+ * see public/assets/consent.js and the privacy policy.
  */
 (function () {
   function uuid() {
@@ -36,9 +38,12 @@
     if (any) { found.landing_url = location.href.slice(0, 2048); found.ts = new Date().toISOString(); utm = found; store('utm_first', JSON.stringify(utm)); }
     else utm = {};
   }
-  // Meta click id -> _fbc cookie (Meta's recommended format) when the pixel is not (yet) allowed to set it.
+  // Meta click id -> _fbc cookie (Meta's recommended format), but only once marketing consent exists
+  // (the pixel itself is not allowed to run before consent either).
   var fbclid = params.get('fbclid');
-  if (fbclid && !getCookie('_fbc')) setCookie('_fbc', 'fb.1.' + Date.now() + '.' + fbclid, 90);
+  function storeFbc() { if (fbclid && !getCookie('_fbc')) setCookie('_fbc', 'fb.1.' + Date.now() + '.' + fbclid, 90); }
+  if (window.Consent && window.Consent.granted() === true) storeFbc();
+  if (window.Consent && window.Consent.onChange) window.Consent.onChange(function (granted) { if (granted) storeFbc(); });
 
   function track(event, props) {
     var body = { visitor_id: vid, event: event, props: props || {}, url: location.href.slice(0, 2048), referrer: document.referrer.slice(0, 2048) };
@@ -47,6 +52,12 @@
       return fetch('/api/events', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body), keepalive: true, credentials: 'same-origin' }).catch(function () {});
     } catch (e) { return Promise.resolve(); }
   }
+
+  // Proof of the cookie-consent decision (who = visitor_id, when = server timestamp, what = granted/denied, banner version).
+  window.addEventListener('consentchange', function (e) {
+    var d = (e && e.detail) || {};
+    track('cookie_consent', { granted: !!d.granted, banner: d.version || 'v1' });
+  });
 
   window.Analytics = {
     visitorId: function () { return vid; },

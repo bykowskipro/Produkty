@@ -1,20 +1,63 @@
 <!doctype html>
+<!--
+  E-mail z dostępem + POTWIERDZENIE ZAWARCIA UMOWY na trwałym nośniku (art. 21 ust. 1–2 UPK). Renderuje src/email.js.
+  Zmienne (podwójne nawiasy klamrowe): greeting, name, site_name, base_url, year, access_url, items (lista linków),
+  order_id, order_date, items_table (wiersze produktów z cenami), amount, payment_method,
+  withdrawal_block (blok o prawie odstąpienia – wariant zależny od zgody zapisanej w sesji Stripe), consent_ts, delivered_at.
+  PLACEHOLDERY DO UZUPEŁNIENIA PRZED STARTEM (wyszukaj „[[”): [[SPRZEDAWCA_NAZWA]] [[SPRZEDAWCA_ADRES]] [[NIP]] [[EMAIL_KONTAKT]] [[TELEFON]]
+  Przy nowej wersji regulaminu zmień „wersja v1 z 28.09.2026” (tu i w delivery.txt).
+-->
 <html lang="pl">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Twój dostęp – {{site_name}}</title></head>
-<body style="margin:0;padding:0;background:#f4f5f7;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#111">
-  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#f4f5f7;padding:24px 12px">
+<body style="margin:0;padding:0;background:#f1f5f9;font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;color:#0b0f19">
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#f1f5f9;padding:24px 12px">
     <tr><td align="center">
-      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:560px;background:#fff;border-radius:12px;padding:28px 24px">
+      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:560px;background:#ffffff;border-radius:12px;padding:28px 24px">
         <tr><td style="font-size:22px;font-weight:700;padding-bottom:12px">{{greeting}}</td></tr>
-        <tr><td style="font-size:16px;line-height:1.5;padding-bottom:18px">Dziękujemy za zakup w {{site_name}}. Twój dostęp jest już aktywny – kliknij przycisk poniżej. Link działa na telefonie i komputerze; zachowaj tę wiadomość.</td></tr>
-        <tr><td align="center" style="padding:6px 0 22px">
-          <a href="{{access_url}}" style="display:inline-block;background:#16a34a;color:#fff;text-decoration:none;font-weight:700;font-size:17px;padding:14px 28px;border-radius:10px">Otwórz dostęp</a>
+        <tr><td style="font-size:16px;line-height:1.5;padding-bottom:18px">Dziękujemy za zakup w {{site_name}}. Twój dostęp jest już aktywny – kliknij przycisk poniżej. Link działa na telefonie i komputerze. <strong>Zachowaj tę wiadomość</strong>: to Twoje potwierdzenie zamówienia i sposób na odzyskanie dostępu.</td></tr>
+        <tr><td align="center" style="padding:6px 0 16px">
+          <a href="{{access_url}}" style="display:inline-block;background:#6d28d9;color:#ffffff;text-decoration:none;font-weight:700;font-size:17px;padding:15px 30px;border-radius:10px">Otwórz dostęp</a>
         </td></tr>
-        <tr><td style="font-size:15px;line-height:1.5;padding-bottom:8px"><strong>Twoje produkty:</strong></td></tr>
-        <tr><td style="font-size:15px;line-height:1.5"><ul style="margin:0;padding-left:20px">{{items}}</ul></td></tr>
-        <tr><td style="font-size:13px;line-height:1.5;color:#666;padding-top:22px;border-top:1px solid #eee;margin-top:20px">
-          Nie udostępniaj linku – jest przypisany do Twojego zakupu. Masz pytanie? Odpowiedz na tę wiadomość.<br>
-          © {{year}} {{site_name}} · <a href="{{base_url}}/legal/regulamin.html" style="color:#666">Regulamin</a> · <a href="{{base_url}}/legal/polityka-prywatnosci.html" style="color:#666">Polityka prywatności</a>
+        <tr><td style="font-size:14px;line-height:1.5;color:#475569;padding-bottom:20px;text-align:center"><strong>Dodaj do ekranu głównego</strong>, żeby mieć checklistę pod ręką przy aucie: iPhone (Safari): Udostępnij → „Do ekranu początkowego”. Android (Chrome): menu ⋮ → „Dodaj do ekranu głównego”.</td></tr>
+        <tr><td style="font-size:15px;line-height:1.5;padding-bottom:8px"><strong>Twoje produkty i linki dostępu:</strong></td></tr>
+        <tr><td style="font-size:15px;line-height:1.5;padding-bottom:22px"><ul style="margin:0;padding-left:20px">{{items}}</ul></td></tr>
+
+        <tr><td style="padding:18px 0 6px;border-top:1px solid #e2e8f0;font-size:17px;font-weight:700">Potwierdzenie zamówienia nr {{order_id}}</td></tr>
+        <tr><td style="font-size:14px;line-height:1.5;color:#475569;padding-bottom:10px">Umowa zawarta na odległość dnia {{order_date}} (czas polski). Sprzedawca: [[SPRZEDAWCA_NAZWA]] (pełne dane niżej).</td></tr>
+        <tr><td style="padding-bottom:10px">
+          <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="font-size:14px;line-height:1.45;border-collapse:collapse">
+            {{items_table}}
+            <tr><td style="padding:8px 0;border-top:2px solid #e2e8f0;font-weight:700">Razem zapłacono (cena końcowa, brutto)</td><td style="padding:8px 0;border-top:2px solid #e2e8f0;font-weight:700;text-align:right;white-space:nowrap">{{amount}}</td></tr>
+          </table>
+        </td></tr>
+        <tr><td style="font-size:14px;line-height:1.55;padding-bottom:16px">
+          <strong>Sposób płatności:</strong> {{payment_method}} – płatność jednorazowa, z góry.<br>
+          <strong>Sposób i termin dostarczenia:</strong> treść cyfrowa bez nośnika materialnego, dostarczona natychmiast po potwierdzeniu płatności – link na stronie „Zakup udany” i w tym e-mailu.<br>
+          <strong>Okres dostępu:</strong> 24 miesiące od dostarczenia.<br>
+          <strong>Główne cechy:</strong> interaktywna checklista w przeglądarce (bez instalacji i logowania); odpowiedzi jednym dotknięciem, pola na pomiary, notatki i zdjęcia, licznik czerwonych flag, lista uwag do negocjacji; zapis postępu dla kilku aut i synchronizacja między urządzeniami przez link z tego e-maila. Szczegółowy opis produktów: § 3 Regulaminu.<br>
+          <strong>Wymagania techniczne, funkcjonalność, kompatybilność:</strong> smartfon, tablet lub komputer z aktualną przeglądarką (Chrome, Safari, Firefox, Edge) z włączonym JavaScript i pamięcią lokalną; internet do otwarcia linku i synchronizacji; e-mail do odbioru linku. Brak DRM; dostęp chroniony unikalnym linkiem. Aktualizacje niezbędne do zachowania zgodności z umową dostarczamy w okresie dostępu bez opłat.<br>
+          <strong>Licencja:</strong> użytek własny, bez udostępniania linku innym osobom (§ 7 Regulaminu).<br>
+          <strong>Regulamin dla tego zamówienia:</strong> wersja v1 z 28.09.2026 – <a href="{{base_url}}/legal/regulamin.html" style="color:#6d28d9">{{base_url}}/legal/regulamin.html</a> (archiwum wersji: <a href="{{base_url}}/legal/archiwum.html" style="color:#6d28d9">{{base_url}}/legal/archiwum.html</a>). Zapisz lub wydrukuj regulamin (np. „Drukuj → zapisz jako PDF”); wyślemy go też na życzenie.
+        </td></tr>
+
+        {{withdrawal_block}}
+
+        <tr><td style="padding:14px 0 6px;font-size:16px;font-weight:700">Gwarancja satysfakcji 14 dni</td></tr>
+        <tr><td style="font-size:14px;line-height:1.55;padding-bottom:12px">Niezależnie od przepisów masz <strong>14 dni od zakupu</strong> na zwrot pieniędzy bez podawania przyczyny. Wystarczy e-mail na <a href="mailto:[[EMAIL_KONTAKT]]" style="color:#6d28d9">[[EMAIL_KONTAKT]]</a> z numerem zamówienia {{order_id}} i słowem „gwarancja”. Zwrot na tę samą metodę płatności w ciągu 14 dni (§ 9 Regulaminu).</td></tr>
+
+        <tr><td style="padding:8px 0 6px;font-size:16px;font-weight:700">Reklamacje / niezgodność z umową</td></tr>
+        <tr><td style="font-size:14px;line-height:1.55;padding-bottom:12px">Odpowiadamy za zgodność treści cyfrowej z umową przez <strong>2 lata</strong> od dostarczenia. Reklamację prześlij na <a href="mailto:[[EMAIL_KONTAKT]]" style="color:#6d28d9">[[EMAIL_KONTAKT]]</a>: opisz problem (urządzenie, przeglądarka, kiedy wystąpił) i podaj numer zamówienia {{order_id}}. <strong>Odpowiemy w ciągu 14 dni.</strong> Możesz żądać naprawy, a gdy to nie pomoże – obniżenia ceny lub odstąpienia od umowy (§ 10 Regulaminu). Możesz też skorzystać z bezpłatnej pomocy rzecznika konsumentów lub Inspekcji Handlowej.</td></tr>
+
+        <tr><td style="padding:8px 0 6px;font-size:16px;font-weight:700">Faktura</td></tr>
+        <tr><td style="font-size:14px;line-height:1.55;padding-bottom:12px">Fakturę wystawimy na życzenie – odpowiedz na tego maila z danymi do faktury (w ciągu 3 miesięcy od końca miesiąca zakupu). E-mail od Stripe z potwierdzeniem płatności nie jest fakturą.</td></tr>
+
+        <tr><td style="padding:8px 0 6px;font-size:16px;font-weight:700">Sprzedawca</td></tr>
+        <tr><td style="font-size:14px;line-height:1.55;padding-bottom:18px">[[SPRZEDAWCA_NAZWA]]<br>[[SPRZEDAWCA_ADRES]]<br>NIP [[NIP]]<br>e-mail: <a href="mailto:[[EMAIL_KONTAKT]]" style="color:#6d28d9">[[EMAIL_KONTAKT]]</a> · tel. [[TELEFON]]<br>Na wiadomości odpowiadamy najpóźniej w ciągu 14 dni.</td></tr>
+
+        <tr><td style="font-size:13px;line-height:1.5;color:#64748b;padding-top:18px;border-top:1px solid #e2e8f0">
+          Nie udostępniaj linku dostępu – jest przypisany do Twojego zakupu. Masz pytanie? Odpowiedz na tę wiadomość – odpisze człowiek.<br>
+          <strong>Wiadomość transakcyjna dotycząca Twojego zamówienia nr {{order_id}}.</strong> Nie jest to newsletter – bez osobnej zgody nie wysyłamy wiadomości marketingowych.<br>
+          © {{year}} {{site_name}} · <a href="{{base_url}}/legal/regulamin.html" style="color:#64748b">Regulamin</a> · <a href="{{base_url}}/legal/polityka-prywatnosci.html" style="color:#64748b">Polityka prywatności</a> · <a href="{{base_url}}/legal/o-marce.html" style="color:#64748b">O marce i o Haczu</a>
         </td></tr>
       </table>
     </td></tr>

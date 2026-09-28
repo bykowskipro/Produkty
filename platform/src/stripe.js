@@ -86,6 +86,7 @@ export function buildCheckoutParams({ product, upsells = [], input, ctx }) {
       utm_term: input.utm_term,
       fbp: input.fbp,
       fbc: input.fbc,
+      marketing_consent: input.marketing_consent, // 'true' | 'false' – gates the server-side Meta CAPI event in fulfillment
       landing_url: input.landing_url,
       client_ip: ctx.clientIp,
       user_agent: ctx.userAgent,
