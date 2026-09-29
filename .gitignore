@@ -5,3 +5,7 @@ platform/data/
 creatives/shots/
 .DS_Store
 ops/sprzedawca.json
+
+# QA: pełnoekranowe zrzuty numerowane (ok. 1,7 MB każdy) są regenerowane przy każdym przebiegu — do repo trafiają tylko kadry v-*.png i wybrane ekrany
+product/qa/*/[0-9][0-9]-*.png
+!product/qa/v4/00-onboarding-2.png
