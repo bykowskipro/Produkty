@@ -1,7 +1,7 @@
 {
  "meta": {
   "product_id": "auto",
-  "version": "1.1",
+  "version": "1.2",
   "title": "Oględziny używanego auta",
   "est_minutes_total": 75,
   "disclaimer": "Narzędzie ma charakter edukacyjny i porządkuje oględziny — nie zastępuje sprawdzenia przez mechanika lub rzeczoznawcę i nie ocenia konkretnego egzemplarza. Decyzja o zakupie i jej skutki należą do Ciebie."
@@ -147,7 +147,8 @@
         "ogloszenie"
        ]
       }
-     ]
+     ],
+     "hint": "Połowę wtop widać jeszcze z kanapy. Przejdź ogłoszenie punkt po punkcie, zanim komukolwiek zapłacisz za paliwo."
     },
     {
      "id": "p1s2",
@@ -250,7 +251,8 @@
         "zastaw"
        ]
       }
-     ]
+     ],
+     "hint": "Trzy dane i pięć minut w historiapojazdu.gov.pl. Jeśli licznik w rejestrze nie rośnie, kończysz tutaj."
     },
     {
      "id": "p1s3",
@@ -301,7 +303,8 @@
         "lakier"
        ]
       }
-     ]
+     ],
+     "hint": "Teraz rozmowa. Wybierz, do kogo dzwonisz, a ja poprowadzę Cię zdanie po zdaniu. Odpowiedzi zaznaczaj na bieżąco."
     },
     {
      "id": "p1s4",
@@ -321,7 +324,8 @@
        "tags": [
         "ustalenia",
         "silnik"
-       ]
+       ],
+       "say": "Przyjadę na zimny silnik — proszę go nie odpalać przed moim przyjazdem, nawet „żeby się nagrzał”."
       },
       {
        "id": "p1s4i2",
@@ -336,7 +340,8 @@
        "tags": [
         "ustalenia",
         "dokumenty"
-       ]
+       ],
+       "say": "Proszę przygotować dowód rejestracyjny, umowę lub fakturę zakupu, książkę serwisową i faktury — chcę je zobaczyć na miejscu."
       },
       {
        "id": "p1s4i3",
@@ -352,7 +357,8 @@
        "tags": [
         "ustalenia",
         "jazda"
-       ]
+       ],
+       "say": "Chciałbym/chciałabym sam(a) poprowadzić 20–30 minut po różnych drogach. To dla Pana/Pani w porządku?"
       },
       {
        "id": "p1s4i4",
@@ -366,7 +372,8 @@
        "input": null,
        "tags": [
         "ustalenia"
-       ]
+       ],
+       "say": "Umówmy się za dnia, w miejscu, gdzie da się obejść auto dookoła i otworzyć wszystkie drzwi."
       },
       {
        "id": "p1s4i5",
@@ -381,9 +388,11 @@
        "tags": [
         "ustalenia",
         "mechanik"
-       ]
+       ],
+       "say": "Jeśli auto mi się spodoba, pojedziemy razem na stację diagnostyczną albo do mechanika — na mój koszt."
       }
-     ]
+     ],
+     "hint": "Zanim się rozłączysz, ustal warunki spotkania. To one decydują, czy oględziny w ogóle mają sens."
     },
     {
      "id": "p1s5",
@@ -462,7 +471,8 @@
         "transakcja"
        ]
       }
-     ]
+     ],
+     "hint": "Pakowanie na 2 minuty. Bez grubościomierza też dasz radę, ale z nim widzisz więcej."
     },
     {
      "id": "p1s6",
@@ -498,7 +508,8 @@
         "mechanik"
        ]
       }
-     ]
+     ],
+     "hint": "Plan B ustal teraz, nie przy aucie. Wtedy nikt nie będzie Cię poganiał."
     }
    ]
   },
@@ -2823,71 +2834,78 @@
    "Czas: 8–12 minut, ciche miejsce, ta aplikacja otwarta na skrypcie — odhaczasz pytania w trakcie, nie po.",
    "Zapisuj dosłownie cztery rzeczy: przebieg, co było lakierowane, od kiedy ma auto, powód sprzedaży. Jutro te cztery zdania zderzysz z faktami."
   ],
-  "opening": [
-   "Dzień dobry, dzwonię w sprawie [auto] z ogłoszenia — ma Pan/Pani chwilę na kilka pytań, zanim przyjadę?",
-   "Dzień dobry, w sprawie auta z ogłoszenia — jest jeszcze aktualne? (Celowo bez nazwy modelu: jeśli usłyszysz „którego?”, rozmawiasz z handlarzem.)",
-   "Dzień dobry, oglądam Pana/Pani ogłoszenie [auto] za [cena]. Nie chcę jechać [X] km na darmo, więc dopytam o kilka rzeczy — zajmie to może dziesięć minut, dobrze?"
-  ],
   "questions": [
    {
     "q": "Czy jest Pan/Pani właścicielem wpisanym w dowodzie rejestracyjnym? Czy jest współwłaściciel? Może mi Pan/Pani wysłać zdjęcie dowodu (VIN, nr rejestracyjny, data pierwszej rejestracji)?",
     "watch_for": "„Sprzedaję dla brata/znajomego” bez słowa o pełnomocnictwie; „firma, ale sprzedaję prywatnie”; odmowa zdjęcia dowodu lub VIN — to koniec rozmowy.",
-    "if_dodges": "„Rozumiem, to zapytam wprost: czyje nazwisko jest w dowodzie rejestracyjnym i czy ta osoba będzie przy podpisaniu umowy?” Jeśli i teraz nie pada nazwisko ani zgoda na zdjęcie dowodu — nie jedziesz."
+    "if_dodges": "„Rozumiem, to zapytam wprost: czyje nazwisko jest w dowodzie rejestracyjnym i czy ta osoba będzie przy podpisaniu umowy?” Jeśli i teraz nie pada nazwisko ani zgoda na zdjęcie dowodu — nie jedziesz.",
+    "flag_label": "Rozmowa: właściciel/współwłaściciel niejasny"
    },
    {
     "q": "Od kiedy ma Pan/Pani to auto i od kogo je Pan/Pani kupił(a)? Jest umowa lub faktura z tamtego zakupu?",
     "watch_for": "Kilka tygodni lub miesięcy posiadania = handel; „z Niemiec od znajomego” bez dokumentów; brak poprzedniej umowy.",
-    "if_dodges": "„Rozumiem, to zapytam wprost: w którym roku kupił(a) Pan/Pani to auto i czy pokaże mi Pan/Pani tamtą umowę na miejscu?” Brak roku albo „umowa gdzieś jest” znaczy, że sprzedawca zna to auto krócej, niż mówi — traktuj je jak auto z handlu i pytaj dalej o papiery."
+    "if_dodges": "„Rozumiem, to zapytam wprost: w którym roku kupił(a) Pan/Pani to auto i czy pokaże mi Pan/Pani tamtą umowę na miejscu?” Brak roku albo „umowa gdzieś jest” znaczy, że sprzedawca zna to auto krócej, niż mówi — traktuj je jak auto z handlu i pytaj dalej o papiery.",
+    "flag_label": "Rozmowa: pochodzenie auta i poprzedni zakup niejasne"
    },
    {
     "q": "Jaki jest dokładny przebieg na dziś i czym jest udokumentowany (książka, faktury, badania)?",
     "watch_for": "Zaokrąglenia („koło 180”), przebieg inny niż w ogłoszeniu, „książka się zgubiła”, brak faktur z przebiegami.",
-    "if_dodges": "„Rozumiem, to zapytam wprost: jaką dokładnie liczbę pokaże licznik, kiedy przyjadę?” Jeśli zamiast liczby pada „koło” albo „mniej więcej”, zapisz to dosłownie — jutro pierwsze, co robisz, to licznik kontra Historia pojazdu."
+    "if_dodges": "„Rozumiem, to zapytam wprost: jaką dokładnie liczbę pokaże licznik, kiedy przyjadę?” Jeśli zamiast liczby pada „koło” albo „mniej więcej”, zapisz to dosłownie — jutro pierwsze, co robisz, to licznik kontra Historia pojazdu.",
+    "flag_label": "Rozmowa: przebieg bez dokumentów"
    },
    {
     "q": "Które elementy były lakierowane lub wymieniane i z jakiego powodu?",
     "watch_for": "„Nic, bezwypadkowy” przy kilkuletnim aucie — zapisz dosłownie, porównasz z miernikiem; „tylko zderzak” bez powodu; irytacja przy pytaniu.",
-    "if_dodges": "„Rozumiem, to zapytam wprost: czy jest choć jeden element, który był lakierowany albo wymieniany — choćby zderzak?” „Nic, na sto procent” przy kilkuletnim aucie zapisz dosłownie; jutro odpowie miernik, a Ty dowiesz się, ile są warte pozostałe zapewnienia."
+    "if_dodges": "„Rozumiem, to zapytam wprost: czy jest choć jeden element, który był lakierowany albo wymieniany — choćby zderzak?” „Nic, na sto procent” przy kilkuletnim aucie zapisz dosłownie; jutro odpowie miernik, a Ty dowiesz się, ile są warte pozostałe zapewnienia.",
+    "flag_label": "Rozmowa: lakierowane elementy — „nic, bezwypadkowy”"
    },
    {
     "q": "Czy auto miało jakąkolwiek szkodę — także parkingową, likwidowaną z OC lub AC, w Polsce albo za granicą?",
     "watch_for": "Rozróżnianie „wypadek” od „stłuczka”; „to nie była szkoda, tylko otarcie”; brak jasnego „nie”.",
-    "if_dodges": "„Rozumiem, to zapytam wprost: czy była jakakolwiek szkoda zgłaszana do ubezpieczyciela — z Pana/Pani OC, z cudzego OC albo z AC?” Jeśli zamiast „nie” słyszysz wykład, co jest szkodą, a co „tylko otarciem”, przyjmij, że szkoda była, i jutro szukaj jej miernikiem."
+    "if_dodges": "„Rozumiem, to zapytam wprost: czy była jakakolwiek szkoda zgłaszana do ubezpieczyciela — z Pana/Pani OC, z cudzego OC albo z AC?” Jeśli zamiast „nie” słyszysz wykład, co jest szkodą, a co „tylko otarciem”, przyjmij, że szkoda była, i jutro szukaj jej miernikiem.",
+    "flag_label": "Rozmowa: szkody — odpowiedź wymijająca"
    },
    {
     "q": "Czy auto jest sprowadzone? Kiedy zarejestrowano je w Polsce i jakie są dokumenty z zagranicy?",
     "watch_for": "„Krajowe” przy dacie pierwszej rejestracji w Polsce sprzed kilku lat dla starszego auta; brak zagranicznych papierów; „tłumaczenie gdzieś jest”.",
-    "if_dodges": "„Rozumiem, to zapytam wprost: w którym roku auto zostało po raz pierwszy zarejestrowane w Polsce i z jakiego kraju przyjechało?” Jeśli sprzedawca nie zna tej daty ani kraju, historia sprzed importu jest dla Ciebie pusta — to auto oglądasz tylko z płatnym raportem VIN i z planem na mechanika."
+    "if_dodges": "„Rozumiem, to zapytam wprost: w którym roku auto zostało po raz pierwszy zarejestrowane w Polsce i z jakiego kraju przyjechało?” Jeśli sprzedawca nie zna tej daty ani kraju, historia sprzed importu jest dla Ciebie pusta — to auto oglądasz tylko z płatnym raportem VIN i z planem na mechanika.",
+    "flag_label": "Rozmowa: import bez dokumentów sprzed PL"
    },
    {
     "q": "Kiedy był ostatni serwis olejowy, wymiana rozrządu, sprzęgła lub oleju w automacie — i czy są na to faktury?",
     "watch_for": "„Niedawno”, „w zeszłym roku u znajomego”; wszystko „robione”, nic udokumentowane.",
-    "if_dodges": "„Rozumiem, to zapytam wprost: na co z tego ma Pan/Pani fakturę albo wpis w książce, a co było robione bez papieru?” Co nie ma dokumentu, traktuj jako niezrobione — i od razu wpisz na listę do rozmowy o cenie."
+    "if_dodges": "„Rozumiem, to zapytam wprost: na co z tego ma Pan/Pani fakturę albo wpis w książce, a co było robione bez papieru?” Co nie ma dokumentu, traktuj jako niezrobione — i od razu wpisz na listę do rozmowy o cenie.",
+    "flag_label": "Rozmowa: serwis/rozrząd bez faktur"
    },
    {
     "q": "Czy jakaś kontrolka świeci lub świeciła w ostatnich miesiącach? Były kasowane błędy?",
     "watch_for": "„Tylko czujnik”; „mechanik skasował i jest ok”; pytanie zwrotne „a czemu Pan pyta?”.",
-    "if_dodges": "„Rozumiem, to zapytam wprost: czy w ostatnim roku ktoś podłączał komputer do auta i kasował błędy — i po co?” Odpowiedź pytaniem („a czemu Pan pyta?”) to też odpowiedź: jutro sprawdzasz wszystkie kontrolki na zapłonie, a jeśli masz czytnik — monitory gotowości OBD2."
+    "if_dodges": "„Rozumiem, to zapytam wprost: czy w ostatnim roku ktoś podłączał komputer do auta i kasował błędy — i po co?” Odpowiedź pytaniem („a czemu Pan pyta?”) to też odpowiedź: jutro sprawdzasz wszystkie kontrolki na zapłonie, a jeśli masz czytnik — monitory gotowości OBD2.",
+    "flag_label": "Rozmowa: kontrolki / kasowane błędy"
    },
    {
     "q": "Czy auto ma ważne badanie techniczne i OC? Czy jest wolne od zastawu, kredytu i leasingu?",
     "watch_for": "„Badanie zrobię przed sprzedażą”; „kredyt spłacony, tylko jeszcze nie wykreślony”; „OC się skończyło, bo stało”.",
-    "if_dodges": "„Rozumiem, to zapytam wprost: do kiedy jest ważne badanie techniczne i czy w dowodzie rejestracyjnym jest jakakolwiek adnotacja albo współwłaściciel?” Jeśli sprzedawca musi „sprawdzić” daty we własnym aucie albo kluczy przy słowie „zastaw”, nie umawiaj się, dopóki nie przyśle zdjęcia dowodu."
+    "if_dodges": "„Rozumiem, to zapytam wprost: do kiedy jest ważne badanie techniczne i czy w dowodzie rejestracyjnym jest jakakolwiek adnotacja albo współwłaściciel?” Jeśli sprzedawca musi „sprawdzić” daty we własnym aucie albo kluczy przy słowie „zastaw”, nie umawiaj się, dopóki nie przyśle zdjęcia dowodu.",
+    "flag_label": "Rozmowa: badanie, OC, zastaw — niepewne"
    },
    {
     "q": "Ile jest kluczyków i czy wszystkie działają (pilot, rozruch)?",
     "watch_for": "Jeden kluczyk, „drugi został u poprzedniego właściciela”; pilot „tylko bateria”.",
-    "if_dodges": "„Rozumiem, to zapytam wprost: ile kluczyków dostanę do ręki przy umowie — jeden czy dwa?” Jeden kluczyk to nie powód, żeby nie jechać, ale „drugi się znajdzie” zapisz jako „jeden” i wróć do tego przy cenie."
+    "if_dodges": "„Rozumiem, to zapytam wprost: ile kluczyków dostanę do ręki przy umowie — jeden czy dwa?” Jeden kluczyk to nie powód, żeby nie jechać, ale „drugi się znajdzie” zapisz jako „jeden” i wróć do tego przy cenie.",
+    "flag_label": "Rozmowa: brak drugiego kluczyka"
    },
    {
     "q": "Czy mogę przyjechać na zimny silnik (proszę nie odpalać przed moim przyjazdem), sam poprowadzić na jeździe próbnej i podjechać na SKP lub do mechanika?",
     "watch_for": "Warunki lub wykręty przy którymkolwiek punkcie: „nie mam czasu”, „już było sprawdzane”, „jazda tylko ze mną za kierownicą”.",
-    "if_dodges": "„Rozumiem, to zapytam wprost: czy auto będzie stało nieodpalane od rana, czy poprowadzę sam(a) i czy możemy podjechać na stację diagnostyczną — tak czy nie na każde z trzech?” „Nie” albo warunek przy którymkolwiek („tylko ze mną za kierownicą”) kończy rozmowę — bez tych trzech rzeczy nie sprawdzisz auta."
+    "if_dodges": "„Rozumiem, to zapytam wprost: czy auto będzie stało nieodpalane od rana, czy poprowadzę sam(a) i czy możemy podjechać na stację diagnostyczną — tak czy nie na każde z trzech?” „Nie” albo warunek przy którymkolwiek („tylko ze mną za kierownicą”) kończy rozmowę — bez tych trzech rzeczy nie sprawdzisz auta.",
+    "flag_label": "Rozmowa: opór przed zimnym silnikiem / jazdą próbną"
    },
    {
     "q": "Dlaczego sprzedaje Pan/Pani to auto i czy cena jest do rozmowy po oględzinach?",
     "watch_for": "Powód niespójny z resztą („kupiłem 2 miesiące temu, ale zmieniam na większe”); „cena ostateczna, dużo chętnych, dziś decyzja”.",
-    "if_dodges": "„Rozumiem, to zapytam wprost: jeśli po oględzinach pokażę konkretne uwagi, czy cena jest do rozmowy?” „Cena ostateczna, dużo chętnych, decyzja dziś” to presja, nie informacja — jeśli mimo to jedziesz, jedź z założeniem, że możesz wrócić bez auta."
+    "if_dodges": "„Rozumiem, to zapytam wprost: jeśli po oględzinach pokażę konkretne uwagi, czy cena jest do rozmowy?” „Cena ostateczna, dużo chętnych, decyzja dziś” to presja, nie informacja — jeśli mimo to jedziesz, jedź z założeniem, że możesz wrócić bez auta.",
+    "flag_label": "Rozmowa: powód sprzedaży / cena nie do rozmowy"
    }
   ],
   "closing": [
@@ -2913,7 +2931,69 @@
     "text": "Dzień dobry, dziękuję za dzisiejsze oględziny [auto]. Auto mi się podoba, ale mam spisane rzeczy, które po zakupie biorę na siebie:\n[WKLEJ LISTĘ UWAG Z RAPORTU]\nDlatego proponuję [KWOTA] zł, odbiór [dzień]: płatność przy podpisaniu umowy, komplet kluczyków i dokumentów w tym samym momencie. Jeśli obniżka nie wchodzi w grę, mogę rozważyć cenę bliższą Pana/Pani oczekiwaniom przy [np. komplecie opon / świeżym badaniu technicznym] przed odbiorem, wpisanym do umowy. Proszę o odpowiedź do [dzień, godzina]. Pozdrawiam, [imię]"
    }
   ],
-  "no_call_note": "Nie lubisz dzwonić? Wiadomość daje mniej sygnałów niż telefon (nie słychać wahania ani zmyślania na bieżąco), ale jest lepsza niż nic — zadaj pisemnie koniecznie pytania 1, 3, 4, 5 i 11 (właściciel i VIN, dokładny przebieg, co lakierowane, szkody, zimny silnik i jazda próbna) i zachowaj odpowiedzi jako zrzut ekranu: jutro to Twój punkt odniesienia."
+  "no_call_note": "Nie lubisz dzwonić? Wiadomość daje mniej sygnałów niż telefon (nie słychać wahania ani zmyślania na bieżąco), ale jest lepsza niż nic — zadaj pisemnie koniecznie pytania 1, 3, 4, 5 i 11 (właściciel i VIN, dokładny przebieg, co lakierowane, szkody, zimny silnik i jazda próbna) i zachowaj odpowiedzi jako zrzut ekranu: jutro to Twój punkt odniesienia.",
+  "seller_type_prompt": "Do kogo dzwonisz?",
+  "seller_types": [
+   {
+    "id": "private",
+    "label": "Osoba prywatna",
+    "hint": "Właściciel z ogłoszenia. Najpierw upewnij się, że to nie handlarz.",
+    "opening": [
+     "Dzień dobry, dzwonię w sprawie [marka model] z ogłoszenia za [cena]. Jest aktualne? Mam kilka pytań, żeby nie jechać na darmo — zajmie to kilka minut, może być?"
+    ],
+    "check": {
+     "title": "Sprawdź, czy to nie handlarz",
+     "intro": "Handlarz udający osobę prywatną to najczęstsza ściema w ogłoszeniach. Trzy pytania, zanim przejdziesz dalej:",
+     "questions": [
+      {
+       "q": "Od kiedy ma Pan/Pani to auto?",
+       "watch_for": "Kilka tygodni lub miesięcy = handel. „Nie pamiętam” też."
+      },
+      {
+       "q": "Auto jest zarejestrowane na Pana/Panią? Kto jest w dowodzie?",
+       "watch_for": "„Sprzedaję dla brata/znajomego/szwagra” bez słowa o pełnomocnictwie."
+      },
+      {
+       "q": "Gdzie mogę obejrzeć auto — pod domem czy na placu?",
+       "watch_for": "Plac, komis, hala z kilkoma autami = firma, choćby w ogłoszeniu było „prywatnie”."
+      }
+     ],
+     "verdict": "Jeśli dwie z trzech odpowiedzi pachną handlem: przełącz na „Handlarz / komis” i pytaj dalej jak firmę. Nie kończ rozmowy — po prostu wiesz, z kim mówisz."
+    }
+   },
+   {
+    "id": "dealer",
+    "label": "Handlarz / komis",
+    "hint": "Firma, plac, „auto z importu”. Rozmawiasz o dokumentach i odpowiedzialności, nie o sentymencie.",
+    "opening": [
+     "Dzień dobry, dzwonię w sprawie [marka model] z ogłoszenia. Zanim przyjadę, chcę ustalić kilka rzeczy o pochodzeniu auta i dokumentach — kto sprzedaje: firma na fakturę czy osoba prywatna na umowę?"
+    ],
+    "extra_questions": [
+     {
+      "q": "Sprzedaż na fakturę VAT, VAT marża czy umowę kupna-sprzedaży? Kto będzie stroną umowy?",
+      "watch_for": "„Umowa z poprzednim właścicielem” = komis unika odpowiedzialności; wtedy formalnie kupujesz od nieznanej osoby."
+     },
+     {
+      "q": "Skąd jest to auto: import własny, skup od klienta, aukcja? Są dokumenty z zagranicy i historia serwisowa?",
+      "watch_for": "„Z Niemiec od dziadka” bez papierów; brak dokumentów sprzed rejestracji w PL."
+     },
+     {
+      "q": "Jaką odpowiedzialność bierze firma za wady po zakupie? Rękojmia, gwarancja pisemna, czy nic?",
+      "watch_for": "„Auto używane, jak widać” — zapisz dosłownie. Odpowiedź mówi, jak skończy się każdy spór."
+     }
+    ]
+   }
+  ],
+  "unknown_type_note": "Nie wiesz? Wybierz „Osoba prywatna” — pierwsze trzy pytania i tak sprawdzą, czy po drugiej stronie nie ma handlarza.",
+  "agreements_intro": "Zanim się rozłączysz, ustal warunki spotkania. Zaznacz, co sprzedawca potwierdził:",
+  "agreements": [
+   "p1s4i1",
+   "p1s4i2",
+   "p1s4i3",
+   "p1s4i4",
+   "p1s4i5"
+  ],
+  "wizard_note": "Ten skrypt jest częścią kroku „Rozmowa” w kreatorze „Zanim pojedziesz”. Odpowiedzi z rozmowy trafiają do raportu jak każdy inny punkt."
  },
  "summary_rules": {
   "walk_away_if": [
