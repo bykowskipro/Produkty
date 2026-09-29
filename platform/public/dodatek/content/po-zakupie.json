@@ -1,10 +1,10 @@
 {
   "meta": {
     "product_id": "po-zakupie",
-    "version": "1.0",
+    "version": "1.1",
     "title": "Kupione — i co dalej",
     "est_minutes_total": 45,
-    "disclaimer": "To jest informacja edukacyjna i organizacyjna, nie porada prawna ani podatkowa. Przepisy, kwoty i terminy sprawdziliśmy we wrześniu 2026 r. w źródłach podanych w sekcji „Źródła”; mogą się zmienić, a Twoja sytuacja może mieć wyjątki. Pozycje oznaczone [do weryfikacji] potwierdź w urzędzie, u ubezpieczyciela lub u prawnika. Terminy liczymy od daty na umowie."
+    "disclaimer": "To jest informacja edukacyjna i organizacyjna, nie porada prawna ani podatkowa. Przepisy, kwoty i terminy sprawdziliśmy we wrześniu 2026 r. (audyt 29.09.2026) w źródłach podanych w sekcji „Źródła”; mogą się zmienić, a Twoja sytuacja może mieć wyjątki. Pozycje oznaczone [do weryfikacji] potwierdź w urzędzie, u ubezpieczyciela lub u prawnika. Terminy podatkowe i urzędowe liczymy od daty na umowie (dni kalendarzowe; gdy ostatni dzień wypada w sobotę, niedzielę lub święto, termin przesuwa się na najbliższy dzień roboczy); terminy rękojmi biegną od wydania auta."
   },
   "quick_start": {
     "title": "Zacznij tu (2 minuty)",
@@ -40,7 +40,7 @@
             {
               "id": "u1s1i1",
               "text": "Dane sprzedającego w umowie zgadzają się z jego dowodem osobistym",
-              "how": "Poproś o dowód osobisty (plastik lub mDowód w aplikacji mObywatel) i porównaj imię, nazwisko, PESEL, adres oraz numer dokumentu z tym, co wpisano w umowie. Sprawdź datę ważności dowodu.",
+              "how": "Poproś o dokument tożsamości (dowód, mDowód w aplikacji mObywatel, paszport) i porównaj imię, nazwisko, PESEL i numer dokumentu z tym, co wpisano w umowie. Adres zamieszkania nie jest w dowodzie osobistym — wpisujecie go na podstawie oświadczenia sprzedającego (poproś o podanie i wpisz czytelnie). Sprawdź datę ważności dokumentu.",
               "why": "Umowa z błędnymi danymi utrudni rejestrację i praktycznie uniemożliwi dochodzenie roszczeń, gdy coś pójdzie nie tak.",
               "severity": "red",
               "flag_label": "Dane sprzedającego niezgodne",
@@ -189,8 +189,8 @@
             {
               "id": "u1s3i1",
               "text": "Cena wpisana cyframi i słownie, w PLN, bez poprawek",
-              "how": "Sprawdź, czy obie wersje ceny się zgadzają i czy nic nie jest przekreślone. Poprawki parafują obie strony. Nie zgadzaj się na wpisanie zaniżonej ceny „żeby zapłacić mniej PCC” — podstawą podatku jest wartość rynkowa, urząd może ją zakwestionować, a Ty tracisz dowód, ile naprawdę zapłaciłeś.",
-              "why": "Cena z umowy to podstawa PCC-3 i kwota, której możesz dochodzić przy odstąpieniu od umowy lub obniżeniu ceny.",
+              "how": "Sprawdź, czy obie wersje ceny się zgadzają i czy nic nie jest przekreślone. Poprawki parafują obie strony. Wpisujesz kwotę faktycznie zapłaconą — ani zaniżoną „żeby zapłacić mniej PCC”, ani zawyżoną „żeby skarbówka się nie czepiała”. Podstawą PCC jest wartość rynkowa, którą urząd może porównać z katalogami; cena z umowy to Twój dowód, ile naprawdę zapłaciłeś.",
+              "why": "Podstawą PCC-3 jest wartość rynkowa auta; cena z umowy jest ważnym dowodem faktycznej zapłaty i kwotą, której możesz dochodzić przy odstąpieniu od umowy lub obniżeniu ceny.",
               "severity": "red",
               "flag_label": "Cena zaniżona / niespójna",
               "dealbreaker": false,
@@ -245,7 +245,7 @@
             {
               "id": "u1s3i4",
               "text": "Klauzula „stan techniczny znany kupującemu” — rozumiesz, co podpisujesz",
-              "how": "To standardowe zdanie oznacza, że nie będziesz reklamować tego, co widziałeś lub co sprzedający ujawnił. NIE oznacza zgody na wady ukryte. Jeśli sprzedający ujawnił konkretne usterki — wypiszcie je w umowie (np. „wgniecenie drzwi lewych, wyciek z pokrywy zaworów”). Co nie jest wypisane, formalnie nie zostało ujawnione.",
+              "how": "To standardowe zdanie oznacza, że nie będziesz reklamować tego, co widziałeś lub co sprzedający ujawnił. NIE oznacza zgody na wady ukryte. Jeśli sprzedający ujawnił konkretne usterki — wypiszcie je w umowie (np. „wgniecenie drzwi lewych, wyciek z pokrywy zaworów”). Bez listy zdanie o „znanym stanie” ułatwia sprzedającemu obronę („przecież mówiłem”) — dlatego wzór umowy w tym dodatku ma pole na listę wad zamiast samego ogólnika.",
               "why": "Sprzedający zwolniony jest z odpowiedzialności za wady, o których kupujący wiedział przy zawarciu umowy (Kodeks cywilny art. 557 § 1). Lista znanych wad chroni obie strony i zamyka drogę do „przecież mówiłem”.",
               "severity": "yellow",
               "flag_label": "Wady ustne, nie wpisane",
@@ -348,7 +348,7 @@
               "id": "u1s4i3",
               "text": "Nie płacisz zaliczki „na rezerwację” bez pisemnego potwierdzenia, a resztę dopiero po podpisaniu",
               "how": "Jeśli wcześniej wpłaciłeś zaliczkę/zadatek, upewnij się, że umowa wymienia tę kwotę i że jest zaliczona na cenę.",
-              "why": "Kwota nieujęta w umowie prawnie „nie istnieje”.",
+              "why": "Ustalenie ustne może istnieć, ale jest bardzo trudne do udowodnienia — każdą zaliczkę lub zadatek i jej warunki wpisz do umowy.",
               "severity": "info",
               "flag_label": "",
               "dealbreaker": false,
@@ -441,7 +441,7 @@
             {
               "id": "u1s5i5",
               "text": "Zdjęcia: umowa (obie strony), dowód rejestracyjny (obie strony), polisa OC, licznik, tablice",
-              "how": "Zrób je zanim wsiądziesz. Wrzucisz je do wniosku o rejestrację online i będziesz mieć dane pod ręką do PCC-3.",
+              "how": "Zrób je zanim wsiądziesz. Przydadzą się do wniosku o rejestrację (tam, gdzie urząd przyjmuje wnioski elektronicznie) i do PCC-3 — dane będziesz mieć pod ręką.",
               "why": "Papier ginie; zdjęcie w telefonie masz w kolejce w urzędzie.",
               "severity": "info",
               "flag_label": "",
@@ -473,7 +473,7 @@
             {
               "id": "u2s1i1",
               "text": "Ustal, czy PCC-3 Cię dotyczy",
-              "how": "Dotyczy: kupiłeś od osoby prywatnej (także przez komis-pośrednika, gdy umowa jest z prywatnym właścicielem), a wartość rynkowa auta przekracza 1 000 zł. NIE dotyczy: dostałeś fakturę VAT lub VAT-marża od firmy (transakcja objęta VAT — art. 2 pkt 4 ustawy o PCC) albo wartość rynkowa nie przekracza 1 000 zł (zwolnienie). Podatek płaci kupujący.",
+              "how": "Dotyczy: kupiłeś od osoby prywatnej (także przez komis-pośrednika, gdy umowa jest z prywatnym właścicielem), a wartość rynkowa auta przekracza 1 000 zł. NIE dotyczy: sprzedaż jest opodatkowana VAT albo zwolniona z VAT (typowo: faktura VAT lub VAT-marża od firmy — o wyjątku decyduje to, że czynność jest objęta VAT, nie sama nazwa „faktura”; art. 2 pkt 4 ustawy o PCC) albo wartość rynkowa nie przekracza 1 000 zł (zwolnienie). Podatek płaci kupujący.",
               "why": "Deklarację składa się bez wezwania — urząd nie przypomni. Brak PCC-3 to zaległość z odsetkami i ryzyko grzywny karno-skarbowej.",
               "severity": "red",
               "flag_label": "PCC-3 do złożenia",
@@ -521,8 +521,8 @@
             {
               "id": "u2s1i3",
               "text": "Spóźniłeś się? Złóż deklarację razem z „czynnym żalem”, zapłać podatek z odsetkami",
-              "how": "Do spóźnionej PCC-3 dołącz pismo „czynny żal” (w e-US jest do tego osobna usługa) — w tym samym momencie, nie dzień później. Zapłać podatek i odsetki za zwłokę. Czynny żal chroni przed grzywną, nie zwalnia z podatku.",
-              "why": "Grzywna za niezłożenie deklaracji liczona jest od minimalnego wynagrodzenia (w 2026 r. dolna granica to ok. 480 zł); czynny żal złożony przed wezwaniem urzędu zwykle ją wyłącza.",
+              "how": "Do spóźnionej PCC-3 dołącz pismo „czynny żal” (w e-US jest do tego osobna usługa) — w tym samym momencie, nie dzień później. Zapłać podatek i odsetki za zwłokę. Czynny żal może wyłączyć karalność, jeśli spełnisz warunki z art. 16 Kodeksu karnego skarbowego (m.in. zawiadomienie zanim urząd sam ujawni sprawę, ujawnienie okoliczności, zapłata należności) — nie zwalnia z podatku.",
+              "why": "Niezłożenie deklaracji może być wykroczeniem skarbowym; wymiar grzywny zależy od sprawy (dolna granica ustawowa to 1/10 minimalnego wynagrodzenia). Czynny żal złożony przed wezwaniem urzędu zwykle zamyka temat.",
               "severity": "yellow",
               "flag_label": "PCC-3 spóźnione",
               "dealbreaker": false,
@@ -635,7 +635,7 @@
             {
               "id": "u2s2i5",
               "text": "Rozważ wniosek online zamiast kolejki",
-              "how": "Wiele urzędów przyjmuje elektroniczny wniosek o rejestrację (profil zaufany/e-dowód) przez e-usługę na gov.pl / ePUAP — dokumenty załączasz jako skany, po tygodniu odbierasz dowód. Pełna rejestracja w aplikacji mObywatel bez wizyty była zapowiadana przez Ministerstwo Cyfryzacji (projekt przyjęty przez rząd 1 lipca 2025 r.) — sprawdź, czy Twój urząd już ją obsługuje [do weryfikacji].",
+              "how": "Część urzędów przyjmuje elektroniczny wniosek o rejestrację (profil zaufany / e-dowód) przez e-usługę — sprawdź na stronie swojego wydziału komunikacji, czy Twój urząd to udostępnia; dokumenty załączasz jako skany. Pełny elektroniczny proces rejestracji wynikający z nowelizacji z 2025 r. ma ruszyć od 2027 r. [do weryfikacji: data startu podawana jako 18.01.2027]. Do tego czasu wniosek online = tylko tam, gdzie urząd go obsługuje.",
               "why": "Oszczędzasz pół dnia urlopu, a termin liczy się od złożenia wniosku online.",
               "severity": "info",
               "flag_label": "",
@@ -695,7 +695,7 @@
               "id": "u2s3i1",
               "text": "Zapisz datę końca OC sprzedającego i ustaw przypomnienie 7 dni wcześniej",
               "how": "Datę masz na polisie (fazę 1 wpisałeś ją do narzędzia). Przejęta polisa NIE odnawia się automatycznie — zasada automatycznego przedłużenia (art. 28 ustawy o ubezpieczeniach obowiązkowych) nie dotyczy nabywcy. Ochrona kończy się z ostatnim dniem okresu i tyle.",
-              "why": "To najczęstsza przerwa w OC po zakupie używanego auta. UFG wykrywa ją z bazy danych, bez kontroli drogowej. Kary w 2026 r. dla samochodu osobowego: 1 920 zł (1–3 dni), 4 810 zł (4–14 dni), 9 610 zł (powyżej 14 dni).",
+              "why": "To najczęstsza przerwa w OC po zakupie używanego auta. UFG wykrywa ją z bazy danych, bez kontroli drogowej. Kary w 2026 r. dla samochodu osobowego: 1 920 zł (1–3 dni), 4 810 zł (4–14 dni), 9 610 zł (powyżej 14 dni); od 2027 r. wzrosną wraz z płacą minimalną (mechanizm: dwukrotność minimalnego wynagrodzenia).",
               "severity": "red",
               "flag_label": "Przerwa w OC",
               "dealbreaker": true,
@@ -776,7 +776,7 @@
             },
             {
               "id": "u2s3i5",
-              "text": "AC nie przechodzi na Ciebie — jeśli chcesz, kup własne",
+              "text": "AC zwykle nie przechodzi na Ciebie — jeśli chcesz, kup własne",
               "how": "Dobrowolne AC (i assistance, NNW) sprzedającego wygasa z chwilą przejścia własności, chyba że ubezpieczyciel zgodzi się na przeniesienie (Kodeks cywilny art. 823). Ubezpieczyciel zwykle chce oględzin i zdjęć auta przed zawarciem AC dla używanego samochodu.",
               "why": "Kupujący często zakłada, że „pakiet” przeszedł razem z OC. Nie przeszedł.",
               "severity": "info",
@@ -806,7 +806,7 @@
             {
               "id": "u2s4i1",
               "text": "Jeśli badanie techniczne kończy się w ciągu 60 dni — umów stację już teraz",
-              "how": "Termin masz w dowodzie rejestracyjnym i w mObywatel. Badanie okresowe samochodu osobowego kosztuje 149 zł (stawka od 19 września 2025 r., Dz.U. 2025 poz. 1223); z instalacją LPG ok. 245 zł [do weryfikacji]. Bez ważnego badania: brak rejestracji, mandat i zatrzymanie dowodu rejestracyjnego przy kontroli. Zapowiadana podwójna opłata za badanie po terminie (powyżej 30 dni spóźnienia) na dzień weryfikacji nie weszła w życie [do weryfikacji].",
+              "how": "Termin masz w dowodzie rejestracyjnym i w mObywatel. Badanie okresowe samochodu osobowego kosztuje 149 zł (stawka od 19 września 2025 r., Dz.U. 2025 poz. 1223); z instalacją LPG 245 zł (149 + 96 za badanie instalacji). Bez ważnego badania: brak rejestracji, mandat i zatrzymanie dowodu rejestracyjnego przy kontroli. Zapowiadana „podwójna opłata” za badanie po terminie (powyżej 30 dni spóźnienia) to na dzień audytu (29.09.2026) nadal projekt, nie obowiązujący cennik.",
               "why": "Stacja to też darmowa druga opinia o stanie auta w pierwszych tygodniach — diagnosta wypisze usterki, o których sprzedający zapomniał.",
               "severity": "yellow",
               "flag_label": "Badanie techniczne blisko terminu",
@@ -983,8 +983,8 @@
             {
               "id": "u3s1i7",
               "text": "Diagnostyka komputerowa (OBD): odczyt błędów i parametrów, akumulator — test obciążeniowy",
-              "how": "Warsztat podłączy komputer i odczyta błędy zapisane i skasowane, licznik regeneracji DPF (diesel), napięcia. Test akumulatora zajmuje minutę.",
-              "why": "Skasowane błędy wracają po kilkuset kilometrach — lepiej wiedzieć o nich teraz, w okresie, gdy możesz jeszcze dochodzić roszczeń.",
+              "how": "Warsztat podłączy komputer i odczyta zapisane błędy i parametry, licznik regeneracji filtra cząstek (diesel), napięcia. Skasowanych błędów zwykle już nie widać — ślady mogą zostać w monitorach gotowości, kodach trwałych lub danych producenta, zależnie od auta. Test akumulatora zajmuje minutę.",
+              "why": "Błędy skasowane przed sprzedażą wracają po kilkuset kilometrach — lepiej wiedzieć o nich teraz, w okresie, gdy możesz jeszcze dochodzić roszczeń.",
               "severity": "yellow",
               "flag_label": "Błędy w pamięci sterowników",
               "dealbreaker": false,
@@ -1332,7 +1332,7 @@
             {
               "id": "u4s4i1",
               "text": "Konsument (zakup od firmy): powiatowy/miejski rzecznik konsumentów + infolinia konsumencka",
-              "how": "Rzecznik konsumentów w Twoim powiecie/mieście doradza i może wystąpić do przedsiębiorcy w Twoim imieniu — bezpłatnie (adres na stronie starostwa/urzędu miasta lub uokik.gov.pl). Infolinia konsumencka: 801 440 220 lub 22 290 89 16 (pn–pt 8:00–18:00, opłata jak za połączenie); sprawy z dokumentami: porady@dlakonsumentow.pl. Polubownie: mediacja i sądy polubowne przy Inspekcji Handlowej.",
+              "how": "Rzecznik konsumentów w Twoim powiecie/mieście doradza i może wystąpić do przedsiębiorcy w Twoim imieniu — bezpłatnie (adres na stronie starostwa/urzędu miasta lub uokik.gov.pl). Infolinia konsumencka: 801 440 220 lub 222 66 76 76 (dni robocze; opłata jak za połączenie) [do weryfikacji: godziny]; sprawy z dokumentami: porady@dlakonsumentow.pl. Polubownie: mediacja i sądy polubowne przy Inspekcji Handlowej. Rzecznik Finansowy nie zajmuje się wadami auta — pomaga w sporze z ubezpieczycielem.",
               "why": "Rzecznik pomaga tylko w sporze konsument–przedsiębiorca; przy zakupie od osoby prywatnej skorzystaj z punktu poniżej.",
               "severity": "info",
               "flag_label": "",
@@ -1383,7 +1383,7 @@
   ],
   "contract_template": {
     "title": "Umowa kupna-sprzedaży samochodu",
-    "intro": "Prosty wzór między osobami prywatnymi (przy zakupie od firmy dowodem własności jest faktura; umowę można podpisać dodatkowo). Pola w nawiasach kwadratowych wypełniasz. Każda klauzula ma notę, co chroni — usuwaj świadomie, nie „bo krótsza umowa”.",
+    "intro": "Prosty wzór między osobami prywatnymi (przy zakupie od firmy dowodem własności jest faktura, a odpowiedzialności przedsiębiorcy za niezgodność towaru z umową nie da się wyłączyć — wtedy klauzuli G nie stosuj). Pola w nawiasach kwadratowych wypełniasz. Każda klauzula ma notę, co chroni — usuwaj świadomie, nie „bo krótsza umowa”.",
     "sections": [
       {
         "heading": "1. Miejsce, data i godzina zawarcia",
@@ -1404,7 +1404,7 @@
           "Telefon, e-mail (opcjonalnie)",
           "Współwłaściciel: te same dane (jeśli jest w dowodzie rejestracyjnym)"
         ],
-        "note": "Dane przepisane z dokumentu tożsamości, nie z ogłoszenia. Bez PESEL i numeru dokumentu trudno później kogokolwiek pozwać. Jeśli sprzedaje firma: pełna nazwa, NIP, adres, osoba reprezentująca."
+        "note": "Dane przepisane z dokumentu tożsamości (adres — z oświadczenia sprzedającego, bo nie ma go w dowodzie osobistym). Bez PESEL i numeru dokumentu trudno później kogokolwiek pozwać. Jeśli sprzedaje firma: pełna nazwa, NIP, adres, osoba reprezentująca."
       },
       {
         "heading": "3. Kupujący",
@@ -1422,16 +1422,16 @@
         "fields": [
           "Marka i model",
           "Rok produkcji",
-          "Numer VIN (17 znaków)",
+          "Numer VIN / numer nadwozia, podwozia lub ramy",
           "Numer rejestracyjny",
           "Pojemność / moc silnika",
           "Rodzaj paliwa (w tym LPG)",
           "Kolor",
-          "Stan licznika w chwili sprzedaży (km)",
+          "Stan drogomierza w chwili wydania (km)",
           "Liczba kluczyków / kart",
           "Wyposażenie dodatkowe przekazywane z pojazdem"
         ],
-        "note": "Wszystko zgodnie z dowodem rejestracyjnym. Przebieg wpisany cyframi to Twój dowód na wypadek cofniętego licznika."
+        "note": "Wszystko zgodnie z dowodem rejestracyjnym. Stan drogomierza wpisany cyframi (i zdjęcie licznika) to Twój dowód na wypadek późniejszego sporu o przebieg."
       },
       {
         "heading": "5. Oświadczenia sprzedającego",
@@ -1458,6 +1458,7 @@
         "heading": "7. Wydanie pojazdu i dokumentów",
         "fields": [
           "Data i godzina wydania",
+          "Stan drogomierza przy wydaniu (km)",
           "Dowód rejestracyjny seria/nr",
           "Polisa OC: ubezpieczyciel, numer, ważna do",
           "Karta pojazdu (jeśli była wydana przed 4.09.2022)",
@@ -1465,7 +1466,7 @@
           "Książka serwisowa / faktury: tak/nie",
           "Klauzula F (przejście ryzyka)"
         ],
-        "note": "Lista tego, co fizycznie odebrałeś. Jeśli czegoś nie ma na liście — formalnie nie zostało wydane."
+        "note": "Lista tego, co fizycznie odebrałeś, z datą i godziną wydania oraz stanem drogomierza. Czego nie ma na liście, tego trudno później dochodzić — dopisz każdą rzecz (drugi kluczyk, koło zapasowe, dokumenty z importu)."
       },
       {
         "heading": "8. Rękojmia",
@@ -1473,7 +1474,7 @@
           "Wariant 1: bez zmian (pełna rękojmia z Kodeksu cywilnego)",
           "Wariant 2: ograniczenie/wyłączenie (klauzula G — uwaga dla kupującego)"
         ],
-        "note": "Między osobami prywatnymi obie opcje są dopuszczalne (KC art. 558 § 1). Dla kupującego korzystny jest wariant 1. Wyłączenie nie chroni sprzedającego, który podstępnie zataił wadę (art. 558 § 2)."
+        "note": "Między osobami prywatnymi obie opcje są dopuszczalne (KC art. 558 § 1). Dla kupującego korzystny jest wariant 1. Wyłączenie nie chroni sprzedającego, który podstępnie zataił wadę (art. 558 § 2). Przy zakupie od przedsiębiorcy (konsument) odpowiedzialności za niezgodność towaru z umową nie da się wyłączyć ani skrócić — klauzuli G nie używaj."
       },
       {
         "heading": "9. Obowiązki po sprzedaży",
@@ -1487,7 +1488,7 @@
       {
         "heading": "10. Postanowienia końcowe i podpisy",
         "fields": [
-          "Koszty umowy (PCC) ponosi kupujący",
+          "Koszty umowy, w tym PCC — jeżeli obowiązek podatkowy powstaje — ponosi kupujący",
           "Zmiany umowy wymagają formy pisemnej",
           "W sprawach nieuregulowanych — Kodeks cywilny",
           "Umowę sporządzono w 2 jednobrzmiących egzemplarzach, po jednym dla każdej strony",
@@ -1499,23 +1500,23 @@
     "clauses": [
       {
         "id": "A",
-        "text": "Sprzedający oświadcza, że pojazd opisany w § 4 stanowi jego wyłączną własność [/ współwłasność osób wskazanych w § 2], jest wolny od wad prawnych oraz praw osób trzecich, nie jest przedmiotem zastawu (w tym zastawu rejestrowego), zabezpieczenia kredytu, leasingu ani innego ograniczenia w rozporządzaniu, a wobec pojazdu nie toczy się żadne postępowanie.",
+        "text": "Sprzedający oświadcza, że pojazd opisany w § 4 stanowi jego wyłączną własność [/ współwłasność osób wskazanych w § 2] albo że jest uprawniony do rozporządzenia nim na podstawie [pełnomocnictwa / umowy z dnia …], jest wolny od wad prawnych oraz praw osób trzecich, nie jest przedmiotem zastawu (w tym zastawu rejestrowego), przewłaszczenia na zabezpieczenie, leasingu ani innego ograniczenia w rozporządzaniu, a wobec pojazdu nie toczy się żadne postępowanie.",
         "note": "Chroni przed autem „na kredycie”, w zastawie lub sprzedanym przez osobę bez prawa do rozporządzania. Nieprawdziwe oświadczenie = podstawa roszczeń i zawiadomienia organów."
       },
       {
         "id": "B",
-        "text": "Sprzedający oświadcza, że stan licznika pojazdu w chwili wydania wynosi [ …… ] km i według jego najlepszej wiedzy odpowiada rzeczywistemu przebiegowi pojazdu.",
-        "note": "Dowód na wypadek cofniętego licznika: masz oświadczenie z datą, przebiegiem i podpisem."
+        "text": "Sprzedający oświadcza, że stan drogomierza pojazdu w chwili wydania wynosi [ …… ] km. [Opcjonalnie, jeśli sprzedający chce to oświadczyć:] Według najlepszej wiedzy Sprzedającego stan ten odpowiada rzeczywistemu przebiegowi pojazdu.",
+        "note": "Dowód na wypadek sporu o przebieg: masz oświadczenie z datą, stanem drogomierza i podpisem. Zdanie o rzeczywistym przebiegu jest osobne — sprzedający może nie znać historii sprzed swojego zakupu."
       },
       {
         "id": "C",
         "text": "Sprzedający oświadcza, że pojazd [nie uczestniczył w kolizjach ani wypadkach / uczestniczył w następujących zdarzeniach: …… , po których wykonano naprawy: …… ].",
-        "note": "Zmusza do konkretnego oświadczenia zamiast „bezwypadkowy” z ogłoszenia. Zapewnienie wbrew wiedzy sprzedającego to klasyczny przykład podstępnego zatajenia."
+        "note": "Zmusza do konkretnego oświadczenia zamiast „bezwypadkowy” z ogłoszenia — jako oświadczenie sprzedającego według jego wiedzy, nie automatyczna formułka. Zapewnienie wbrew wiedzy sprzedającego to klasyczny przykład podstępnego zatajenia."
       },
       {
         "id": "D",
-        "text": "Sprzedający ujawnił Kupującemu następujące wady i usterki pojazdu: [ …… / brak ]. Kupujący oświadcza, że zapoznał się ze stanem technicznym pojazdu w zakresie możliwym do stwierdzenia podczas oględzin i jazdy próbnej, i nie wnosi zastrzeżeń do wad wymienionych powyżej.",
-        "note": "Zamiast ogólnego „stan techniczny znany kupującemu” — lista. Sprzedający nie odpowiada za wady znane kupującemu (KC art. 557 § 1), więc lista jasno wyznacza granicę: co wypisane, to znane; co nie — nie."
+        "text": "Sprzedający ujawnił Kupującemu następujące wady i usterki pojazdu: [ …… — wypisz konkretnie, punkt po punkcie / brak ]. Kupujący oświadcza, że zapoznał się ze stanem technicznym pojazdu w zakresie możliwym do stwierdzenia podczas oględzin i jazdy próbnej i nie wnosi zastrzeżeń do wad wymienionych powyżej.",
+        "note": "Zamiast ogólnego „stan techniczny znany kupującemu” — lista. Sprzedający nie odpowiada za wady znane kupującemu (KC art. 557 § 1), więc lista wyznacza granicę: co wypisane, to znane. Bez listy ogólnik ułatwia sprzedającemu obronę w sporze."
       },
       {
         "id": "E",
@@ -1539,8 +1540,8 @@
       },
       {
         "id": "I",
-        "text": "Kupujący zobowiązuje się zarejestrować pojazd w terminie 30 dni od dnia zawarcia umowy oraz ponosi koszty związane z zawarciem niniejszej umowy, w tym podatek od czynności cywilnoprawnych.",
-        "note": "Informuje, kto płaci PCC-3 (z ustawy: kupujący) i przypomina o terminie rejestracji."
+        "text": "Kupujący zobowiązuje się złożyć wniosek o rejestrację pojazdu w terminie 30 dni od dnia jego nabycia oraz ponosi koszty związane z zawarciem niniejszej umowy, w tym podatek od czynności cywilnoprawnych, jeżeli na podstawie przepisów powstaje obowiązek jego zapłaty.",
+        "note": "Informuje, kto płaci PCC-3, gdy jest należny (z ustawy: kupujący; nie ma go przy sprzedaży objętej VAT), i przypomina o terminie rejestracji."
       },
       {
         "id": "J",
@@ -1556,7 +1557,7 @@
       "days_from_purchase": 14,
       "who": "kupujący",
       "hard": true,
-      "how": "Online: podatki.gov.pl → e-Urząd Skarbowy → e-Deklaracje → PCC-3; przelew na rachunek urzędu skarbowego wg miejsca zamieszkania kupującego.",
+      "how": "Online: podatki.gov.pl → e-Urząd Skarbowy → e-Deklaracje → PCC-3; przelew na rachunek urzędu skarbowego wg miejsca zamieszkania kupującego. Termin liczy się od dnia zawarcia umowy (dni kalendarzowe; ostatni dzień wolny → następny dzień roboczy). Podstawa: wartość rynkowa.",
       "applies_if": "Zakup od osoby prywatnej (bez faktury VAT/VAT-marża) i wartość rynkowa pojazdu powyżej 1 000 zł.",
       "source": "https://www.gov.pl/web/gov/zaplac-podatek-od-czynnosci-cywilnoprawnych",
       "confidence": "wysoka"
@@ -1567,7 +1568,7 @@
       "days_from_purchase": 30,
       "who": "kupujący",
       "hard": true,
-      "how": "Wydział komunikacji wg miejsca zamieszkania kupującego, osobiście lub e-usługą (profil zaufany). Kara: 500 zł, po 180 dniach 1 000 zł.",
+      "how": "Wydział komunikacji wg miejsca zamieszkania kupującego, osobiście lub e-usługą tam, gdzie urząd ją udostępnia. Termin liczy się od dnia nabycia (data umowy); liczy się data złożenia wniosku. Kara: 500 zł, po 180 dniach 1 000 zł.",
       "applies_if": "Każdy zakup pojazdu zarejestrowanego w Polsce (od 1.01.2024 obowiązek rejestracji zamiast zgłoszenia nabycia).",
       "source": "https://www.gov.pl/web/gov/zarejestruj-pojazd",
       "confidence": "wysoka"
@@ -1578,7 +1579,7 @@
       "days_from_purchase": 14,
       "who": "sprzedający",
       "hard": true,
-      "how": "Mail/formularz ubezpieczyciela z kopią umowy; do zgłoszenia sprzedający i kupujący odpowiadają solidarnie za składkę.",
+      "how": "Mail/formularz ubezpieczyciela z kopią umowy; liczone od przeniesienia własności (data umowy). Do zgłoszenia sprzedający i kupujący odpowiadają solidarnie za składkę.",
       "applies_if": "Zawsze, gdy pojazd miał polisę OC (art. 32 ust. 1 ustawy o ubezpieczeniach obowiązkowych).",
       "source": "https://rankomat.pl/samochod/polisa-oc-kupno-sprzedaz-auta",
       "confidence": "wysoka"
@@ -1589,7 +1590,7 @@
       "days_from_purchase": 30,
       "who": "sprzedający",
       "hard": true,
-      "how": "Wydział komunikacji sprzedającego lub online przez gov.pl (profil zaufany). Kara: 250 zł.",
+      "how": "Wydział komunikacji sprzedającego lub online przez gov.pl (profil zaufany); liczone od dnia zbycia. Kara: 250 zł.",
       "applies_if": "Zawsze (art. 78 ust. 2 pkt 1 Prawa o ruchu drogowym).",
       "source": "https://www.gov.pl/web/gov/zglos-zbycie-lub-nabycie-pojazdu-na-przyklad-sprzedaz-kupno-darowizne",
       "confidence": "wysoka"
@@ -1882,18 +1883,35 @@
     {
       "claim": "Płatna checklista i kontekst rynkowy produktu (research wewnętrzny)",
       "url": "https://shop.jaksprawdzacauta.pl/produkt/checklista/"
+    },
+    {
+      "claim": "PCC: podstawą opodatkowania przy sprzedaży jest wartość rynkowa rzeczy; stawka 2%; 14 dni od powstania obowiązku podatkowego; zwolnienie, gdy podstawa nie przekracza 1 000 zł.",
+      "url": "https://www.gov.pl/web/gov/zaplac-podatek-od-czynnosci-cywilnoprawnych"
+    },
+    {
+      "claim": "Czynny żal — przesłanki z art. 16 Kodeksu karnego skarbowego (zawiadomienie przed ujawnieniem przez organ, ujawnienie okoliczności, uiszczenie należności).",
+      "url": "https://www.podatki.gov.pl/abc-podatkow/czynny-zal/"
+    },
+    {
+      "claim": "Infolinia konsumencka: 801 440 220 oraz 222 66 76 76 (dni robocze), porady@dlakonsumentow.pl.",
+      "url": "https://uokik.gov.pl/pomoc-dla-konsumentow"
+    },
+    {
+      "claim": "Nowelizacja rejestracji pojazdów (Dz.U. 2025 poz. 1734): pełny elektroniczny wniosek o rejestrację od 2027 r. [do weryfikacji: 18.01.2027].",
+      "url": "https://dziennikustaw.gov.pl/DU/2025/1734"
     }
   ],
   "facts_to_verify": [
     "Opłata za rejestrację przy zachowaniu tablic po 10.06.2026: źródła podają 66,50 zł lub 80 zł (zależnie od pozwolenia czasowego i znaków legalizacyjnych) — potwierdzić w konkretnym urzędzie; tablice indywidualne 1 000 zł.",
     "Dostępność pełnej rejestracji pojazdu online w aplikacji mObywatel (bez wizyty) — projekt przyjęty przez rząd 1.07.2025; sprawdzić, czy i w których urzędach usługa działa we wrześniu 2026.",
     "Podwójna opłata za badanie techniczne po terminie (>30 dni) — według źródeł z 2025/2026 jeszcze nie obowiązuje; potwierdzić status ustawy przed publikacją.",
-    "Opłata za badanie techniczne pojazdu z instalacją LPG (ok. 245 zł) — z tabeli prasowej, nie z rozporządzenia.",
     "Dolna granica grzywny karno-skarbowej za brak PCC-3 (ok. 480 zł = 1/10 minimalnego wynagrodzenia 4 806 zł w 2026) — wyliczenie prasowe; zasada z KKS.",
     "Kary UFG 2026 (1 920 / 4 810 / 9 610 zł) — z ufg.pl na wrzesień 2026; zmienią się 1.01.2027 wraz z minimalnym wynagrodzeniem.",
     "Opłata skarbowa za pełnomocnictwo 17 zł i zwolnienie dla najbliższej rodziny — wiedza ogólna, nie weryfikowana w tej sesji.",
     "Ważność pozwolenia czasowego (30 dni) — wiedza ogólna, nie weryfikowana w tej sesji.",
     "Kodeks karny art. 306a (licznik) i art. 286 (oszustwo) — numery artykułów z wiedzy ogólnej, nie weryfikowane w tej sesji.",
-    "Kodeks cywilny art. 823 (wygaśnięcie AC przy zbyciu) — z wiedzy ogólnej; źródło prasowe potwierdza skutek, nie numer artykułu."
-  ]
+    "Kodeks cywilny art. 823 (wygaśnięcie AC przy zbyciu) — z wiedzy ogólnej; źródło prasowe potwierdza skutek, nie numer artykułu.",
+    "[potwierdzone w audycie B 29.09.2026] 149 zł badanie osobówki i 245 zł z LPG (149 + 96); kary 500 / 1 000 / 250 zł; UFG 2026: 1 920 / 4 810 / 9 610 zł; podwójna opłata za badanie po terminie — nadal projekt. [poprawione] podstawa PCC = wartość rynkowa (nie cena z umowy); adres nie jest w dowodzie osobistym; Rzecznik Finansowy nie jest instytucją od wad auta; infolinia konsumencka 801 440 220 / 222 66 76 76; pełna rejestracja online dopiero od 2027 r. (18.01.2027 — do potwierdzenia); AC może przejść na nabywcę za zgodą ubezpieczyciela (KC art. 823) — nie pisać „nigdy”. [nowe] UFG 2027: płaca minimalna 4 950 zł → orientacyjnie 1 980 / 4 950 / 9 900 zł (do potwierdzenia na ufg.pl w styczniu 2027)."
+  ],
+  "deadlines_note": "Terminy urzędowe i podatkowe liczymy od daty umowy w dniach kalendarzowych; jeśli ostatni dzień wypada w sobotę, niedzielę lub święto, termin przesuwa się na najbliższy dzień roboczy. Odpowiedzialność sprzedającego za wady (2 lata) biegnie od wydania auta, nie od podpisania — dlatego wpisz w umowie datę i godzinę wydania."
 }

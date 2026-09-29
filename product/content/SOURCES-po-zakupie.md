@@ -1,4 +1,4 @@
-# Źródła i status weryfikacji — „Kupione — i co dalej” (po-zakupie.json v1.0)
+# Źródła i status weryfikacji — „Kupione — i co dalej” (po-zakupie.json v1.0; uzupełnienie dla 1.1 na końcu)
 
 Data weryfikacji: 2026-09-28. Metoda: wyłącznie snippety wyszukiwarki (bezpośrednie pobieranie stron zablokowane przez proxy). Priorytet: gov.pl / podatki.gov.pl / ufg.pl / uokik.gov.pl / Dziennik Ustaw; źródła branżowe (rankomat, mubi, prawo.pl, otomoto) jako potwierdzenie drugie. Wszystko, czego nie dało się potwierdzić w źródle pierwotnym, jest w treści oznaczone literalnie `[do weryfikacji]`.
 
@@ -27,7 +27,7 @@ Data weryfikacji: 2026-09-28. Metoda: wyłącznie snippety wyszukiwarki (bezpoś
 - Zachowanie tablic: 66,50 zł (bez pozwolenia czasowego) lub 80 zł (z nim) — rankomat/compensa; snippet gov.pl „Zarejestruj pojazd” podał „85 zł + 13,50 zł” (prawdopodobnie nieaktualny fragment sprzed 4.09.2022). W treści: zakres + `[do weryfikacji]`.
 - Od 10.06.2026: oświadczenie o stanie tablic zamiast ich przynoszenia; bez ponownej legalizacji (forsal, bezprawnik, auto-swiat, lowiczanin) — brak snippetu z gov.pl, ale 5 zgodnych źródeł prasowych z datą.
 
-## Pełna lista URL (claim → url) znajduje się w `po-zakupie.json` → `sources` (39 pozycji) i w `po-zakupie.md`.
+## Pełna lista URL (claim → url) znajduje się w `po-zakupie.json` → `sources` (43 pozycji po audycie B) i w `po-zakupie.md`.
 
 ## Czego NIE weryfikowano w tej sesji (wiedza ogólna, oznaczone w facts_to_verify)
 - opłata skarbowa 17 zł za pełnomocnictwo i zwolnienie dla rodziny; ważność pozwolenia czasowego 30 dni;
@@ -37,3 +37,19 @@ Data weryfikacji: 2026-09-28. Metoda: wyłącznie snippety wyszukiwarki (bezpoś
 ## Zasady użycia w copy/reklamie
 - Kwoty kar (UFG, rejestracja) można cytować z podaniem roku 2026 i źródła; nie obiecywać skuteczności roszczeń.
 - Wszędzie „informacja, nie porada” — disclaimer jest w `meta.disclaimer`, nie powtarzać go w każdym punkcie.
+
+## Po audycie B (dodatek 1.1, 2026-09-29)
+
+Fakty potwierdzone i otwarte: tabela w `experiments/audyt/wynik-B-2026-09-29.md` (sekcja 7). Aktualna lista „do weryfikacji” z `po-zakupie.json` → `facts_to_verify`:
+- Opłata za rejestrację przy zachowaniu tablic po 10.06.2026: źródła podają 66,50 zł lub 80 zł (zależnie od pozwolenia czasowego i znaków legalizacyjnych) — potwierdzić w konkretnym urzędzie; tablice indywidualne 1 000 zł.
+- Dostępność pełnej rejestracji pojazdu online w aplikacji mObywatel (bez wizyty) — projekt przyjęty przez rząd 1.07.2025; sprawdzić, czy i w których urzędach usługa działa we wrześniu 2026.
+- Podwójna opłata za badanie techniczne po terminie (>30 dni) — według źródeł z 2025/2026 jeszcze nie obowiązuje; potwierdzić status ustawy przed publikacją.
+- Dolna granica grzywny karno-skarbowej za brak PCC-3 (ok. 480 zł = 1/10 minimalnego wynagrodzenia 4 806 zł w 2026) — wyliczenie prasowe; zasada z KKS.
+- Kary UFG 2026 (1 920 / 4 810 / 9 610 zł) — z ufg.pl na wrzesień 2026; zmienią się 1.01.2027 wraz z minimalnym wynagrodzeniem.
+- Opłata skarbowa za pełnomocnictwo 17 zł i zwolnienie dla najbliższej rodziny — wiedza ogólna, nie weryfikowana w tej sesji.
+- Ważność pozwolenia czasowego (30 dni) — wiedza ogólna, nie weryfikowana w tej sesji.
+- Kodeks karny art. 306a (licznik) i art. 286 (oszustwo) — numery artykułów z wiedzy ogólnej, nie weryfikowane w tej sesji.
+- Kodeks cywilny art. 823 (wygaśnięcie AC przy zbyciu) — z wiedzy ogólnej; źródło prasowe potwierdza skutek, nie numer artykułu.
+- [potwierdzone w audycie B 29.09.2026] 149 zł badanie osobówki i 245 zł z LPG (149 + 96); kary 500 / 1 000 / 250 zł; UFG 2026: 1 920 / 4 810 / 9 610 zł; podwójna opłata za badanie po terminie — nadal projekt. [poprawione] podstawa PCC = wartość rynkowa (nie cena z umowy); adres nie jest w dowodzie osobistym; Rzecznik Finansowy nie jest instytucją od wad auta; infolinia konsumencka 801 440 220 / 222 66 76 76; pełna rejestracja online dopiero od 2027 r. (18.01.2027 — do potwierdzenia); AC może przejść na nabywcę za zgodą ubezpieczyciela (KC art. 823) — nie pisać „nigdy”. [nowe] UFG 2027: płaca minimalna 4 950 zł → orientacyjnie 1 980 / 4 950 / 9 900 zł (do potwierdzenia na ufg.pl w styczniu 2027).
+
+Zmiany treści 1.1: adres sprzedającego z oświadczenia (u1s1i1), PCC od wartości rynkowej (u1s3i1, klauzula I), e-rejestracja jako „sprawdź w swoim urzędzie” (u1s5i5, u2s2i5), AC „zwykle nie przechodzi” (u2s3i5), klauzule umowy A/B/C/D, terminy z dniem startu i regułą dni kalendarzowych (`deadlines_note`).

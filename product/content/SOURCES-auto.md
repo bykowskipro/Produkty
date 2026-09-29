@@ -1,4 +1,4 @@
-# Źródła i fakty do weryfikacji — produkt „Oględziny używanego auta” (auto.json v1.0)
+# Źródła i fakty do weryfikacji — produkt „Oględziny używanego auta” (auto.json v1.0; uzupełnienie dla 1.4 w sekcji 4)
 
 Data researchu: 2026-09-28. Ograniczenie: bezpośrednie pobieranie stron było zablokowane (proxy), więc każdy wpis opiera się na snippecie wyszukiwarki i wymaga potwierdzenia na stronie źródłowej przed użyciem w reklamie lub jako „twardy fakt” w produkcie. W treści produktu unikano kwot napraw, statystyk i nazw modeli.
 
@@ -75,3 +75,17 @@ Data researchu: 2026-09-28. Ograniczenie: bezpośrednie pobieranie stron było z
 - Brak nazw modeli i marek „awaryjnych”.
 - Kolory dymu, emulsja pod korkiem, objawy dwumasy, łożysk, przegubów, sprzęgła, automatu — wiedza warsztatowa ogólna, bez pojedynczego źródła; do przeglądu przez mechanika-konsultanta przed publikacją.
 - Zalecenia procesowe (kolejność faz, „silnik zimny”, „Ty prowadzisz”) — praktyka rynkowa, nie przepis.
+
+## 4. Uzupełnienie po audycie B (treść 1.4, 2026-09-29)
+
+Nowe twierdzenia → źródła dodane w 1.4:
+- Ok. 18% (mniej więcej co piąty) sprzedających używane auta kategorycznie nie zgadza się na jazdę próbną; częsty powód to obawa o szkodę, nie ukrywanie wad (dane Motoraportera cytowane przez Motofakty i MotoFocus). — https://motofakty.pl/co-piaty-sprzedajacy-samochod-uzywany-nie-zgadza-sie-na-jazde-probna/ar/c4-16228577
+- W komisach auta z importu często nie mają tablic/dokumentów dopuszczających do ruchu — jazda próbna po drodze publicznej bywa niemożliwa; zostaje podnośnik/SKP. — https://info-car.pl/infocar/artykuly/bez-jazdy-probnej-w-komisie.html
+- Michelin: po 5 latach coroczna kontrola opon przez specjalistę, po 10 latach od daty produkcji wymiana — zalecenie producenta, nie przepis. — https://www.michelin.pl/auto/porady/wszystko-o-oponach/jak-dlugo-mozna-uzywac-opon
+- Historia pojazdu (gov.pl): raport ma charakter informacyjny i nie jest dokumentem urzędowym; usługa może zawierać także część danych z zagranicznych rejestrów. — https://historiapojazdu.gov.pl/
+- Zbiorniki LPG w pojazdach podlegają badaniom dozoru technicznego (TDT) — okresowo, co 10 lat od daty produkcji zbiornika. — https://www.tdt.gov.pl/
+
+Nowe pozycje „do weryfikacji” (pełna lista w `auto.json` → `facts_to_verify`, 17 pozycji ze statusem po audycie):
+- [potwierdzone w audycie B 2026-09-29] odczyty z kontroli drogowych i wymiana drogomierza w CEP; C.1 posiadacz / C.2 właściciel; kary 500/1 000/250 zł; PCC-3 2%/14 dni/1 000 zł (podstawa: wartość rynkowa); 10 lat opon = zalecenie producenta. [poprawione] Historia pojazdu zawiera także część danych zagranicznych; raport nie jest dokumentem urzędowym; antydatowanie umowy nie jest automatycznie „poświadczeniem nieprawdy” z art. 271 kk; publiczna wyszukiwarka sądowych zastawów po VIN nie istnieje (zaświadczenie z sądu, DW-2). [nadal do sprawdzenia] czy raport Historii pojazdu pokazuje wprost „zatrzymany dowód rejestracyjny” — sprawdzić na kilku realnych raportach przed startem.
+
+Progi reguł automatycznych po audycie: `product/content/RULES-auto.md`; uzasadnienia i odrzucone propozycje: `experiments/audyt/wynik-B-2026-09-29.md`.

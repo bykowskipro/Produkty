@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Builds the „przykładowe auto” seed for the preview bundle: a fully answered Skoda Octavia 2016 whose report shows
- * „Negocjuj” (2 problemy, 7 uwag, 0 dealbreakerów) – the same story as the landing's „Tak wygląda raport”.
+ * „Negocjuj” (2 problemy, 7 uwag, 0 dealbreakerów; treść 1.4: lakier liczony od mediany, LPG/HV pominięte przez pole „Paliwo”) – the same story as the landing's „Tak wygląda raport”.
  * Usage: node ops/make-demo-example.mjs product/content/auto.json <out.js>
  * The output script runs before engine.js in the demo and, when the page is opened with ?example=1, adds the car
  * `example` to localStorage (existing cars are kept) and opens its report. Rule-driven items are re-evaluated by the
@@ -22,14 +22,14 @@ const O = {
   p1s1i5: { v: 'good' }, p1s1i7: { v: 'good' },
   p1s2i1: { v: 'have' }, p1s2i2: { v: 'up', input: 176800, note: 'Badania: 2022 – 141 210, 2023 – 158 900, 2024 – 167 400, 2026-04 – 176 800.' }, p1s2i3: { v: 'good' }, p1s2i4: { v: 'pl' }, p1s2i5: { state: 'pomin' }, p1s2i6: { v: 'good' },
   p1s3i1: { v: 'done' }, p1s3i2: { v: 'good' }, p1s3i3: { v: 'good', note: '„Tylny zderzak po parkingowym w 2022, lakierowany u znajomego”.' },
-  p1s4i1: { v: 'good' }, p1s4i2: { v: 'good' }, p1s4i3: { v: 'good' }, p1s4i4: { v: 'good' }, p1s4i5: { v: 'good' },
+  p1s4i1: { v: 'good' }, p1s4i2: { v: 'good' }, p1s4i3: { v: 'me' }, p1s4i4: { v: 'good' }, p1s4i5: { v: 'good' },
   p1s5i1: { v: 'have' }, p1s5i2: { v: 'have' }, p1s5i3: { v: 'have' }, p1s5i4: { v: 'have' }, p1s5i5: { v: 'good' },
   p1s6i1: { v: 'good' }, p1s6i2: { v: 'good' },
   p2s1i1: { v: 'good' }, p2s1i2: { input: VIN }, p2s1i3: { v: 'good' }, p2s1i4: { v: 'good' }, p2s1i5: { input: '2027-03-15' }, p2s1i6: { input: 2016 },
   p2s2i1: { v: 'good' }, p2s2i2: { v: 'good' }, p2s2i3: { v: 'good' }, p2s2i4: { v: 'good' },
   p2s3i1: { v: 'good' }, p2s3i2: { v: 'owner' }, p2s3i3: { v: 'none' }, p2s3i4: { v: 'good' }, p2s3i5: { state: 'pomin' },
   p2s4i1: { v: 'good' }, p2s4i2: { v: 'mid', note: 'Ostatni wpis 2022. Sprzedawca: „potem robił kolega”.' }, p2s4i3: { v: 'good', note: 'Rozrząd 2023 – faktura na 1 850 zł.' }, p2s4i4: { input: '2026-12-31' }, p2s4i5: { state: 'pomin' },
-  p2s4i6: { input: 1, auto: true, note: 'Drugi „został u poprzedniego właściciela”.' }, p2s4i7: { v: 'none' },
+  p2s4i6: { input: 1, auto: true, note: 'Drugi „został u poprzedniego właściciela”.' }, p2s4i7: { v: 'none' }, p2s4i8: { state: 'pomin' },
   p3s1i1: { v: 'good' }, p3s1i2: { v: 'good' }, p3s1i3: { v: 'good' }, p3s1i4: { v: 'good' },
   p3s2i1: { input: 110 }, p3s2i2: { input: 118 }, p3s2i3: { input: 112 }, p3s2i4: { input: 120 }, p3s2i5: { input: 380, note: 'Prawy dolny róg drzwi, pod listwą – 380 µm; reszta drzwi 130–150.' }, p3s2i6: { input: 116 },
   p3s2i7: { input: 210 }, p3s2i8: { input: 125 }, p3s2i9: { input: 122 }, p3s2i10: { input: 118 }, p3s2i11: { input: 115 }, p3s2i12: { input: 130 }, p3s2i13: { v: 'good' },
@@ -41,17 +41,17 @@ const O = {
   p4s1i1: { input: 180450 }, p4s1i2: { v: 'good' }, p4s1i3: { v: 'good' }, p4s1i4: { v: 'good' }, p4s1i5: { v: 'good' },
   p4s2i1: { v: 'good' }, p4s2i2: { v: 'good' }, p4s2i3: { v: 'mid', note: 'Mokro przy kole zapasowym, uszczelka klapy do sprawdzenia.' }, p4s2i4: { v: 'good' },
   p4s3i1: { v: 'ok' }, p4s3i2: { v: 'ok' }, p4s3i3: { v: 'good' },
-  p4s4i1: { v: 'good' }, p4s4i2: { v: 'bad', note: 'Sprężarka się załącza, nawiew letni po 5 minutach.' }, p4s4i3: { v: 'good' }, p4s4i4: { v: 'good' }, p4s4i5: { v: 'good' }, p4s4i6: { v: 'good' },
+  p4s4i1: { v: 'good' }, p4s4i2: { v: 'none', note: 'Sprężarka się załącza, nawiew letni po 5 minutach.' }, p4s4i3: { v: 'good' }, p4s4i4: { v: 'good' }, p4s4i5: { v: 'good' }, p4s4i6: { v: 'good' },
   p4s5i1: { v: 'good' }, p4s5i2: { v: 'ok' }, p4s5i3: { v: 'good' },
-  p4s6i1: { v: 'good' }, p4s6i2: { v: 'good' },
+  p4s6i1: { v: 'good' }, p4s6i2: { v: 'good' }, p4s6i3: { state: 'pomin' },
   p5s1i1: { v: 'good' }, p5s1i2: { v: 'good' }, p5s1i3: { v: 'good' }, p5s1i4: { v: 'good' }, p5s1i5: { v: 'good' }, p5s1i6: { v: 'good' }, p5s1i7: { v: 'good' }, p5s1i8: { v: 'good' }, p5s1i9: { v: 'good' }, p5s1i10: { v: 'good' },
   p5s2i1: { v: 'good' }, p5s2i2: { v: 'good' }, p5s2i3: { v: 'good' }, p5s2i4: { v: 'good' }, p5s2i5: { v: 'good' }, p5s2i6: { v: 'good' }, p5s2i7: { v: 'good' },
-  p6s1i1: { v: 'good' }, p6s1i2: { v: 'good' },
+  p6s1i1: { v: 'good' },
   p6s2i1: { v: 'good' }, p6s2i2: { v: 'good' }, p6s2i3: { v: 'good' },
   p6s3i1: { state: 'pomin' }, p6s3i2: { state: 'pomin' }, p6s3i3: { state: 'pomin' },
   p6s4i1: { v: 'good' }, p6s4i2: { v: 'good' }, p6s5i1: { v: 'good' }, p6s5i2: { v: 'good' }, p6s5i3: { v: 'good' },
-  p6s6i1: { v: 'good' }, p6s6i2: { v: 'good' }, p6s6i3: { v: 'good' }, p6s6i4: { v: 'good' }, p6s7i1: { v: 'good' }, p6s7i2: { v: 'good' }, p6s8i1: { v: 'good' }, p6s8i2: { v: 'good' },
-  p7s1i1: { v: 'done' }, p7s1i2: { v: 'good' }, p7s1i3: { v: 'na' }, p7s2i1: { v: 'done' }, p7s2i2: { v: 'done' }, p7s2i3: { v: 'done' },
+  p6s6i1: { v: 'good' }, p6s6i2: { v: 'good' }, p6s6i3: { v: 'good' }, p6s6i4: { v: 'good' }, p6s7i1: { v: 'good' }, p6s7i2: { v: 'good' }, p6s7i3: { v: 'good' }, p6s8i1: { v: 'good' }, p6s8i2: { v: 'good' },
+  p7s1i1: { v: 'done' }, p7s1i2: { v: 'good' }, p7s1i3: { v: 'done' }, p7s2i1: { v: 'done' },
   p7s3i1: { v: 'none' }, p7s3i2: { v: 'good' }, p7s3i3: { v: 'good' }, p7s3i4: { v: 'good' }, p7s4i1: { v: 'done' },
 };
 
@@ -87,7 +87,7 @@ const car = {
   created: now, u: now,
   vin: VIN, st: 'private', cd: 1, qf: 1,
   q: { c0: 'p', c1: 'p', c2: 'p' },
-  d: { price: 32900, year: 2016, odo_ad: 180000, reg: 'XX 00000', first_reg: '2016-05-12', odo_photo: 'yes', miss: {}, got: {}, ref: {} },
+  d: { model: 'Skoda Octavia 1.4 TSI', price: 32900, year: 2016, odo_ad: 180000, fuel: 'petrol', gearbox: 'manual', reg: 'XX 00000', first_reg: '2016-05-12', odo_photo: 'yes', miss: {}, got: {}, ref: {} },
   a: a,
 };
 const js = `/* Demo only: „Przykładowe auto” – a fully answered Octavia 2016. Opened with app.html?example=1 it adds the car to this device's data (your own cars stay) and shows its report. Generated by ops/make-demo-example.mjs. */

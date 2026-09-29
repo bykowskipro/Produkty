@@ -1,7 +1,7 @@
 {
   "meta": {
     "product_id": "auto",
-    "version": "1.3",
+    "version": "1.4",
     "title": "Oględziny używanego auta",
     "est_minutes_total": 75,
     "disclaimer": "Narzędzie ma charakter edukacyjny i porządkuje oględziny — nie zastępuje sprawdzenia przez mechanika lub rzeczoznawcę i nie ocenia konkretnego egzemplarza. Decyzja o zakupie i jej skutki należą do Ciebie."
@@ -10,9 +10,9 @@
     "title": "Zacznij tu (3 minuty)",
     "steps": [
       "Wieczór przed: wpisz dane z ogłoszenia (cena, rocznik, przebieg, VIN, nr rejestracyjny, data pierwszej rejestracji). Czego nie ma — zaznacz „nie ma”, dostaniesz gotowe zdania na rozmowę. Trzy dane odblokowują bezpłatny raport na historiapojazdu.gov.pl.",
-      "Zadzwoń (nie pisz): najpierw zdobądź brakujące dane, potem 12 pytań ze scenariusza, na końcu ustal zimny silnik, dokumenty na stole, zasady jazdy próbnej (Ty prowadzisz choć część trasy) i zgodę na mechanika/SKP.",
+      "Zadzwoń (nie pisz): najpierw zdobądź brakujące dane, potem 12 pytań ze scenariusza, na końcu ustal zimny silnik, dokumenty na stole, zasady jazdy próbnej (prowadzisz choć część trasy, a jeśli sprzedawca woli prowadzić — umawiasz SKP) i zgodę na mechanika/SKP.",
       "Spakuj: telefon z latarką + powerbank, grubościomierz (jeśli masz — instrukcja 60 s w kroku „Co zabrać”), ręcznik papierowy, białą chusteczkę, rękawiczki, opcjonalnie czytnik OBD2. Podnieś limity przelewu/BLIK zamiast wozić gotówkę.",
-      "Na miejscu zaczynasz od dokumentów i VIN w 3 miejscach. Jeśli tu coś się nie zgadza, kończysz po 5 minutach i oszczędzasz godzinę.",
+      "Na miejscu zaczynasz od dokumentów i VIN. Jeśli tu coś się nie zgadza, kończysz po 5 minutach i oszczędzasz godzinę. Nie wchodź pod auto i nie dotykaj gorących elementów — wszystko, co poniżej progu, zobaczy podnośnik na SKP.",
       "Potem nadwozie (dach to wzorzec dla miernika, dalej zgodnie z ruchem wskazówek zegara), wnętrze i test kontrolek na samym zapłonie — silnik wciąż zimny.",
       "Dopiero teraz zimny start: stoisz przy masce i przy wydechu, nie w środku. Następnie 20–30 minut jazdy po różnych drogach — Ty prowadzisz, radio wyłączone.",
       "Na końcu aplikacja układa Twoją listę uwag: sprawdź, czy nie ma punktu „odpuść”, zdecyduj o mechaniku i negocjuj faktami z listy — bez wycen z internetu."
@@ -76,10 +76,10 @@
             {
               "id": "p1s1i2",
               "text": "VIN od sprzedawcy: z ogłoszenia, SMS-em albo ze zdjęcia dowodu",
-              "how": "VIN wpisujesz w „Danych z ogłoszenia” wyżej — ten punkt odhacza się sam, gdy tam jest 17 znaków. Nie ma go w ogłoszeniu? Zaznacz „nie ma” i poproś w rozmowie (dostaniesz gotowe zdanie). Uczciwy sprzedawca nie ma powodu go chować; odmowa podania VIN kończy temat, bo bez niego nie sprawdzisz nic.",
-              "why": "VIN otwiera bezpłatną Historię pojazdu: odczyty licznika z badań, właścicieli, status, kradzież. Bez VIN jedziesz w ciemno.",
+              "how": "VIN (albo numer nadwozia w starszych autach) wpisujesz w „Danych z ogłoszenia” wyżej — ten punkt odhacza się sam, gdy tam jest. Nie ma go w ogłoszeniu? Zaznacz „nie ma” i poproś w rozmowie: wystarczy sam numer, bez zdjęcia dowodu. Część sprzedawców nie chce podawać VIN-u przed spotkaniem — to niewygoda (nie sprawdzisz historii przed wyjazdem), nie wada auta. Granica jest inna: jeśli VIN nie da się sprawdzić nawet na miejscu, przed umową i zapłatą — nie kupujesz.",
+              "why": "VIN otwiera bezpłatną Historię pojazdu: odczyty licznika z badań, właścicieli, status, kradzież. Bez sprawdzenia numeru kupujesz w ciemno.",
               "severity": "red",
-              "flag_label": "Sprzedawca odmówił podania VIN przed spotkaniem",
+              "flag_label": "Sprzedawca uniemożliwia sprawdzenie VIN przed zakupem",
               "dealbreaker": true,
               "quick": true,
               "photo": false,
@@ -97,7 +97,12 @@
                     "v": "have"
                   },
                   {
-                    "label": "Odmówił podania",
+                    "label": "Poda dopiero na miejscu",
+                    "state": "uwaga",
+                    "v": "later"
+                  },
+                  {
+                    "label": "Nie da sprawdzić nawet na miejscu",
                     "state": "problem",
                     "v": "refused"
                   }
@@ -110,7 +115,7 @@
               "id": "p1s1i3",
               "text": "Opis to same zapewnienia: „bezwypadkowy”, „garażowany”, „ASO”",
               "how": "Szukaj w opisie konkretów: kiedy wymieniony rozrząd, jakie faktury, ilu właścicieli, które elementy lakierowane. Opis złożony z przymiotników bez faktów oznacza, że musisz zadać więcej pytań przez telefon.",
-              "why": "Słowa w ogłoszeniu nic nie kosztują; faktury i pomiar lakieru — tak.",
+              "why": "Dokumenty zwiększają możliwość weryfikacji, ale też mogą być niepełne; słowa w ogłoszeniu nie da się zweryfikować w ogóle.",
               "severity": "info",
               "flag_label": "Opis pełen zapewnień bez konkretów (bezwypadkowy/garażowany bez dowodów)",
               "dealbreaker": false,
@@ -174,7 +179,7 @@
             {
               "id": "p1s1i5",
               "text": "„Sprzedaję w imieniu znajomego” / handlarz udający prywatnego",
-              "how": "Zadzwoń i powiedz „dzwonię w sprawie auta” — jeśli usłyszysz „którego?”, to handlarz. Wpisz numer telefonu w wyszukiwarkę ogłoszeń: kilka aut pod jednym numerem mówi wszystko. Handlarz to nie zbrodnia, ale „prywatny” w ogłoszeniu i firma (lub obca osoba) na umowie to inna sytuacja prawna i inny poziom zaufania.",
+              "how": "Zadzwoń i powiedz „dzwonię w sprawie auta” — „którego?” to sygnał (ktoś może sprzedawać kilka rodzinnych aut, ale najczęściej to handel). Wpisz numer telefonu w wyszukiwarkę ogłoszeń: kilka aut pod jednym numerem mówi wszystko. Handlarz to nie zbrodnia, ale „prywatny” w ogłoszeniu i firma (lub obca osoba) na umowie to inna sytuacja prawna: komis jako pośrednik podsuwa umowę z nieznanym Ci właścicielem i w ten sposób unika odpowiedzialności przedsiębiorcy za wady.",
               "why": "Kto ukrywa, kim jest, ukryje też, co wie o aucie.",
               "severity": "yellow",
               "flag_label": "Sprzedający ukrywa, że jest handlarzem („w imieniu znajomego”)",
@@ -229,7 +234,7 @@
             {
               "id": "p1s1i7",
               "text": "Zdjęcia aktualne? Pora roku, tablice, otoczenie",
-              "how": "Śnieg na zdjęciach w lipcu oznacza, że auto stoi od miesięcy albo ogłoszenie jest „przeklejone” z poprzedniej sprzedaży. Zasłonięte tablice to norma, ale poproś o numer rejestracyjny — bez niego nie odpalisz Historii pojazdu.",
+              "how": "Śnieg na zdjęciach w lipcu oznacza, że zdjęcia są stare — auto stoi od miesięcy albo ogłoszenie jest „przeklejone” z poprzedniej sprzedaży; ustal, kiedy zrobiono zdjęcia. Zasłonięte tablice to norma, ale poproś o numer rejestracyjny — bez niego nie odpalisz Historii pojazdu.",
               "why": "Auto, które długo stoi lub krąży między sprzedawcami, zwykle ma powód.",
               "severity": "info",
               "flag_label": "Ogłoszenie ze starymi lub „przeklejonymi” zdjęciami",
@@ -266,7 +271,7 @@
               "id": "p1s2i1",
               "text": "Raport z historiapojazdu.gov.pl: pobrany i zapisany",
               "how": "Kliknij przycisk wyżej, wpisz trzy dane (VIN, numer rejestracyjny, data pierwszej rejestracji — są w „Danych z ogłoszenia”) i zapisz raport jako PDF. Nie masz kompletu danych? Zdobądź je w rozmowie (krok 3) i wróć tu — to 5 minut, a kolejne punkty tego kroku bez raportu nie mają sensu.",
-              "why": "To jedyne bezpłatne, urzędowe źródło o aucie: odczyty licznika, właściciele, status, OC, badania.",
+              "why": "To bezpłatne źródło danych z ewidencji pojazdów (CEPiK): odczyty licznika, właściciele, status, OC, badania. Wydruk ma charakter informacyjny, nie jest dokumentem urzędowym — ale do decyzji wystarczy.",
               "severity": "red",
               "flag_label": "Brak raportu z Historii pojazdu przed oględzinami",
               "dealbreaker": false,
@@ -295,11 +300,11 @@
             },
             {
               "id": "p1s2i2",
-              "text": "Historia pojazdu: odczyty licznika z badań rosną?",
-              "how": "W raporcie zobaczysz stany licznika spisane przez diagnostę przy badaniach technicznych (zbierane od 2014 r.) i z kontroli drogowych (od 2020 r.). Ułóż je chronologicznie: każdy kolejny musi być większy. Spadek albo „skok w dół” (np. 190 tys. → 130 tys.) to cofnięty licznik. Zapisz ostatni odczyt — jutro porównasz z licznikiem.",
-              "why": "Cofnięty licznik to przestępstwo (art. 306a kk) i najczęstsza wtopa na rynku wtórnym — tu wychodzi za darmo.",
+              "text": "Historia pojazdu: odczyty licznika z badań — spójne?",
+              "how": "W raporcie zobaczysz stany licznika spisane przy badaniach technicznych (zbierane od 2014 r.) i z kontroli drogowych (od 2020 r.). Ułóż je chronologicznie: każdy kolejny powinien być większy. Spadek albo „skok w dół” (np. 190 tys. → 130 tys.) to niespójność: najczęściej ingerencja w drogomierz, czasem udokumentowana wymiana drogomierza (w ewidencji jest data i powód wymiany, odczyt po wymianie) albo błąd wpisu. Nie kupuj bez wyjaśnienia i dokumentu. Zapisz ostatni odczyt — jutro porównasz z licznikiem.",
+              "why": "Ingerencja w drogomierz to przestępstwo (art. 306a kk). Sama rozbieżność jeszcze nim nie jest — ale bez dokumentu wymiany traktuj ją jak wadę, której nie da się „zbić z ceny”.",
               "severity": "red",
-              "flag_label": "Odczyty licznika w Historii pojazdu nie rosną / niespójne z ogłoszeniem",
+              "flag_label": "Odczyty licznika w Historii pojazdu niespójne (spadek bez udokumentowanej wymiany drogomierza)",
               "dealbreaker": true,
               "quick": true,
               "photo": false,
@@ -323,7 +328,12 @@
                     "v": "up"
                   },
                   {
-                    "label": "Jest spadek / skok w dół",
+                    "label": "Spadek, ale jest dokument wymiany drogomierza",
+                    "state": "uwaga",
+                    "v": "replaced"
+                  },
+                  {
+                    "label": "Spadek / skok w dół bez wyjaśnienia",
                     "state": "problem",
                     "v": "down"
                   }
@@ -335,7 +345,7 @@
             {
               "id": "p1s2i3",
               "text": "Historia pojazdu: właściciele, status, kradzież, OC, badanie",
-              "how": "Sprawdź: liczbę właścicieli i czy to osoby prywatne czy firmy (porównaj z tym, co mówi sprzedawca), status „zarejestrowany”, brak wpisu o kradzieży, ważne OC i ważne badanie techniczne, ciągłość badań (kilkuletnia przerwa = auto stało lub było po szkodzie), ewentualną informację o szkodzie istotnej. Zapisz raport jako PDF.",
+              "how": "Sprawdź: liczbę właścicieli i czy to osoby prywatne czy firmy (porównaj z tym, co mówi sprzedawca), status „zarejestrowany”, brak wpisu o kradzieży, ważne OC i ważne badanie techniczne, ciągłość badań (kilkuletnia przerwa = auto stało, było w naprawie lub nie przeszło badania — zapytaj), ewentualną informację o szkodzie istotnej. Zapisz raport jako PDF. Znaczenie: wpis o kradzieży = koniec; zatrzymany dowód = do wyjaśnienia przed spotkaniem; brak ważnego OC lub badania = auto nie powinno wyjechać na jazdę próbną.",
               "why": "Rozbieżność między raportem a opowieścią sprzedawcy to najtańszy test jego wiarygodności.",
               "severity": "yellow",
               "flag_label": "Historia pojazdu niezgodna z opowieścią sprzedawcy (właściciele/badania/OC/szkoda)",
@@ -359,7 +369,7 @@
                     "v": "mid"
                   },
                   {
-                    "label": "Kradzież, zatrzymany dowód, brak OC",
+                    "label": "Kradzież, zatrzymany dowód, brak OC lub badania",
                     "state": "problem",
                     "v": "bad"
                   }
@@ -369,7 +379,7 @@
             {
               "id": "p1s2i4",
               "text": "Auto sprowadzone? Data pierwszej rejestracji w PL vs rocznik",
-              "how": "Jeśli kilkunastoletnie auto zostało zarejestrowane w Polsce niedawno, to import. Rządowa Historia pojazdu obejmuje tylko okres w Polsce — przebiegi i szkody sprzed sprowadzenia poznasz tylko z płatnego raportu lub z zagranicznych dokumentów. Zapytaj o dokumenty z kraju pochodzenia.",
+              "how": "Jeśli kilkunastoletnie auto zostało zarejestrowane w Polsce niedawno, to import. Historia pojazdu pokazuje przede wszystkim okres w Polsce; część danych z zagranicznych rejestrów bywa dostępna (zależy od kraju). Przebiegi i szkody sprzed sprowadzenia poznasz zwykle tylko z płatnego raportu lub z zagranicznych dokumentów. Zapytaj o dokumenty z kraju pochodzenia.",
               "why": "Import sam w sobie nie jest wadą, ale luka w historii to miejsce, w którym najczęściej znika prawdziwy przebieg.",
               "severity": "info",
               "flag_label": "Import: brak udokumentowanej historii sprzed rejestracji w Polsce",
@@ -434,11 +444,11 @@
             },
             {
               "id": "p1s2i6",
-              "text": "Zastaw / leasing / kredyt — wyklucz przed przelewem",
-              "how": "W dowodzie rejestracyjnym szukaj adnotacji „ZASTAW” i sprawdź pole właściciela (C.2): jeśli to bank lub firma leasingowa, sprzedawca nie może sprzedać auta bez ich zgody. Rejestr Zastawów Skarbowych sprawdzisz online po VIN na podatki.gov.pl; rejestr zastawów sądowych — wnioskiem DW-2 w sądzie albo poproś sprzedawcę o aktualne zaświadczenie z rejestru.",
+              "text": "Zastaw / leasing / przewłaszczenie — wyklucz przed przelewem",
+              "how": "W dowodzie rejestracyjnym szukaj adnotacji „ZASTAW” i sprawdź pole właściciela (C.2): bank lub firma leasingowa jako właściciel oznacza, że sprzedawca potrzebuje dokumentu wykupu lub zgody. Rejestr Zastawów Skarbowych sprawdzisz online na podatki.gov.pl; zastaw rejestrowy — poproś sprzedawcę o aktualne zaświadczenie z sądowego rejestru zastawów (wniosek DW-2) albo złóż je sam. Uwaga: zwykły kredyt gotówkowy sprzedawcy nie obciąża auta — problemem jest zastaw rejestrowy, przewłaszczenie na zabezpieczenie i leasing.",
               "why": "Auto obciążone zastawem może zostać zabrane nowemu właścicielowi, choć zapłacił co do grosza.",
               "severity": "red",
-              "flag_label": "Nie wykluczono zastawu, leasingu ani kredytu na aucie",
+              "flag_label": "Nie wykluczono zastawu, leasingu ani przewłaszczenia na aucie",
               "dealbreaker": false,
               "photo": false,
               "input": null,
@@ -461,7 +471,7 @@
                     "v": "mid"
                   },
                   {
-                    "label": "Zastaw / bank lub leasing w dowodzie",
+                    "label": "Zastaw / leasing / przewłaszczenie bez dokumentów zwolnienia",
                     "state": "problem",
                     "v": "bad"
                   }
@@ -559,14 +569,14 @@
                     "v": "good"
                   },
                   {
-                    "label": "„Nic, bezwypadkowy”",
-                    "state": "uwaga",
-                    "v": "mid"
+                    "label": "„Nic nie lakierowane” — zapisane, sprawdzisz miernikiem",
+                    "state": "ok",
+                    "v": "nothing"
                   },
                   {
                     "label": "Unika odpowiedzi",
                     "state": "uwaga",
-                    "v": "mid2"
+                    "v": "dodge"
                   }
                 ]
               }
@@ -581,11 +591,11 @@
             {
               "id": "p1s4i1",
               "text": "Silnik ma być zimny — powiedz to wprost",
-              "how": "„Proszę nie odpalać auta przed moim przyjazdem, chcę zobaczyć zimny start”. Ustal godzinę i przyjedź punktualnie. Jeśli sprzedawca kręci („muszę podjechać po córkę”, „stoi w innym miejscu”), to znaczy, że na zimnym coś słychać albo dymi.",
+              "how": "„Proszę nie odpalać auta przed moim przyjazdem, chcę zobaczyć zimny start”. Ustal godzinę i przyjedź punktualnie. Wykręty („muszę podjechać po córkę”, „stoi w innym miejscu”) zapisz. Odmowa nie dowodzi wady, ale test zimnego startu przepada: przełóż spotkanie na rano albo jedź z założeniem, że rozruch i pierwsze sekundy pracy ocenisz tylko na ciepłym silniku.",
               "why": "Na ciepłym silniku znika połowa objawów: stuki, dym, nierówna praca, ciężki rozruch.",
               "severity": "red",
-              "flag_label": "Sprzedawca nie zgodził się na oględziny na zimnym silniku",
-              "dealbreaker": true,
+              "flag_label": "Zimny start nieweryfikowalny — sprzedawca nie zgodził się na zimny silnik",
+              "dealbreaker": false,
               "quick": true,
               "photo": false,
               "input": null,
@@ -608,8 +618,8 @@
                     "v": "mid"
                   },
                   {
-                    "label": "Odmówił",
-                    "state": "problem",
+                    "label": "Odmówił — zimnego startu nie będzie",
+                    "state": "uwaga",
                     "v": "bad"
                   }
                 ]
@@ -618,7 +628,7 @@
             {
               "id": "p1s4i2",
               "text": "Dokumenty na stole: wymień listę przez telefon",
-              "how": "Dowód rejestracyjny, dowód osobisty właściciela, poprzednia umowa lub faktura zakupu, polisa OC, książka serwisowa i faktury, wszystkie kluczyki. Jeśli słyszysz „dowód jest u żony”, „książkę zgubiłem, ale w serwisie wiedzą” — przełóż spotkanie do czasu skompletowania.",
+              "how": "Dowód rejestracyjny, dokument tożsamości właściciela, polisa OC, książka serwisowa i faktury, wszystkie kluczyki; poprzednia umowa lub faktura zakupu wtedy, gdy sprzedający nie widnieje jeszcze w dowodzie jako właściciel. Jeśli słyszysz „dowód jest u żony”, „książkę zgubiłem, ale w serwisie wiedzą” — przełóż spotkanie do czasu skompletowania.",
               "why": "Bez dokumentów nie ma czego oglądać; kompletuje się je przed sprzedażą, nie po wpłacie zaliczki.",
               "severity": "yellow",
               "flag_label": "Sprzedawca nie zapewnił kompletu dokumentów na spotkanie",
@@ -644,8 +654,8 @@
                     "v": "mid"
                   },
                   {
-                    "label": "Nie ma dowodu / umowy",
-                    "state": "problem",
+                    "label": "Nie ma dowodu rejestracyjnego — przełóż spotkanie",
+                    "state": "uwaga",
                     "v": "bad"
                   }
                 ]
@@ -654,11 +664,11 @@
             {
               "id": "p1s4i3",
               "text": "Jazda próbna: ustal, kto prowadzi i na jakich zasadach",
-              "how": "W Polsce mniej więcej co piąty sprzedający nie zgadza się na jazdę próbną, a wielu chce prowadzić sam — najczęściej ze strachu o stłuczkę (bez AC za szkodę w aucie płaci kierujący), nie dlatego, że auto jest wadliwe. Dlatego nie pytaj „czy mogę się przejechać”, tylko zaproponuj zasady: pokażesz prawo jazdy, jedziecie razem, trasa 20–30 minut ustalona z góry, za ewentualną szkodę odpowiadasz Ty — spisane na kartce. Sprzedawca może przejechać pierwszy odcinek, ale przynajmniej część trasy prowadzisz Ty: inaczej nie ocenisz sprzęgła, skrzyni, hamulców i kierownicy. „Tylko ja za kierownicą” to uwaga: dopytaj o powód, zaproponuj kartkę z zasadami i krótszy odcinek. Kategoryczne „żadnej jazdy” albo „auto nie ma tablic” oznacza, że możesz sprawdzić je tylko na podnośniku (SKP) i kupujesz auto niesprawdzone w ruchu — dla większości kupujących to koniec tematu.",
+              "how": "W Polsce mniej więcej co piąty sprzedający nie zgadza się na jazdę próbną, a wielu chce prowadzić sam — zwykle ze strachu o stłuczkę: szkody innych pokrywa OC auta, ale koszt uszkodzenia samego testowanego auta bez AC może spaść na kierującego (zależnie od okoliczności i winy). Nie pytaj „czy mogę się przejechać” — zaproponuj zasady: pokażesz prawo jazdy, jedziecie razem, trasa 20–30 minut ustalona z góry, sprzedawca może przejechać pierwszy odcinek. Jeśli chce prowadzić całość — przyjmij to, ale umów sprawdzenie na SKP lub u mechanika: z fotela pasażera ocenisz hałasy, dym i pracę skrzyni, nie ocenisz sprzęgła ani luzu na kierownicy. Brak jakiejkolwiek jazdy (np. auto bez tablic) i brak zgody na niezależne sprawdzenie = kupujesz auto niesprawdzone w ruchu; dla większości kupujących to koniec.",
               "why": "Skrzyni, zawieszenia i hamulców nie ocenisz na parkingu, a z fotela pasażera nie poczujesz sprzęgła ani luzu na kierownicy.",
               "severity": "red",
-              "flag_label": "Brak jazdy próbnej za Twoją kierownicą (odmowa lub tylko sprzedawca prowadził)",
-              "dealbreaker": true,
+              "flag_label": "Auto niesprawdzone w ruchu: brak jazdy próbnej i brak niezależnego sprawdzenia",
+              "dealbreaker": false,
               "quick": true,
               "photo": false,
               "input": null,
@@ -666,24 +676,29 @@
                 "ustalenia",
                 "jazda"
               ],
-              "say": "Chciał(a)bym poprowadzić choć część trasy, 20–30 minut. Pokażę prawo jazdy, jedziemy razem, a za ewentualną szkodę odpowiadam ja — możemy to spisać na kartce. Pasuje?",
+              "say": "Chciał(a)bym poprowadzić choć część trasy, 20–30 minut — pokażę prawo jazdy, jedziemy razem. Jeśli woli Pan/Pani prowadzić, w porządku, ale wtedy umówmy sprawdzenie na stacji diagnostycznej.",
               "ctrl": {
                 "type": "choice",
                 "options": [
                   {
                     "label": "Ja prowadzę (choć część trasy)",
                     "state": "ok",
-                    "v": "good"
+                    "v": "me"
                   },
                   {
-                    "label": "Tylko sprzedawca za kierownicą",
+                    "label": "Prowadzi sprzedawca, zgoda na SKP / mechanika",
+                    "state": "ok",
+                    "v": "seller_skp"
+                  },
+                  {
+                    "label": "Żadnej jazdy, ale zgoda na SKP",
                     "state": "uwaga",
-                    "v": "mid"
+                    "v": "no_drive_skp"
                   },
                   {
-                    "label": "Żadnej jazdy próbnej",
+                    "label": "Żadnej jazdy i żadnego sprawdzenia",
                     "state": "problem",
-                    "v": "bad"
+                    "v": "none"
                   }
                 ]
               }
@@ -691,7 +706,7 @@
             {
               "id": "p1s4i4",
               "text": "Miejsce i pora: dzień, sucho, płasko, da się obejść auto dookoła",
-              "how": "Oglądaj za dnia, w miejscu, gdzie położysz się przy podwoziu i otworzysz wszystkie drzwi. Nie w deszczu, nie o zmroku, nie w ciasnym garażu, nie „pod marketem, bo tak mi po drodze”. Weź kogoś ze sobą: druga para oczu i bezpieczeństwo, gdy w grę wchodzą pieniądze.",
+              "how": "Oglądaj za dnia, w miejscu, gdzie kucniesz przy progu, otworzysz wszystkie drzwi i obejdziesz auto dookoła. Nie w deszczu, nie o zmroku, nie w ciasnym garażu, nie „pod marketem, bo tak mi po drodze”. Weź kogoś ze sobą: druga para oczu i bezpieczeństwo, gdy w grę wchodzą pieniądze.",
               "why": "W złych warunkach przegapisz to, co widać gołym okiem w słońcu.",
               "severity": "info",
               "flag_label": "Oględziny w złych warunkach (deszcz/zmrok/ciasno) — ocena niepełna",
@@ -825,7 +840,7 @@
             {
               "id": "p1s5i3",
               "text": "Rękawiczki, ręcznik papierowy, biała chusteczka, magnes",
-              "how": "Ręcznik papierowy: bagnet oleju, korek wlewu, wycieki. Biała chusteczka: przetrzyj wnętrze końcówki wydechu (mokra, tłusta czerń to informacja). Rękawiczki, bo dotkniesz podwozia. Magnes owinięty w szmatkę: nie trzyma się na grubej szpachli — prymitywny zamiennik miernika (nie działa na aluminium i plastiku).",
+              "how": "Ręcznik papierowy: bagnet oleju, korek wlewu, wycieki. Biała chusteczka: przetrzyj wnętrze końcówki wydechu na zimnym, wyłączonym silniku. Rękawiczki, bo dotkniesz podwozia i komory silnika. Magnes owinięty w miękką szmatkę to tylko orientacyjny test na grubą szpachlę (nie działa na aluminium i plastiku, może porysować lakier) — lepszy jest tani miernik.",
               "why": "Za kilka złotych masz testy, których większość kupujących nie robi.",
               "severity": "info",
               "flag_label": "Brak podstawowych akcesoriów — część testów pominięta",
@@ -923,7 +938,7 @@
             {
               "id": "p1s6i1",
               "text": "Stacja kontroli pojazdów (SKP) — co da, czego nie da",
-              "how": "Diagnosta sprawdzi hamulce na rolkach, zawieszenie, luzy, światła, często zmierzy lakier — szybko i tanio. Nie oceni jednak silnika ani skrzyni „na przyszłość” i nie zajrzy w historię. Umów się wcześniej i powiedz, że to sprawdzenie przed zakupem, nie badanie okresowe.",
+              "how": "Diagnosta sprawdzi hamulce na rolkach, zawieszenie, luzy, światła i podwozie na podnośniku — szybko i tanio. Zapytaj wcześniej, czy stacja robi oględziny przedzakupowe i czy mierzy lakier (nie każda). Nie oceni jednak silnika ani skrzyni „na przyszłość” i nie zajrzy w historię. Umów się i powiedz, że to sprawdzenie przed zakupem, nie badanie okresowe.",
               "why": "Godzina na SKP wyłapuje to, czego nie zobaczysz bez podnośnika.",
               "severity": "info",
               "flag_label": "Auto nie było sprawdzone na SKP/u mechanika przed decyzją",
@@ -953,7 +968,7 @@
             {
               "id": "p1s6i2",
               "text": "Mechanik — kiedy obowiązkowo, nie opcjonalnie",
-              "how": "Gdy auto jest drogie jak na Twój budżet, ma silnik lub skrzynię, których nie znasz, jest importowane bez historii, albo ta aplikacja policzy 2 lub więcej uwag w fazach „Pod maską” i „Jazda próbna”. Najlepiej mechanik, u którego potem będziesz serwisować — ma interes, żeby nie kupić Ci problemu. Gdy auto jest daleko: mobilny rzeczoznawca.",
+              "how": "Gdy auto jest drogie jak na Twój budżet, ma silnik lub skrzynię, których nie znasz, jest importowane bez historii, albo w etapach „Pod maską” i „Jazda próbna” pojawi się choć jeden problem (nie chodzi o liczbę odhaczonych uwag, tylko o ich wagę). Najlepiej mechanik, u którego potem będziesz serwisować — ma interes, żeby nie kupić Ci problemu. Gdy auto jest daleko: mobilny rzeczoznawca.",
               "why": "Koszt sprawdzenia jest stały; koszt pominięcia — nie.",
               "severity": "info",
               "flag_label": "Zalecane sprawdzenie u mechanika nie zostało wykonane",
@@ -1001,10 +1016,10 @@
             {
               "id": "p2s1i1",
               "text": "Oryginał dowodu rejestracyjnego w ręku (nie zdjęcie, nie ksero)",
-              "how": "Weź dokument do ręki. Sprawdź, czy nie jest zniszczony lub „poprawiany”. Pamiętaj: zatrzymanie dowodu odbywa się dziś elektronicznie, więc kartka może być u sprzedawcy, a dokument i tak zatrzymany — dlatego wczoraj sprawdzałeś status w Historii pojazdu. Bez oryginału nie podpisujesz dziś niczego.",
-              "why": "Dowód rejestracyjny to jedyny dokument, który wiąże ten konkretny egzemplarz z właścicielem.",
+              "how": "Weź dokument do ręki. Sprawdź, czy nie jest zniszczony lub „poprawiany”. Pamiętaj: zatrzymanie dowodu odbywa się dziś elektronicznie, więc kartka może być u sprzedawcy, a dokument i tak zatrzymany — dlatego wczoraj sprawdzałeś status w Historii pojazdu. Bez oryginału nie podpisujesz dziś niczego — możesz wrócić, gdy będzie.",
+              "why": "Dowód rejestracyjny nie jest tytułem własności (tym są umowy i faktury), ale bez niego nie zarejestrujesz auta, a jego brak na spotkaniu to najczęściej bałagan albo kłopot, o którym nikt nie wspomniał.",
               "severity": "red",
-              "flag_label": "Brak oryginału dowodu rejestracyjnego na miejscu",
+              "flag_label": "Dowód rejestracyjny zatrzymany lub auto wyrejestrowane",
               "dealbreaker": true,
               "quick": true,
               "photo": true,
@@ -1021,11 +1036,17 @@
                     "v": "good"
                   },
                   {
-                    "label": "Tylko zdjęcie / ksero / „w urzędzie”",
+                    "label": "Tylko zdjęcie / ksero / „w urzędzie” — dziś nie podpisuj",
+                    "state": "uwaga",
+                    "v": "copy"
+                  },
+                  {
+                    "label": "Dowód zatrzymany / auto wyrejestrowane",
                     "state": "problem",
                     "v": "bad"
                   }
-                ]
+                ],
+                "skip": false
               }
             },
             {
@@ -1056,7 +1077,7 @@
             {
               "id": "p2s1i3",
               "text": "Właściciel (C.2) i posiadacz (C.1): czy to osoba przed Tobą?",
-              "how": "Przeczytaj nazwisko właściciela. Jeśli w polu właściciela figuruje bank lub firma leasingowa, sprzedawca jest tylko użytkownikiem i nie może sprzedać auta bez ich dokumentów (wykup, zgoda). Jeśli nazwisko inne niż sprzedawcy — przechodzisz do sekcji „Kto sprzedaje”.",
+              "how": "Przeczytaj nazwisko właściciela. Jeśli w polu właściciela figuruje bank lub firma leasingowa, sprzedawca jest tylko użytkownikiem — do sprzedaży potrzebuje dokumentu wykupu albo zgody właściciela. Jeśli nazwisko inne niż sprzedawcy — przechodzisz do sekcji „Kto sprzedaje”.",
               "why": "Kupno od osoby, która nie jest właścicielem, to najprostsza droga do utraty auta i pieniędzy.",
               "severity": "red",
               "flag_label": "Właściciel w dowodzie rejestracyjnym inny niż sprzedający (bank/leasing/obca osoba)",
@@ -1091,10 +1112,10 @@
             {
               "id": "p2s1i4",
               "text": "Adnotacje urzędowe: ZASTAW, współwłaściciel, GAZ, HAK, L, TAXI",
-              "how": "Znajdź rubrykę „Adnotacje urzędowe”. „ZASTAW” — nie kupujesz bez zaświadczenia wierzyciela o wykreśleniu. Współwłaściciel — musi podpisać umowę (lub dać pełnomocnictwo). „L” lub „TAXI” — auto z nauki jazdy/taksówki, czyli bardzo intensywnie eksploatowane. Instalacja gazowa bez wpisu „GAZ” — niezalegalizowana.",
+              "how": "Znajdź rubrykę „Adnotacje urzędowe”. „ZASTAW” — nie kupujesz bez zaświadczenia wierzyciela o wykreśleniu. Współwłaściciel — musi podpisać umowę (lub dać pełnomocnictwo); sama współwłasność jest normalna. „L” lub „TAXI” — auto z nauki jazdy lub taksówka, czyli bardzo intensywnie eksploatowane. Instalacja gazowa bez wpisu „GAZ” — status do wyjaśnienia: do badania technicznego i rejestracji wpis jest potrzebny.",
               "why": "Adnotacje to jedyne miejsce, gdzie urząd mówi Ci o obciążeniach i przeszłości auta.",
               "severity": "yellow",
-              "flag_label": "Adnotacja w dowodzie wymaga wyjaśnienia (ZASTAW/współwłaściciel/L/TAXI/GAZ)",
+              "flag_label": "Adnotacja w dowodzie wymaga wyjaśnienia (ZASTAW / współwłaściciel bez zgody / L / TAXI / GAZ)",
               "dealbreaker": false,
               "photo": true,
               "input": null,
@@ -1111,12 +1132,17 @@
                     "v": "good"
                   },
                   {
+                    "label": "Współwłaściciel — podpisze lub jest pełnomocnictwo",
+                    "state": "ok",
+                    "v": "coowner_ok"
+                  },
+                  {
                     "label": "GAZ / HAK / L / TAXI",
                     "state": "uwaga",
                     "v": "mid"
                   },
                   {
-                    "label": "ZASTAW / współwłaściciel",
+                    "label": "ZASTAW lub współwłaściciel bez zgody",
                     "state": "problem",
                     "v": "bad"
                   }
@@ -1181,8 +1207,8 @@
             {
               "id": "p2s2i1",
               "text": "VIN na podszybiu (przez przednią szybę) = pole E",
-              "how": "Stań po stronie kierowcy i przeczytaj tabliczkę widoczną u dołu szyby. Porównaj z dowodem znak po znaku. Zrób zdjęcie. Brak tabliczki, świeże ślady kleju, inna czcionka niż fabryczna — pytasz i notujesz.",
-              "why": "To najłatwiejsza do sprawdzenia kopia VIN — jeśli jej nie ma, ktoś miał powód.",
+              "how": "Stań po stronie kierowcy i przeczytaj tabliczkę widoczną u dołu szyby — o ile ten model ją ma (nie każdy). Porównaj z dowodem znak po znaku. Zrób zdjęcie. Świeże ślady kleju, inna czcionka niż fabryczna — pytasz i notujesz.",
+              "why": "To najłatwiejsza do sprawdzenia kopia VIN — tam, gdzie fabrycznie jest.",
               "severity": "red",
               "flag_label": "VIN na podszybiu nieczytelny/niezgodny z dowodem rejestracyjnym",
               "dealbreaker": true,
@@ -1210,14 +1236,15 @@
                     "state": "problem",
                     "v": "bad"
                   }
-                ]
+                ],
+                "skip": "Ten model nie ma VIN pod szybą"
               }
             },
             {
               "id": "p2s2i2",
               "text": "Tabliczka znamionowa (słupek/drzwi kierowcy lub komora silnika) = pole E",
               "how": "Znajdź metalową tabliczkę lub naklejkę z VIN, masami i często kodem lakieru. Sprawdź: oryginalne nity/naklejka bez pęcherzy, brak śladów odklejania, lakier wokół bez różnicy odcienia. Porównaj VIN znak po znaku i sfotografuj.",
-              "why": "Tabliczka przeklejona lub „przenitowana” to klasyczny ślad auta składanego z dwóch lub kradzionego.",
+              "why": "Tabliczka przeklejona lub „przenitowana” bez dokumentu to klasyczny ślad auta składanego z dwóch lub kradzionego; tabliczka zastępcza po legalnej naprawie ma dokument — poproś o niego.",
               "severity": "red",
               "flag_label": "Tabliczka znamionowa uszkodzona, przeklejana lub VIN niezgodny",
               "dealbreaker": true,
@@ -1236,9 +1263,14 @@
                     "v": "good"
                   },
                   {
-                    "label": "Nie znalazłem / nieczytelny",
+                    "label": "Nie znalazłem / nieczytelna",
                     "state": "uwaga",
                     "v": "mid"
+                  },
+                  {
+                    "label": "Tabliczka zastępcza, jest dokument naprawy",
+                    "state": "uwaga",
+                    "v": "replaced"
                   },
                   {
                     "label": "Różni się lub ślady ingerencji",
@@ -1251,7 +1283,7 @@
             {
               "id": "p2s2i3",
               "text": "VIN wybity w nadwoziu (podłoga pod fotelem / gródź / bagażnik)",
-              "how": "Zapytaj sprzedawcę, gdzie w tym modelu jest numer wybity w blasze (często pod dywanikiem przy fotelu pasażera, na grodzi w komorze silnika lub w podłodze bagażnika). Poświeć latarką: znaki równe, blacha wokół gładka, bez szlifowania, spawania, świeżej farby ani „łaty”. Sfotografuj.",
+              "how": "Zapytaj sprzedawcę albo sprawdź w instrukcji obsługi, u ASO lub na stacji diagnostycznej, gdzie w tym modelu jest numer wybity w blasze (często pod dywanikiem przy fotelu pasażera, na grodzi w komorze silnika lub w podłodze bagażnika). Poświeć latarką: znaki równe, blacha wokół gładka, bez szlifowania, spawania, świeżej farby ani „łaty”. Sfotografuj.",
               "why": "Numer w blasze jest najtrudniejszy do podrobienia — dlatego przy nim najczęściej widać ślady przeróbek.",
               "severity": "red",
               "flag_label": "VIN w nadwoziu nieczytelny, przebijany lub z śladami ingerencji",
@@ -1315,7 +1347,8 @@
                     "state": "uwaga",
                     "v": "mid2"
                   }
-                ]
+                ],
+                "skip": "Ten model ich nie ma / nie wiem"
               }
             }
           ]
@@ -1327,10 +1360,10 @@
             {
               "id": "p2s3i1",
               "text": "Dowód osobisty sprzedawcy = nazwisko w dowodzie rejestracyjnym",
-              "how": "Poproś o dowód osobisty (lub mDowód w mObywatel) i porównaj nazwisko oraz PESEL z dowodem rejestracyjnym i z umową. Spisz dane do umowy z dokumentu, nie z dyktanda. Brak dokumentu tożsamości = nie podpisujesz.",
+              "how": "Poproś o dokument tożsamości (dowód, mDowód w mObywatel, paszport) i porównaj nazwisko z dowodem rejestracyjnym i z umową. Spisz dane do umowy z dokumentu, nie z dyktanda. Inna osoba niż w dowodzie rejestracyjnym może sprzedawać legalnie — z pełnomocnictwem albo z łańcuchem umów (kupiła auto i nie zdążyła przerejestrować); bez tego nie podpisujesz.",
               "why": "Umowa z osobą, której tożsamości nie potwierdziłeś, to papier bez wartości.",
               "severity": "red",
-              "flag_label": "Sprzedający nie potwierdził tożsamości lub nie jest właścicielem z dowodu",
+              "flag_label": "Sprzedający nie potwierdził tożsamości lub nie wykazał prawa do sprzedaży",
               "dealbreaker": true,
               "quick": true,
               "photo": false,
@@ -1347,7 +1380,12 @@
                     "v": "good"
                   },
                   {
-                    "label": "Nie pokazał / inne nazwisko",
+                    "label": "Inna osoba — jest pełnomocnictwo lub umowa nabycia",
+                    "state": "uwaga",
+                    "v": "chain"
+                  },
+                  {
+                    "label": "Nie pokazał dokumentu / nie wykazał prawa do sprzedaży",
                     "state": "problem",
                     "v": "bad"
                   }
@@ -1357,7 +1395,7 @@
             {
               "id": "p2s3i2",
               "text": "Sprzedaje ktoś inny niż właściciel: pisemne pełnomocnictwo",
-              "how": "„Sprzedaję za brata/kolegę” wymaga pełnomocnictwa na piśmie: dane właściciela i pełnomocnika, dane auta (VIN, nr rej.), zakres (sprzedaż), podpis właściciela; do tego kopia dowodu właściciela. Zadzwoń do właściciela przy sprzedawcy. Bez tego — nie kupujesz, choćby cena była świetna.",
+              "how": "„Sprzedaję za brata/kolegę” wymaga pełnomocnictwa na piśmie: dane właściciela (zgodne z dowodem rejestracyjnym) i pełnomocnika, dane auta (VIN, nr rej.), zakres (sprzedaż), podpis właściciela. Zadzwoń do właściciela przy sprzedawcy. Bez tego — nie kupujesz, choćby cena była świetna.",
               "why": "Bez pełnomocnictwa właściciel może zażądać zwrotu auta, a Ty zostaniesz z roszczeniem do „kolegi”.",
               "severity": "red",
               "flag_label": "Sprzedaje osoba trzecia bez pisemnego pełnomocnictwa właściciela",
@@ -1427,10 +1465,10 @@
             {
               "id": "p2s3i4",
               "text": "Test mObywatel: „pokaż to auto w Moich pojazdach”",
-              "how": "Poproś sprzedawcę, żeby w swojej aplikacji mObywatel otworzył „Moje pojazdy” — widać tam pojazdy, których jest właścicielem lub współwłaścicielem, z VIN, terminem badania i OC. Auto na liście = mocne potwierdzenie własności. Nie każdy używa aplikacji, więc odmowa nie przesądza — ale „mam aplikację, tylko tego auta tam nie ma” przesądza.",
+              "how": "Poproś sprzedawcę, żeby w swojej aplikacji mObywatel otworzył „Moje pojazdy” — widać tam pojazdy, których jest właścicielem lub współwłaścicielem, z VIN, terminem badania i OC. Auto na liście = mocne potwierdzenie własności. Aplikacja nie jest obowiązkowa, więc jej brak niczego nie przesądza. Ale „mam aplikację, tylko tego auta tam nie ma” oznacza, że w ewidencji właścicielem jest ktoś inny — wróć do dokumentów.",
               "why": "Trzydzieści sekund, których żaden „sprzedający w imieniu kuzyna” nie przejdzie.",
               "severity": "yellow",
-              "flag_label": "Sprzedawca nie potrafi pokazać auta w mObywatel mimo deklarowanej własności",
+              "flag_label": "Sprzedawca ma mObywatel, ale auta nie ma w „Moich pojazdach” mimo deklarowanej własności",
               "dealbreaker": false,
               "photo": false,
               "input": null,
@@ -1442,17 +1480,17 @@
                 "type": "choice",
                 "options": [
                   {
-                    "label": "Pokazał w „Moich pojazdach”",
+                    "label": "Pokazał — auto jest na liście",
                     "state": "ok",
                     "v": "good"
                   },
                   {
-                    "label": "Nie chce / kręci",
+                    "label": "Ma aplikację, auta na liście nie ma",
                     "state": "uwaga",
                     "v": "bad"
                   }
                 ],
-                "skip": "Nie ma mObywatela"
+                "skip": "Nie używa aplikacji"
               }
             },
             {
@@ -1550,12 +1588,12 @@
                     "v": "good"
                   },
                   {
-                    "label": "Niekompletna",
+                    "label": "Niekompletna / brak książki",
                     "state": "uwaga",
                     "v": "mid"
                   },
                   {
-                    "label": "Brak / przebiegi nie rosną",
+                    "label": "Wpisy z przebiegami, które maleją",
                     "state": "problem",
                     "v": "bad"
                   }
@@ -1565,7 +1603,7 @@
             {
               "id": "p2s4i3",
               "text": "Duże serwisy: rozrząd, sprzęgło, olej w skrzyni — faktura czy „na gębę”?",
-              "how": "Zapytaj, kiedy i gdzie wymieniono rozrząd (jeśli pasek), sprzęgło, olej w skrzyni automatycznej, płyn hamulcowy. Każda odpowiedź bez faktury to deklaracja, nie fakt — zapisz jako uwagę do negocjacji, bo ten koszt może być Twój.",
+              "how": "Zapytaj, kiedy i gdzie wymieniono rozrząd (jeśli pasek — ustal interwał producenta dla tego silnika; łańcuch nie ma stałego terminu, ale ma objawy), sprzęgło, olej w skrzyni automatycznej, płyn hamulcowy. Każda odpowiedź bez faktury to deklaracja, nie fakt — zapisz jako uwagę do negocjacji, bo ten koszt może być Twój. Napis markerem na osłonie to nie dokument.",
               "why": "„Rozrząd był robiony” bez papieru znaczy tyle, co „nie wiem”.",
               "severity": "yellow",
               "flag_label": "Brak dowodu wymiany rozrządu/dużych serwisów — tylko deklaracja",
@@ -1682,7 +1720,7 @@
                   },
                   {
                     "label": "Któryś nie działa",
-                    "state": "problem",
+                    "state": "uwaga",
                     "v": "broken"
                   }
                 ],
@@ -1716,6 +1754,48 @@
                     "state": "ok",
                     "v": "none"
                   }
+                ]
+              }
+            },
+            {
+              "id": "p2s4i8",
+              "text": "Instalacja LPG: wpis „GAZ” w dowodzie, dokumenty i termin badania zbiornika",
+              "how": "Na zbiorniku (w bagażniku lub pod autem przy zbiorniku toroidalnym) jest tabliczka z datą produkcji: zbiornik LPG podlega badaniu dozoru technicznego (TDT) co 10 lat od tej daty. Poproś o dokument instalacji (wyciąg ze świadectwa homologacji od montażysty) i sprawdź adnotację „GAZ” w dowodzie rejestracyjnym. Poproś o uruchomienie na benzynie i przełączenie na gaz: przełączenie ma być płynne, bez szarpania i bez zapachu gazu w kabinie. Niczego nie reguluj sam.",
+              "why": "Bez wpisu i dokumentów auto nie przejdzie badania technicznego; zbiornik po terminie to unieruchomione auto i wydatek rzędu setek złotych.",
+              "severity": "red",
+              "flag_label": "LPG: brak wpisu GAZ / dokumentów instalacji lub zbiornik po terminie badania",
+              "dealbreaker": false,
+              "photo": true,
+              "input": null,
+              "tags": [
+                "dokumenty",
+                "lpg"
+              ],
+              "ctrl": {
+                "type": "choice",
+                "options": [
+                  {
+                    "label": "Wpis, dokumenty i zbiornik w terminie",
+                    "state": "ok",
+                    "v": "good"
+                  },
+                  {
+                    "label": "Zbiornik traci ważność w ciągu roku",
+                    "state": "uwaga",
+                    "v": "soon"
+                  },
+                  {
+                    "label": "Brak wpisu GAZ / dokumentów lub zbiornik po terminie",
+                    "state": "problem",
+                    "v": "bad"
+                  }
+                ],
+                "skip": "Nie ma LPG"
+              },
+              "na_if": {
+                "field": "fuel",
+                "not_in": [
+                  "lpg"
                 ]
               }
             }
@@ -1884,9 +1964,9 @@
           "items": [
             {
               "id": "p3s2i1",
-              "text": "Dach — 3–5 punktów, zapisz najwyższy odczyt",
-              "how": "Przyłóż sondę prostopadle: środek, dwa rogi, przy krawędziach. To Twój wzorzec: dach najrzadziej bywa naprawiany, więc jego wartość to „fabryka” dla tego egzemplarza (chyba że auto dachowało lub miało gradobicie — wtedy szpachla na dachu). Zanotuj najwyższy wynik i porównaj z dachem. Bez miernika: patrz pod kątem pod światło i szukaj różnicy odcienia, „skórki pomarańczy”, pyłu na uszczelkach.",
-              "why": "Bez punktu odniesienia liczby z miernika nic nie znaczą — dach go daje.",
+              "text": "Dach — 3–5 punktów, wpisz typowy odczyt",
+              "how": "Przyłóż sondę prostopadle: środek, dwa rogi, przy krawędziach; wpisz typowy odczyt. Dach zwykle jest najrzadziej naprawiany, ale bywa aluminiowy, szklany (panorama) albo oklejony folią — dlatego bazą dla oceny jest mediana wszystkich zmierzonych elementów (od trzech pomiarów), a nie sam dach. Zmierz co najmniej dach, maskę i dwa elementy boczne. Bez miernika: patrz pod kątem pod światło i szukaj różnicy odcienia, „skórki pomarańczy”, pyłu na uszczelkach.",
+              "why": "Liczby z miernika nic nie znaczą bez porównania z resztą tego samego auta — dlatego mierzysz kilka elementów, nie jeden.",
               "severity": "yellow",
               "flag_label": "Lakier: dach — odczyt podwyższony względem reszty auta (możliwa naprawa)",
               "dealbreaker": false,
@@ -1895,7 +1975,7 @@
                 "type": "number",
                 "label": "Grubość lakieru: dach",
                 "unit": "µm",
-                "hint": "Orientacyjnie: stal fabrycznie najczęściej ok. 80–180 µm (średnio ok. 100–150). Ok. 180–300 µm: element prawdopodobnie lakierowany ponownie. Powyżej ok. 300 µm: możliwa szpachla. To widełki, nie wyrok — porównuj z dachem i sąsiednimi elementami tego samego auta. Aluminium tani miernik (Fe) nie zmierzy."
+                "hint": "Wpisz typowy odczyt z 3–5 punktów (środek i rogi); pojedynczy odstający punkt zapisz w notatce. Wartości fabryczne różnią się między markami i materiałami — liczy się różnica względem reszty tego auta. Tani miernik Fe mierzy tylko stal: na aluminium pokaże błąd lub zero (to nie „gruba warstwa”), plastikowych zderzaków nie zmierzy."
               },
               "panel": "roof",
               "tags": [
@@ -1910,7 +1990,7 @@
             },
             {
               "id": "p3s2i2",
-              "text": "Maska — 3–5 punktów, zapisz najwyższy odczyt",
+              "text": "Maska — 3–5 punktów, wpisz typowy odczyt",
               "how": "Przyłóż sondę prostopadle: środek, dwa rogi, przy krawędziach. Zmierz też przy przedniej krawędzi (odpryski od kamieni bywają zaprawiane). Jeśli miernik pokazuje błąd lub zero — maska może być aluminiowa; wtedy oceniaj wzrokowo. Zanotuj najwyższy wynik i porównaj z dachem. Bez miernika: patrz pod kątem pod światło i szukaj różnicy odcienia, „skórki pomarańczy”, pyłu na uszczelkach.",
               "why": "Lakierowana maska bywa niewinna (kamienie), ale często idzie w parze z naprawą przodu.",
               "severity": "yellow",
@@ -1921,7 +2001,7 @@
                 "type": "number",
                 "label": "Grubość lakieru: maska",
                 "unit": "µm",
-                "hint": "Orientacyjnie: stal fabrycznie najczęściej ok. 80–180 µm (średnio ok. 100–150). Ok. 180–300 µm: element prawdopodobnie lakierowany ponownie. Powyżej ok. 300 µm: możliwa szpachla. To widełki, nie wyrok — porównuj z dachem i sąsiednimi elementami tego samego auta. Aluminium tani miernik (Fe) nie zmierzy."
+                "hint": "Wpisz typowy odczyt z 3–5 punktów (środek i rogi); pojedynczy odstający punkt zapisz w notatce. Wartości fabryczne różnią się między markami i materiałami — liczy się różnica względem reszty tego auta. Tani miernik Fe mierzy tylko stal: na aluminium pokaże błąd lub zero (to nie „gruba warstwa”), plastikowych zderzaków nie zmierzy."
               },
               "panel": "hood",
               "tags": [
@@ -1936,7 +2016,7 @@
             },
             {
               "id": "p3s2i3",
-              "text": "Błotnik przedni lewy — 3–5 punktów, zapisz najwyższy odczyt",
+              "text": "Błotnik przedni lewy — 3–5 punktów, wpisz typowy odczyt",
               "how": "Przyłóż sondę prostopadle: środek, dwa rogi, przy krawędziach. Zmierz górę przy masce, bok przy drzwiach i dół przy progu. Zajrzyj na śruby mocujące błotnik pod maską: ślady klucza = błotnik był zdejmowany. Zanotuj najwyższy wynik i porównaj z dachem. Bez miernika: patrz pod kątem pod światło i szukaj różnicy odcienia, „skórki pomarańczy”, pyłu na uszczelkach.",
               "why": "Błotnik przedni to najczęściej wymieniany element po stłuczce — łatwo go podmienić, trudniej dopasować.",
               "severity": "yellow",
@@ -1947,7 +2027,7 @@
                 "type": "number",
                 "label": "Grubość lakieru: błotnik przedni lewy",
                 "unit": "µm",
-                "hint": "Orientacyjnie: stal fabrycznie najczęściej ok. 80–180 µm (średnio ok. 100–150). Ok. 180–300 µm: element prawdopodobnie lakierowany ponownie. Powyżej ok. 300 µm: możliwa szpachla. To widełki, nie wyrok — porównuj z dachem i sąsiednimi elementami tego samego auta. Aluminium tani miernik (Fe) nie zmierzy."
+                "hint": "Wpisz typowy odczyt z 3–5 punktów (środek i rogi); pojedynczy odstający punkt zapisz w notatce. Wartości fabryczne różnią się między markami i materiałami — liczy się różnica względem reszty tego auta. Tani miernik Fe mierzy tylko stal: na aluminium pokaże błąd lub zero (to nie „gruba warstwa”), plastikowych zderzaków nie zmierzy."
               },
               "panel": "fl_fender",
               "tags": [
@@ -1962,7 +2042,7 @@
             },
             {
               "id": "p3s2i4",
-              "text": "Drzwi przednie lewe — 3–5 punktów, zapisz najwyższy odczyt",
+              "text": "Drzwi przednie lewe — 3–5 punktów, wpisz typowy odczyt",
               "how": "Przyłóż sondę prostopadle: środek, dwa rogi, przy krawędziach. Zmierz środek, przy klamce, przy dolnej krawędzi i w okolicy słupka. Sprawdź krawędź dolną od wewnątrz: tam widać granicę lakierowania. Zanotuj najwyższy wynik i porównaj z dachem. Bez miernika: patrz pod kątem pod światło i szukaj różnicy odcienia, „skórki pomarańczy”, pyłu na uszczelkach.",
               "why": "Wysoki odczyt na drzwiach kierowcy przy „bezwypadkowym” to najczęstsza konfrontacja z opowieścią sprzedawcy.",
               "severity": "yellow",
@@ -1973,7 +2053,7 @@
                 "type": "number",
                 "label": "Grubość lakieru: drzwi przednie lewe",
                 "unit": "µm",
-                "hint": "Orientacyjnie: stal fabrycznie najczęściej ok. 80–180 µm (średnio ok. 100–150). Ok. 180–300 µm: element prawdopodobnie lakierowany ponownie. Powyżej ok. 300 µm: możliwa szpachla. To widełki, nie wyrok — porównuj z dachem i sąsiednimi elementami tego samego auta. Aluminium tani miernik (Fe) nie zmierzy."
+                "hint": "Wpisz typowy odczyt z 3–5 punktów (środek i rogi); pojedynczy odstający punkt zapisz w notatce. Wartości fabryczne różnią się między markami i materiałami — liczy się różnica względem reszty tego auta. Tani miernik Fe mierzy tylko stal: na aluminium pokaże błąd lub zero (to nie „gruba warstwa”), plastikowych zderzaków nie zmierzy."
               },
               "panel": "fl_door",
               "tags": [
@@ -1988,7 +2068,7 @@
             },
             {
               "id": "p3s2i5",
-              "text": "Drzwi tylne lewe — 3–5 punktów, zapisz najwyższy odczyt",
+              "text": "Drzwi tylne lewe — 3–5 punktów, wpisz typowy odczyt",
               "how": "Przyłóż sondę prostopadle: środek, dwa rogi, przy krawędziach. Środek, dół, okolice klamki i tylnej krawędzi (styk z ćwiartką). Zanotuj najwyższy wynik i porównaj z dachem. Bez miernika: patrz pod kątem pod światło i szukaj różnicy odcienia, „skórki pomarańczy”, pyłu na uszczelkach.",
               "why": "Uszkodzenia boku rzadko kończą się na jednym elemencie — porównaj z sąsiednimi.",
               "severity": "yellow",
@@ -1999,7 +2079,7 @@
                 "type": "number",
                 "label": "Grubość lakieru: drzwi tylne lewe",
                 "unit": "µm",
-                "hint": "Orientacyjnie: stal fabrycznie najczęściej ok. 80–180 µm (średnio ok. 100–150). Ok. 180–300 µm: element prawdopodobnie lakierowany ponownie. Powyżej ok. 300 µm: możliwa szpachla. To widełki, nie wyrok — porównuj z dachem i sąsiednimi elementami tego samego auta. Aluminium tani miernik (Fe) nie zmierzy."
+                "hint": "Wpisz typowy odczyt z 3–5 punktów (środek i rogi); pojedynczy odstający punkt zapisz w notatce. Wartości fabryczne różnią się między markami i materiałami — liczy się różnica względem reszty tego auta. Tani miernik Fe mierzy tylko stal: na aluminium pokaże błąd lub zero (to nie „gruba warstwa”), plastikowych zderzaków nie zmierzy."
               },
               "panel": "rl_door",
               "tags": [
@@ -2014,7 +2094,7 @@
             },
             {
               "id": "p3s2i6",
-              "text": "Ćwiartka tylna lewa (błotnik tylny) — 3–5 punktów, zapisz najwyższy odczyt",
+              "text": "Ćwiartka tylna lewa (błotnik tylny) — 3–5 punktów, wpisz typowy odczyt",
               "how": "Przyłóż sondę prostopadle: środek, dwa rogi, przy krawędziach. Zmierz nad kołem, przy lampie i przy klapie. Ćwiartka jest zespawana z nadwoziem — jej naprawa to prawdziwa blacharka, nie wymiana na śruby. Zajrzyj do nadkola i pod uszczelkę bagażnika: świeży lakier, ślady szlifowania. Zanotuj najwyższy wynik i porównaj z dachem. Bez miernika: patrz pod kątem pod światło i szukaj różnicy odcienia, „skórki pomarańczy”, pyłu na uszczelkach.",
               "why": "Szpachla na ćwiartce zwykle oznacza poważniejszą naprawę tyłu, nie parkingową rysę.",
               "severity": "yellow",
@@ -2025,7 +2105,7 @@
                 "type": "number",
                 "label": "Grubość lakieru: ćwiartka tylna lewa (błotnik tylny)",
                 "unit": "µm",
-                "hint": "Orientacyjnie: stal fabrycznie najczęściej ok. 80–180 µm (średnio ok. 100–150). Ok. 180–300 µm: element prawdopodobnie lakierowany ponownie. Powyżej ok. 300 µm: możliwa szpachla. To widełki, nie wyrok — porównuj z dachem i sąsiednimi elementami tego samego auta. Aluminium tani miernik (Fe) nie zmierzy."
+                "hint": "Wpisz typowy odczyt z 3–5 punktów (środek i rogi); pojedynczy odstający punkt zapisz w notatce. Wartości fabryczne różnią się między markami i materiałami — liczy się różnica względem reszty tego auta. Tani miernik Fe mierzy tylko stal: na aluminium pokaże błąd lub zero (to nie „gruba warstwa”), plastikowych zderzaków nie zmierzy."
               },
               "panel": "rl_quarter",
               "tags": [
@@ -2040,7 +2120,7 @@
             },
             {
               "id": "p3s2i7",
-              "text": "Klapa bagażnika — 3–5 punktów, zapisz najwyższy odczyt",
+              "text": "Klapa bagażnika — 3–5 punktów, wpisz typowy odczyt",
               "how": "Przyłóż sondę prostopadle: środek, dwa rogi, przy krawędziach. Środek, okolice emblematu, dolna krawędź. Jeśli odczyt błędny/zerowy — klapa może być aluminiowa lub plastikowa; wtedy sprawdź od wewnątrz ślady uszczelniacza i lakieru. Zanotuj najwyższy wynik i porównaj z dachem. Bez miernika: patrz pod kątem pod światło i szukaj różnicy odcienia, „skórki pomarańczy”, pyłu na uszczelkach.",
               "why": "Lakierowana klapa + nowa lampa + inny odczyt na ćwiartce = uderzenie w tył.",
               "severity": "yellow",
@@ -2051,7 +2131,7 @@
                 "type": "number",
                 "label": "Grubość lakieru: klapa bagażnika",
                 "unit": "µm",
-                "hint": "Orientacyjnie: stal fabrycznie najczęściej ok. 80–180 µm (średnio ok. 100–150). Ok. 180–300 µm: element prawdopodobnie lakierowany ponownie. Powyżej ok. 300 µm: możliwa szpachla. To widełki, nie wyrok — porównuj z dachem i sąsiednimi elementami tego samego auta. Aluminium tani miernik (Fe) nie zmierzy."
+                "hint": "Wpisz typowy odczyt z 3–5 punktów (środek i rogi); pojedynczy odstający punkt zapisz w notatce. Wartości fabryczne różnią się między markami i materiałami — liczy się różnica względem reszty tego auta. Tani miernik Fe mierzy tylko stal: na aluminium pokaże błąd lub zero (to nie „gruba warstwa”), plastikowych zderzaków nie zmierzy."
               },
               "panel": "trunk",
               "tags": [
@@ -2066,7 +2146,7 @@
             },
             {
               "id": "p3s2i8",
-              "text": "Ćwiartka tylna prawa (błotnik tylny) — 3–5 punktów, zapisz najwyższy odczyt",
+              "text": "Ćwiartka tylna prawa (błotnik tylny) — 3–5 punktów, wpisz typowy odczyt",
               "how": "Przyłóż sondę prostopadle: środek, dwa rogi, przy krawędziach. Nad kołem, przy lampie, przy klapie; zajrzyj do nadkola i pod uszczelkę bagażnika. Zanotuj najwyższy wynik i porównaj z dachem. Bez miernika: patrz pod kątem pod światło i szukaj różnicy odcienia, „skórki pomarańczy”, pyłu na uszczelkach.",
               "why": "Prawa strona częściej „spotyka” słupki i krawężniki — nie pomijaj jej.",
               "severity": "yellow",
@@ -2077,7 +2157,7 @@
                 "type": "number",
                 "label": "Grubość lakieru: ćwiartka tylna prawa (błotnik tylny)",
                 "unit": "µm",
-                "hint": "Orientacyjnie: stal fabrycznie najczęściej ok. 80–180 µm (średnio ok. 100–150). Ok. 180–300 µm: element prawdopodobnie lakierowany ponownie. Powyżej ok. 300 µm: możliwa szpachla. To widełki, nie wyrok — porównuj z dachem i sąsiednimi elementami tego samego auta. Aluminium tani miernik (Fe) nie zmierzy."
+                "hint": "Wpisz typowy odczyt z 3–5 punktów (środek i rogi); pojedynczy odstający punkt zapisz w notatce. Wartości fabryczne różnią się między markami i materiałami — liczy się różnica względem reszty tego auta. Tani miernik Fe mierzy tylko stal: na aluminium pokaże błąd lub zero (to nie „gruba warstwa”), plastikowych zderzaków nie zmierzy."
               },
               "panel": "rr_quarter",
               "tags": [
@@ -2092,7 +2172,7 @@
             },
             {
               "id": "p3s2i9",
-              "text": "Drzwi tylne prawe — 3–5 punktów, zapisz najwyższy odczyt",
+              "text": "Drzwi tylne prawe — 3–5 punktów, wpisz typowy odczyt",
               "how": "Przyłóż sondę prostopadle: środek, dwa rogi, przy krawędziach. Środek, dół, klamka, tylna krawędź. Zanotuj najwyższy wynik i porównaj z dachem. Bez miernika: patrz pod kątem pod światło i szukaj różnicy odcienia, „skórki pomarańczy”, pyłu na uszczelkach.",
               "why": "Dwa sąsiednie elementy z podwyższonym odczytem to już naprawa boku, nie przypadek.",
               "severity": "yellow",
@@ -2103,7 +2183,7 @@
                 "type": "number",
                 "label": "Grubość lakieru: drzwi tylne prawe",
                 "unit": "µm",
-                "hint": "Orientacyjnie: stal fabrycznie najczęściej ok. 80–180 µm (średnio ok. 100–150). Ok. 180–300 µm: element prawdopodobnie lakierowany ponownie. Powyżej ok. 300 µm: możliwa szpachla. To widełki, nie wyrok — porównuj z dachem i sąsiednimi elementami tego samego auta. Aluminium tani miernik (Fe) nie zmierzy."
+                "hint": "Wpisz typowy odczyt z 3–5 punktów (środek i rogi); pojedynczy odstający punkt zapisz w notatce. Wartości fabryczne różnią się między markami i materiałami — liczy się różnica względem reszty tego auta. Tani miernik Fe mierzy tylko stal: na aluminium pokaże błąd lub zero (to nie „gruba warstwa”), plastikowych zderzaków nie zmierzy."
               },
               "panel": "rr_door",
               "tags": [
@@ -2118,7 +2198,7 @@
             },
             {
               "id": "p3s2i10",
-              "text": "Drzwi przednie prawe — 3–5 punktów, zapisz najwyższy odczyt",
+              "text": "Drzwi przednie prawe — 3–5 punktów, wpisz typowy odczyt",
               "how": "Przyłóż sondę prostopadle: środek, dwa rogi, przy krawędziach. Środek, klamka, dolna krawędź, okolica słupka. Zanotuj najwyższy wynik i porównaj z dachem. Bez miernika: patrz pod kątem pod światło i szukaj różnicy odcienia, „skórki pomarańczy”, pyłu na uszczelkach.",
               "why": "Element po elemencie budujesz mapę auta — luki w niej wypełni sprzedawca.",
               "severity": "yellow",
@@ -2129,7 +2209,7 @@
                 "type": "number",
                 "label": "Grubość lakieru: drzwi przednie prawe",
                 "unit": "µm",
-                "hint": "Orientacyjnie: stal fabrycznie najczęściej ok. 80–180 µm (średnio ok. 100–150). Ok. 180–300 µm: element prawdopodobnie lakierowany ponownie. Powyżej ok. 300 µm: możliwa szpachla. To widełki, nie wyrok — porównuj z dachem i sąsiednimi elementami tego samego auta. Aluminium tani miernik (Fe) nie zmierzy."
+                "hint": "Wpisz typowy odczyt z 3–5 punktów (środek i rogi); pojedynczy odstający punkt zapisz w notatce. Wartości fabryczne różnią się między markami i materiałami — liczy się różnica względem reszty tego auta. Tani miernik Fe mierzy tylko stal: na aluminium pokaże błąd lub zero (to nie „gruba warstwa”), plastikowych zderzaków nie zmierzy."
               },
               "panel": "fr_door",
               "tags": [
@@ -2144,7 +2224,7 @@
             },
             {
               "id": "p3s2i11",
-              "text": "Błotnik przedni prawy — 3–5 punktów, zapisz najwyższy odczyt",
+              "text": "Błotnik przedni prawy — 3–5 punktów, wpisz typowy odczyt",
               "how": "Przyłóż sondę prostopadle: środek, dwa rogi, przy krawędziach. Góra przy masce, bok przy drzwiach, dół przy progu; śruby pod maską. Zanotuj najwyższy wynik i porównaj z dachem. Bez miernika: patrz pod kątem pod światło i szukaj różnicy odcienia, „skórki pomarańczy”, pyłu na uszczelkach.",
               "why": "Wymieniony błotnik przedni prawy bywa jedynym śladem po naprawionym przodzie.",
               "severity": "yellow",
@@ -2155,7 +2235,7 @@
                 "type": "number",
                 "label": "Grubość lakieru: błotnik przedni prawy",
                 "unit": "µm",
-                "hint": "Orientacyjnie: stal fabrycznie najczęściej ok. 80–180 µm (średnio ok. 100–150). Ok. 180–300 µm: element prawdopodobnie lakierowany ponownie. Powyżej ok. 300 µm: możliwa szpachla. To widełki, nie wyrok — porównuj z dachem i sąsiednimi elementami tego samego auta. Aluminium tani miernik (Fe) nie zmierzy."
+                "hint": "Wpisz typowy odczyt z 3–5 punktów (środek i rogi); pojedynczy odstający punkt zapisz w notatce. Wartości fabryczne różnią się między markami i materiałami — liczy się różnica względem reszty tego auta. Tani miernik Fe mierzy tylko stal: na aluminium pokaże błąd lub zero (to nie „gruba warstwa”), plastikowych zderzaków nie zmierzy."
               },
               "panel": "fr_fender",
               "tags": [
@@ -2170,7 +2250,7 @@
             },
             {
               "id": "p3s2i12",
-              "text": "Słupki i progi (punkty kontrolne) — 3–5 punktów, zapisz najwyższy odczyt",
+              "text": "Słupki i progi (punkty kontrolne) — 3–5 punktów, wpisz typowy odczyt",
               "how": "Przyłóż sondę prostopadle: środek, dwa rogi, przy krawędziach. Zmierz słupek A i B po obu stronach (przy otwartych drzwiach) oraz progi w 2–3 punktach. To elementy konstrukcyjne: podwyższony odczyt tutaj waży więcej niż na drzwiach. Zanotuj najwyższy wynik i porównaj z dachem. Bez miernika: patrz pod kątem pod światło i szukaj różnicy odcienia, „skórki pomarańczy”, pyłu na uszczelkach.",
               "why": "Naprawa słupka lub progu oznacza, że auto dostało mocno — to nie kategoria „rysa parkingowa”.",
               "severity": "yellow",
@@ -2181,7 +2261,7 @@
                 "type": "number",
                 "label": "Grubość lakieru: słupki i progi (punkty kontrolne)",
                 "unit": "µm",
-                "hint": "Orientacyjnie: stal fabrycznie najczęściej ok. 80–180 µm (średnio ok. 100–150). Ok. 180–300 µm: element prawdopodobnie lakierowany ponownie. Powyżej ok. 300 µm: możliwa szpachla. To widełki, nie wyrok — porównuj z dachem i sąsiednimi elementami tego samego auta. Aluminium tani miernik (Fe) nie zmierzy."
+                "hint": "Wpisz typowy odczyt z 3–5 punktów (środek i rogi); pojedynczy odstający punkt zapisz w notatce. Wartości fabryczne różnią się między markami i materiałami — liczy się różnica względem reszty tego auta. Tani miernik Fe mierzy tylko stal: na aluminium pokaże błąd lub zero (to nie „gruba warstwa”), plastikowych zderzaków nie zmierzy."
               },
               "panel": "sills",
               "tags": [
@@ -2263,9 +2343,9 @@
                     "v": "mid"
                   },
                   {
-                    "label": "Kilka elementów",
-                    "state": "problem",
-                    "v": "bad"
+                    "label": "Kilka elementów w innym odcieniu",
+                    "state": "uwaga",
+                    "v": "many"
                   }
                 ]
               }
@@ -2273,7 +2353,7 @@
             {
               "id": "p3s3i2",
               "text": "Struktura lakieru: „skórka pomarańczy”, zacieki, wtrącenia",
-              "how": "Patrz na odbicie latarki lub nieba w lakierze: fabryczna faktura jest drobna i jednolita na całym aucie. Grubsza „skórka pomarańczy”, zacieki przy krawędziach, pyłki pod lakierem, matowe pasy przy uszczelkach — to lakier nakładany w warsztacie.",
+              "how": "Porównuj strukturę lakieru między elementami pod światło: fabryczna „skórka pomarańczy” bywa normalna, ale element wyraźnie gładszy lub wyraźnie bardziej pofalowany niż sąsiednie, zacieki i wtrącenia pod lakierem to ślady lakierowania poza fabryką.",
               "why": "Struktura lakieru mówi prawdę nawet wtedy, gdy kolor dobrano idealnie.",
               "severity": "yellow",
               "flag_label": "Nierówna struktura lakieru (element lakierowany w warsztacie)",
@@ -2368,7 +2448,7 @@
             {
               "id": "p3s4i1",
               "text": "Oznaczenia na szybach: ten sam producent i rok na wszystkich",
-              "how": "Na każdej szybie w rogu znajdź logo producenta i kod z datą: cyfra to ostatnia cyfra roku, kropki wskazują miesiąc (przed cyfrą: styczeń–czerwiec, po cyfrze: lipiec–grudzień). Wszystkie szyby powinny mieć tego samego producenta i rok zbliżony do roku produkcji auta. Jedna inna boczna = włamanie lub uderzenie w bok; inna przednia = odprysk, ale też możliwa kolizja; sfotografuj i zapytaj.",
+              "how": "Na każdej szybie jest oznaczenie producenta i kod roku. Fabryka może używać kilku dostawców, więc liczy się logika: rok na szybie nie późniejszy niż produkcja auta. Jedna szyba nowsza = wymieniona (poproś o powód i, przy autach z kamerą asystentów, o dokument kalibracji); kilka nowszych z tej samej strony = naprawa po zdarzeniu.",
               "why": "Wymieniona szyba to najtrwalszy ślad zdarzenia, którego nie ma w żadnym raporcie.",
               "severity": "yellow",
               "flag_label": "Jedna lub więcej szyb z innym producentem/rokiem niż reszta (wymiana)",
@@ -2382,19 +2462,19 @@
                 "type": "choice",
                 "options": [
                   {
-                    "label": "Wszystkie te same",
+                    "label": "Oznaczenia logiczne (rok nie późniejszy niż auto)",
                     "state": "ok",
                     "v": "good"
                   },
                   {
-                    "label": "Jedna inna",
+                    "label": "Jedna szyba wymieniona",
                     "state": "uwaga",
-                    "v": "mid"
+                    "v": "one"
                   },
                   {
-                    "label": "Kilka innych",
+                    "label": "Kilka wymienionych",
                     "state": "uwaga",
-                    "v": "mid2"
+                    "v": "many"
                   }
                 ]
               }
@@ -2421,12 +2501,12 @@
                     "v": "good"
                   },
                   {
-                    "label": "Odpryski / piaskowanie",
+                    "label": "Odpryski / piaskowanie poza polem widzenia",
                     "state": "uwaga",
                     "v": "mid"
                   },
                   {
-                    "label": "Pęknięcie",
+                    "label": "Pęknięcie lub odprysk w polu widzenia kierowcy",
                     "state": "problem",
                     "v": "bad"
                   }
@@ -2499,8 +2579,8 @@
           "items": [
             {
               "id": "p3s5i1",
-              "text": "Progi: przejedź dłonią pod spodem, naciśnij kciukiem",
-              "how": "Kucnij przy każdym progu. Poświeć latarką na spód i krawędź od strony podwozia, naciśnij kciukiem w kilku punktach: ma być twardo. Pęcherze pod lakierem, „gąbczaste” miejsca, świeży czarny spray tylko na progach, plastikowe nakładki, których nie da się podważyć (zaklejone) — to rdza w toku lub ukrywana.",
+              "text": "Progi: obejrzyj z latarką od spodu krawędzi, przesuń dłonią — bez naciskania na siłę",
+              "how": "Kucnij przy każdym progu. Poświeć latarką na spód i krawędź od strony podwozia, delikatnie przesuń dłonią w rękawiczce (bez naciskania — nie chodzi o wgniatanie blachy). Pęcherze pod lakierem, łuszczenie, świeży czarny spray tylko na progach, plastikowe nakładki zaklejone tak, że nie da się zajrzeć pod spód — to rdza w toku lub ukrywana. Ocenę wytrzymałości zostaw podnośnikowi na SKP.",
               "why": "Próg to element nośny: zgniły próg to koszt i problem na badaniu technicznym, a nie kosmetyka.",
               "severity": "red",
               "flag_label": "Skorodowane progi lub ślady maskowania korozji progów",
@@ -2515,7 +2595,7 @@
                 "type": "choice",
                 "options": [
                   {
-                    "label": "Czysto, twarde",
+                    "label": "Czysto, bez pęcherzy",
                     "state": "ok",
                     "v": "good"
                   },
@@ -2525,7 +2605,7 @@
                     "v": "mid"
                   },
                   {
-                    "label": "Miękkie / dziury / łaty",
+                    "label": "Łuszczenie / dziury / łaty / świeży spray",
                     "state": "problem",
                     "v": "bad"
                   }
@@ -2602,8 +2682,8 @@
             },
             {
               "id": "p3s5i4",
-              "text": "Podłoga, podłużnice, mocowania zawieszenia — od spodu",
-              "how": "Połóż się (kartonik!) i poświeć na podłogę pod fotelami, podłużnice, mocowania wahaczy i sprężyn, wnękę koła zapasowego od spodu. Łuszcząca się blacha, brązowe „łzy”, dziury pod dywanikiem, świeża farba tylko na fragmencie.",
+              "text": "Podłoga, podłużnice, mocowania zawieszenia — z latarką od boku, bez wchodzenia pod auto",
+              "how": "Nie wchodź i nie wsuwaj głowy ani tułowia pod auto stojące na kołach, lewarku czy przypadkowych podporach. Kucnij przy progu i poświeć latarką w głąb: podłoga pod fotelami, podłużnice, mocowania wahaczy i sprężyn; wnękę koła zapasowego obejrzyj od góry z bagażnika. Łuszcząca się blacha, brązowe „łzy”, dziury pod dywanikiem, świeża farba tylko na fragmencie. Całe podwozie obejrzysz dopiero na podnośniku (SKP) — to część Planu B.",
               "why": "Skorodowana podłoga lub podłużnica to auto, które może nie przejść badania — i którego nie da się tanio uratować.",
               "severity": "red",
               "flag_label": "Korozja elementów nośnych (podłoga/podłużnice/mocowania)",
@@ -2618,7 +2698,7 @@
                 "type": "choice",
                 "options": [
                   {
-                    "label": "Czysto, twarde",
+                    "label": "Czysto, bez pęcherzy",
                     "state": "ok",
                     "v": "good"
                   },
@@ -2628,7 +2708,7 @@
                     "v": "mid"
                   },
                   {
-                    "label": "Miękkie / dziury / łaty",
+                    "label": "Łuszczenie / dziury / łaty",
                     "state": "problem",
                     "v": "bad"
                   }
@@ -2644,7 +2724,7 @@
             {
               "id": "p3s6i1",
               "text": "DOT na każdej oponie: rok produkcji, najstarszą wpisz",
-              "how": "Na boku opony znajdź „DOT” i ostatnie 4 cyfry: dwie pierwsze to tydzień, dwie ostatnie rok (np. 2319 = 23. tydzień 2019). Sprawdź wszystkie cztery i koło zapasowe. Wpisz rok najstarszej. Bardzo stare opony (producenci mówią o ok. 10 latach jako granicy) to wymiana od razu, niezależnie od bieżnika.",
+              "how": "Na boku opony znajdź „DOT” i ostatnie 4 cyfry: dwie pierwsze to tydzień, dwie ostatnie rok (np. 2319 = 23. tydzień 2019). Sprawdź wszystkie cztery i koło zapasowe. Wpisz rok najstarszej. Producenci opon zalecają coroczną kontrolę po 5 latach i wymianę po 10 — to zalecenie, nie przepis.",
               "why": "Wiek opony widać dopiero na boku — bieżnik potrafi wyglądać dobrze na oponie twardej jak plastik.",
               "severity": "yellow",
               "flag_label": "Opony stare (wg DOT) — do wymiany niezależnie od bieżnika",
@@ -2727,7 +2807,7 @@
             {
               "id": "p3s6i4",
               "text": "Pary: na jednej osi ten sam model i rozmiar",
-              "how": "Porównaj opony na przedniej osi ze sobą i na tylnej ze sobą: marka, model, rozmiar, indeksy. Różne opony na jednej osi to niezgodność z przepisami (przepisy wymagają jednakowej rzeźby bieżnika na osi) i problem na badaniu. Cztery różne opony mówią o stylu utrzymania całego auta.",
+              "how": "Na jednej osi opony mają być tego samego rozmiaru i tej samej konstrukcji oraz rzeźby bieżnika — tego wymagają przepisy o warunkach technicznych i tego sprawdza diagnosta. Przód i tył mogą się różnić (w części aut różnią się fabrycznie). Różne modele na osi to zwykle oszczędność „na jedną oponę” po przebiciu — pytanie, na czym jeszcze oszczędzano.",
               "why": "Kto oszczędzał na oponach, oszczędzał też na oleju.",
               "severity": "yellow",
               "flag_label": "Różne opony na jednej osi / mieszanka czterech modeli",
@@ -2746,12 +2826,12 @@
                     "v": "good"
                   },
                   {
-                    "label": "Różne modele",
+                    "label": "Różne modele na osi, ta sama rzeźba",
                     "state": "uwaga",
                     "v": "mid"
                   },
                   {
-                    "label": "Różne rozmiary",
+                    "label": "Różne rozmiary lub różna rzeźba bieżnika na jednej osi",
                     "state": "problem",
                     "v": "bad"
                   }
@@ -2761,7 +2841,7 @@
             {
               "id": "p3s6i5",
               "text": "Felgi: pęknięcia, spawy, krawężnikowe obicia, bicie",
-              "how": "Obejrzyj każdą felgę od zewnątrz i od wewnątrz (latarką przez szprychy): pęknięcia przy szprychach, ślady spawania, głębokie obicia rantu, nierówne kołpaki. Mocne uszkodzenia felg = uderzenia w dziury, które dostało też zawieszenie.",
+              "how": "Obejrzyj każdą felgę: pęknięcia przy szprychach i na rancie, ślady spawania, głębokie obicia krawężnikowe, wgniecenia rantu od wewnątrz (poświeć latarką). Bicia koła wzrokiem nie ocenisz — wyjdzie na jeździe (wibracje kierownicy) albo na wyważarce.",
               "why": "Felga przyjmuje uderzenie pierwsza; drugie w kolejce jest zawieszenie.",
               "severity": "yellow",
               "flag_label": "Felgi uszkodzone/naprawiane",
@@ -2899,9 +2979,9 @@
             },
             {
               "id": "p3s7i4",
-              "text": "Ślady spawania, pofalowane podłużnice, łaty — konstrukcja",
-              "how": "Latarką wzdłuż podłużnic (belki od zderzaka w głąb podwozia) z przodu i z tyłu, kielichów, podłogi i pasa przedniego: nierówne, nieregularne szwy spawalnicze inne niż fabryczne punktowe zgrzewy, pofalowana lub „pomarszczona” blacha, wstawiane łaty, uszczelniacz nałożony pędzlem. To ślady po ciężkim wypadku — auto sklejane lub prostowane na ramie.",
-              "why": "Naprawiona konstrukcja nigdy nie zachowa się w kolejnym zderzeniu tak jak fabryczna — to nie temat do negocjacji.",
+              "text": "Ślady spawania, pofalowane podłużnice, łaty — konstrukcja (z góry i od boku, bez wchodzenia pod auto)",
+              "how": "Bez wchodzenia pod auto. Z góry, w komorze silnika: podłużnice (belki biegnące od pasa przedniego w głąb), kielichy amortyzatorów, pas przedni i śruby błotników. Z tyłu: podłoga bagażnika i wnęka koła zapasowego po podniesieniu wykładziny. Od boku, z latarką w nadkolach: początek podłużnic i progi. Szukasz nieregularnych szwów spawalniczych innych niż fabryczne punktowe zgrzewy, pofalowanej lub „pomarszczonej” blachy, wstawianych łat, uszczelniacza nałożonego pędzlem. Całe podwozie zobaczy podnośnik na SKP.",
+              "why": "Prawidłowa naprawa konstrukcji istnieje, ale laik nie odróżni jej od byle jakiej. Dla Ciebie to auto do oceny przez blacharza lub rzeczoznawcę, nie do negocjacji ceny.",
               "severity": "red",
               "flag_label": "Ślady spawania/prostowania elementów konstrukcyjnych (auto po ciężkim wypadku)",
               "dealbreaker": true,
@@ -2921,7 +3001,7 @@
                     "v": "good"
                   },
                   {
-                    "label": "Niepewne (zrób zdjęcie)",
+                    "label": "Niepewne (zrób zdjęcie, pokaż fachowcowi)",
                     "state": "uwaga",
                     "v": "mid"
                   },
@@ -2953,10 +3033,10 @@
             {
               "id": "p4s1i1",
               "text": "Licznik: wpisz przebieg — porównam z ogłoszeniem i Historią pojazdu",
-              "how": "Włącz zapłon i przepisz przebieg co do kilometra. Porównaj z tym, co zapisałeś wczoraj: musi być większy niż ostatni odczyt z badania technicznego w Historii pojazdu i zgodny z ogłoszeniem (kilkadziesiąt km różnicy to normalne). Niższy niż w rejestrze albo niż w ogłoszeniu — kończysz oględziny.",
+              "how": "Włącz zapłon i przepisz przebieg co do kilometra. Porównam z ostatnim odczytem z badania w Historii pojazdu i z ogłoszeniem. Licznik niższy niż wcześniejszy urzędowy odczyt to niespójność, której bez dokumentu wymiany drogomierza nie da się wytłumaczyć — kończysz oględziny. Różnica kilkuset kilometrów wobec ogłoszenia jest normalna; tysięcy — wymaga wyjaśnienia.",
               "why": "To najprostszy w Polsce test na cofnięty licznik i większość kupujących go nie robi.",
               "severity": "red",
-              "flag_label": "Przebieg na liczniku niższy niż w Historii pojazdu / niezgodny z ogłoszeniem",
+              "flag_label": "Przebieg na liczniku niższy niż w Historii pojazdu / niespójny z ogłoszeniem",
               "dealbreaker": true,
               "quick": true,
               "photo": true,
@@ -2979,7 +3059,7 @@
             {
               "id": "p4s1i2",
               "text": "Kierownica: przetarcia i błyszcząca skóra vs deklarowany przebieg",
-              "how": "Obejrzyj wieniec w miejscach „za dziesięć druga” i na dole: wytarta, wyświecona, łuszcząca się skóra, gładkie przyciski bez faktury. Takie zużycie zwykle towarzyszy dużym przebiegom. Nowa kierownica, świeży pokrowiec lub przeszywanie w aucie „z małym przebiegiem” to też sygnał — pytaj dlaczego.",
+              "how": "Kierownica przy kilkudziesięciu tysiącach km ma być matowa i równa; wytarty, błyszczący wieniec przy „80 tys.” to sprzeczność. Ale nowa kierownica lub tapicerka przy dużym przebiegu to też sygnał — ktoś odświeżał auto przed sprzedażą. Zużycie porównuj z całą resztą wnętrza; sam w sobie nie jest dowodem.",
               "why": "Kierownicy nie da się cofnąć śrubokrętem — dlatego się ją wymienia.",
               "severity": "yellow",
               "flag_label": "Zużycie kierownicy niezgodne z deklarowanym przebiegiem (lub kierownica wymieniona)",
@@ -2994,7 +3074,7 @@
                 "type": "choice",
                 "options": [
                   {
-                    "label": "Pasuje do przebiegu",
+                    "label": "Nie widzę sprzeczności z przebiegiem",
                     "state": "ok",
                     "v": "good"
                   },
@@ -3004,9 +3084,9 @@
                     "v": "mid"
                   },
                   {
-                    "label": "Podejrzanie nowe",
+                    "label": "Podejrzanie nowe / wymienione",
                     "state": "uwaga",
-                    "v": "mid2"
+                    "v": "new"
                   }
                 ]
               }
@@ -3029,7 +3109,7 @@
                 "type": "choice",
                 "options": [
                   {
-                    "label": "Pasuje do przebiegu",
+                    "label": "Nie widzę sprzeczności z przebiegiem",
                     "state": "ok",
                     "v": "good"
                   },
@@ -3039,9 +3119,9 @@
                     "v": "mid"
                   },
                   {
-                    "label": "Podejrzanie nowe",
+                    "label": "Podejrzanie nowe / wymienione",
                     "state": "uwaga",
-                    "v": "mid2"
+                    "v": "new"
                   }
                 ]
               }
@@ -3064,7 +3144,7 @@
                 "type": "choice",
                 "options": [
                   {
-                    "label": "Pasuje do przebiegu",
+                    "label": "Nie widzę sprzeczności z przebiegiem",
                     "state": "ok",
                     "v": "good"
                   },
@@ -3074,9 +3154,9 @@
                     "v": "mid"
                   },
                   {
-                    "label": "Podejrzanie nowe",
+                    "label": "Podejrzanie nowe / wymienione",
                     "state": "uwaga",
-                    "v": "mid2"
+                    "v": "new"
                   }
                 ]
               }
@@ -3099,7 +3179,7 @@
                 "type": "choice",
                 "options": [
                   {
-                    "label": "Pasuje do przebiegu",
+                    "label": "Nie widzę sprzeczności z przebiegiem",
                     "state": "ok",
                     "v": "good"
                   },
@@ -3109,9 +3189,9 @@
                     "v": "mid"
                   },
                   {
-                    "label": "Podejrzanie nowe",
+                    "label": "Podejrzanie nowe / wymienione",
                     "state": "uwaga",
-                    "v": "mid2"
+                    "v": "new"
                   }
                 ]
               }
@@ -3159,12 +3239,12 @@
             },
             {
               "id": "p4s2i2",
-              "text": "Pod dywanikami: wilgoć, muł, rdza na szynach foteli i śrubach",
-              "how": "Wyjmij dywaniki, wciśnij palcem wykładzinę w rogach i pod pedałami: ma być sucha. Podnieś brzeg wykładziny (przy progu), poświeć na podłogę: piasek, muł, linia wodna, osady na wiązkach, rdza na szynach foteli i śrubach mocujących pasy/fotele. To klasyczne ślady auta po zalaniu.",
+              "text": "Pod dywanikami: wilgoć, muł, linia wodna, rdza na szynach foteli i śrubach",
+              "how": "Wyjmij dywaniki (te wyjmowane), wciśnij palcem wykładzinę w rogach i pod pedałami: ma być sucha. Wsuń dłoń pod wykładzinę przy progu tak głęboko, jak wejdzie bez szarpania i podważania plastików — nie demontuj niczego. Szukasz zestawu śladów, nie jednego: piasek lub muł w zakamarkach, linia wodna na wykładzinie, osady na wiązkach, rdza na szynach foteli i śrubach mocujących pasy i fotele, zapach stęchlizny. Pojedyncza wilgoć to zwykle przeciek (uszczelka, kratka odpływu) — zapisz jako uwagę.",
               "why": "Zalane auto to elektronika, która zacznie umierać po kolei — i korozja od środka.",
               "severity": "red",
-              "flag_label": "Ślady zalania: wilgoć/muł pod wykładziną, rdza na szynach i śrubach",
-              "dealbreaker": false,
+              "flag_label": "Zestaw śladów zalania: muł/linia wodna pod wykładziną, rdza na szynach i śrubach",
+              "dealbreaker": true,
               "photo": true,
               "input": null,
               "tags": [
@@ -3180,17 +3260,18 @@
                     "v": "good"
                   },
                   {
-                    "label": "Wilgoć",
+                    "label": "Wilgoć w jednym miejscu (przeciek)",
                     "state": "uwaga",
                     "v": "mid"
                   },
                   {
-                    "label": "Muł, rdza na szynach",
+                    "label": "Muł, linia wodna, rdza na szynach — kilka śladów naraz",
                     "state": "problem",
                     "v": "bad"
                   }
                 ]
-              }
+              },
+              "quick": true
             },
             {
               "id": "p4s2i3",
@@ -3265,11 +3346,11 @@
           "items": [
             {
               "id": "p4s3i1",
-              "text": "Zapłon bez odpalania: wszystkie kontrolki zapalają się i gasną",
-              "how": "Przekręć kluczyk do pozycji zapłonu (lub wciśnij start bez sprzęgła/hamulca). Wszystkie kontrolki powinny zapalić się na chwilę (autotest), a większość zgasnąć po kilku sekundach. Zrób zdjęcie deski w momencie, gdy świecą wszystkie. Brak jednej z typowych (silnik, ABS, ESP, airbag, akumulator) = ktoś wyjął żarówkę lub zamaskował błąd.",
+              "text": "Zapłon bez odpalania: autotest kontrolek — czy alarmowe się pokazały i zgasły",
+              "how": "Przekręć kluczyk do pozycji zapłonu (lub wciśnij start bez sprzęgła/hamulca). Kontrolki zapalają się na chwilę (autotest) i większość gaśnie po kilku sekundach. Układ różni się między modelami — nie każde auto zapala wszystkie ikony naraz. Liczy się, czy pokazały się i zgasły alarmowe: silnik (check engine), ABS, ESP, airbag/SRS, akumulator, ciśnienie oleju. Zrób zdjęcie deski w momencie, gdy świecą. Brak którejś z tych sześciu = ktoś mógł wyjąć żarówkę lub zamaskować błąd; kontrolka gasnąca dokładnie w tej samej chwili co inna — zapisz.",
               "why": "Kontrolka, której nie ma, to błąd, którego sprzedawca nie chce Ci pokazać.",
               "severity": "red",
-              "flag_label": "Nie wszystkie kontrolki zapalają się w autoteście (możliwe zamaskowanie błędu)",
+              "flag_label": "Nie wszystkie kontrolki alarmowe pokazują się w autoteście (możliwe zamaskowanie błędu)",
               "dealbreaker": false,
               "quick": true,
               "photo": true,
@@ -3282,19 +3363,19 @@
                 "type": "choice",
                 "options": [
                   {
-                    "label": "Wszystkie zapalają się i gasną",
+                    "label": "Alarmowe zapaliły się i zgasły",
                     "state": "ok",
                     "v": "ok"
                   },
                   {
-                    "label": "Któraś się nie zapala",
-                    "state": "problem",
-                    "v": "missing"
+                    "label": "Nie wiem, które powinny",
+                    "state": "uwaga",
+                    "v": "unsure"
                   },
                   {
-                    "label": "Któraś nie gaśnie",
+                    "label": "Któraś z alarmowych nie zapala się",
                     "state": "problem",
-                    "v": "stays"
+                    "v": "missing"
                   }
                 ]
               }
@@ -3302,10 +3383,10 @@
             {
               "id": "p4s3i2",
               "text": "Kontrolka AIRBAG: MUSI się zapalić i zgasnąć",
-              "how": "Szukaj żółtej/czerwonej ikony poduszki (lub napisu AIRBAG/SRS) w autoteście. Prawidłowo: świeci kilka sekund i gaśnie. Nie zapala się wcale = najczęściej wyjęta żarówka lub „oszukany” sterownik po wypadku, w którym poduszki wystrzeliły. Świeci stale = błąd systemu — poduszki mogą nie zadziałać.",
+              "how": "Szukaj żółtej/czerwonej ikony poduszki (lub napisu AIRBAG/SRS) w autoteście. Prawidłowo: świeci kilka sekund i gaśnie. Nie zapala się wcale albo świeci stale = nieprawidłowy autotest: możliwa wyjęta żarówka, „oszukany” sterownik po wystrzale poduszek albo błąd systemu — przed zakupem diagnostyka SRS komputerem, nie „na oko”. Gaśnięcie dokładnie w tej samej chwili co inna kontrolka bywa śladem mostka na innej diodzie — też do diagnostyki.",
               "why": "Auto bez działających poduszek wygląda jak auto z poduszkami — do pierwszego wypadku.",
               "severity": "red",
-              "flag_label": "Kontrolka airbag nie zapala się przy zapłonie lub świeci stale",
+              "flag_label": "Kontrolka airbag: nieprawidłowy autotest (nie zapala się / świeci stale)",
               "dealbreaker": true,
               "quick": true,
               "photo": true,
@@ -3324,6 +3405,11 @@
                     "v": "ok"
                   },
                   {
+                    "label": "Gaśnie dokładnie razem z inną kontrolką (podejrzenie mostka)",
+                    "state": "uwaga",
+                    "v": "bridge"
+                  },
+                  {
                     "label": "Nie zapala się",
                     "state": "problem",
                     "v": "missing"
@@ -3338,8 +3424,8 @@
             },
             {
               "id": "p4s3i3",
-              "text": "Po odpaleniu żadna kontrolka nie świeci (silnik, ABS, ESP, akumulator, olej)",
-              "how": "Ten punkt odhaczasz dopiero po zimnym starcie w następnej fazie — zostaw go na później. Każda kontrolka świecąca po uruchomieniu to zapisany błąd. „To tylko czujnik” bez dowodu (faktura, odczyt) to deklaracja, nie diagnoza.",
+              "text": "Po odpaleniu: żadna alarmowa nie świeci (silnik, ABS, ESP, akumulator, olej, airbag)",
+              "how": "Ten punkt odhaczasz dopiero po zimnym starcie w następnej fazie — zostaw go na później. Zwykłe kontrolki statusu (światła, pasy, hamulec postojowy, tryb jazdy) mogą świecić. Żółta ostrzegawcza (check engine, ESP, DPF, ciśnienie w oponach) = zapisany błąd do wyjaśnienia; czerwona (olej, akumulator, hamulce, temperatura, airbag) = nie jedź na jazdę próbną, dopóki nie wiesz dlaczego. „To tylko czujnik” bez dowodu (faktura, odczyt) to deklaracja, nie diagnoza.",
               "why": "Świecąca kontrolka to jedyny moment, w którym auto samo mówi Ci, co mu jest.",
               "severity": "red",
               "flag_label": "Kontrolka świeci po uruchomieniu silnika (błąd niezdiagnozowany)",
@@ -3354,14 +3440,19 @@
                 "type": "choice",
                 "options": [
                   {
-                    "label": "Nic nie świeci",
+                    "label": "Nic poza statusem (światła, pasy, ręczny)",
                     "state": "ok",
                     "v": "good"
                   },
                   {
-                    "label": "Świeci (która? — notatka)",
+                    "label": "Świeci żółta ostrzegawcza",
+                    "state": "uwaga",
+                    "v": "yellow"
+                  },
+                  {
+                    "label": "Świeci czerwona lub check engine",
                     "state": "problem",
-                    "v": "bad"
+                    "v": "red"
                   }
                 ]
               }
@@ -3404,7 +3495,7 @@
             {
               "id": "p4s4i2",
               "text": "Klimatyzacja: chłodzi w 1–2 minuty, sprężarka się załącza",
-              "how": "Ten test dokończysz po odpaleniu: włącz A/C na maks. chłodzenie, po 1–2 minutach z nawiewu ma iść wyraźnie zimne powietrze; przy włączaniu słychać lekkie kliknięcie sprężarki i minimalną zmianę obrotów. Powiew ciepły lub „trochę chłodniejszy” = układ nieszczelny lub sprężarka do naprawy. Zapach z nawiewu (stęchły) = parownik.",
+              "how": "Ten test dokończysz po odpaleniu: włącz A/C na maks. chłodzenie, po 1–2 minutach z nawiewu ma iść wyraźnie zimne powietrze. Kliknięcie sprężarki i zmiana obrotów przy włączeniu to cecha starszych układów — w nowszych (sprężarki o zmiennej wydajności, elektryczne w hybrydach) możesz ich nie usłyszeć; oceniaj to, czy chłodzi. Powiew ciepły lub „trochę chłodniejszy” = układ nieszczelny lub sprężarka do naprawy — to usterka, nie cecha. Zapach z nawiewu (stęchły) = parownik.",
               "why": "„Wystarczy nabić” to najczęstsze kłamstwo o klimatyzacji — gaz ucieka, bo coś jest nieszczelne.",
               "severity": "yellow",
               "flag_label": "Klimatyzacja nie chłodzi lub sprężarka się nie załącza",
@@ -3419,19 +3510,19 @@
                 "type": "choice",
                 "options": [
                   {
-                    "label": "Chłodzi, sprężarka pracuje",
+                    "label": "Chłodzi wyraźnie",
                     "state": "ok",
                     "v": "good"
                   },
                   {
                     "label": "Chłodzi słabo",
-                    "state": "uwaga",
-                    "v": "mid"
+                    "state": "problem",
+                    "v": "weak"
                   },
                   {
-                    "label": "Nie chłodzi / nie załącza",
+                    "label": "Nie chłodzi",
                     "state": "problem",
-                    "v": "bad"
+                    "v": "none"
                   }
                 ]
               }
@@ -3629,7 +3720,7 @@
                     "v": "unsure"
                   },
                   {
-                    "label": "Rysy przy emblemacie / inna faktura",
+                    "label": "Rysy / inna faktura / luźny moduł — diagnostyka SRS",
                     "state": "problem",
                     "v": "bad"
                   }
@@ -3704,7 +3795,7 @@
             {
               "id": "p4s6i2",
               "text": "OBD2 (opcjonalnie): błędy, monitory gotowości, przebieg w sterownikach",
-              "how": "Podłącz czytnik pod deską (zwykle nad pedałami), włącz zapłon, uruchom aplikację. Odczytaj błędy zapisane i oczekujące („pending”). Zajrzyj w „monitory gotowości/readiness”: jeśli większość ma status „niegotowy/not ready”, ktoś skasował błędy niedawno — „brak błędów” nic wtedy nie znaczy. Jeśli aplikacja pokazuje przebieg zapisany w sterowniku, porównaj go z licznikiem.",
+              "how": "Podłącz czytnik pod deską (zwykle nad pedałami), włącz zapłon, uruchom aplikację. Odczytaj błędy zapisane i oczekujące („pending”). Zajrzyj w „monitory gotowości/readiness”: większość „niegotowa/not ready” oznacza, że niedawno kasowano błędy — albo odłączano akumulator, albo auto nie przejechało pełnego cyklu; zapytaj o powód. Odczyt przebiegu ze sterownika zależy od modelu i aplikacji — jeśli jest, porównaj z licznikiem.",
               "why": "Kasowanie błędów przed oględzinami to standardowy zabieg — monitory gotowości go zdradzają.",
               "severity": "yellow",
               "flag_label": "OBD2: zapisane błędy lub ślady kasowania błędów tuż przed oględzinami",
@@ -3724,7 +3815,7 @@
                     "v": "good"
                   },
                   {
-                    "label": "Monitory niegotowe / błędy oczekujące",
+                    "label": "Monitory niegotowe / błędy oczekujące — zapytaj o powód",
                     "state": "uwaga",
                     "v": "mid"
                   },
@@ -3735,6 +3826,50 @@
                   }
                 ],
                 "skip": "Nie mam czytnika"
+              }
+            },
+            {
+              "id": "p4s6i3",
+              "text": "Hybryda / elektryk: bateria wysokiego napięcia — raport stanu (SOH), komunikaty, ładowanie",
+              "how": "Poproś o raport stanu baterii (SOH) z serwisu lub aplikacji diagnostycznej i o historię serwisową układu wysokiego napięcia. Na zapłonie sprawdź, czy nie ma komunikatów o układzie hybrydowym / wysokiego napięcia. W elektryku i hybrydzie plug-in podłącz auto do ładowarki choćby na 5 minut: ładowanie ma ruszyć bez błędów. Obudowę baterii pod podłogą oceni tylko podnośnik — to zadanie dla serwisu, nie dla Ciebie. Nie dotykaj pomarańczowych przewodów.",
+              "why": "Bateria to najdroższa część takiego auta, a wzrokiem nie ocenisz jej stanu — bez raportu kupujesz w ciemno.",
+              "severity": "red",
+              "flag_label": "Hybryda/EV: brak raportu stanu baterii lub błąd układu wysokiego napięcia",
+              "dealbreaker": false,
+              "photo": true,
+              "input": null,
+              "tags": [
+                "naped",
+                "bateria"
+              ],
+              "ctrl": {
+                "type": "choice",
+                "options": [
+                  {
+                    "label": "Raport SOH i brak komunikatów",
+                    "state": "ok",
+                    "v": "good"
+                  },
+                  {
+                    "label": "Brak raportu, bez komunikatów",
+                    "state": "uwaga",
+                    "v": "noreport"
+                  },
+                  {
+                    "label": "Komunikat układu HV / błąd ładowania / uszkodzona obudowa",
+                    "state": "problem",
+                    "v": "bad"
+                  }
+                ],
+                "skip": "Nie dotyczy (spalinowe)"
+              },
+              "na_if": {
+                "field": "fuel",
+                "not_in": [
+                  "hev",
+                  "phev",
+                  "ev"
+                ]
               }
             }
           ]
@@ -3756,12 +3891,12 @@
           "items": [
             {
               "id": "p5s1i1",
-              "text": "Test „czy naprawdę zimny”: maska, pokrywa silnika, przewód chłodnicy",
-              "how": "Zanim otworzysz maskę, połóż dłoń na masce nad silnikiem, potem na pokrywie silnika i górnym przewodzie chłodnicy: mają być w temperaturze otoczenia. Wskaźnik temperatury na samym dole, wentylator nie pracuje, brak „tykania” stygnącego metalu. Ciepły silnik mimo wczorajszej umowy = sprzedawca wiedział, co na zimnym słychać.",
-              "why": "Rozgrzany silnik przed Twoim przyjazdem to nie uprzejmość, tylko ukrywanie objawów.",
-              "severity": "red",
-              "flag_label": "Silnik był rozgrzany przed oględzinami mimo ustaleń",
-              "dealbreaker": true,
+              "text": "Czy silnik naprawdę jest zimny: wskaźnik temperatury, wentylator, odczyt OBD",
+              "how": "Nie dotykaj elementów silnika, żeby to sprawdzić — nie musisz. Zanim ktokolwiek odpali: po włączeniu zapłonu wskaźnik temperatury ma być na samym dole, wentylator chłodnicy nie pracuje, nie słychać „tykania” stygnącego metalu; jeśli masz czytnik OBD, odczytaj temperaturę płynu — ma być zbliżona do temperatury otoczenia. Ciepły silnik mimo umowy nie dowodzi wady, ale odbiera Ci test zimnego startu: zapisz to i albo umów się jeszcze raz na rano, albo pamiętaj, że rozruch oceniasz na ciepłym.",
+              "why": "Na ciepłym silniku znika połowa objawów: stuki, dym, nierówna praca, ciężki rozruch — ocena jest wtedy niepełna.",
+              "severity": "yellow",
+              "flag_label": "Silnik rozgrzany przed oględzinami — zimny start niesprawdzony",
+              "dealbreaker": false,
               "quick": true,
               "photo": false,
               "input": null,
@@ -3778,9 +3913,9 @@
                     "v": "good"
                   },
                   {
-                    "label": "Letni / ciepły",
-                    "state": "problem",
-                    "v": "bad"
+                    "label": "Ciepły — test zimnego startu utracony",
+                    "state": "uwaga",
+                    "v": "warm"
                   }
                 ]
               }
@@ -3853,10 +3988,10 @@
             {
               "id": "p5s1i4",
               "text": "Olej: bagnet — poziom, kolor, konsystencja, drobinki",
-              "how": "Wyjmij bagnet, wytrzyj ręcznikiem papierowym, włóż, wyjmij: poziom między min a max (bardzo niski = auto bierze olej lub zaniedbanie; nad max = dolewany „na oko” lub paliwo w oleju). Rozetrzyj kroplę na białym papierze: w benzyniaku bardzo czarny, gęsty olej to długo bez wymiany; w dieslu czarny jest normalny. Metaliczne drobinki, piana, mleczny kolor — poważny sygnał.",
+              "how": "Wyjmij bagnet, wytrzyj ręcznikiem papierowym, włóż, wyjmij: poziom między min a max (bardzo niski = auto bierze olej lub zaniedbanie; nad max = dolewany „na oko” lub paliwo w oleju). Kolor sam w sobie niewiele mówi (w dieslu olej ciemnieje od razu). Rozetrzyj kroplę na białym papierze i powąchaj: metaliczne drobinki, piana, mleczny kolor, wyraźny zapach paliwa — poważny sygnał.",
               "why": "Olej to krwiobieg silnika — jego stan mówi, jak auto było traktowane przez ostatnie tysiące kilometrów.",
               "severity": "yellow",
-              "flag_label": "Olej: zły poziom, bardzo zużyty lub z zanieczyszczeniami",
+              "flag_label": "Olej: zły poziom lub zanieczyszczenia (drobinki, piana, emulsja, paliwo)",
               "dealbreaker": false,
               "photo": true,
               "input": null,
@@ -3868,17 +4003,17 @@
                 "type": "choice",
                 "options": [
                   {
-                    "label": "W normie, czysty",
+                    "label": "Poziom w normie, bez zanieczyszczeń",
                     "state": "ok",
                     "v": "good"
                   },
                   {
-                    "label": "Ciemny / niski",
+                    "label": "Poziom niski lub nad max",
                     "state": "uwaga",
                     "v": "mid"
                   },
                   {
-                    "label": "Drobinki / mleczny / brak",
+                    "label": "Drobinki / piana / mleczny / zapach paliwa",
                     "state": "problem",
                     "v": "bad"
                   }
@@ -3888,7 +4023,7 @@
             {
               "id": "p5s1i5",
               "text": "Korek wlewu oleju od spodu: majonez/emulsja lub gruby nagar",
-              "how": "Odkręć korek wlewu (silnik zimny), obejrzyj spód i szyjkę latarką. Jasnobrązowa, kremowa emulsja („majonez”) = woda w oleju: może to być efekt bardzo krótkich tras zimą, ale częściej — uszczelki pod głowicą. Gruby czarny szlam i nagar w szyjce = wymiany oleju robione rzadko. Czysty metal z cienkim filmem oleju = w porządku.",
+              "how": "Odkręć korek wlewu oleju (tylko na zimnym silniku), obejrzyj spód i szyjkę latarką. Kremowy nalot („majonez”) to woda w oleju: przy samych krótkich trasach zimą bywa niewinną kondensacją; poważnie, gdy jest gęsty i idzie w parze z ubytkiem płynu chłodniczego, przegrzewaniem albo olejem w zbiorniczku płynu. Gruby czarny szlam i nagar w szyjce = wymiany oleju robione rzadko. Czysty metal z cienkim filmem oleju = w porządku.",
               "why": "Emulsja pod korkiem to jeden z niewielu objawów uszczelki pod głowicą widocznych bez narzędzi.",
               "severity": "red",
               "flag_label": "Emulsja pod korkiem wlewu oleju lub gruby nagar (zaniedbanie/uszczelka pod głowicą)",
@@ -3909,12 +4044,12 @@
                     "v": "good"
                   },
                   {
-                    "label": "Lekki osad",
+                    "label": "Lekki nalot / kropelki (krótkie trasy)",
                     "state": "uwaga",
                     "v": "mid"
                   },
                   {
-                    "label": "Majonez / gruby nagar",
+                    "label": "Gęsty majonez + ubytek płynu lub olej w zbiorniczku",
                     "state": "problem",
                     "v": "bad"
                   }
@@ -3924,7 +4059,7 @@
             {
               "id": "p5s1i6",
               "text": "Płyn chłodniczy: poziom, kolor, oleista warstwa, osad",
-              "how": "Zbiorniczek wyrównawczy: poziom między min a max, płyn klarowny w jednym kolorze (różowy/niebieski/zielony/żółty — zależy od producenta). Rdzawy, brązowy, mętny = zaniedbany układ. Tłusta tęczowa warstwa na powierzchni albo piana/mazista brązowa breja = olej w płynie (uszczelka pod głowicą, chłodnica oleju). Korek otwieraj tylko na zimnym.",
+              "how": "NIGDY nie odkręcaj korka zbiorniczka ani chłodnicy na ciepłym lub gorącym silniku — układ jest pod ciśnieniem, grozi poparzeniem wrzątkiem. Oceniaj przez ścianki zbiorniczka wyrównawczego: poziom między min a max, płyn klarowny w jednym kolorze (różowy/niebieski/zielony/żółty — zależy od producenta). Rdzawy, brązowy, mętny = zaniedbany układ. Tłusta tęczowa warstwa na powierzchni, piana albo mazista brązowa breja = olej w płynie (uszczelka pod głowicą, chłodnica oleju).",
               "why": "Olej w chłodnicy to remont, a nie „dolewka”.",
               "severity": "red",
               "flag_label": "Płyn chłodniczy zanieczyszczony olejem lub mocno zaniedbany",
@@ -3939,17 +4074,17 @@
                 "type": "choice",
                 "options": [
                   {
-                    "label": "Czysty, poziom OK",
+                    "label": "Klarowny, poziom między min a max",
                     "state": "ok",
                     "v": "good"
                   },
                   {
-                    "label": "Niski / brudny",
+                    "label": "Niski / mętny / rdzawy",
                     "state": "uwaga",
                     "v": "mid"
                   },
                   {
-                    "label": "Olej / osad / rdza",
+                    "label": "Olej, piana lub mazista breja",
                     "state": "problem",
                     "v": "bad"
                   }
@@ -4020,7 +4155,7 @@
             {
               "id": "p5s1i9",
               "text": "Ślady napraw przodu: kielichy, pas przedni, podłużnice, śruby",
-              "how": "Latarką od góry: kielichy amortyzatorów (blacha ma fabryczne, równe przetłoczenia — fale, szpachla, świeży lakier lub uszczelniacz nałożony pędzlem to naprawa), pas przedni i belka pod chłodnicą (nowy lakier, śruby ze śladami klucza, brak fabrycznych naklejek), podłużnice od góry (pomarszczenia), nowa chłodnica/skraplacz w starym aucie, nowe wsporniki reflektorów.",
+              "how": "Z góry, w komorze silnika: kielichy amortyzatorów (równe, bez fałd i spawów), pas przedni i belka pod chłodnicą (proste, fabryczne zgrzewy), śruby błotników, maski i zderzaka. Ślady klucza na śrubach to ślad demontażu — ustal powód (naprawa po kolizji, ale też zwykły serwis, np. wymiana chłodnicy). Świeży lakier, inny odcień podkładu, uszczelniacz nałożony pędzlem — to już naprawa blacharska.",
               "why": "Naprawiony przód nie musi dyskwalifikować, ale „bezwypadkowy” z prostowanymi kielichami — tak.",
               "severity": "red",
               "flag_label": "Ślady naprawy przodu (kielichy/pas przedni/podłużnice)",
@@ -4056,7 +4191,7 @@
             {
               "id": "p5s1i10",
               "text": "Płyn hamulcowy, przewody, wiązki: kolor, spękania, taśma izolacyjna",
-              "how": "Zbiorniczek płynu hamulcowego: poziom między min a max, płyn jasny (ciemnobrązowy = lata bez wymiany). Przewody gumowe: spękania, twarde, zaciski „warsztatowe” zamiast fabrycznych. Wiązki: taśma izolacyjna w nietypowych miejscach, luźne wtyczki, pogryzione izolacje (gryzonie), zapach spalonej izolacji.",
+              "how": "Płyn hamulcowy: poziom między min a max; kolor to tylko obserwacja (bardzo ciemny = stary), stan naprawdę ocenia się przyrządem mierzącym zawartość wody — zapytaj o datę wymiany (zalecana co 2 lata). Przewody gumowe: spękania, pęcznienie. Wiązki elektryczne: taśma izolacyjna zamiast fabrycznych złączy, prowizorki.",
               "why": "Prowizorki w komorze to zapowiedź błędów elektrycznych, których nikt nie umie znaleźć.",
               "severity": "yellow",
               "flag_label": "Zaniedbane płyny/przewody lub prowizoryczne naprawy instalacji",
@@ -4092,8 +4227,8 @@
           "items": [
             {
               "id": "p5s2i1",
-              "text": "Rozruch: odpala od razu, bez długiego kręcenia i „pompowania” gazu",
-              "how": "Poproś sprzedawcę o odpalenie, Ty stój przy otwartej masce (albo z tyłu przy wydechu — patrz następny punkt). Silnik ma zaskoczyć w sekundę–dwie, bez kilku prób, bez pomocy gazem, bez zgrzytu rozrusznika. Ciężki zimny rozruch to zwykle początek droższej historii (wtryski, świece, kompresja, akumulator).",
+              "text": "Rozruch: odpala od razu, bez długiego kręcenia i kilku prób",
+              "how": "Poproś sprzedawcę o odpalenie, Ty stój z boku przy otwartej masce (albo z tyłu przy wydechu — patrz następny punkt), nie nad silnikiem. Silnik ma zaskoczyć w sekundę–dwie, bez kilku prób i bez zgrzytu rozrusznika. Ciężki zimny rozruch to zwykle początek droższej historii (wtryski, świece żarowe, kompresja, akumulator).",
               "why": "Zimny rozruch to jedyny test, którego nie da się powtórzyć po rozgrzaniu — dlatego tak o niego walczyłeś.",
               "severity": "red",
               "flag_label": "Ciężki zimny rozruch (długie kręcenie, kilka prób, przygazowywanie)",
@@ -4118,7 +4253,7 @@
                     "v": "mid"
                   },
                   {
-                    "label": "Trudny / „pompowanie” gazu",
+                    "label": "Kilka prób / zgrzyt rozrusznika",
                     "state": "problem",
                     "v": "bad"
                   }
@@ -4163,7 +4298,7 @@
             {
               "id": "p5s2i3",
               "text": "Dym z wydechu przy starcie i przy przegazowaniu — jaki kolor?",
-              "how": "Stań z tyłu przy starcie, potem poproś o 2–3 krótkie przegazowania. Niebieskawy, ostro pachnący = spalanie oleju (turbo, uszczelniacze zaworów, pierścienie). Biały gęsty, słodkawy, nieznikający po rozgrzaniu = płyn chłodniczy w cylindrach (uszczelka pod głowicą). Czarny = zbyt bogata mieszanka / wtrysk / w dieslu problemy z DPF. Przezroczysta para na zimno, znikająca po chwili — normalna. Nagraj krótki film.",
+              "how": "Stań z tyłu, z boku, przy starcie; potem poproś o 2–3 krótkie przegazowania — nie wdychaj spalin. Przezroczysta para na zimno, znikająca po chwili — normalna. Niebieskawy, ostro pachnący = spalanie oleju (turbo, uszczelniacze zaworów, pierścienie). Biały gęsty, słodkawy, nieznikający po rozgrzaniu = płyn chłodniczy w cylindrach. Czarny: w dieslu przy przegazowaniu — wtryski, dolot, filtr cząstek; w benzyniaku — zbyt bogata mieszanka (układ paliwowy). Nagraj krótki film.",
               "why": "Kolor dymu to język, w którym silnik mówi o swoich najdroższych częściach.",
               "severity": "red",
               "flag_label": "Dym z wydechu (niebieski/biały/czarny) przy starcie lub przegazowaniu",
@@ -4179,17 +4314,17 @@
                 "type": "choice",
                 "options": [
                   {
-                    "label": "Brak",
+                    "label": "Brak / chwilowa para na zimno",
                     "state": "ok",
                     "v": "good"
                   },
                   {
-                    "label": "Krótko przy starcie",
+                    "label": "Czarny przy przegazowaniu (diesel)",
                     "state": "uwaga",
-                    "v": "mid"
+                    "v": "black_diesel"
                   },
                   {
-                    "label": "Niebieski / biały / czarny",
+                    "label": "Niebieski, biały gęsty lub czarny stały po rozgrzaniu",
                     "state": "problem",
                     "v": "bad"
                   }
@@ -4258,7 +4393,7 @@
             {
               "id": "p5s2i6",
               "text": "Chłodzenie na postoju: temperatura rośnie stopniowo, brak bulgotania",
-              "how": "Zostaw silnik na jałowym kilka minut (idziesz do fazy „Wnętrze” dokończyć klimatyzację). Wskaźnik ma rosnąć płynnie i zatrzymać się w normie; poziom w zbiorniczku nie może gwałtownie rosnąć, bulgotać ani wypychać płynu; wentylator ma się załączyć. Po jeździe próbnej sprawdzisz to jeszcze raz.",
+              "how": "Nie dotykaj korka ani przewodów. Po kilku minutach pracy wskaźnik temperatury ma rosnąć stopniowo, wentylator włącza się dopiero po rozgrzaniu, w zbiorniczku nie ma bulgotania ani pęcherzy (patrz przez ścianki). Szybki wzrost temperatury, wentylator od razu na najwyższych obrotach, bulgotanie w zbiorniczku — problem układu chłodzenia lub uszczelki pod głowicą.",
               "why": "Bulgotanie w zbiorniczku to gazy spalinowe w układzie chłodzenia — czyli uszczelka pod głowicą.",
               "severity": "red",
               "flag_label": "Objawy problemów z chłodzeniem (bulgotanie, przegrzewanie, wypychanie płynu)",
@@ -4287,11 +4422,11 @@
             },
             {
               "id": "p5s2i7",
-              "text": "Końcówka wydechu: test białej chusteczki",
-              "how": "Po kilku minutach pracy (rura nie może być gorąca — dotknij ostrożnie) przetrzyj wnętrze końcówki białą chusteczką. Sucha, lekko szara — w porządku. Sucha czarna sadza — w starszych dieslach częsta, w benzyniaku sygnał bogatej mieszanki. Mokra, tłusta czerń lub olej — spalanie oleju.",
-              "why": "To, co zostaje w rurze, to to, czego silnik nie powinien spalać.",
+              "text": "Końcówka wydechu przed odpaleniem: osad w rurze (w dieslu z filtrem cząstek ma być czysto)",
+              "how": "Rób to TYLKO przed uruchomieniem, na zimnym silniku — nigdy przy pracującym ani gorącym wydechu. Przetrzyj wnętrze końcówki białą chusteczką. Benzyna: sucha, lekko szara — w porządku; czarna sucha sadza — bogata mieszanka; mokra, tłusta czerń — spalanie oleju. Diesel z filtrem cząstek (praktycznie każdy od ok. 2010 r.): rura ma być czysta lub tylko szara — gęsta czarna sadza oznacza filtr wycięty albo uszkodzony (auto bez filtra nie przejdzie badania, a odtworzenie kosztuje tysiące).",
+              "why": "To, co zostaje w rurze, to to, czego silnik nie powinien wypuszczać — a w dieslu to najprostszy test, czy filtr cząstek w ogóle tam jest.",
               "severity": "yellow",
-              "flag_label": "Tłusty/oleisty osad w końcówce wydechu",
+              "flag_label": "Osad w końcówce wydechu: tłusty/oleisty lub gruba sadza w dieslu z filtrem cząstek",
               "dealbreaker": false,
               "photo": true,
               "input": null,
@@ -4303,17 +4438,17 @@
                 "type": "choice",
                 "options": [
                   {
-                    "label": "Sucha, szara",
+                    "label": "Sucha, szara / czysta",
                     "state": "ok",
                     "v": "good"
                   },
                   {
-                    "label": "Czarna, sucha",
+                    "label": "Czarna sucha sadza (benzyna)",
                     "state": "uwaga",
                     "v": "mid"
                   },
                   {
-                    "label": "Mokra, tłusta",
+                    "label": "Mokra, tłusta — lub gruba sadza w dieslu z filtrem",
                     "state": "problem",
                     "v": "bad"
                   }
@@ -4339,11 +4474,11 @@
           "items": [
             {
               "id": "p6s1i1",
-              "text": "Ty prowadzisz; OC ważne; zasady odpowiedzialności ustalone przed ruszeniem",
-              "how": "Weź prawo jazdy. Upewnij się (Historia pojazdu / ufg.pl), że auto ma OC — szkody innych pokryje polisa auta, ale za uszkodzenie testowanego auta bez AC może odpowiadać kierujący. Powiedz sprzedawcy wprost: „Jadę spokojnie, testuję hamulce w bezpiecznym miejscu — uprzedzę”. Torbę z gotówką i dokumenty miej przy sobie, nie w aucie sprzedawcy.",
-              "why": "Jasne zasady przed ruszeniem oszczędzają Ci kłótni po ewentualnej stłuczce.",
+              "text": "Ty prowadzisz (jeśli się da); OC ważne; trasa 20–30 min: miasto, nierówna droga, szybsza trasa, parking",
+              "how": "Weź prawo jazdy. Upewnij się (Historia pojazdu / ufg.pl), że auto ma ważne OC i badanie: szkody innych pokryje polisa auta, ale koszt uszkodzenia testowanego auta bez AC może obciążyć kierującego, zależnie od okoliczności i winy — jedź spokojnie. Powiedz sprzedawcy wprost: „Jadę spokojnie, mocniej hamuję tylko w bezpiecznym miejscu — uprzedzę”. Trasa: kawałek miasta z ruszaniem i zatrzymywaniem, nierówny odcinek (zawieszenie), szybsza droga (hałasy, stabilność), parking na pełny skręt. Dokumenty i pieniądze miej przy sobie, nie w aucie sprzedawcy.",
+              "why": "Jasne zasady przed ruszeniem oszczędzają Ci kłótni po ewentualnej stłuczce, a pełna trasa pozwala usłyszeć to, czego nie słychać na parkingu.",
               "severity": "yellow",
-              "flag_label": "Jazda próbna bez potwierdzonego OC lub bez ustalonych zasad odpowiedzialności",
+              "flag_label": "Jazda próbna bez ważnego OC/badania albo bez pełnej trasy",
               "dealbreaker": false,
               "photo": false,
               "input": null,
@@ -4355,47 +4490,18 @@
                 "type": "choice",
                 "options": [
                   {
-                    "label": "Ustalone, ja prowadzę",
+                    "label": "Ja prowadzę, OC ważne, pełna trasa",
                     "state": "ok",
                     "v": "good"
                   },
                   {
-                    "label": "Prowadzi sprzedawca",
+                    "label": "Prowadzi sprzedawca / trasa skrócona",
                     "state": "uwaga",
                     "v": "mid"
                   },
                   {
-                    "label": "Brak OC / brak zasad",
+                    "label": "Brak ważnego OC lub badania — nie jedź",
                     "state": "problem",
-                    "v": "bad"
-                  }
-                ]
-              }
-            },
-            {
-              "id": "p6s1i2",
-              "text": "Trasa 20–30 min: miasto, nierówna droga, szybsza trasa, parking",
-              "how": "Zaplanuj pętlę: kilka minut w mieście (start-stop, skrzynia na niskich biegach), kawałek dziurawej lub brukowanej drogi (zawieszenie), odcinek szybszej drogi (szumy, prowadzenie, wibracje), parking na manewry (pełny skręt, cofanie, hamowanie). Zanim ruszysz: ustaw fotel i lusterka, sprawdź, że po odpaleniu żadna kontrolka nie świeci, i że hamulec postojowy trzyma.",
-              "why": "Pięć minut wokół bloku niczego nie pokaże — auto musi się rozgrzać i dostać obciążenie.",
-              "severity": "info",
-              "flag_label": "Jazda próbna za krótka lub bez zróżnicowanej trasy",
-              "dealbreaker": false,
-              "photo": false,
-              "input": null,
-              "tags": [
-                "jazda"
-              ],
-              "ctrl": {
-                "type": "choice",
-                "options": [
-                  {
-                    "label": "Trasa jak trzeba",
-                    "state": "ok",
-                    "v": "good"
-                  },
-                  {
-                    "label": "Tylko krótki odcinek",
-                    "state": "uwaga",
                     "v": "bad"
                   }
                 ]
@@ -4409,11 +4515,11 @@
           "items": [
             {
               "id": "p6s2i1",
-              "text": "Sprzęgło: punkt chwytania, ślizganie, drgania przy ruszaniu",
-              "how": "Rusz kilka razy: punkt chwytania bardzo wysoko = sprzęgło zużyte. Test ślizgania: na 4. lub 5. biegu przy niskich obrotach dodaj mocno gazu — jeśli obroty rosną szybciej niż prędkość, sprzęgło się ślizga. Drgania i „szarpanie” przy ruszaniu = tarcza lub koło dwumasowe. Pedał bardzo ciężki, zapadający się lub „strzelający” — układ do naprawy.",
+              "text": "Sprzęgło: załącza płynnie, nie ślizga się, nie szarpie",
+              "how": "Rusz kilka razy: płynnie, bez szarpania i drgań; punkt załączenia bywa różny w różnych autach, więc sam w sobie nie przesądza. Test ślizgania: na pustej prostej, przy ok. 50 km/h na 4. biegu wciśnij gaz do oporu — jeśli obroty rosną, a auto nie przyspiesza proporcjonalnie, sprzęgło się ślizga. Drgania i szarpanie przy ruszaniu = tarcza lub koło dwumasowe. Pedał bardzo ciężki, zapadający się lub „strzelający” — układ do naprawy.",
               "why": "Sprzęgło z dwumasą to jedna z droższych pozycji w aucie z manualem — i jedna z najczęściej „już prawie” zużytych przy sprzedaży.",
               "severity": "red",
-              "flag_label": "Sprzęgło ślizga się / punkt chwytania wysoko / drgania przy ruszaniu",
+              "flag_label": "Sprzęgło ślizga się / drgania przy ruszaniu / nietypowa praca pedału",
               "dealbreaker": false,
               "photo": false,
               "input": null,
@@ -4425,22 +4531,28 @@
                 "type": "choice",
                 "options": [
                   {
-                    "label": "Chwyta nisko, równo",
+                    "label": "Płynnie, nie ślizga się",
                     "state": "ok",
                     "v": "good"
                   },
                   {
-                    "label": "Wysoko / drgania",
+                    "label": "Drgania / bardzo wysoko / ciężki pedał",
                     "state": "uwaga",
                     "v": "mid"
                   },
                   {
-                    "label": "Ślizga się",
+                    "label": "Ślizga się (obroty rosną, auto nie przyspiesza)",
                     "state": "problem",
                     "v": "bad"
                   }
                 ],
                 "skip": "Automat"
+              },
+              "na_if": {
+                "field": "gearbox",
+                "in": [
+                  "auto"
+                ]
               }
             },
             {
@@ -4476,12 +4588,18 @@
                   }
                 ],
                 "skip": "Automat"
+              },
+              "na_if": {
+                "field": "gearbox",
+                "in": [
+                  "auto"
+                ]
               }
             },
             {
               "id": "p6s2i3",
               "text": "Koło dwumasowe: grzechot na jałowym, drgania przy niskich obrotach",
-              "how": "Na postoju, na luzie, wciśnij i puść sprzęgło: metaliczny grzechot, który pojawia się i znika ze sprzęgłem, to typowy objaw dwumasy. W jeździe: wibracje przy ok. 1000–1500 obr./min pod obciążeniem, stuk/„klang” przy gaszeniu silnika.",
+              "how": "Na postoju, na luzie, wciśnij i puść sprzęgło: metaliczny grzechot, który pojawia się i znika ze sprzęgłem, to typowy objaw dwumasy. W jeździe: wibracje przy ok. 1000–1500 obr./min pod obciążeniem, stuk/„klang” przy gaszeniu silnika. Dwumasowe koło występuje w większości manualnych diesli i w części automatów — jeśli nie wiesz, czy to auto je ma, zapytaj.",
               "why": "Dwumasa nie psuje się nagle — daje znać dokładnie takimi dźwiękami.",
               "severity": "yellow",
               "flag_label": "Objawy zużycia koła dwumasowego",
@@ -4506,7 +4624,13 @@
                     "v": "bad"
                   }
                 ],
-                "skip": "Automat"
+                "skip": "Nie dotyczy / nie wiem"
+              },
+              "na_if": {
+                "field": "gearbox",
+                "in": [
+                  "auto"
+                ]
               }
             }
           ]
@@ -4518,7 +4642,7 @@
             {
               "id": "p6s3i1",
               "text": "Zmiany biegów płynne na zimnym i ciepłym; D↔R bez stuku i zwłoki",
-              "how": "Na postoju przełącz P→R→N→D z nogą na hamulcu: bieg ma się załączyć w ok. sekundę, bez szarpnięcia i stuku. W jeździe: zmiany w górę niewyczuwalne lub ledwo wyczuwalne, bez szarpania, bez „zawieszania” na wysokich obrotach; redukcje przy hamowaniu bez uderzeń. Powtórz po rozgrzaniu — część problemów pojawia się dopiero na ciepłym.",
+              "how": "Najpierw ustal typ automatu, bo „normalne” zachowanie jest inne: klasyczny (hydrokinetyczny) pełza miękko i zmienia biegi płynnie; dwusprzęgłowy (DSG, DCT, PDK) zmienia błyskawicznie, ale przy pełzaniu w korku lekko wibruje — to cecha; bezstopniowy (CVT, e-CVT w hybrydach) nie ma biegów: przy przyspieszaniu trzyma równe, wysokie obroty — to nie usterka. Na postoju przełącz P→R→N→D z nogą na hamulcu: bieg ma się załączyć w ok. sekundę, bez szarpnięcia i stuku. W jeździe: bez szarpania, bez „zawieszania” na wysokich obrotach; redukcje bez uderzeń. Powtórz po rozgrzaniu.",
               "why": "Szarpiący automat to naprawa skrzyni, nie „adaptacja” — a to jedna z najdroższych pozycji w aucie.",
               "severity": "red",
               "flag_label": "Automat szarpie, zwleka z załączeniem biegu lub stuka przy D/R",
@@ -4533,7 +4657,7 @@
                 "type": "choice",
                 "options": [
                   {
-                    "label": "Płynnie",
+                    "label": "Płynnie (jak na swój typ)",
                     "state": "ok",
                     "v": "good"
                   },
@@ -4543,18 +4667,24 @@
                     "v": "mid"
                   },
                   {
-                    "label": "Stuki D↔R / ślizga",
+                    "label": "Stuki D↔R / szarpie / ślizga",
                     "state": "problem",
                     "v": "bad"
                   }
                 ],
-                "skip": "Manual"
+                "skip": "Manual / nie dotyczy"
+              },
+              "na_if": {
+                "field": "gearbox",
+                "in": [
+                  "manual"
+                ]
               }
             },
             {
               "id": "p6s3i2",
               "text": "Kickdown, tryb manualny, brak ślizgania",
-              "how": "Na pustej drodze wciśnij gaz do oporu: skrzynia ma zredukować od razu i przyspieszyć bez „wiszenia”. Sprawdź tryb manualny/łopatki. Ślizganie: obroty skaczą w górę, a auto nie przyspiesza proporcjonalnie — to poważny sygnał. Zapach spalenizny po tym teście — również.",
+              "how": "Na pustej drodze wciśnij gaz do oporu: skrzynia ma zredukować od razu i przyspieszyć bez „wiszenia”. Sprawdź tryb manualny/łopatki, jeśli są (CVT może ich nie mieć — to nie wada). Ślizganie: obroty skaczą w górę, a auto nie przyspiesza proporcjonalnie — to poważny sygnał, koszt naprawy skrzyni liczy się w tysiącach. Zapach spalenizny po tym teście — również.",
               "why": "Ślizgająca się skrzynia automatyczna to koniec jej życia, nie usterka.",
               "severity": "red",
               "flag_label": "Skrzynia automatyczna ślizga się lub nie reaguje na kickdown",
@@ -4579,12 +4709,18 @@
                     "v": "mid"
                   },
                   {
-                    "label": "Ślizga / nie reaguje",
+                    "label": "Ślizga się (obroty rosną, prędkość nie) / nie reaguje",
                     "state": "problem",
                     "v": "bad"
                   }
                 ],
-                "skip": "Manual"
+                "skip": "Manual / skrzynia bez tej funkcji"
+              },
+              "na_if": {
+                "field": "gearbox",
+                "in": [
+                  "manual"
+                ]
               }
             },
             {
@@ -4616,7 +4752,13 @@
                     "v": "bad"
                   }
                 ],
-                "skip": "Manual"
+                "skip": "Manual / nie dotyczy"
+              },
+              "na_if": {
+                "field": "gearbox",
+                "in": [
+                  "manual"
+                ]
               }
             }
           ]
@@ -4628,7 +4770,7 @@
             {
               "id": "p6s4i1",
               "text": "Przyspieszenie: płynne, bez szarpania, dziur i „trybu awaryjnego”",
-              "how": "Przyspiesz zdecydowanie kilka razy (w tym z niskich obrotów na wyższym biegu). Szukaj: szarpania, „dziur” w mocy, nagłej utraty mocy (tryb awaryjny — kontrolka), świstu/wycia turbo, dymu w lusterku przy mocnym przyspieszeniu. W dieslu z filtrem cząstek: pytaj, jak auto jeździło — same krótkie trasy to problem, którego nie zobaczysz w 20 minut.",
+              "how": "Przyspiesz zdecydowanie kilka razy (w tym z niskich obrotów na wyższym biegu). Szukaj: szarpania, „dziur” w mocy, nagłej utraty mocy (tryb awaryjny — kontrolka), nagłego głośnego wycia lub świstu przy przyspieszaniu (turbo — nie rozstrzygaj sam, zapisz), dymu w lusterku przy mocnym przyspieszeniu. W dieslu z filtrem cząstek: pytaj, jak auto jeździło — same krótkie trasy to problem, którego nie zobaczysz w 20 minut.",
               "why": "Na obciążeniu wychodzą wtryski, turbo, przepływomierz i skrzynia — wszystko, co drogie.",
               "severity": "red",
               "flag_label": "Silnik szarpie, traci moc lub dymi pod obciążeniem",
@@ -4663,7 +4805,7 @@
             {
               "id": "p6s4i2",
               "text": "Kontrolki i temperatura w trakcie jazdy",
-              "how": "Co kilka minut zerknij na zegary: żadna kontrolka nie zapala się pod obciążeniem ani w korku; temperatura stoi stabilnie w normie zarówno na trasie, jak i w wolnej jeździe. Skok temperatury w korku = wentylator/termostat/chłodnica; kontrolka pojawiająca się „na chwilę” = błąd sporadyczny, który sprzedawca kasuje.",
+              "how": "W trakcie jazdy żadna kontrolka nie powinna się zapalić, a temperatura ma zostać w normalnym zakresie: w wielu autach wskazówka jest „buforowana” i stoi w miejscu, w innych lekko pływa — liczy się brak alarmu i brak wyraźnego przekroczenia zwykłego zakresu. Kontrolka w jeździe = zapisany błąd; zatrzymaj się bezpiecznie i zapisz, która.",
               "why": "Kontrolka, która mignęła raz, wróci — po zakupie.",
               "severity": "red",
               "flag_label": "Kontrolka zapala się w trakcie jazdy lub temperatura niestabilna",
@@ -4679,12 +4821,12 @@
                 "type": "choice",
                 "options": [
                   {
-                    "label": "Nic, temperatura stała",
+                    "label": "Nic, temperatura w normie",
                     "state": "ok",
                     "v": "good"
                   },
                   {
-                    "label": "Temperatura pływa",
+                    "label": "Temperatura wyraźnie wyżej niż zwykle / pływa",
                     "state": "uwaga",
                     "v": "mid"
                   },
@@ -4704,11 +4846,11 @@
           "items": [
             {
               "id": "p6s5i1",
-              "text": "Hamowanie awaryjne: prosto, ABS pulsuje, pedał nie zapada się",
-              "how": "W bezpiecznym, pustym miejscu (uprzedź sprzedawcę) zahamuj mocno z ok. 50 km/h: auto ma zostać w torze (bez ściągania), pedał ma pulsować (ABS), a nie zapadać się do podłogi. Zrób to dwa razy. Po teście nie zaciągaj hamulca postojowego od razu — tarcze są gorące.",
+              "text": "Mocniejsze hamowanie w bezpiecznym miejscu: prosto, pedał twardy, nie zapada się",
+              "how": "W bezpiecznym, pustym i legalnym miejscu (uprzedź sprzedawcę) zahamuj zdecydowanie z ok. 40–50 km/h — kontrolowanie, bez prowokowania manewru awaryjnego: auto ma zostać w torze (bez ściągania), pedał ma być twardy i nie zapadać się do podłogi; jeśli włączy się ABS, poczujesz pulsowanie w pedale — to normalne. Zrób to dwa razy. Po teście odczekaj kilka minut, zanim zaciągniesz hamulec postojowy — tarcze są gorące.",
               "why": "Hamulce testujesz Ty na parkingu albo los na skrzyżowaniu.",
               "severity": "red",
-              "flag_label": "Auto ściąga przy hamowaniu / ABS nie działa / pedał zapada się",
+              "flag_label": "Auto ściąga przy hamowaniu / pedał zapada się / kontrolka ABS",
               "dealbreaker": false,
               "photo": false,
               "input": null,
@@ -4720,17 +4862,17 @@
                 "type": "choice",
                 "options": [
                   {
-                    "label": "Prosto, ABS pulsuje",
+                    "label": "Prosto, pedał twardy",
                     "state": "ok",
                     "v": "good"
                   },
                   {
-                    "label": "Lekko ściąga",
+                    "label": "Lekko ściąga / wibracje",
                     "state": "uwaga",
                     "v": "mid"
                   },
                   {
-                    "label": "Ściąga / pedał zapada / bez ABS",
+                    "label": "Ściąga / pedał zapada się / kontrolka ABS",
                     "state": "problem",
                     "v": "bad"
                   }
@@ -4740,7 +4882,7 @@
             {
               "id": "p6s5i2",
               "text": "Wibracje, piski, zgrzyty, „gąbczasty” pedał",
-              "how": "Hamuj łagodnie z większej prędkości: bicie w kierownicy lub pulsowanie pedału = krzywe tarcze; pisk = klocki (lub blaszki ostrzegawcze), zgrzyt metal o metal = klocki na zero; pedał miękki, dochodzący coraz niżej = płyn, powietrze w układzie lub pompa.",
+              "how": "Wibracje w kierownicy lub pedale przy hamowaniu (zwykle tarcze), piski i zgrzyty (klocki, tarcze), pedał miękki — zapada się bardziej niż byś oczekiwał albo zmienia punkt oporu między naciśnięciami (powietrze lub nieszczelność w układzie). Zapisz, przy jakiej prędkości.",
               "why": "Tarcze i klocki to konkretna pozycja do negocjacji — a gąbczasty pedał to zakaz dalszej jazdy.",
               "severity": "yellow",
               "flag_label": "Wibracje/piski/zgrzyty przy hamowaniu lub miękki pedał",
@@ -4774,7 +4916,7 @@
             {
               "id": "p6s5i3",
               "text": "Hamulec postojowy trzyma na wzniesieniu",
-              "how": "Zatrzymaj się na pochyłości, zaciągnij (lub włącz elektryczny) i puść hamulec nożny: auto ma stać. Elektryczny: załącza i zwalnia bez komunikatów, słychać równą pracę silniczków po obu stronach. Ręczny: nie „do sufitu”.",
+              "how": "Rób ten test po ostudzeniu hamulców (kilka minut po mocnym hamowaniu). Zatrzymaj się na pochyłości, zaciągnij (lub włącz elektryczny) i puść hamulec nożny: auto ma stać. Elektryczny: załącza i zwalnia bez komunikatów, słychać równą pracę silniczków po obu stronach; funkcja Auto Hold to nie to samo. Ręczny: nie „do sufitu”.",
               "why": "Niedziałający ręczny to najczęściej zapieczone linki lub zaciski — i pewne zastrzeżenie na badaniu technicznym.",
               "severity": "yellow",
               "flag_label": "Hamulec postojowy nie trzyma lub działa nierówno",
@@ -4883,7 +5025,7 @@
             {
               "id": "p6s6i3",
               "text": "Skręt maksymalny na parkingu w obie strony, wolno",
-              "how": "Skręć kierownicę do oporu w lewo i jedź powoli po kółku, potem w prawo. Rytmiczne klikanie/stukanie z okolic koła = przegub napędowy (zewnętrzny) — sprawdź od razu osłony przegubów (tłuszcz na feldze od wewnątrz). Wycie/jęk przy skręcie na postoju = wspomaganie.",
+              "how": "Skręć kierownicę do oporu w lewo i jedź powoli po kółku, potem w prawo — krótko; nie trzymaj kierownicy długo na skrajnym położeniu (obciąża wspomaganie). Rytmiczne klikanie/stukanie z okolic koła = przegub napędowy (zewnętrzny) — sprawdź od razu osłony przegubów (tłuszcz na feldze od wewnątrz). Wycie/jęk przy skręcie na postoju = wspomaganie.",
               "why": "Stukający przegub to naprawa, ale rozerwana osłona ignorowana miesiącami to znak, jak auto było serwisowane.",
               "severity": "red",
               "flag_label": "Stuki przegubów przy pełnym skręcie / hałas wspomagania",
@@ -4958,10 +5100,10 @@
             {
               "id": "p6s7i1",
               "text": "Buczenie/szum rosnący z prędkością — łożysko czy opony?",
-              "how": "Na szybszej drodze, przy zamkniętych oknach, wyłącz radio. Buczenie, które rośnie z prędkością i zmienia się przy lekkim skręcie (odciążasz koło: w lewo głośniej = prawe łożysko i odwrotnie), to łożysko koła. Hałas rosnący z obrotami silnika (nie z prędkością) = osprzęt, wydech. Szum jednostajny „zależny od nawierzchni” — zwykle opony.",
+              "how": "Na szybszej drodze, przy zamkniętych oknach, wyłącz radio. Hałas, który rośnie z prędkością i zmienia się przy lekkim skręcie (odciążasz koło: w lewo głośniej = prawa strona i odwrotnie), to najczęściej łożysko koła — ale może to być też opona, przekładnia lub wał; zapisz objaw, nie diagnozę. Hałas rosnący z obrotami silnika (nie z prędkością) = osprzęt, wydech. Szum jednostajny „zależny od nawierzchni” — zwykle opony.",
               "why": "Łożysko koła da się zlokalizować w minutę — i wpisać na listę uwag jako konkret.",
               "severity": "yellow",
-              "flag_label": "Buczenie łożyska koła lub inny hałas zależny od prędkości",
+              "flag_label": "Hałas rosnący z prędkością (łożysko koła, opona lub napęd — do sprawdzenia)",
               "dealbreaker": false,
               "photo": false,
               "input": null,
@@ -4978,13 +5120,13 @@
                     "v": "good"
                   },
                   {
-                    "label": "Szum od opon",
-                    "state": "uwaga",
-                    "v": "mid"
+                    "label": "Szum zależny od nawierzchni (opony)",
+                    "state": "ok",
+                    "v": "tyres"
                   },
                   {
-                    "label": "Buczy rosnąco (łożysko)",
-                    "state": "problem",
+                    "label": "Buczenie rośnie z prędkością",
+                    "state": "uwaga",
                     "v": "bad"
                   }
                 ]
@@ -4994,7 +5136,7 @@
               "id": "p6s7i2",
               "text": "Systemy: tempomat, asystenty, start-stop, 4×4, nagrzewnica po rozgrzaniu",
               "how": "Włącz tempomat (utrzymuje prędkość), asystenta pasa/martwego pola (reaguje, bez komunikatów o błędzie), start-stop (gasi i odpala), napęd 4×4 lub tryby jazdy, jeśli są. Po rozgrzaniu przełącz nawiew na ciepło: nagrzewnica ma grzać wyraźnie, a klimatyzacja po powrocie na zimno — chłodzić.",
-              "why": "Komunikaty o błędach asystentów często oznaczają kalibrację po wymianie szyby lub zderzaka — czyli zdarzenie, o którym nikt nie wspomniał.",
+              "why": "Niedziałający system to koszt; komunikat o błędzie asystenta to często ślad naprawy przodu lub wymiany szyby — patrz następny punkt.",
               "severity": "info",
               "flag_label": "Niesprawne systemy wspomagające / nagrzewnica lub klimatyzacja",
               "dealbreaker": false,
@@ -5018,6 +5160,42 @@
                     "v": "bad"
                   }
                 ]
+              }
+            },
+            {
+              "id": "p6s7i3",
+              "text": "Asystenty (ADAS): wymieniana szyba lub naprawa przodu = pytanie o kalibrację kamery i radaru",
+              "how": "Zapytaj, czy wymieniano przednią szybę albo naprawiano przód (zderzak, grill, lampy). Jeśli tak — poproś o dokument kalibracji kamery/radaru po naprawie (robi to serwis, jest protokół). Brak komunikatu na desce nie potwierdza prawidłowej kalibracji. Na jeździe: asystent pasa i aktywny tempomat działają bez komunikatów o błędzie i nie reagują „po swojemu”.",
+              "why": "Źle skalibrowana kamera lub radar działają, ale niedokładnie — a naprawa przodu, o której nikt nie wspomniał, to też informacja o historii auta.",
+              "severity": "yellow",
+              "flag_label": "ADAS: wymiana szyby lub naprawa przodu bez dokumentu kalibracji",
+              "dealbreaker": false,
+              "photo": false,
+              "input": null,
+              "tags": [
+                "jazda",
+                "adas"
+              ],
+              "ctrl": {
+                "type": "choice",
+                "options": [
+                  {
+                    "label": "Brak wymian / jest dokument kalibracji",
+                    "state": "ok",
+                    "v": "good"
+                  },
+                  {
+                    "label": "Wymiana lub naprawa bez dokumentu kalibracji",
+                    "state": "uwaga",
+                    "v": "nodoc"
+                  },
+                  {
+                    "label": "Aktywny błąd asystenta",
+                    "state": "problem",
+                    "v": "error"
+                  }
+                ],
+                "skip": "Auto bez asystentów"
               }
             }
           ]
@@ -5065,7 +5243,7 @@
             {
               "id": "p6s8i2",
               "text": "Dym i zapach na ciepłym, gorące koło, ponowny rozruch",
-              "how": "Poproś o 2–3 przegazowania na ciepłym silniku i patrz na wydech (niebieski dym na ciepłym = spalanie oleju). Powąchaj przy kołach: zapach spalenizny i jedno koło wyraźnie gorętsze od pozostałych (ostrożnie zbliż dłoń do felgi) = zapieczony zacisk. Zgaś silnik, odczekaj minutę, odpal ponownie: ma zaskoczyć od razu, obroty jałowe stabilne.",
+              "how": "Poproś o 2–3 przegazowania na ciepłym silniku i patrz na wydech z boku (niebieski dym na ciepłym = spalanie oleju). Nie dotykaj tarcz ani zacisków. Zbliż dłoń na kilka centymetrów do każdej felgi po kolei: jedno koło wyraźnie gorętsze od pozostałych i zapach spalenizny = zapieczony zacisk. Zgaś silnik, odczekaj minutę, odpal ponownie: ma zaskoczyć od razu, obroty jałowe stabilne.",
               "why": "Problem z rozruchem na ciepłym to inna usterka niż na zimnym — sprawdzasz obie.",
               "severity": "yellow",
               "flag_label": "Dym na ciepłym / przegrzane koło / problem z ponownym rozruchem",
@@ -5143,7 +5321,7 @@
             {
               "id": "p7s1i2",
               "text": "Pytania kontrolne: skonfrontuj odpowiedzi z telefonu z tym, co widziałeś",
-              "how": "Spokojnie, bez oskarżeń: „Mówił Pan, że nic nie było lakierowane — drzwi mają wyraźnie wyższy odczyt niż dach. Co się stało?”. Notuj reakcję: szczera korekta („faktycznie, było otarcie”) to co innego niż „miernik Panu źle pokazuje” albo agresja. Zapytaj też: „Co jeszcze powinienem wiedzieć, zanim kupię?”.",
+              "how": "Wróć do notatek z rozmowy: przebieg, co lakierowane, od kiedy ma auto, szkody, serwis. Zestaw z tym, co zobaczyłeś i zmierzyłeś. Drobne rozbieżności zdarzają się każdemu; istotna rozbieżność (np. „nic nie lakierowane” przy dwóch elementach po naprawie) obniża wiarygodność wszystkiego, czego nie mogłeś sprawdzić.",
               "why": "Nie chodzi o przyłapanie — chodzi o to, czy możesz wierzyć w resztę tego, czego nie da się sprawdzić.",
               "severity": "yellow",
               "flag_label": "Sprzedawca zaprzecza faktom z oględzin lub zmienia wersję",
@@ -5168,7 +5346,7 @@
                     "v": "mid"
                   },
                   {
-                    "label": "Kłamał w istotnej sprawie",
+                    "label": "Istotna rozbieżność między deklaracją a stanem",
                     "state": "problem",
                     "v": "bad"
                   }
@@ -5178,7 +5356,7 @@
             {
               "id": "p7s1i3",
               "text": "Mechanik/SKP przed pieniędzmi — jeśli warunki spełnione",
-              "how": "Jedź na sprawdzenie, gdy: masz 2 lub więcej uwag w „Pod maską” lub „Jeździe próbnej”, cokolwiek czerwonego poza dealbreakerami, auto jest drogie jak na Twój budżet albo importowane bez historii. Płacisz Ty, decydujesz Ty. Jeśli sprzedawca stawia warunek „najpierw zaliczka, potem mechanik” — to on decyduje, nie Ty.",
+              "how": "Jedź na sprawdzenie, gdy: w „Pod maską” lub „Jeździe próbnej” pojawił się choć jeden problem, cokolwiek czerwonego poza dealbreakerami, auto jest drogie jak na Twój budżet, ma napęd, którego nie znasz (automat, hybryda, LPG), albo jest importowane bez historii. Płacisz Ty, decydujesz Ty. Jeśli sprzedawca stawia warunek „najpierw zaliczka, potem mechanik” — to on decyduje, nie Ty.",
               "why": "Godzina u mechanika kosztuje zawsze tyle samo; błąd przy zakupie — nie.",
               "severity": "info",
               "flag_label": "Zalecane sprawdzenie u mechanika/SKP pominięte",
@@ -5198,16 +5376,12 @@
                     "v": "done"
                   },
                   {
-                    "label": "Warunki nie wymagały",
-                    "state": "ok",
-                    "v": "na"
-                  },
-                  {
                     "label": "Pomijam mimo zalecenia",
                     "state": "uwaga",
                     "v": "skip"
                   }
-                ]
+                ],
+                "skip": "Nie było wskazań"
               }
             }
           ]
@@ -5218,61 +5392,11 @@
           "items": [
             {
               "id": "p7s2i1",
-              "text": "Negocjuj faktami z listy, nie opinią o aucie",
-              "how": "Wymień konkretne, sprawdzalne pozycje: rok produkcji opon, elementy z podwyższonym odczytem lakieru, brak drugiego kluczyka, brak faktury za rozrząd, klimatyzacja, która nie chłodzi, stuk lewego przodu. Mów o nich jako o „robocie i ryzyku, które przejmuję”, nie rzucaj wycen z internetu — sprzedawca zawsze zna „tańszego mechanika”.",
-              "why": "Fakt, którego sprzedawca nie może zaprzeczyć, jest wart więcej niż każda kwota, którą wymyślisz.",
+              "text": "Zasady negocjacji: fakty z listy, jedna uzasadniona propozycja, gotowość do odejścia",
+              "how": "Negocjujesz faktami z raportu, nie opinią o aucie: „opony z 2019, brak faktury za rozrząd, klimatyzacja nie chłodzi” zamiast „auto jest zmęczone”. Składasz jedną propozycję z uzasadnieniem i milkniesz — kto pierwszy się odezwie, ten przegrywa. Twoim najsilniejszym argumentem jest gotowość do odejścia: ustal wcześniej cenę, powyżej której wychodzisz, i trzymaj się jej. Zamiast obniżki możesz negocjować rzeczy: komplet opon, świeże badanie techniczne przed odbiorem, serwis olejowy — wpisane do umowy.",
+              "why": "Sprzedawca ma jedno auto, Ty masz kilka ogłoszeń — kto o tym pamięta, ten negocjuje spokojnie.",
               "severity": "info",
-              "flag_label": "Argumenty do negocjacji niewykorzystane",
-              "dealbreaker": false,
-              "photo": false,
-              "input": null,
-              "tags": [
-                "negocjacja"
-              ],
-              "ctrl": {
-                "type": "choice",
-                "options": [
-                  {
-                    "label": "Stosuję",
-                    "state": "ok",
-                    "v": "done"
-                  }
-                ],
-                "skip": "Pomiń"
-              }
-            },
-            {
-              "id": "p7s2i2",
-              "text": "Jedna propozycja, uzasadniona, i cisza",
-              "how": "Podaj jedną kwotę poniżej Twojego maksimum, uzasadnij ją 3–4 najmocniejszymi punktami z listy i zamilknij. Nie licytuj się sam ze sobą, nie tłumacz się. Alternatywa do obniżki: komplet opon, serwis olejowy, dorobiony kluczyk, świeże badanie — przed odbiorem, na koszt sprzedawcy, wpisane do umowy.",
-              "why": "Kto pierwszy przerwie ciszę po propozycji, zwykle ustępuje.",
-              "severity": "info",
-              "flag_label": "Negocjacja bez jasnej, uzasadnionej propozycji",
-              "dealbreaker": false,
-              "photo": false,
-              "input": null,
-              "tags": [
-                "negocjacja"
-              ],
-              "ctrl": {
-                "type": "choice",
-                "options": [
-                  {
-                    "label": "Stosuję",
-                    "state": "ok",
-                    "v": "done"
-                  }
-                ],
-                "skip": "Pomiń"
-              }
-            },
-            {
-              "id": "p7s2i3",
-              "text": "Gotowość do odejścia jest Twoim najsilniejszym argumentem",
-              "how": "Masz inne ogłoszenia otwarte w telefonie — możesz je pokazać. „Jest drugi chętny, dziś decyzja” to presja: jeśli drugi chętny istnieje, niech kupuje. Nie dopłacaj za zmęczenie po 100 km drogi ani za to, że „już tu jesteś”.",
-              "why": "To nie jest ostatnie auto w Polsce — jest ich ponad trzy miliony rocznie.",
-              "severity": "info",
-              "flag_label": "Decyzja podejmowana pod presją czasu lub zmęczenia",
+              "flag_label": "Negocjacja bez listy faktów lub bez ustalonej ceny wyjścia",
               "dealbreaker": false,
               "photo": false,
               "input": null,
@@ -5300,7 +5424,7 @@
             {
               "id": "p7s3i1",
               "text": "Zaliczka czy zadatek — tylko na piśmie, z warunkami",
-              "how": "Jeśli rezerwujesz auto: pokwitowanie lub umowa przedwstępna z danymi stron, VIN i nr rej., kwotą, terminem finalizacji i warunkami zwrotu. Wiedz, co podpisujesz: zaliczka jest zwrotna, zadatek przepada, gdy to Ty się wycofasz (a należy się podwójnie, gdy wycofa się sprzedawca). Nie wpłacaj nic „na konto kolegi” ani bez dokumentu.",
+              "how": "Jeśli rezerwujesz auto: pokwitowanie lub umowa przedwstępna z danymi stron, VIN i nr rej., kwotą, terminem finalizacji i warunkami zwrotu. Wiedz, co podpisujesz: zaliczka jest zwrotna; zadatek działa wg art. 394 Kodeksu cywilnego — jeśli to Ty bez uzasadnienia nie wykonasz umowy, sprzedawca może go zatrzymać, a jeśli on — możesz żądać podwójnej kwoty (chyba że umówiliście się inaczej lub umowę rozwiązano za zgodą obu stron). Nie wpłacaj nic „na konto kolegi” ani bez dokumentu.",
               "why": "Ustne „oddam, jak się rozmyślisz” nie ma żadnej wartości następnego dnia.",
               "severity": "yellow",
               "flag_label": "Zaliczka/zadatek bez pisemnego potwierdzenia i warunków",
@@ -5335,7 +5459,7 @@
             {
               "id": "p7s3i2",
               "text": "Umowa: pełne dane, VIN, przebieg, wady wypisane, wszyscy właściciele",
-              "how": "Dane stron przepisz z dokumentów tożsamości; VIN i nr rej. z dowodu rejestracyjnego; przebieg z licznika w dniu sprzedaży (zrób zdjęcie); cena słownie; data i godzina; oświadczenia sprzedawcy: że jest właścicielem, auto jest wolne od obciążeń i praw osób trzecich, oraz lista znanych wad. Liczba kluczyków i wydanych dokumentów. Dwa egzemplarze, podpisy wszystkich współwłaścicieli. Uwaga na zapis „kupujący zna stan techniczny i nie wnosi zastrzeżeń” bez wypisanych wad — to w praktyce wyłączenie rękojmi (dopuszczalne między osobami prywatnymi; nie chroni sprzedawcy, gdy wadę podstępnie zataił, ale to Ty musisz to potem udowodnić).",
+              "how": "Dane stron przepisz z dokumentów tożsamości; VIN (lub numer nadwozia) i nr rej. z dowodu rejestracyjnego; stan drogomierza z licznika w dniu sprzedaży (zrób zdjęcie); cena słownie; data i godzina; oświadczenia sprzedawcy: że jest właścicielem lub jest uprawniony do sprzedaży, auto jest wolne od zastawu, leasingu, przewłaszczenia i praw osób trzecich, oraz LISTA znanych wad — konkretnie, punkt po punkcie. Liczba kluczyków i wydanych dokumentów. Dwa egzemplarze, podpisy wszystkich współwłaścicieli. Uwaga na sam zapis „kupujący zna stan techniczny i nie wnosi zastrzeżeń” bez listy wad: sprzedający nie odpowiada za wady, o których wiedziałeś, więc ogólnik ułatwia mu obronę; rękojmię między osobami prywatnymi reguluje osobna klauzula (wzór w dodatku „Po zakupie”).",
               "why": "Umowa to jedyny dokument, który zostaje, gdy sprzedawca przestanie odbierać telefon.",
               "severity": "red",
               "flag_label": "Umowa niekompletna lub z zapisem wyłączającym rękojmię bez listy wad",
@@ -5370,7 +5494,7 @@
             {
               "id": "p7s3i3",
               "text": "„Na wczoraj” — nie antydatuj umowy",
-              "how": "Sprzedawca prosi o wpisanie wcześniejszej daty (żeby uniknąć zgłoszenia zbycia, mandatów, kary za brak rejestracji lub OC)? Odmów. Data w umowie to data faktycznej sprzedaży: od niej liczysz 14 dni na PCC-3 (podatek od czynności cywilnoprawnych płaci kupujący) i 30 dni na rejestrację (kara za spóźnienie). Fałszywa data to poświadczenie nieprawdy, a Ty odpowiadasz za wszystko, co auto „zrobiło” między datami.",
+              "how": "Sprzedawca prosi o wpisanie wcześniejszej daty (żeby uniknąć zgłoszenia zbycia, mandatów, kary za brak rejestracji lub OC)? Odmów. Data w umowie to data faktycznej sprzedaży: od niej liczysz 14 dni na PCC-3 (podatek płaci kupujący) i 30 dni na rejestrację. Fałszywa data sprowadza na Ciebie cudze mandaty, szkody i problemy podatkowe za okres między datami — i jest dowodem, który obraca się przeciwko Tobie w każdym sporze.",
               "why": "Kto prosi o fałszywą datę, prosi Cię o wzięcie na siebie jego problemów.",
               "severity": "red",
               "flag_label": "Sprzedawca proponuje antydatowanie umowy („na wczoraj”)",
@@ -5436,7 +5560,7 @@
             {
               "id": "p7s4i1",
               "text": "Odchodzisz, gdy pojawi się choć jedno z tego",
-              "how": "VIN niezgodny lub ze śladami ingerencji; sprzedawca nie jest właścicielem i nie ma pełnomocnictwa; brak oryginału dowodu rejestracyjnego; licznik niższy niż w Historii pojazdu; kontrolka airbag bez autotestu; spawane/prostowane podłużnice, słupki, kielichy; odmowa jazdy próbnej lub zimnego startu; zastaw/leasing bez dokumentów zwolnienia; prośba o antydatowanie umowy połączona z presją „dziś albo nigdy”. Żadna z tych rzeczy nie jest tematem do negocjacji ceny.",
+              "how": "VIN lub numer nadwozia niezgodny z dokumentami albo ze śladami ingerencji; sprzedawca nie wykazał prawa do sprzedaży (nie właściciel, bez pełnomocnictwa lub umów); auto figuruje jako kradzione albo ma zastaw/leasing/przewłaszczenie bez dokumentów zwolnienia; dowód zatrzymany lub auto wyrejestrowane; licznik niższy niż w Historii pojazdu bez udokumentowanej wymiany drogomierza; nieprawidłowy autotest kontrolki airbag; ślady spawania lub prostowania konstrukcji; zestaw śladów zalania; brak jakiejkolwiek jazdy próbnej i brak zgody na niezależne sprawdzenie; prośba o antydatowanie umowy połączona z presją „dziś albo nigdy”. Żadna z tych rzeczy nie jest tematem do negocjacji ceny.",
               "why": "Najlepsza negocjacja przy takim aucie to ta, której nie zaczynasz.",
               "severity": "info",
               "flag_label": "Zignorowano sygnał „odpuść bez dyskusji”",
@@ -5475,24 +5599,24 @@
     "questions": [
       {
         "q": "Czy jest Pan/Pani właścicielem wpisanym w dowodzie rejestracyjnym? Czy jest współwłaściciel? Może mi Pan/Pani wysłać zdjęcie dowodu (VIN, nr rejestracyjny, data pierwszej rejestracji)?",
-        "watch_for": "„Sprzedaję dla brata/znajomego” bez słowa o pełnomocnictwie; „firma, ale sprzedaję prywatnie”; odmowa zdjęcia dowodu lub VIN — to koniec rozmowy.",
-        "if_dodges": "„Rozumiem, to zapytam wprost: czyje nazwisko jest w dowodzie rejestracyjnym i czy ta osoba będzie przy podpisaniu umowy?” Jeśli i teraz nie pada nazwisko ani zgoda na zdjęcie dowodu — nie jedziesz.",
+        "watch_for": "„Sprzedaję dla brata/znajomego” bez słowa o pełnomocnictwie; „firma, ale sprzedaję prywatnie”. Niechęć do podania VIN-u przed spotkaniem to częsta ostrożność — sprawdzisz na miejscu; odmowa jakiejkolwiek weryfikacji przed zapłatą to koniec.",
+        "if_dodges": "„Rozumiem, to zapytam wprost: czyje nazwisko jest w dowodzie rejestracyjnym i czy ta osoba będzie przy podpisaniu umowy?” Jeśli i teraz nie pada nazwisko — nie jedziesz.",
         "flag_label": "Rozmowa: właściciel/współwłaściciel niejasny",
         "ctrl": {
           "type": "choice",
           "options": [
             {
-              "label": "Właściciel, przyśle zdjęcie dowodu",
+              "label": "Właściciel, poda VIN",
               "state": "ok",
               "v": "owner"
             },
             {
-              "label": "Właściciel, ale bez zdjęcia",
+              "label": "Właściciel, VIN dopiero na miejscu",
               "state": "uwaga",
-              "v": "nophoto"
+              "v": "later"
             },
             {
-              "label": "Ktoś inny / odmowa",
+              "label": "Ktoś inny bez pełnomocnictwa / nie chce mówić",
               "state": "problem",
               "v": "other"
             }
@@ -5504,7 +5628,7 @@
       },
       {
         "q": "Od kiedy ma Pan/Pani to auto i od kogo je Pan/Pani kupił(a)? Jest umowa lub faktura z tamtego zakupu?",
-        "watch_for": "Kilka tygodni lub miesięcy posiadania = handel; „z Niemiec od znajomego” bez dokumentów; brak poprzedniej umowy.",
+        "watch_for": "Kilka tygodni lub miesięcy posiadania to sygnał handlu albo pytanie „dlaczego tak szybko sprzedaje?” — nie dowód; „z Niemiec od znajomego” bez dokumentów; brak poprzedniej umowy.",
         "if_dodges": "„Rozumiem, to zapytam wprost: w którym roku kupił(a) Pan/Pani to auto i czy pokaże mi Pan/Pani tamtą umowę na miejscu?” Brak roku albo „umowa gdzieś jest” znaczy, że sprzedawca zna to auto krócej, niż mówi — traktuj je jak auto z handlu i pytaj dalej o papiery.",
         "flag_label": "Rozmowa: pochodzenie auta i poprzedni zakup niejasne",
         "ctrl": {
@@ -5516,13 +5640,13 @@
               "v": "long"
             },
             {
-              "label": "Kilka miesięcy / brak umowy",
+              "label": "Kilka miesięcy",
               "state": "uwaga",
               "v": "months"
             },
             {
-              "label": "Tygodnie / „nie pamiętam”",
-              "state": "problem",
+              "label": "Tygodnie / „nie pamiętam” — zapytaj, dlaczego tak szybko",
+              "state": "uwaga",
               "v": "weeks"
             }
           ]
@@ -5530,7 +5654,7 @@
       },
       {
         "q": "Jaki jest dokładny przebieg na dziś i czym jest udokumentowany (książka, faktury, badania)?",
-        "watch_for": "Zaokrąglenia („koło 180”), przebieg inny niż w ogłoszeniu, „książka się zgubiła”, brak faktur z przebiegami.",
+        "watch_for": "Przebieg inny niż w ogłoszeniu o tysiące km, „książka się zgubiła”, brak faktur z przebiegami. Różnica kilkuset kilometrów od publikacji ogłoszenia jest naturalna.",
         "if_dodges": "„Rozumiem, to zapytam wprost: jaką dokładnie liczbę pokaże licznik, kiedy przyjadę?” Jeśli zamiast liczby pada „koło” albo „mniej więcej”, zapisz to dosłownie — jutro pierwsze, co robisz, to licznik kontra Historia pojazdu.",
         "flag_label": "Rozmowa: przebieg bez dokumentów",
         "ctrl": {
@@ -5542,12 +5666,12 @@
               "v": "exact_docs"
             },
             {
-              "label": "Dokładny, bez dokumentów",
+              "label": "Dokładny, bez dokumentów / „koło…”",
               "state": "uwaga",
               "v": "exact"
             },
             {
-              "label": "„Koło…” / inny niż w ogłoszeniu",
+              "label": "Wyraźnie inny niż w ogłoszeniu (tysiące km)",
               "state": "problem",
               "v": "vague"
             }
@@ -5571,13 +5695,13 @@
               "v": "specific"
             },
             {
-              "label": "„Nic, bezwypadkowy”",
-              "state": "uwaga",
+              "label": "„Nic, bezwypadkowy” — zapisz, sprawdzisz miernikiem",
+              "state": "ok",
               "v": "nothing"
             },
             {
               "label": "Irytacja / kręci",
-              "state": "problem",
+              "state": "uwaga",
               "v": "dodge"
             }
           ]
@@ -5597,7 +5721,7 @@
               "v": "clear"
             },
             {
-              "label": "„To nie szkoda, tylko otarcie”",
+              "label": "„To nie szkoda, tylko otarcie” — zapisz opis",
               "state": "uwaga",
               "v": "minimize"
             },
@@ -5629,7 +5753,7 @@
             },
             {
               "label": "Nie zna daty ani kraju",
-              "state": "problem",
+              "state": "uwaga",
               "v": "unknown"
             }
           ]
@@ -5658,8 +5782,8 @@
               "v": "nodocs"
             },
             {
-              "label": "Nie wie / nic",
-              "state": "problem",
+              "label": "Nie wie / nic nie robione",
+              "state": "uwaga",
               "v": "none"
             }
           ]
@@ -5667,7 +5791,7 @@
       },
       {
         "q": "Czy jakaś kontrolka świeci lub świeciła w ostatnich miesiącach? Były kasowane błędy?",
-        "watch_for": "„Tylko czujnik”; „mechanik skasował i jest ok”; pytanie zwrotne „a czemu Pan pyta?”.",
+        "watch_for": "„Tylko czujnik”; „mechanik skasował i jest ok” bez naprawy i dokumentu; pytanie zwrotne „a czemu Pan pyta?”. Skasowanie po udokumentowanej naprawie to co innego niż skasowanie „żeby nie świeciło”.",
         "if_dodges": "„Rozumiem, to zapytam wprost: czy w ostatnim roku ktoś podłączał komputer do auta i kasował błędy — i po co?” Odpowiedź pytaniem („a czemu Pan pyta?”) to też odpowiedź: jutro sprawdzasz wszystkie kontrolki na zapłonie, a jeśli masz czytnik — monitory gotowości OBD2.",
         "flag_label": "Rozmowa: kontrolki / kasowane błędy",
         "ctrl": {
@@ -5679,12 +5803,12 @@
               "v": "none"
             },
             {
-              "label": "„Tylko czujnik”, kasowane",
+              "label": "Kasowane po naprawie — jest dokument",
               "state": "uwaga",
-              "v": "cleared"
+              "v": "cleared_fixed"
             },
             {
-              "label": "Świeci teraz / unika",
+              "label": "Kasowane bez naprawy / świeci teraz / unika",
               "state": "problem",
               "v": "on"
             }
@@ -5692,8 +5816,8 @@
         }
       },
       {
-        "q": "Czy auto ma ważne badanie techniczne i OC? Czy jest wolne od zastawu, kredytu i leasingu?",
-        "watch_for": "„Badanie zrobię przed sprzedażą”; „kredyt spłacony, tylko jeszcze nie wykreślony”; „OC się skończyło, bo stało”.",
+        "q": "Czy auto ma ważne badanie techniczne i OC? Czy jest wolne od zastawu, leasingu i przewłaszczenia?",
+        "watch_for": "„Badanie zrobię przed sprzedażą”; „leasing spłacony, tylko jeszcze nie przepisany”; „OC się skończyło, bo stało”. Zwykły kredyt gotówkowy sprzedawcy nie obciąża auta — obciąża je zastaw rejestrowy, przewłaszczenie i leasing.",
         "if_dodges": "„Rozumiem, to zapytam wprost: do kiedy jest ważne badanie techniczne i czy w dowodzie rejestracyjnym jest jakakolwiek adnotacja albo współwłaściciel?” Jeśli sprzedawca musi „sprawdzić” daty we własnym aucie albo kluczy przy słowie „zastaw”, nie umawiaj się, dopóki nie przyśle zdjęcia dowodu.",
         "flag_label": "Rozmowa: badanie, OC, zastaw — niepewne",
         "ctrl": {
@@ -5710,7 +5834,7 @@
               "v": "unsure"
             },
             {
-              "label": "Brak badania / kredyt / leasing",
+              "label": "Brak badania lub OC / leasing / zastaw / przewłaszczenie",
               "state": "problem",
               "v": "burden"
             }
@@ -5745,8 +5869,8 @@
       },
       {
         "q": "Czy mogę przyjechać na zimny silnik (proszę nie odpalać przed moim przyjazdem), sam poprowadzić na jeździe próbnej i podjechać na SKP lub do mechanika?",
-        "watch_for": "Wykręty przy zimnym silniku lub SKP („nie mam czasu”, „już było sprawdzane”) to czerwona flaga. „Jazda tylko ze mną za kierownicą” jest częsta i sama w sobie nie przekreśla auta — zaproponuj zasady (prawo jazdy, razem, Ty odpowiadasz za szkodę, na kartce) i choć część trasy za Twoją kierownicą.",
-        "if_dodges": "„Rozumiem, to zapytam wprost: czy auto będzie stało nieodpalane od rana, czy mogę poprowadzić choć część trasy na spisanych zasadach i czy możemy podjechać na stację diagnostyczną — tak czy nie na każde z trzech?” „Nie” na zimny silnik albo na SKP kończy rozmowę. „Nie” na jakąkolwiek jazdę z Tobą za kierownicą oznacza auto niesprawdzone w ruchu — jedziesz tylko z planem na podnośnik i z taką ceną.",
+        "watch_for": "Wykręty przy SKP lub mechaniku („nie mam czasu”, „już było sprawdzane”) ważą najwięcej — to jedyne niezależne sprawdzenie, jakie masz. „Jazda tylko ze mną za kierownicą” jest częsta i sama w sobie nie przekreśla auta — zaproponuj zasady i choć część trasy za Twoją kierownicą. Odmowa zimnego silnika odbiera Ci jeden test, nie całe auto.",
+        "if_dodges": "„Rozumiem, to zapytam wprost: czy auto będzie stało nieodpalane od rana, czy mogę poprowadzić choć część trasy i czy możemy podjechać na stację diagnostyczną — tak czy nie na każde z trzech?” „Nie” na stację diagnostyczną i mechanika kończy rozmowę. „Nie” na jakąkolwiek jazdę z Tobą za kierownicą oznacza auto niesprawdzone w ruchu — jedziesz tylko z planem na podnośnik i z taką ceną.",
         "flag_label": "Rozmowa: opór przed zimnym silnikiem, jazdą próbną lub SKP",
         "ctrl": {
           "type": "choice",
@@ -5757,12 +5881,12 @@
               "v": "yes"
             },
             {
-              "label": "Warunek przy jednym (np. jazda ze mną)",
+              "label": "Warunek przy jednym (np. jazda ze mną) / zimny silnik nie",
               "state": "uwaga",
               "v": "cond"
             },
             {
-              "label": "„Nie” na którekolwiek",
+              "label": "„Nie” na sprawdzenie u mechanika / na SKP",
               "state": "problem",
               "v": "no"
             }
@@ -5771,7 +5895,7 @@
       },
       {
         "q": "Dlaczego sprzedaje Pan/Pani to auto i czy cena jest do rozmowy po oględzinach?",
-        "watch_for": "Powód niespójny z resztą („kupiłem 2 miesiące temu, ale zmieniam na większe”); „cena ostateczna, dużo chętnych, dziś decyzja”.",
+        "watch_for": "Powód niespójny z resztą („kupiłem 2 miesiące temu, ale zmieniam na większe”). „Cena ostateczna” to informacja o sprzedawcy, nie o aucie; presja „dziś decyzja” to technika sprzedaży — zapisz i nie daj się jej poganiać.",
         "if_dodges": "„Rozumiem, to zapytam wprost: jeśli po oględzinach pokażę konkretne uwagi, czy cena jest do rozmowy?” „Cena ostateczna, dużo chętnych, decyzja dziś” to presja, nie informacja — jeśli mimo to jedziesz, jedź z założeniem, że możesz wrócić bez auta.",
         "flag_label": "Rozmowa: powód sprzedaży / cena nie do rozmowy",
         "ctrl": {
@@ -5783,14 +5907,14 @@
               "v": "ok"
             },
             {
-              "label": "Cena „ostateczna”, presja",
-              "state": "uwaga",
-              "v": "pressure"
-            },
-            {
               "label": "Powód niespójny",
               "state": "uwaga",
               "v": "odd"
+            },
+            {
+              "label": "Presja czasu („dużo chętnych, dziś decyzja”)",
+              "state": "uwaga",
+              "v": "pressure"
             }
           ]
         },
@@ -5800,14 +5924,14 @@
       }
     ],
     "closing": [
-      "Podsumuję, żebyśmy się dobrze rozumieli: przyjeżdżam [dzień] o [godzina], auto stoi nieodpalane od rana, na stole dowód rejestracyjny, Pana/Pani dowód osobisty, poprzednia umowa, książka serwisowa i faktury, wszystkie kluczyki; jazdę próbną robię ja, 20–30 minut. Zgadza się?",
+      "Podsumuję, żebyśmy się dobrze rozumieli: przyjeżdżam [dzień] o [godzina], auto stoi nieodpalane od rana, na stole dowód rejestracyjny, dokument tożsamości, książka serwisowa i faktury, wszystkie kluczyki; jazdę próbną robimy razem, 20–30 minut, ja prowadzę choć część trasy. Zgadza się?",
       "Dziękuję, wyślę SMS-a z potwierdzeniem godziny. Gdyby coś się zmieniło, proszę dać znać wcześniej — jadę [X] km specjalnie do Pana/Pani.",
       "Gdy odpowiedzi dyskwalifikują: „Dziękuję za rozmowę i za szczerość. Na tym etapie to nie jest auto dla mnie — powodzenia ze sprzedażą.” Bez tłumaczenia się i bez wykładu, co jest nie tak."
     ],
     "message_templates": [
       {
         "title": "Pierwsza wiadomość (OLX/Otomoto)",
-        "text": "Dzień dobry, interesuje mnie [auto] z Pana/Pani ogłoszenia. Zanim umówię się na oględziny, poproszę o kilka rzeczy:\n– numer VIN (może być zdjęcie dowodu rejestracyjnego, dane adresowe można zasłonić),\n– aktualny przebieg i zdjęcie licznika,\n– informację, które elementy były lakierowane lub wymieniane i dlaczego,\n– jakie są faktury z serwisu (olej, rozrząd, sprzęgło/skrzynia).\nCzy auto będzie dostępne [dzień] przed południem? Chciał(a)bym zobaczyć je na zimnym silniku i przejechać się 20–30 minut. Z góry dziękuję i pozdrawiam, [imię]"
+        "text": "Dzień dobry, interesuje mnie [auto] z Pana/Pani ogłoszenia. Zanim umówię się na oględziny, poproszę o kilka rzeczy:\n– numer VIN (wystarczy sam numer — potrzebuję go do bezpłatnej Historii pojazdu),\n– aktualny przebieg i zdjęcie licznika,\n– informację, które elementy były lakierowane lub wymieniane i dlaczego,\n– jakie są faktury z serwisu (olej, rozrząd, sprzęgło/skrzynia).\nCzy auto będzie dostępne [dzień] przed południem? Chciał(a)bym zobaczyć je na zimnym silniku i przejechać się 20–30 minut. Z góry dziękuję i pozdrawiam, [imię]"
       },
       {
         "title": "Gdy sprzedawca nie podaje VIN",
@@ -5815,7 +5939,7 @@
       },
       {
         "title": "Potwierdzenie przed przyjazdem",
-        "text": "Dzień dobry, potwierdzam: [dzień] o [godzina], [adres]. Proszę nie odpalać auta przed moim przyjazdem — chcę zobaczyć zimny start. Poproszę o przygotowanie: dowodu rejestracyjnego, dowodu osobistego właściciela, poprzedniej umowy zakupu, książki serwisowej i faktur, wszystkich kluczyków oraz dokumentów z importu, jeśli auto było sprowadzone. Planuję jazdę próbną 20–30 minut za moją kierownicą, a jeśli auto mi się spodoba — krótkie sprawdzenie na stacji diagnostycznej lub u mechanika w okolicy, za moje pieniądze. Gdyby coś się zmieniło, proszę o wiadomość wcześniej. Do zobaczenia, [imię]"
+        "text": "Dzień dobry, potwierdzam: [dzień] o [godzina], [adres]. Proszę nie odpalać auta przed moim przyjazdem — chcę zobaczyć zimny start. Poproszę o przygotowanie: dowodu rejestracyjnego, dowodu osobistego właściciela, poprzedniej umowy zakupu, książki serwisowej i faktur, wszystkich kluczyków oraz dokumentów z importu, jeśli auto było sprowadzone. Planuję jazdę próbną 20–30 minut razem z Panem/Panią, chciał(a)bym poprowadzić choć część trasy, a jeśli auto mi się spodoba — krótkie sprawdzenie na stacji diagnostycznej lub u mechanika w okolicy, za moje pieniądze. Gdyby coś się zmieniło, proszę o wiadomość wcześniej. Do zobaczenia, [imię]"
       },
       {
         "title": "Po oględzinach — oferta z listą uwag",
@@ -5833,8 +5957,8 @@
           "Dzień dobry, dzwonię w sprawie [marka model] z ogłoszenia za [cena]. Jest aktualne? Mam kilka pytań, żeby nie jechać na darmo — zajmie to kilka minut, może być?"
         ],
         "check": {
-          "title": "Sprawdź, czy to nie handlarz",
-          "intro": "Handlarz udający osobę prywatną to najczęstsza ściema w ogłoszeniach. Trzy pytania — zaznacz, jak brzmi odpowiedź:",
+          "title": "Sygnały, że to może być handel",
+          "intro": "Handlarz udający osobę prywatną to najczęstsza ściema w ogłoszeniach. Trzy pytania — zaznacz, jak brzmi odpowiedź. To sygnały, nie wyrok:",
           "questions": [
             {
               "q": "Od kiedy ma Pan/Pani to auto?",
@@ -5855,9 +5979,9 @@
               "a_dealer": "Plac / komis / „pod marketem”"
             }
           ],
-          "verdict": "Dwie z trzech odpowiedzi wskazują na handel? Przełącz na „Handlarz / komis” i pytaj dalej jak firmę: o fakturę, pochodzenie auta i odpowiedzialność za wady. Nie kończ rozmowy — po prostu wiesz, z kim mówisz.",
+          "verdict": "Dwie z trzech odpowiedzi wskazują na handel? Ustal, kto będzie stroną umowy — osoba czy firma (NIP, faktura VAT / VAT marża czy umowa z „poprzednim właścicielem”) — przełącz na „Handlarz / komis” i pytaj dalej jak firmę. Nie kończ rozmowy — po prostu wiesz, z kim mówisz.",
           "verdict_private": "Odpowiedzi brzmią jak osoba prywatna. Pytaj dalej.",
-          "verdict_dealer": "To brzmi jak handel — przełącz i pytaj jak firmę."
+          "verdict_dealer": "To brzmi jak handel. Ustal, kto będzie stroną umowy (osoba czy firma, faktura czy umowa), przełącz i pytaj jak firmę."
         }
       },
       {
@@ -5896,20 +6020,23 @@
   },
   "summary_rules": {
     "walk_away_if": [
-      "VIN w dowodzie rejestracyjnym różni się od VIN na podszybiu, tabliczce lub w nadwoziu — albo którykolwiek nosi ślady ingerencji",
-      "Brak oryginału dowodu rejestracyjnego, sprzedający nie jest właścicielem z dowodu i nie ma pisemnego pełnomocnictwa, albo brak podpisu współwłaściciela",
-      "Przebieg na liczniku niższy niż ostatni odczyt w Historii pojazdu lub odczyty w rejestrze nie rosną",
-      "Kontrolka airbag nie zapala się przy zapłonie albo świeci stale",
-      "Ślady spawania lub prostowania podłużnic, słupków, kielichów amortyzatorów, podłogi",
-      "Sprzedający odmawia podania VIN lub zimnego startu, nie zgadza się na żadną jazdę próbną ani sprawdzenie na SKP; silnik rozgrzany mimo ustaleń",
-      "Adnotacja ZASTAW w dowodzie albo właścicielem jest bank/leasing, a sprzedawca nie ma dokumentów zwolnienia",
-      "Sprzedawca żąda antydatowania umowy lub pieniędzy przed pokazaniem dokumentów"
+      "VIN (lub numer nadwozia) w dowodzie rejestracyjnym różni się od numeru na aucie — albo którykolwiek nosi ślady szlifowania, przebijania, przeklejania bez dokumentu",
+      "Sprzedający nie wykazał prawa do sprzedaży: nie jest właścicielem z dowodu i nie ma pisemnego pełnomocnictwa ani umów nabycia; brak podpisu współwłaściciela",
+      "Auto figuruje jako kradzione albo ma zastaw, leasing lub przewłaszczenie bez dokumentów zwolnienia; dowód rejestracyjny zatrzymany lub auto wyrejestrowane",
+      "Przebieg na liczniku niższy niż ostatni odczyt w Historii pojazdu albo odczyty w rejestrze maleją — bez udokumentowanej wymiany drogomierza",
+      "Kontrolka airbag nie zapala się przy zapłonie albo świeci stale (nieprawidłowy autotest), a sprzedający nie chce tego wyjaśnić diagnostyką przed zakupem",
+      "Ślady spawania lub prostowania podłużnic, słupków, kielichów amortyzatorów, podłogi — bez zgody na ocenę przez blacharza lub rzeczoznawcę",
+      "Zestaw śladów zalania: muł i linia wodna pod wykładziną, rdza na szynach foteli i śrubach, stęchlizna",
+      "Poważna usterka hamulców lub układu kierowniczego, przegrzewanie, alarm ciśnienia oleju albo duży wyciek ujawnione na jeździe",
+      "Brak jakiejkolwiek jazdy próbnej i brak zgody na sprawdzenie na SKP lub u mechanika — auto niesprawdzone w ruchu",
+      "Sprzedawca żąda antydatowania umowy, zaliczki przed pokazaniem auta i dokumentów albo pieniędzy przed przekazaniem dokumentów"
     ],
     "get_mechanic_if": [
-      "Łącznie 2 lub więcej odpowiedzi „uwaga”/„problem” w fazach „Pod maską” i „Jazda próbna”",
-      "Jakikolwiek punkt czerwony poza listą „odpuść” — zwłaszcza dym, emulsja pod korkiem, wycieki, praca skrzyni, ściąganie przy hamowaniu",
+      "Choć jeden problem w etapach „Pod maską” i „Jazda próbna” (nie chodzi o liczbę uwag, tylko o ich wagę) — zwłaszcza dym, emulsja pod korkiem, wycieki, praca skrzyni, ściąganie przy hamowaniu",
+      "Jakikolwiek punkt czerwony poza listą „odpuść”",
       "Ślady naprawy przodu lub tyłu (kielichy, pas przedni, wnęka koła zapasowego) przy deklaracji „bezwypadkowy”",
       "Auto z importu bez historii sprzed rejestracji w Polsce",
+      "Napęd, którego nie znasz: automat (zwłaszcza dwusprzęgłowy lub bezstopniowy), hybryda lub elektryk bez raportu baterii, LPG bez dokumentów",
       "Cena to znacząca część Twojego budżetu albo nie znasz tej konstrukcji silnika/skrzyni",
       "Nie miałeś grubościomierza, a auto ma różnice odcieni lub nierówne szczeliny"
     ],
@@ -6232,6 +6359,22 @@
     {
       "claim": "W komisach auta z importu często nie mają tablic/dokumentów dopuszczających do ruchu — jazda próbna po drodze publicznej bywa niemożliwa; zostaje podnośnik/SKP.",
       "url": "https://info-car.pl/infocar/artykuly/bez-jazdy-probnej-w-komisie.html"
+    },
+    {
+      "claim": "Michelin: po 5 latach coroczna kontrola opon przez specjalistę, po 10 latach od daty produkcji wymiana — zalecenie producenta, nie przepis.",
+      "url": "https://www.michelin.pl/auto/porady/wszystko-o-oponach/jak-dlugo-mozna-uzywac-opon"
+    },
+    {
+      "claim": "Historia pojazdu (gov.pl): raport ma charakter informacyjny i nie jest dokumentem urzędowym; usługa może zawierać także część danych z zagranicznych rejestrów.",
+      "url": "https://historiapojazdu.gov.pl/"
+    },
+    {
+      "claim": "Ewidencja pojazdów (CEP) gromadzi odczyty drogomierza z badań technicznych, kontroli drogowych oraz dane o wymianie drogomierza (data, przyczyna, odczyt po wymianie).",
+      "url": "https://www.gov.pl/web/gov/sprawdz-historie-pojazdu"
+    },
+    {
+      "claim": "Zbiorniki LPG w pojazdach podlegają badaniom dozoru technicznego (TDT) — okresowo, co 10 lat od daty produkcji zbiornika.",
+      "url": "https://www.tdt.gov.pl/"
     }
   ],
   "facts_to_verify": [
@@ -6250,14 +6393,21 @@
     "[do weryfikacji] Zadatek: „należy się w podwójnej wysokości, gdy wycofa się druga strona” (art. 394 kc) — sprawdzić brzmienie w glosariuszu i P7.",
     "[do weryfikacji] PCC-3: 14 dni, podatek 2% od wartości rynkowej, zwolnienie do 1000 zł — w treści bez stawki; potwierdzić brak zmian w 2026.",
     "[do weryfikacji] „Auto bez ważnego badania nie powinno wyjeżdżać na jazdę próbną” — sformułowanie ostrożne; sprawdzić, czy nie zaostrzyć („nie może poruszać się po drodze publicznej”).",
-    "[do weryfikacji] Import: „dokument potwierdzający akcyzę” wymagany przy rejestracji auta osobowego z UE — potwierdzić aktualne wymogi i nazwę dokumentu."
+    "[do weryfikacji] Import: „dokument potwierdzający akcyzę” wymagany przy rejestracji auta osobowego z UE — potwierdzić aktualne wymogi i nazwę dokumentu.",
+    "[potwierdzone w audycie B 2026-09-29] odczyty z kontroli drogowych i wymiana drogomierza w CEP; C.1 posiadacz / C.2 właściciel; kary 500/1 000/250 zł; PCC-3 2%/14 dni/1 000 zł (podstawa: wartość rynkowa); 10 lat opon = zalecenie producenta. [poprawione] Historia pojazdu zawiera także część danych zagranicznych; raport nie jest dokumentem urzędowym; antydatowanie umowy nie jest automatycznie „poświadczeniem nieprawdy” z art. 271 kk; publiczna wyszukiwarka sądowych zastawów po VIN nie istnieje (zaświadczenie z sądu, DW-2). [nadal do sprawdzenia] czy raport Historii pojazdu pokazuje wprost „zatrzymany dowód rejestracyjny” — sprawdzić na kilku realnych raportach przed startem."
   ],
   "intake": {
     "title": "Dane z ogłoszenia",
-    "intro": "Wpisz to, co jest w ogłoszeniu. Czego nie ma — zostaw puste i tapnij „nie ma”. Nic nie przepada: te braki dostaniesz jako gotowe zdania w kroku „Rozmowa”, a ja je potem porównam z dokumentami i licznikiem.",
+    "intro": "Wpisz to, co jest w ogłoszeniu. Czego nie ma — zostaw puste i tapnij „nie ma”. Nic nie przepada: te braki dostaniesz jako gotowe zdania w kroku „Rozmowa”, a ja je potem porównam z dokumentami i licznikiem. Paliwo i skrzynia sterują listą: punkty, które nie dotyczą tego auta, oznaczę jako pominięte.",
     "missing_label": "nie ma",
     "missing_hint": "zapytasz w rozmowie",
     "fields": [
+      {
+        "id": "model",
+        "label": "Marka i model",
+        "type": "text",
+        "ask": "Potwierdzę tylko: to [marka model], rocznik [rok]?"
+      },
       {
         "id": "price",
         "label": "Cena",
@@ -6280,10 +6430,58 @@
         "ask": "Jaki jest dokładny przebieg na dziś — co pokaże licznik, kiedy przyjadę?"
       },
       {
+        "id": "fuel",
+        "label": "Paliwo / napęd",
+        "type": "choice",
+        "options": [
+          {
+            "v": "petrol",
+            "label": "Benzyna"
+          },
+          {
+            "v": "diesel",
+            "label": "Diesel"
+          },
+          {
+            "v": "lpg",
+            "label": "LPG"
+          },
+          {
+            "v": "hev",
+            "label": "Hybryda"
+          },
+          {
+            "v": "phev",
+            "label": "Plug-in"
+          },
+          {
+            "v": "ev",
+            "label": "Elektryk"
+          }
+        ],
+        "ask": "Jakie paliwo — benzyna, diesel, LPG, hybryda czy elektryk?"
+      },
+      {
+        "id": "gearbox",
+        "label": "Skrzynia biegów",
+        "type": "choice",
+        "options": [
+          {
+            "v": "manual",
+            "label": "Manualna"
+          },
+          {
+            "v": "auto",
+            "label": "Automatyczna"
+          }
+        ],
+        "ask": "Skrzynia manualna czy automatyczna? Jeśli automat — jaki (klasyczny, dwusprzęgłowy DSG, bezstopniowy CVT)?"
+      },
+      {
         "id": "vin",
-        "label": "VIN (17 znaków)",
+        "label": "VIN / numer nadwozia",
         "type": "vin",
-        "ask": "Poproszę o numer VIN — może być zdjęcie dowodu rejestracyjnego, dane adresowe można zasłonić. Potrzebuję go tylko do bezpłatnej Historii pojazdu.",
+        "ask": "Poproszę o numer VIN — wystarczy sam numer, żebym przed przyjazdem sprawdził Historię pojazdu.",
         "refusable": true
       },
       {
@@ -6312,7 +6510,7 @@
     ],
     "derived_intro": "Co z tego wynika:",
     "call_title": "Najpierw zdobądź to, czego nie było w ogłoszeniu",
-    "call_intro": "Powiedz zdanie, wpisz odpowiedź. Gdy sprzedawca odmawia VIN-u, numeru rejestracyjnego albo zdjęcia dowodu — zaznacz odmowę; to jest odpowiedź.",
+    "call_intro": "Powiedz zdanie, wpisz odpowiedź. Sprzedawca nie chce podać VIN-u przed spotkaniem? To niewygoda, nie wada — zaznacz odmowę, sprawdzisz numer na miejscu, przed jakąkolwiek zapłatą.",
     "call_done": "Masz komplet danych z ogłoszenia i rozmowy.",
     "refused_label": "Odmówił",
     "got_label": "zdobyte w rozmowie"

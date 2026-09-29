@@ -789,3 +789,6 @@ button.paint-row:hover { background: var(--surface); }
 .onb__demo--3 .ans { white-space: normal; font-size: 15px; padding: 8px 4px; }
 .ikf__row--single { grid-template-columns: minmax(0, 1fr); }
 .ikf input::placeholder, .vin-in::placeholder { text-transform: none; letter-spacing: 0; font-weight: 500; color: var(--faint); }
+.ikf__seg--n6, .ikf__seg--n5, .ikf__seg--n4 { grid-template-columns: repeat(3, 1fr); }
+.ikf__seg--n3 { grid-template-columns: repeat(3, 1fr); }
+.ikf__seg button { min-height: var(--tap); white-space: normal; line-height: 1.15; padding: 6px 6px; font-size: 15px; }

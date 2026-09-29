@@ -21,7 +21,7 @@ Właściciel doszedł do kroku 3 i zgłosił pięć problemów (dane z ogłoszen
 - Dealbreakery dokumentowe mają dwie odpowiedzi („Oryginał w ręku” / „Tylko zdjęcie, ksero”), VIN w trzech miejscach: „Zgadza się znak w znak / Nie znalazłem / Różni się lub ślady ingerencji”.
 
 ### Etap 3 „Nadwozie i lakier”
-- 12 elementów lakieru: po wpisaniu µm użytkownik musiał jeszcze tapnąć OK/Uwaga/Problem, mimo że mapa lakieru już wiedziała, jak jest. Teraz ocenę robi system względem dachu (1,4× = uwaga, 2,4× = problem), bez dachu prosi o zmierzenie dachu. Przycisk „Nie mam miernika” zamiast „Pomiń”.
+- 12 elementów lakieru: po wpisaniu µm użytkownik musiał jeszcze tapnąć OK/Uwaga/Problem, mimo że mapa lakieru już wiedziała, jak jest. Teraz ocenę robi system względem bazy — od treści 1.4 jest nią mediana zmierzonych elementów (1,6× = uwaga, 3,0× = problem; pierwotnie 1,4× / 2,4× dachu), bez dachu prosi o zmierzenie dachu. Przycisk „Nie mam miernika” zamiast „Pomiń”.
 - DOT i bieżnik: wpisujesz rok / mm, system ocenia (10 lat i 1,6 mm to progi twarde, 6 lat i 3 mm — ostrzegawcze).
 - Rdza, wycieki, szczeliny: trzy stopnie opisane po ludzku („Czysto, twarde / Naloty, pęcherze / Miękkie, dziury, łaty”).
 
@@ -41,7 +41,7 @@ Właściciel doszedł do kroku 3 i zgłosił pięć problemów (dane z ogłoszen
 - Pytania w raporcie „Czy cena uwzględnia: …” generują się teraz tylko z etapów przy aucie; uwagi z etapu 1 i z rozmowy dostają „Wyjaśnij przed decyzją: …”.
 
 ## Czego nie zmieniłem i dlaczego
-- **Progi liczbowe** (1,4× / 2,4× dachu, 7 000 i 25 000 km/rok, 60 dni do badania, 14 dni do końca OC, 6 i 10 lat DOT, 1,6 i 3 mm bieżnika, ±12% ceny) to widełki orientacyjne, nie normy. Są opisane w treści jako widełki. Audyt B (mechanik) powinien je potwierdzić albo poprawić — to najważniejsza rzecz do sprawdzenia przed startem.
+- **Progi liczbowe** (po audycie B 29.09.2026: 1,6× / 3,0× mediany zmierzonych elementów lakieru, 5 000 i 35 000 km/rok, 30 dni do badania, 14 dni do końca OC, 6 i 10 lat DOT, 1,6 / 3 / 4 mm bieżnika, 70% / 85% typowej ceny; pierwotnie 1,4× / 2,4× dachu, 7 000 / 25 000 km/rok, 60 dni, ±12%) to widełki orientacyjne, nie normy. Są opisane w treści jako widełki. Audyt B (mechanik) powinien je potwierdzić albo poprawić — to najważniejsza rzecz do sprawdzenia przed startem.
 - **Import**: nie wykrywam go automatycznie z daty pierwszej rejestracji, bo pole B w dowodzie to pierwsza rejestracja gdziekolwiek, nie w Polsce. Zostaje pytanie w rozmowie i punkt w kroku „Historia”.
 - **Blokowanie „Dalej”** przy pustych danych: nie. Jest miękka podpowiedź. Ludzie oglądają auta bez ogłoszenia (z polecenia) i nie mogą utknąć w kroku 1.
 - **Ocena „OK” bez punktu odniesienia**: nie. Licznik bez ogłoszenia i rejestru dostaje „uwaga: niezweryfikowany”. Zielone bez podstawy to fałszywe bezpieczeństwo.

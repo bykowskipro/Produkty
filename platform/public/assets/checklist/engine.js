@@ -209,9 +209,9 @@
   const AUTO_RULES = {
     vin_present: function (app, it, car) {
       const vin = String(car.vin || '');
-      if (vin.length === 17) return { state: 'ok', text: 'VIN masz: ' + vin + '. Sprawdzisz go w Historii pojazdu (krok 2) i na aucie w trzech miejscach (etap 2).' };
+      if (vin.length >= 11) return { state: 'ok', text: 'Numer masz: ' + vin + '. Sprawdzisz go w Historii pojazdu (krok 2) i na aucie (etap 2).' };
       const m = app.intakeStatus(car, 'vin');
-      return { state: null, text: m === 'refused' ? 'Sprzedawca odmówił podania VIN — zaznacz „Odmówił podania”.' : m === 'missing' ? 'VIN zaznaczony jako „nie ma” — dostaniesz gotowe zdanie w kroku „Rozmowa”.' : 'Wpisz VIN w „Danych z ogłoszenia” wyżej albo zaznacz tam „nie ma”.' };
+      return { state: null, text: m === 'refused' ? 'Sprzedawca nie podał numeru przed spotkaniem — sprawdzisz go na miejscu, przed jakąkolwiek zapłatą.' : m === 'missing' ? 'VIN zaznaczony jako „nie ma” — dostaniesz gotowe zdanie w kroku „Rozmowa”.' : 'Wpisz VIN w „Danych z ogłoszenia” wyżej albo zaznacz tam „nie ma”.' };
     },
     km_per_year: function (app, it, car) {
       const odo = app.intakeNum(car, 'odo_ad'); const year = app.intakeNum(car, 'year');
@@ -219,51 +219,52 @@
       const now = new Date(); const nowY = now.getFullYear() + now.getMonth() / 12;
       if (year < 1950 || year > now.getFullYear() + 1) return { state: null, text: 'Sprawdź rocznik (' + year + ') — wygląda na literówkę.' };
       const age = Math.max(0.5, nowY - year - 0.5); const kpy = Math.round(odo / age / 100) * 100; const k = fmtKm(kpy) + '/rok';
-      if (kpy < 7000) return { state: 'uwaga', text: '≈ ' + k + ' — bardzo mało jak na wiek. Jutro porównaj z zużyciem kierownicy, fotela i pedałów (etap 4) i z odczytami w Historii pojazdu.' };
-      if (kpy > 25000) return { state: 'uwaga', text: '≈ ' + k + ' — dużo. Zapytaj o flotę, taxi, przedstawiciela handlowego; poproś o faktury serwisowe z przebiegami.' };
-      return { state: 'ok', text: '≈ ' + k + ' — typowo jak na wiek auta.' };
+      if (kpy < 5000) return { state: 'uwaga', text: '≈ ' + k + ' — nietypowo mało (zdarza się: auto miejskie, starsza osoba). Zweryfikuj: zużycie kierownicy, fotela i pedałów (etap 4) oraz odczyty w Historii pojazdu.' };
+      if (kpy > 35000) return { state: 'uwaga', text: '≈ ' + k + ' — intensywne użytkowanie (flota, taxi, przedstawiciel). Poproś o faktury serwisowe z przebiegami.' };
+      return { state: 'ok', text: '≈ ' + k + ' — w typowym zakresie. To informacja o przebiegu, nie ocena stanu auta.' };
     },
     price_vs_market: function (app, it, car) {
       const m = app.numInput(it.id, car); if (m == null) return null;
       const price = app.intakeNum(car, 'price'); if (price == null) return { state: null, text: 'Wpisz cenę z ogłoszenia w „Danych z ogłoszenia”, żeby porównać.' };
       const r = price / m; const pct = Math.round(Math.abs(1 - r) * 100);
-      if (r <= 0.75) return { state: 'uwaga', text: 'Ok. ' + pct + '% taniej niż podobne oferty. Tak duża różnica ma powód — jutro szukasz go w dokumentach, lakierze i historii.' };
-      if (r <= 0.88) return { state: 'uwaga', text: 'Ok. ' + pct + '% taniej niż podobne oferty. Zapytaj wprost o powód.' };
-      if (r >= 1.15) return { state: 'ok', text: 'Ok. ' + pct + '% drożej niż podobne oferty — argument w negocjacji, nie wada.' };
-      return { state: 'ok', text: 'Cena w rynku (różnica ok. ' + pct + '%).' };
+      if (r <= 0.7) return { state: 'problem', force: true, text: 'Ok. ' + pct + '% taniej niż podobne oferty. Tak tanio nie ma bez powodu: najczęściej ciężka szkoda, wada prawna albo oszustwo „na zaliczkę”. Nie płać nic przed oględzinami i sprawdzeniem na SKP.' };
+      if (r <= 0.85) return { state: 'uwaga', text: 'Ok. ' + pct + '% taniej niż podobne oferty. Zapytaj wprost o powód i szukaj go jutro w dokumentach, lakierze i historii.' };
+      if (r >= 1.12) return { state: 'ok', text: 'Ok. ' + pct + '% drożej niż podobne oferty — argument w negocjacji, nie wada.' };
+      return { state: 'ok', text: 'Cena blisko podobnych ofert (różnica ok. ' + pct + '%). To informacja o cenie, nie o stanie auta.' };
     },
     odo_registry: function (app, it, car) {
       const r = app.numInput(it.id, car); if (r == null) return null;
       const ad = app.intakeNum(car, 'odo_ad');
-      if (ad != null && ad + 500 < r) return { state: 'problem', force: true, text: 'W ogłoszeniu ' + fmtKm(ad) + ', a przy ostatnim badaniu już ' + fmtKm(r) + ' — ogłoszenie podaje mniej niż rejestr. To wygląda na cofnięty licznik: zapytaj i nie jedź bez wyjaśnienia.' };
-      return { state: null, text: 'Zapisane: ' + fmtKm(r) + '. Jutro licznik musi pokazać co najmniej tyle' + (ad != null ? '; ogłoszenie (' + fmtKm(ad) + ') się z tym zgadza.' : '.') };
+      if (ad != null && ad + 2000 < r) return { state: 'problem', force: true, text: 'W ogłoszeniu ' + fmtKm(ad) + ', a przy ostatnim badaniu już ' + fmtKm(r) + ' — ogłoszenie podaje mniej niż wcześniejszy urzędowy odczyt. To niespójność do wyjaśnienia (ingerencja w drogomierz, jego wymiana albo błąd w ogłoszeniu) — nie jedź bez wyjaśnienia i dokumentu.' };
+      return { state: null, text: 'Zapisane: ' + fmtKm(r) + '. Jutro licznik musi pokazać co najmniej tyle' + (ad != null ? '; ogłoszenie (' + fmtKm(ad) + ') jest z tym spójne.' : '.') };
     },
     odo_dashboard: function (app, it, car) {
       const v = app.numInput(it.id, car); if (v == null) return null;
       const reg = app.registryOdo(car); const ad = app.intakeNum(car, 'odo_ad');
-      if (reg != null && v < reg) return { state: 'problem', text: 'Licznik ' + fmtKm(v) + ' pokazuje MNIEJ niż ostatni odczyt z badania w Historii pojazdu (' + fmtKm(reg) + '). To cofnięty licznik — kończysz oględziny.' };
-      if (ad != null && v + 300 < ad) return { state: 'problem', text: 'Licznik ' + fmtKm(v) + ' pokazuje mniej niż ogłoszenie (' + fmtKm(ad) + '). Auto nie jeździ do tyłu — pytaj, skąd różnica, i nie kupuj bez wyjaśnienia.' };
-      if (ad != null && v > ad + 3000) return { state: 'uwaga', text: 'Licznik ' + fmtKm(v) + ' — o ' + fmtKm(v - ad) + ' więcej niż w ogłoszeniu. Ogłoszenie nieaktualne albo auto dużo jeździ; zapytaj.' };
-      if (reg == null && ad == null) return { state: 'uwaga', text: 'Zapisane ' + fmtKm(v) + ', ale nie mam z czym porównać: brak przebiegu z ogłoszenia (krok 1) i odczytu z Historii pojazdu (krok 2). Bez tego cofniętego licznika nie wykryjesz.' };
-      return { state: 'ok', text: 'Licznik ' + fmtKm(v) + (reg != null ? ' ≥ ostatnie badanie (' + fmtKm(reg) + ')' : '') + (ad != null ? (reg != null ? ', ' : ' — ') + 'zgodny z ogłoszeniem (' + fmtKm(ad) + ')' : '') + '.' };
+      if (reg != null && v < reg) return { state: 'problem', text: 'Licznik ' + fmtKm(v) + ' pokazuje MNIEJ niż wcześniejszy urzędowy odczyt z Historii pojazdu (' + fmtKm(reg) + '). Bez dokumentu wymiany drogomierza tej niespójności nie da się wytłumaczyć — kończysz oględziny.' };
+      if (ad != null && v + 2000 < ad) return { state: 'problem', text: 'Licznik ' + fmtKm(v) + ' pokazuje o ' + fmtKm(ad - v) + ' mniej niż ogłoszenie (' + fmtKm(ad) + '). Auto nie jeździ do tyłu — pytaj, skąd różnica, i nie kupuj bez wyjaśnienia.' };
+      if (ad != null && v > ad + 5000) return { state: 'uwaga', text: 'Licznik ' + fmtKm(v) + ' — o ' + fmtKm(v - ad) + ' więcej niż w ogłoszeniu. Od publikacji auto sporo przejechało albo ogłoszenie jest stare; zapytaj.' };
+      if (reg == null && ad == null) return { state: 'uwaga', text: 'Zapisane ' + fmtKm(v) + ', ale nie mam z czym porównać: brak przebiegu z ogłoszenia (krok 1) i odczytu z Historii pojazdu (krok 2). Bez tego niespójności licznika nie wykryjesz.' };
+      return { state: 'ok', text: 'Licznik ' + fmtKm(v) + (reg != null ? ' nie niższy niż ostatnie badanie (' + fmtKm(reg) + ')' : '') + (ad != null ? (reg != null ? ', ' : ' — ') + 'spójny z ogłoszeniem (' + fmtKm(ad) + ')' : '') + '. Brak niespójności w tym teście — to nie ocena całego auta.' };
     },
     vin_doc: function (app, it, car) {
       const v = app.strInput(it.id, car); if (!v) return null;
-      if (v.length !== 17) return { state: null, text: v.length + '/17 znaków — VIN ma dokładnie 17 (bez liter I, O, Q).' };
+      if (v.length < 11) return { state: null, text: v.length + ' znaków — VIN ma zwykle 17 (bez liter I, O, Q); starsze auta mają krótszy numer nadwozia.' };
       const seller = String(car.vin || '');
-      if (seller.length === 17) return seller === v ? { state: 'ok', text: 'Zgodny z VIN-em od sprzedawcy. Teraz ten sam ciąg na aucie: podszybie, tabliczka, nadwozie.' } : { state: 'problem', text: 'INNY niż VIN podany przed spotkaniem (' + seller + '). Zapytaj dlaczego; bez prostego wyjaśnienia (literówka w SMS-ie) kończysz.' };
-      return { state: 'ok', text: 'Zapisany. Porównasz go z autem w następnej sekcji.', setVin: v };
+      if (seller.length >= 11) return seller === v ? { state: 'ok', text: 'Dokument zgodny z numerem od sprzedawcy. Właściwa weryfikacja jest w następnej sekcji: ten sam numer na aucie.' } : { state: 'problem', text: 'INNY niż numer podany przed spotkaniem (' + seller + '). Zapytaj dlaczego; bez prostego wyjaśnienia (literówka w SMS-ie) kończysz.' };
+      return { state: 'ok', text: 'Zapisany (nie było numeru od sprzedawcy, więc nie ma z czym porównać). Właściwa weryfikacja: ten sam numer na aucie w następnej sekcji.', setVin: v };
     },
     inspection_valid: function (app, it, car) {
       const ds = app.dateInputOf(it.id, car); if (!ds) return null; const left = daysBetween(todayStr(), ds);
-      if (left < 0) return { state: 'problem', text: 'Badanie nieważne od ' + Math.abs(left) + ' ' + plural(Math.abs(left), 'dnia', 'dni', 'dni') + '. Auto nie powinno wyjechać na jazdę próbną; to koszt i pytanie, dlaczego stało.' };
-      if (left <= 60) return { state: 'uwaga', text: 'Badanie kończy się za ' + left + ' ' + plural(left, 'dzień', 'dni', 'dni') + ' (' + fmtPl(ds) + ') — świeże badanie przed odbiorem to dobry punkt do negocjacji.' };
+      if (left < 0) return { state: 'problem', text: 'Badanie nieważne od ' + Math.abs(left) + ' ' + plural(Math.abs(left), 'dnia', 'dni', 'dni') + '. Auto nie powinno wyjechać na jazdę próbną po drodze publicznej; to koszt i pytanie, dlaczego stało.' };
+      if (left <= 30) return { state: 'uwaga', text: 'Badanie kończy się za ' + left + ' ' + plural(left, 'dzień', 'dni', 'dni') + ' (' + fmtPl(ds) + ') — świeże badanie przed odbiorem to dobry punkt do negocjacji.' };
+      if (left <= 60) return { state: 'ok', text: 'Badanie ważne do ' + fmtPl(ds) + ' (' + left + ' dni) — zaraz po zakupie umów stację.' };
       return { state: 'ok', text: 'Badanie ważne do ' + fmtPl(ds) + '.' };
     },
     oc_valid: function (app, it, car) {
       const ds = app.dateInputOf(it.id, car); if (!ds) return null; const left = daysBetween(todayStr(), ds);
       if (left < 0) return { state: 'problem', text: 'OC nieważne od ' + Math.abs(left) + ' ' + plural(Math.abs(left), 'dnia', 'dni', 'dni') + ' — jazda próbna wyłącznie na Twoje ryzyko; nie jedź.' };
-      if (left <= 14) return { state: 'uwaga', text: 'OC kończy się za ' + left + ' ' + plural(left, 'dzień', 'dni', 'dni') + ' — po zakupie od razu nowa polisa.' };
+      if (left <= 14) return { state: 'ok', text: 'OC ważne, ale kończy się za ' + left + ' ' + plural(left, 'dzień', 'dni', 'dni') + ' — to nie wada auta; po zakupie od razu własna polisa (przejęta się nie odnawia).' };
       return { state: 'ok', text: 'OC ważne do ' + fmtPl(ds) + '.' };
     },
     prod_year: function (app, it, car) {
@@ -282,27 +283,26 @@
     dot_year: function (app, it, car) {
       const y = app.numInput(it.id, car); if (y == null) return null; const age = new Date().getFullYear() - y;
       if (y < 1990 || age < 0) return { state: null, text: 'Sprawdź rok: DOT to 4 cyfry, dwie ostatnie to rok (np. 2319 = 2019).' };
-      if (age >= 10) return { state: 'problem', text: 'Najstarsza opona ma ' + age + ' lat — do wymiany od razu, niezależnie od bieżnika (producenci mówią o ok. 10 latach jako granicy).' };
-      if (age >= 6) return { state: 'uwaga', text: 'Najstarsza opona ma ' + age + ' lat — obejrzyj pęknięcia boków i planuj wymianę.' };
+      if (age >= 10) return { state: 'problem', text: 'Najstarsza opona ma ' + age + ' lat — producenci zalecają wymianę po 10 latach niezależnie od bieżnika (zalecenie, nie przepis). Do negocjacji jako komplet opon.' };
+      if (age >= 6) return { state: 'uwaga', text: 'Najstarsza opona ma ' + age + ' lat — obejrzyj pęknięcia boków; producenci zalecają coroczną kontrolę po 5 latach.' };
       return { state: 'ok', text: 'Najstarsza opona z ' + y + ' r. (' + age + ' ' + plural(age, 'rok', 'lata', 'lat') + ').' };
     },
     tread_mm: function (app, it, car) {
       const t = app.numInput(it.id, car); if (t == null) return null;
       if (t < 1.6) return { state: 'problem', text: fmtNum(t) + ' mm — poniżej prawnego minimum 1,6 mm. Opony do wymiany przed jazdą.' };
-      if (t < 3) return { state: 'uwaga', text: fmtNum(t) + ' mm — blisko minimum; planuj wymianę (letnie ok. 3 mm, zimowe ok. 4 mm).' };
-      if (t < 4) return { state: 'ok', text: fmtNum(t) + ' mm — w porządku dla letnich; zimowe poniżej 4 mm już do wymiany.' };
+      if (t < 3) return { state: 'uwaga', text: fmtNum(t) + ' mm — blisko minimum; komplet do wymiany wkrótce (letnie ok. 3 mm, zimowe i całoroczne ok. 4 mm to progi zalecane, nie ustawowe).' };
+      if (t < 4) return { state: 'uwaga', text: fmtNum(t) + ' mm — dla letnich jeszcze w porządku; zimowe i całoroczne poniżej 4 mm tracą właściwości (zalecenie producentów). Sprawdź typ opony.' };
       return { state: 'ok', text: fmtNum(t) + ' mm — dobry bieżnik.' };
     },
     paint_panel: function (app, it, car, carId) {
       const v = app.numInput(it.id, car); if (v == null) return null;
       const key = app.content.panelOfItem[it.id]; const pd = app.paintData(carId); const p = PANEL_INDEX[key]; const name = p ? p.label : 'element';
-      if (key === 'roof') return { state: 'ok', text: 'Dach ' + fmtNum(v) + ' µm — to Twoja baza. Pozostałe elementy porównuję z nią.' };
-      if (pd.baseSrc !== 'roof' && pd.count < 3) return { state: null, text: 'Zmierz też dach — bez bazy nie ocenię ' + fmtNum(v) + ' µm.' };
-      const lv = pd.levels[key]; const base = pd.baseline; const ratio = base ? ratioText(v / base) : '';
-      const bs = pd.baseSrc === 'roof' ? 'dachu' : 'mediany';
-      if (lv === 'bad') return { state: 'problem', text: name + ': ' + fmtNum(v) + ' µm, ' + ratio + ' ' + bs + ' (' + fmtNum(base) + ' µm) — wyraźnie wyższy: szpachla lub naprawa. Zrób zdjęcie i zapytaj, co tu było.' };
-      if (lv === 'warn') return { state: 'uwaga', text: name + ': ' + fmtNum(v) + ' µm, ' + ratio + ' ' + bs + ' (' + fmtNum(base) + ' µm) — podwyższony: element lakierowany. Argument w rozmowie o cenie.' };
-      return { state: 'ok', text: name + ': ' + fmtNum(v) + ' µm, ' + ratio + ' ' + bs + ' — w normie.' };
+      if (!pd.baseline) return { state: null, text: 'Zapisane ' + fmtNum(v) + ' µm. Zmierz co najmniej 3 elementy (albo dach) — bazą jest mediana zmierzonych elementów tego auta.' };
+      const lv = pd.levels[key]; const base = pd.baseline; const ratio = ratioText(v / base);
+      const bs = pd.baseSrc === 'roof' ? 'dachu' : 'mediany ' + pd.count + ' ' + plural(pd.count, 'elementu', 'elementów', 'elementów');
+      if (lv === 'bad') return { state: 'problem', text: name + ': ' + fmtNum(v) + ' µm, ' + ratio + ' ' + bs + ' (' + fmtNum(base) + ' µm) — bardzo duża różnica: możliwa szpachla lub naprawa blacharska. Zrób zdjęcie, zapytaj, co tu było, i pokaż fachowcowi.' };
+      if (lv === 'warn') return { state: 'uwaga', text: name + ': ' + fmtNum(v) + ' µm, ' + ratio + ' ' + bs + ' (' + fmtNum(base) + ' µm) — wyraźnie grubszy niż reszta: element mógł być lakierowany. Porównaj odcień i szukaj oversprayu; argument w rozmowie o cenie.' };
+      return { state: 'ok', text: name + ': ' + fmtNum(v) + ' µm, ' + ratio + ' ' + bs + ' — bez wyraźnej różnicy względem reszty auta.' };
     },
   };
   function normalize(raw) {
@@ -390,6 +390,7 @@
     c.intake = ik && Array.isArray(ik.fields) && ik.fields.length ? Object.assign({}, ik, { fields: ik.fields.filter((f) => f && f.id && f.type), byId: {} }) : null;
     if (c.intake) c.intake.fields.forEach((f) => { c.intake.byId[f.id] = f; });
     c.autoItems = c.items.filter((it) => it.ctrl.auto);
+    c.naItems = c.items.filter((it) => it.na_if && typeof it.na_if === 'object' && it.na_if.field);
     c.wizard = buildWizard(c, scr);
     return c;
   }
@@ -456,7 +457,7 @@
   /* ------------------------------------------------------------------ mount */
   const Checklist = {
     mount(opts) { const app = new App(opts); app.init(); Checklist.app = app; window.OdhaczApp = app; return app; },
-    version: '1.3.0',
+    version: '1.4.0',
   };
   window.Checklist = Checklist;
 
@@ -1087,6 +1088,7 @@
     if (!f) return String(v);
     if (f.type === 'date') return fmtPl(String(v)) || String(v);
     if (f.type === 'yesno') return v === 'yes' ? (f.yes || 'tak') : (f.no || 'nie');
+    if (f.type === 'choice' && Array.isArray(f.options)) { const o = f.options.find((x) => x.v === v); return o ? o.label : String(v); }
     if (f.type === 'number') { const n = Number(v); if (!isFinite(n)) return String(v); if (f.unit === 'km') return fmtKm(n); if (f.unit === 'zł') { try { return n.toLocaleString('pl-PL') + ' zł'; } catch (e) { return n + ' zł'; } } return String(n); }
     return String(v);
   };
@@ -1114,6 +1116,14 @@
   App.prototype.reevalAuto = function (opts) {
     opts = opts || {}; const carId = opts.carId || this.state.active; const changed = [];
     (this.content.autoItems || []).forEach((it) => { if (opts.except === it.id) return; const r = this.applyAuto(it, { carId: carId }); if (r && r.changed) changed.push(it); });
+    // Items that do not apply to this car (manual vs automatic gearbox, fuel type): marked „pomin” by the system, cleared when the intake changes.
+    const car = this.state.cars[carId];
+    (this.content.naItems || []).forEach((it) => {
+      const cond = it.na_if; const val = this.intakeVal(car, cond.field); const tup = (car && car.a && car.a[it.id]) || []; const cur = tup[0] || null; const wasAuto = tup[3] === 'a';
+      const na = val != null && ((Array.isArray(cond.in) && cond.in.indexOf(val) >= 0) || (Array.isArray(cond.not_in) && cond.not_in.indexOf(val) < 0));
+      if (na && cur == null) { this.setAnswerFor(carId, it.id, { state: 'pomin', auto: true }); changed.push(it); }
+      else if (!na && cur === 'pomin' && wasAuto) { this.setAnswerFor(carId, it.id, { state: null, auto: false }); changed.push(it); }
+    });
     if (carId !== this.state.active || opts.silent || !this.root) return changed;
     changed.forEach((it) => this.refreshRow(it));
     if (changed.length) { this.updateFlagbar(); if (this.route.view === 'start') this.refreshWizard(); if (this.route.view === 'filtr') this.refreshFilter(); }
@@ -1212,6 +1222,13 @@
     const wrap = el('div', { class: 'ikf' + (compact ? ' ikf--compact' : ''), 'data-field': f.id });
     const lab = el('div', { class: 'ikf__lab' }, el('span', { text: f.label }), d.got[f.id] && this.intakeStatus(car, f.id) === 'have' ? el('span', { class: 'chip chip--got' }, ik.got_label || 'z rozmowy') : null);
     wrap.append(lab);
+    if (f.type === 'choice' && Array.isArray(f.options)) {
+      const seg = el('div', { class: 'seg seg--wrap ikf__seg ikf__seg--n' + f.options.length, role: 'group', 'aria-label': f.label });
+      f.options.forEach((o) => seg.append(el('button', { type: 'button', class: cur === o.v ? 'is-on' : '', 'aria-pressed': cur === o.v ? 'true' : 'false', 'data-v': o.v, onclick: () => { const nv = cur === o.v ? null : o.v; self.setIntake(f.id, nv, { got: false }); if (onDone) onDone(false); } }, o.label)));
+      wrap.append(seg);
+      if (!compact && cur == null) wrap.append(el('span', { class: 'ikf__hint' }, 'Nie wiesz? Zostaw puste — zapytasz w rozmowie.'));
+      return wrap;
+    }
     if (f.type === 'yesno') {
       const seg = el('div', { class: 'seg seg--wrap ikf__seg', role: 'group', 'aria-label': f.label });
       [['yes', f.yes || 'Tak'], ['no', f.no || 'Nie']].forEach((p) => seg.append(el('button', { type: 'button', class: cur === p[0] ? 'is-on' : '', 'aria-pressed': cur === p[0] ? 'true' : 'false', onclick: () => { const nv = cur === p[0] ? null : p[0]; self.setIntake(f.id, nv, { miss: nv === 'no', got: false, ref: false }); if (onDone) onDone(false); } }, p[1])));
@@ -1237,7 +1254,7 @@
     const row = el('div', { class: 'ikf__row' + (compact ? ' ikf__row--single' : '') }, el('div', { class: 'inwrap' }, inp, f.unit ? el('span', { class: 'unit', text: f.unit }) : null),
       compact ? null : el('button', { class: 'missbtn', type: 'button', 'data-testid': 'ik-miss-' + f.id, 'aria-label': (ik.missing_label || 'nie ma') + ': ' + f.label, onclick: () => { self.setIntake(f.id, null, { miss: true }); if (onDone) onDone(false); } }, ik.missing_label || 'nie ma'));
     wrap.append(row);
-    if (f.type === 'vin') { const st = el('span', { class: 'ikf__hint' }); const upd = () => { const v = String(inp.value || ''); const bad = /[IOQ]/i.test(v); st.textContent = !v ? '17 znaków z dowodu (pole E) albo z podszybia.' : v.length === 17 && !bad ? '17/17 – komplet' : v.length + '/17' + (bad ? ' · VIN nie zawiera liter I, O ani Q' : ''); }; inp.addEventListener('input', upd); upd(); wrap.append(st); }
+    if (f.type === 'vin') { const st = el('span', { class: 'ikf__hint' }); const upd = () => { const v = String(inp.value || ''); const bad = /[IOQ]/i.test(v); st.textContent = !v ? 'Zwykle 17 znaków (dowód, pole E, albo podszybie); starsze auta mają krótszy numer nadwozia.' : v.length === 17 && !bad ? '17/17 – komplet' : v.length + '/17' + (bad ? ' · VIN nie zawiera liter I, O ani Q' : v.length >= 11 ? ' · krótszy numer nadwozia? W porządku.' : ''); }; inp.addEventListener('input', upd); upd(); wrap.append(st); }
     return wrap;
   };
   App.prototype.intakeCard = function () {
@@ -1259,7 +1276,7 @@
     if (odo != null && year != null) { const r = AUTO_RULES.km_per_year(this, null, car); if (r && r.text) lines.push({ st: r.state || 'none', text: r.state ? r.text.split(' — ')[0] + (r.state === 'ok' ? ' — typowo jak na wiek' : /mało/.test(r.text) ? ' — mało jak na wiek: jutro licznik kontra zużycie' : ' — dużo: zapytaj o flotę, taxi, przedstawiciela') : r.text }); }
     if (year != null && fr) { const fy = parseInt(String(fr).slice(0, 4), 10); if (fy) { const diff = fy - year; if (diff < 0) lines.push({ st: 'problem', text: 'Pierwsza rejestracja (' + fy + ') wcześniejsza niż rok produkcji (' + year + ') — coś się nie zgadza, zapytaj.' }); else if (diff >= 2) lines.push({ st: 'uwaga', text: 'Pierwsza rejestracja ' + diff + ' ' + plural(diff, 'rok', 'lata', 'lat') + ' po roku produkcji — auto długo stało w salonie lub na placu albo rocznik jest naciągany. Zapytaj.' }); else lines.push({ st: 'ok', text: 'Pierwsza rejestracja (' + fy + ') zgodna z rocznikiem.' }); } }
     const refused = ik.fields.filter((f) => this.intakeStatus(car, f.id) === 'refused'); const miss = ik.fields.filter((f) => this.intakeStatus(car, f.id) === 'missing');
-    refused.forEach((f) => lines.push({ st: 'problem', text: 'Sprzedawca odmówił: ' + this.intakeShortLabel(f) + '.' + (f.id === 'vin' ? ' Bez VIN nie sprawdzisz nic — to koniec tematu.' : '') }));
+    refused.forEach((f) => lines.push({ st: 'uwaga', text: 'Sprzedawca nie podał przed spotkaniem: ' + this.intakeShortLabel(f) + '.' + (f.id === 'vin' ? ' Historii nie sprawdzisz przed wyjazdem — na miejscu numer musi być do sprawdzenia przed jakąkolwiek zapłatą.' : '') }));
     if (lines.length) { out.push(el('div', { class: 'ikderived__t' }, ik.derived_intro || 'Co z tego wynika:')); lines.forEach((l) => out.push(el('div', { class: 'autov autov--' + l.st }, el('span', { class: 'autov__i', html: l.st === 'problem' ? ICON.flag : l.st === 'uwaga' ? ICON.alert : l.st === 'ok' ? ICON.check : ICON.info }), el('span', null, l.text)))); }
     if (miss.length) out.push(el('p', { class: 'ikmiss', 'data-testid': 'intake-missing' }, el('span', { html: ICON.phone }), el('span', null, el('b', null, 'Do zdobycia w rozmowie (krok 3): '), miss.map((f) => this.intakeShortLabel(f)).join(', ') + '. Dostaniesz tam gotowe zdania.')));
     else out.push(el('p', { class: 'ikmiss ikmiss--ok', 'data-testid': 'intake-complete' }, el('span', { html: ICON.check }), el('span', null, 'Komplet danych z ogłoszenia.')));
@@ -1316,8 +1333,8 @@
   App.prototype.afterRefusal = function (fid) {
     if (fid !== 'vin') return;
     const it = this.content.itemById.p1s1i2 && this.content.itemById.p1s1i2.ctrl && this.content.itemById.p1s1i2.ctrl.auto === 'vin_present' ? this.content.itemById.p1s1i2 : (this.content.autoItems || []).find((x) => x.ctrl.auto === 'vin_present');
-    if (!it) return; const o = (it.ctrl.options || []).find((x) => x.state === 'problem');
-    this.applyState(it, { state: 'problem', input: o ? o.v : null }, this.itemEl(it.id));
+    if (!it) return; const o = (it.ctrl.options || []).find((x) => x.state === 'uwaga') || (it.ctrl.options || []).find((x) => x.state === 'problem');
+    if (o) this.applyState(it, { state: o.state, input: o.v }, this.itemEl(it.id));
   };
   /** „Z ogłoszenia: …” chips under a call question that refers to intake fields. */
   App.prototype.refText = function (fid) {
@@ -1389,7 +1406,7 @@
     } else if (cnt.answered < Math.max(1, Math.round(cnt.total * 0.5))) {
       kind = 'todo'; title = 'Za wcześnie na decyzję'; lead = 'Odhaczone ' + cnt.answered + ' z ' + cnt.total + ' punktów. Wróć tu, kiedy przejdziesz przynajmniej silnik i jazdę próbną.';
     } else {
-      kind = 'ok'; title = 'Wygląda dobrze'; lead = cnt.answered + ' ' + plural(cnt.answered, 'punkt', 'punkty', 'punktów') + ' bez problemów i uwag.' + (cnt.answered < cnt.total ? ' Zostało ' + (cnt.total - cnt.answered) + ' – dokończ przed decyzją.' : ' Trzymaj się zasad bezpiecznej transakcji poniżej.');
+      kind = 'ok'; title = 'Bez czerwonych flag w sprawdzonych punktach'; lead = cnt.answered + ' ' + plural(cnt.answered, 'punkt', 'punkty', 'punktów') + ' bez problemów i uwag' + (cnt.pomin ? ', ' + cnt.pomin + ' ' + plural(cnt.pomin, 'pominięty', 'pominięte', 'pominiętych') : '') + '.' + (cnt.answered < cnt.total ? ' Zostało ' + (cnt.total - cnt.answered) + ' – dokończ przed decyzją.' : ' To wynik Twoich oględzin, nie gwarancja stanu auta — trzymaj się zasad bezpiecznej transakcji poniżej.');
     }
     const ruleText = kind === 'walk' ? rules.walk_away_if : kind === 'mech' ? rules.get_mechanic_if : kind === 'nego' ? rules.negotiate_if : null;
     return { kind: kind, title: title, lead: lead, reasons: reasons, rules: Array.isArray(ruleText) ? ruleText : [] };
@@ -1721,19 +1738,21 @@
   };
 
   /* ------------------------------------------------------------------ paint map (Mapa lakieru) */
-  /** Readings per panel + levels relative to the baseline (roof, else median): ≤1.4× ok, 1.4–2.4× warn, >2.4× bad. */
+  /** Readings per panel + levels relative to the baseline (median of 3+ panels, else roof; median): ≤1.4× ok, 1.4–2.4× warn, >2.4× bad. */
   App.prototype.paintData = function (carId) {
     const c = this.content; const car = carId ? this.state.cars[carId] : this.car(); const a = (car && car.a) || {};
     const d = { readings: {}, values: [], baseline: null, baseSrc: null, levels: {}, max: null, count: 0, flagged: [], panels: Object.keys(c.panelItem || {}).length };
     if (!c.hasPaint) return d;
     PANELS.forEach((p) => { const it = c.panelItem[p.key]; if (!it) return; const v = a[it.id] && a[it.id][1]; const n = typeof v === 'number' ? v : (v != null && v !== '' ? Number(v) : NaN); if (isFinite(n) && n > 0) { d.readings[p.key] = n; d.values.push(n); } });
     d.count = d.values.length;
-    if (d.readings.roof) { d.baseline = d.readings.roof; d.baseSrc = 'roof'; }
-    else if (d.count) { const s = d.values.slice().sort((x, y) => x - y); const m = s.length >> 1; d.baseline = s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2; d.baseSrc = 'median'; }
+    // Baseline: the median of all measured panels once there are 3+ readings (robust to an aluminium/glass/wrapped roof and to a
+    // repaired roof); with fewer readings the roof alone; otherwise none (no verdicts until 3 panels are measured).
+    if (d.count >= 3) { const s = d.values.slice().sort((x, y) => x - y); const m = s.length >> 1; d.baseline = s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2; d.baseSrc = 'median'; }
+    else if (d.readings.roof) { d.baseline = d.readings.roof; d.baseSrc = 'roof'; }
     PANELS.forEach((p) => {
       const v = d.readings[p.key];
       if (v == null) { d.levels[p.key] = c.panelItem[p.key] ? 'none' : 'na'; return; }
-      const r = d.baseline ? v / d.baseline : 1; const lv = r > 2.4 ? 'bad' : r > 1.4 ? 'warn' : 'ok';
+      const r = d.baseline ? v / d.baseline : 1; const lv = !d.baseline ? 'ok' : r > 3.0 ? 'bad' : r > 1.6 ? 'warn' : 'ok';
       d.levels[p.key] = lv; if (lv !== 'ok') d.flagged.push({ key: p.key, value: v, ratio: r, level: lv });
       if (!d.max || v > d.max.value) d.max = { key: p.key, value: v, ratio: r, level: lv };
     });
@@ -1784,7 +1803,7 @@
     card.append(el('div', { class: 'card__title' }, el('h2', { class: 'grow', style: 'margin:0', text: opts.title || 'Mapa lakieru' }), el('span', { class: 'chip', text: d.count + '/' + d.panels + ' odczytów' })));
     card.append(this.paintSvg(d, !!opts.interactive));
     const legend = el('div', { class: 'paint-legend', 'aria-label': 'Legenda' });
-    [['ok', '≤ 1,4× bazy'], ['warn', '1,4–2,4× bazy'], ['bad', '> 2,4× bazy'], ['none', 'brak odczytu']].forEach((x) => legend.append(el('span', { class: 'pl pl--' + x[0] }, el('i'), x[1])));
+    [['ok', '≤ 1,6× bazy'], ['warn', '1,6–3,0× bazy'], ['bad', '> 3,0× bazy'], ['none', 'brak odczytu']].forEach((x) => legend.append(el('span', { class: 'pl pl--' + x[0] }, el('i'), x[1])));
     card.append(legend);
     card.append(el('p', { class: 'paint-base' }, this.paintBaseText(d)));
     card.append(el('p', { class: 'paint-note', 'data-testid': 'paint-note' }, this.paintInterpretation(d)));

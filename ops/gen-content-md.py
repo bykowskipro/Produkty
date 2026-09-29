@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
-"""Regenerate product/content/auto.md as a readable mirror of auto.json.
+"""Regenerate product/content/<product>.md as a readable mirror of <product>.json (auto and po-zakupie).
 Usage: python3 ops/gen-content-md.py product/content/auto.json product/content/auto.md
+       python3 ops/gen-content-md.py product/content/po-zakupie.json product/content/po-zakupie.md
 Reproduces the legacy layout exactly; additionally renders new fields
 (quick, panel, extended seller_call_script) when present."""
 import json, sys
@@ -11,7 +12,7 @@ SEV = {'yellow': 'ŻÓŁTA', 'red': 'CZERWONA', 'info': 'INFO'}
 def gen(d):
     L = []
     m = d['meta']
-    L.append(f"# {m['title']} — pełna treść produktu (mirror auto.json v{m['version']})")
+    L.append(f"# {m['title']} — pełna treść produktu (mirror {m.get('product_id', 'auto')}.json v{m['version']})")
     L.append("")
     L.append(f"> {m['disclaimer']}")
     L.append("")
@@ -85,7 +86,22 @@ def gen(d):
                 if it.get('input'):
                     inp = it['input']
                     unit = f" [{inp['unit']}]" if inp.get('unit') else ''
-                    L.append(f"- **Pole ({inp['type']}):** {inp['label']}{unit} — {inp.get('hint', '')}")
+                    opts_s = ''
+                    if inp.get('options') and isinstance(inp['options'][0], str):
+                        opts_s = ' — opcje: ' + ' / '.join(f"„{o}”" for o in inp['options'])
+                    L.append(f"- **Pole ({inp['type']}):** {inp['label']}{unit} — {inp.get('hint', '')}{opts_s}")
+                dl = it.get('deadline')
+                if dl:
+                    if dl.get('days_from_purchase') is not None:
+                        when = f"{dl['days_from_purchase']} dni od daty umowy"
+                    elif dl.get('days_before_input') is not None:
+                        when = f"{dl['days_before_input']} dni przed datą z pola `{dl.get('input_ref', '')}`"
+                    elif dl.get('days_from_input') is not None:
+                        when = f"{dl['days_from_input']} dni od daty z pola `{dl.get('input_ref', '')}`"
+                    else:
+                        when = '—'
+                    extra = (f"; kto: {dl['who']}" if dl.get('who') else '') + ('; zalecenie, nie obowiązek' if dl.get('soft') else '')
+                    L.append(f"- **Termin:** {dl['label']} — {when}{extra}")
                 c = it.get('ctrl')
                 if c:
                     if c['type'] == 'auto':
@@ -100,13 +116,17 @@ def gen(d):
                         elif c.get('skip'):
                             tail += f"; pominięcie: „{c['skip']}”"
                         L.append(f"- **Odpowiedzi:** {opts}{tail}")
+                else:
+                    L.append("- **Odpowiedzi:** ogólne „OK” → ok / „Uwaga” → uwaga / „Problem” → problem / „Pomiń” → pomin")
                 L.append(f"- **Na listę uwag:** „{it['flag_label']}”")
                 L.append(f"- Tagi: {', '.join(it['tags'])}")
                 L.append("")
 
-    s = d['seller_call_script']
-    extended = 'message_templates' in s
-    if not extended:
+    s = d.get('seller_call_script')
+    extended = bool(s) and 'message_templates' in s
+    if not s:
+        pass
+    elif not extended:
         L.append("## Skrypt rozmowy telefonicznej ze sprzedawcą")
         L.append("")
         L.append(s['intro'])
@@ -188,30 +208,72 @@ def gen(d):
         L.append(s['no_call_note'])
         L.append("")
 
-    r = d['summary_rules']
-    L.append("## Reguły podsumowania")
-    L.append("")
-    for title, key in [("Odpuść bez dyskusji, gdy", "walk_away_if"), ("Jedź do mechanika/SKP, gdy", "get_mechanic_if"),
-                       ("Negocjuj, gdy", "negotiate_if"), ("Gotowe zdania (bez kwot)", "negotiation_phrases"),
-                       ("Zasady bezpiecznej transakcji", "safe_deal_rules")]:
-        L.append(f"### {title}")
+    r = d.get('summary_rules')
+    if r:
+        L.append("## Reguły podsumowania")
         L.append("")
-        for x in r[key]:
-            L.append(f"- {x}")
+        for title, key in [("Odpuść bez dyskusji, gdy", "walk_away_if"), ("Jedź do mechanika/SKP, gdy", "get_mechanic_if"),
+                           ("Negocjuj, gdy", "negotiate_if"), ("Gotowe zdania (bez kwot)", "negotiation_phrases"),
+                           ("Zasady bezpiecznej transakcji", "safe_deal_rules")]:
+            L.append(f"### {title}")
+            L.append("")
+            for x in r.get(key, []):
+                L.append(f"- {x}")
+            L.append("")
+    ct = d.get('contract_template')
+    if ct:
+        L.append(f"## Wzór: {ct['title']}")
+        L.append("")
+        L.append(ct['intro'])
+        L.append("")
+        for sec in ct['sections']:
+            L.append(f"**{sec['heading']}**  ")
+            for f in sec.get('fields', []):
+                L.append(f"- [ ] {f}")
+            if sec.get('note'):
+                L.append(f"  _Co chroni: {sec['note']}_")
+            L.append("")
+        for c in ct.get('clauses', []):
+            L.append(f"**Klauzula {c['id']}.** {c['text']}  ")
+            if c.get('note'):
+                L.append(f"_Co chroni: {c['note']}_")
+            L.append("")
+    dls = d.get('deadlines')
+    if dls:
+        L.append("## Terminy (liczone od daty umowy)")
+        L.append("")
+        if d.get('deadlines_note'):
+            L.append(d['deadlines_note'])
+            L.append("")
+        L.append("| ID | Termin | Dni | Kto | Twardy? | Dotyczy, gdy | Pewność |")
+        L.append("|---|---|---|---|---|---|---|")
+        for x in dls:
+            if x.get('days_from_purchase') is not None:
+                days = str(x['days_from_purchase'])
+            elif x.get('date_from_input'):
+                days = f"data z pola (−{x['remind_days_before']} dni)" if x.get('remind_days_before') else 'data z pola'
+            elif x.get('days_from_input'):
+                days = f"{x.get('days', '')} od zgłoszenia"
+            else:
+                days = '—'
+            L.append(f"| {x['id']} | {x['label']} | {days} | {x.get('who', '')} | {'tak' if x.get('hard') else 'nie'} | {x.get('applies_if', '')} | {x.get('confidence', 'n/d')} |")
+        L.append("")
+        for x in dls:
+            L.append(f"- **{x['label']}** — {x.get('how', '')}" + (f" Źródło: {x['source']}" if x.get('source') else ''))
         L.append("")
     L.append("## Słowniczek")
     L.append("")
-    for g in d['glossary']:
+    for g in d.get('glossary', []):
         L.append(f"- **{g['term']}** — {g['def']}")
     L.append("")
     L.append("## Źródła")
     L.append("")
-    for x in d['sources']:
+    for x in d.get('sources', []):
         L.append(f"- {x['claim']} — {x['url']}")
     L.append("")
     L.append("## Do weryfikacji przed publikacją")
     L.append("")
-    for f in d['facts_to_verify']:
+    for f in d.get('facts_to_verify', []):
         L.append(f"- {f}")
     return "\n".join(L) + "\n"
 
