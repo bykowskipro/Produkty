@@ -12,7 +12,7 @@ Kolejność ma znaczenie. Odpisz jednym komunikatem „GOTOWE” + dane z sekcji
 1. Kup domenę, w DNS ustaw rekord **A** dla `@` i `www` na IP VPS.
 2. Na VPS: Docker + Compose, porty 80/443 otwarte.
 3. Sklonuj repo (gałąź `claude/amazing-edison-dxulwx`), wejdź do `platform/`, skopiuj `.env.example` → `.env`, uzupełnij wg `ops/DEPLOY.md`. Na początek zostaw `STRIPE_SECRET_KEY` **testowy** (`sk_test_…`).
-4. `docker compose up -d --build`. Sprawdź, że `https://TWOJA-DOMENA/healthz` zwraca `{"ok":true}`.
+4. `docker compose up -d --build`. Potem z dowolnego komputera: `bash ops/smoke.sh TWOJA-DOMENA` — 13 automatycznych sprawdzeń (HTTPS, strony, zamknięty produkt, panel, webhook, placeholdery).
 
 ## C. Stripe (15 min)
 1. Ustawienia → Metody płatności: **karty, BLIK, Przelewy24, Link** włączone. **Potwierdź mi, że BLIK faktycznie widać w Twoim Checkout** (nie każde konto ma go aktywnego od ręki).
