@@ -870,3 +870,14 @@ body.sticky-space { padding-bottom: 84px; }
   .sticky { display: none; }
   body.sticky-space { padding-bottom: 0; }
 }
+
+/* v4: mock rows – adapted answers and automatic verdicts */
+.mseg--3 { grid-template-columns: repeat(3, 1fr); }
+.mseg--3 span { white-space: normal; line-height: 1.15; padding: 5px 4px; }
+.mauto { display: flex; align-items: flex-start; gap: 6px; margin-top: 9px; padding: 7px 9px; border-radius: 10px; background: #E8EDF3; font: 500 12px/1.3 var(--font-body); color: var(--ink); }
+.mauto svg { width: 14px; height: 14px; flex: none; margin-top: 1px; }
+.mauto b { font-weight: 700; }
+.mauto.ok { background: var(--ok-soft, #DCFCE7); }
+.mauto.ok svg { color: var(--ok); }
+.mauto.bad { background: #fff; border: 1px solid #FECACA; color: var(--bad-text, #991B1B); }
+.mauto.bad svg { color: var(--bad); }

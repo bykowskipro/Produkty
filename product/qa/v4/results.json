@@ -1,0 +1,334 @@
+[
+  {
+    "name": "onboarding: adapted answers text + 3 demo buttons",
+    "ok": true,
+    "extra": "Odpowiadasz jednym tapnięciemPrzy każdym punkcie odpowiedzi pasują do pytania: „zgadza się / różni się”, „sucho / kapie”"
+  },
+  {
+    "name": "step 1: intake card first, 7 fields",
+    "ok": true
+  },
+  {
+    "name": "step 1: no VIN card duplicate",
+    "ok": true
+  },
+  {
+    "name": "step 1: items = 7 listing checks",
+    "ok": true
+  },
+  {
+    "name": "p1s1i6 (km/rok) is pure auto: no ok/uwaga buttons, only skip",
+    "ok": true,
+    "extra": "Nie mam danych"
+  },
+  {
+    "name": "p1s1i6 verdict asks for data",
+    "ok": true
+  },
+  {
+    "name": "intake derived: km/rok computed",
+    "ok": true,
+    "extra": "Co z tego wynika:≈ 17 700 km/rok — typowo jak na wiekDo zdobycia w rozmowie (krok 3): VIN, Nr rejestracyjny, Data pierwszej rejestracji, Zdjęcie licznika w ogłoszeniu. Dostaniesz tam gotowe zdania."
+  },
+  {
+    "name": "p1s1i6 auto-answered from intake",
+    "ok": true,
+    "extra": "Ocena: ≈ 17 700 km/rok — typowo jak na wiek auta."
+  },
+  {
+    "name": "intake nudge gone after required fields",
+    "ok": true
+  },
+  {
+    "name": "p1s1i6 → uwaga for very low km/rok",
+    "ok": true,
+    "extra": "Ocena: ≈ 3900 km/rok — bardzo mało jak na wiek. Jutro porównaj z zużyciem kierownicy, fotela i pedałów (etap 4) i z odczytami w Historii pojazdu."
+  },
+  {
+    "name": "VIN marked „nie ma” → listed for the call",
+    "ok": true,
+    "extra": "Do zdobycia w rozmowie (krok 3): VIN, Nr rejestracyjny, Data pierwszej rejestracji, Zdjęcie licznika w ogłoszeniu. Dostaniesz tam gotowe zdania."
+  },
+  {
+    "name": "p1s1i2 verdict: VIN to be obtained in the call",
+    "ok": true,
+    "extra": "Hacz: VIN zaznaczony jako „nie ma” — dostaniesz gotowe zdanie w kroku „Rozmowa”."
+  },
+  {
+    "name": "p1s1i2 has no skip button (skip:false)",
+    "ok": true
+  },
+  {
+    "name": "p1s1i2 buttons: Mam VIN / Odmówił",
+    "ok": true
+  },
+  {
+    "name": "derived: first registration 2 years after year → uwaga",
+    "ok": true,
+    "extra": "Co z tego wynika:≈ 17 700 km/rok — typowo jak na wiekPierwsza rejestracja 2 lata po roku produkcji — auto długo stało w salonie lub na placu albo rocznik jest naciągany. Zapytaj.Do zdobycia w rozmowie (krok 3): VIN, Nr rejestracyjny, Zdjęcie licznika w ogłoszeniu. Dostaniesz tam gotowe zdania."
+  },
+  {
+    "name": "p1s1i1 options adapted (Dobre, całe auto …)",
+    "ok": true,
+    "extra": "Dobre, całe autoBrakuje ujęć (strona, róg)Mokre / ciemne / garażPomiń"
+  },
+  {
+    "name": "choice stores [state, option]",
+    "ok": true,
+    "extra": "[\"uwaga\",\"mid\"]"
+  },
+  {
+    "name": "p1s1i4 price 22% below market → auto uwaga",
+    "ok": true,
+    "extra": "Ocena: Ok. 22% taniej niż podobne oferty. Zapytaj wprost o powód."
+  },
+  {
+    "name": "mixed item: manual override after auto",
+    "ok": true
+  },
+  {
+    "name": "step 2: history card lists 3 data with missing ones",
+    "ok": true,
+    "extra": "Trzy dane do Historii pojazduVIN: brak — zapytasz w rozmowieNr rejestracyjny: brak — zapytasz w rozmowieData pierwszej rejestracji: 12 czerwca 2018Bez kompletu raport się nie otworzy. Zdobądź brakujące dane w kroku 3 (dostaniesz gotowe zdania) i wróć tu — to 5 minut. Jeśli już je masz, wpisz je w kroku 1.Otwórz historiapojazdu.gov.plZdobądź w rozmowie"
+  },
+  {
+    "name": "step 2: „Zdobądź w rozmowie” button present",
+    "ok": true
+  },
+  {
+    "name": "step 2: p1s2i1 = raport (no more „Zdobądź 3 dane”)",
+    "ok": true
+  },
+  {
+    "name": "p1s2i2: registry > listing → forced problem + dealbreaker sheet",
+    "ok": true,
+    "extra": "Ocena: W ogłoszeniu 180 000 km, a przy ostatnim badaniu już 195 000 km — ogłoszenie podaje mniej niż rejestr. To wygląda na cofnięty licznik: zapytaj i nie jedź bez wyjaśnienia."
+  },
+  {
+    "name": "p1s2i2: registry ≤ listing → system answer withdrawn (unanswered), hint text",
+    "ok": true,
+    "extra": "state: null"
+  },
+  {
+    "name": "p1s2i2 „Rosną” → ok",
+    "ok": true
+  },
+  {
+    "name": "step 3: getcard lists VIN, nr rej., zdjęcie licznika with sentences",
+    "ok": true,
+    "extra": "Najpierw zdobądź to, czego nie było w ogłoszeniuPowiedz zdanie, wpisz odpowiedź. Gdy sprzedawca odmawia VIN-u, numeru rejestracyjnego albo zdjęcia dowodu — zaznacz odmowę; to jest odpowiedź.Powiedz:„P"
+  },
+  {
+    "name": "step 3: getcard comes right after the opening",
+    "ok": true
+  },
+  {
+    "name": "getcard: VIN typed → p1s1i2 auto ok",
+    "ok": true
+  },
+  {
+    "name": "getcard: VIN row gone, others remain",
+    "ok": true
+  },
+  {
+    "name": "getcard: refusal recorded",
+    "ok": true
+  },
+  {
+    "name": "dealer check: explicit thresholds text",
+    "ok": true,
+    "extra": "Sprawdź, czy to nie handlarzHandlarz udający osobę prywatną to najczęstsza ściema w ogłoszeniach. Trzy pytania — zaznacz, jak brzmi odpowiedź:Od kiedy ma Pan/Pa"
+  },
+  {
+    "name": "dealer check: 2/3 dealer → verdict switch",
+    "ok": true,
+    "extra": "To brzmi jak handel — przełącz i pytaj jak firmę."
+  },
+  {
+    "name": "q3 refline shows listing mileage",
+    "ok": true,
+    "extra": "Z ogłoszenia: Przebieg: 180 000 km"
+  },
+  {
+    "name": "q3 options adapted",
+    "ok": true,
+    "extra": "Dokładny + dokumentyDokładny, bez dokumentów„Koło…” / inny niż w ogłoszeniuPomiń"
+  },
+  {
+    "name": "call question stores option id",
+    "ok": true,
+    "extra": "[\"problem\",\"vague\"]"
+  },
+  {
+    "name": "q11: test-drive nuance text",
+    "ok": true,
+    "extra": "11/12Czy mogę przyjechać na zimny silnik (proszę nie odpalać przed moim przyjazdem), sam poprowadzić na jeździe próbnej i podjechać na SKP lub do mechanika?Uważ"
+  },
+  {
+    "name": "p1s4i3 options: ja prowadzę / tylko sprzedawca / żadnej",
+    "ok": true,
+    "extra": "Ja prowadzę (choć część trasy)Tylko sprzedawca za kierownicąŻadnej jazdy próbnejPomiń"
+  },
+  {
+    "name": "p1s4i3 say present",
+    "ok": true
+  },
+  {
+    "name": "p1s4i3 „tylko sprzedawca” = uwaga, no dealbreaker sheet",
+    "ok": true
+  },
+  {
+    "name": "step 4: gauge item = Mam / Nie mam (pomin), no generic bar",
+    "ok": true
+  },
+  {
+    "name": "„Nie mam — oceniam wzrokiem” → pomin (not a flag)",
+    "ok": true
+  },
+  {
+    "name": "money item rewritten",
+    "ok": true
+  },
+  {
+    "name": "step 5: plan B options",
+    "ok": true
+  },
+  {
+    "name": "p2s1i2 VIN from document = seller VIN → ok",
+    "ok": true,
+    "extra": "Ocena: Zgodny z VIN-em od sprzedawcy. Teraz ten sam ciąg na aucie: podszybie, tabliczka, nadwozie."
+  },
+  {
+    "name": "p2s1i2 different VIN → problem",
+    "ok": true,
+    "extra": "Ocena: INNY niż VIN podany przed spotkaniem (WVWZZZ1KZ5W123456). Zapytaj dlaczego; bez prostego wyjaśnienia (literówka w SMS-ie) kończysz."
+  },
+  {
+    "name": "p2s1i5 inspection expires within 60 days → uwaga",
+    "ok": true,
+    "extra": "Ocena: Badanie kończy się za 16 dni (15 października 2026) — świeże badanie przed odbiorem to dobry punkt do negocjacji."
+  },
+  {
+    "name": "p2s4i6 one key → uwaga (auto), buttons remain",
+    "ok": true,
+    "extra": "Ocena: Jeden kluczyk: koszt dorobienia i pytanie, gdzie jest drugi. Punkt do negocjacji."
+  },
+  {
+    "name": "p2s1i1 dealbreaker: two options only",
+    "ok": true,
+    "extra": "Oryginał w rękuTylko zdjęcie / ksero / „w urzędzie”Pomiń"
+  },
+  {
+    "name": "paint: hood without roof → undecided (zmierz dach)",
+    "ok": true,
+    "extra": "Hacz: Zmierz też dach — bez bazy nie ocenię 300 µm."
+  },
+  {
+    "name": "paint: roof typed → hood 300 (2,7×) auto problem",
+    "ok": true,
+    "extra": "Ocena: Maska: 300 µm, 2,7× dachu (110 µm) — wyraźnie wyższy: szpachla lub naprawa. Zrób zdjęcie i zapytaj, co tu było."
+  },
+  {
+    "name": "paint: 170 vs 110 (1,5×) → uwaga",
+    "ok": true,
+    "extra": "Ocena: Drzwi przednie lewe: 170 µm, 1,5× dachu (110 µm) — podwyższony: element lakierowany. Argument w rozmowie o cenie."
+  },
+  {
+    "name": "DOT 2014 (12 lat) → problem",
+    "ok": true,
+    "extra": "Ocena: Najstarsza opona ma 12 lat — do wymiany od razu, niezależnie od bieżnika (producenci mówią o ok. 10 latach jako granicy)."
+  },
+  {
+    "name": "tread 2,5 mm → uwaga",
+    "ok": true,
+    "extra": "Ocena: 2,5 mm — blisko minimum; planuj wymianę (letnie ok. 3 mm, zimowe ok. 4 mm)."
+  },
+  {
+    "name": "p3s5i1 rust options",
+    "ok": true
+  },
+  {
+    "name": "odometer 178200 < registry 178500 → problem + dealbreaker sheet",
+    "ok": true,
+    "extra": "Ocena: Licznik 178 200 km pokazuje MNIEJ niż ostatni odczyt z badania w Historii pojazdu (178 500 km). To cofnięty licznik — kończysz oględziny."
+  },
+  {
+    "name": "odometer 180450 ≥ registry, ≈ listing → ok",
+    "ok": true,
+    "extra": "Ocena: Licznik 180 450 km ≥ ostatnie badanie (178 500 km), zgodny z ogłoszeniem (180 000 km)."
+  },
+  {
+    "name": "airbag options: nie zapala / świeci stale",
+    "ok": true
+  },
+  {
+    "name": "manual gearbox items: skip = „Automat”",
+    "ok": true
+  },
+  {
+    "name": "automatic items: skip = „Manual”",
+    "ok": true
+  },
+  {
+    "name": "summary decision computed",
+    "ok": true,
+    "extra": "Co z tym zrobićZawołaj mechanika przed decyzjąNie mówimy „nie”. Mówimy: nie płać, zanim ktoś z podnośnikiem i komputerem"
+  },
+  {
+    "name": "report: intake rows (Cena/Rocznik/Przebieg ogłoszenie)",
+    "ok": true,
+    "extra": "Pomiary i daneCena (ogłoszenie)32 900 złRocznik2016Przebieg (ogłoszenie)180 000 kmVINWVWZZZ1KZ5W123456 (z rozmowy)Nr rejestracyjnysprzedawca odmówiłData pierwszej rejestracji12 czerwca 2018Typowa cena podobnych ogłoszeń4"
+  },
+  {
+    "name": "report: „Ocena:” lines for auto items",
+    "ok": true,
+    "extra": 7
+  },
+  {
+    "name": "report: option label next to a choice row",
+    "ok": true,
+    "extra": "Odpowiedź: Brakuje ujęć (strona, róg)UwagaJazda próbna: ustal, kto prowadzi i na"
+  },
+  {
+    "name": "report: VIN + rocznik in header meta",
+    "ok": true
+  },
+  {
+    "name": "reportText: POMIARY I DANE has intake",
+    "ok": true
+  },
+  {
+    "name": "compare: price + year rows",
+    "ok": true,
+    "extra": "Auto 2 – GolfZa wcześnie na decyzjęDealbreakery0Problemy0Uwagi0Rozmowa—Postęp0/172Lakier: max / dach—Cena (ogłoszenie)28 500 złRocznik2015Przebieg (licznik)—Najstarsza opona (DOT)—Bieżnik—Najważniejsz"
+  },
+  {
+    "name": "sync: car.d in remote payload",
+    "ok": true,
+    "extra": "{\"miss\":{\"reg\":1,\"odo_photo\":1},\"got\":{\"vin\":1},\"ref\":{\"reg\":1},\"price\":32900,\"year\":2016,\"odo_ad\":180000,\"odo_photo\":\"no\",\"first_reg\":\"2018-06-12\"}"
+  },
+  {
+    "name": "sync: vin in remote payload",
+    "ok": true
+  },
+  {
+    "name": "pull from server restores intake + auto states",
+    "ok": true,
+    "extra": "ok"
+  },
+  {
+    "name": "dodatek keeps generic OK/Uwaga/Problem/Pomiń",
+    "ok": true,
+    "extra": "OKUwagaProblemPomiń"
+  },
+  {
+    "name": "no page errors",
+    "ok": true,
+    "extra": ""
+  },
+  {
+    "name": "no console errors (sandbox TLS/font loads ignored)",
+    "ok": true,
+    "extra": ""
+  }
+]

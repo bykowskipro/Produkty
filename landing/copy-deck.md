@@ -16,12 +16,12 @@ USUNIĘTY (od v2). Istnieje darmowe interaktywne narzędzie do sprawdzenia ogło
 ## 1. HERO
 - Overline: **Odhacz Auto** · prowadzenie przy aucie, dowody, raport
 - H1: **Obejrzyj używane auto jak fachowiec. Wyjdź z listą uwag do negocjacji.**
-- Lead: Otwierasz link w telefonie przy aucie. Prowadzimy Cię krok po kroku: tapiesz OK / Uwaga / Problem, wpisujesz pomiar lakieru, robisz zdjęcie problemu. Na końcu masz decyzję, raport z oględzin i listę problemów i argumentów, z którymi wejdziesz do negocjacji. To strona, nie plik i nie apka. Nie musisz być mechanikiem.
+- Lead: Otwierasz link w telefonie przy aucie. Prowadzimy Cię krok po kroku: przy każdym punkcie odpowiedzi pasują do pytania („zgadza się / różni się”, „sucho / kapie”), a pomiary — lakier, licznik, bieżnik — ocenia system. Do problemu przypinasz zdjęcie. Na końcu masz decyzję, raport z oględzin i listę problemów i argumentów, z którymi wejdziesz do negocjacji. To strona, nie plik i nie apka. Nie musisz być mechanikiem.
 - CTA główne: **Kupuję za 39 zł** (przycisk `data-buy="main"`, `data-testid="cta-main"`)
 - CTA drugie (link): Zobacz, jak działa ↓ (kotwica do demo)
 - Kotwica pod CTA: **39 zł raz.** Używasz przy każdym aucie, które pojedziesz obejrzeć. *(linia o paliwie usunięta)*
 - Linia zaufania: Dostęp od razu po płatności · BLIK, karta, Przelewy24 · Gwarancja spokojnej głowy: 14 dni
-- Wizual: makieta telefonu — etap „Nadwozie i lakier”, 3 rzędy z odpowiedziami OK / Uwaga / Problem; przy rzędzie „Problem” dowody przypięte do punktu: chipy „zdjęcie · 640 µm · „prawy tył, pod listwą””; dolny pasek „Czerwone flagi: 3 · Dealbreaker: 0”. Obok mały Hacz z latarką.
+- Wizual: makieta telefonu — etap „Nadwozie i lakier”, 3 rzędy: pomiar lakieru z oceną systemu („1,1× dachu — w normie”), odcień z odpowiedziami dopasowanymi do pytania (Jednolity / Jeden element inny / Kilka elementów), pomiar 640 µm z oceną „5,8× dachu — szpachla lub naprawa”; przy rzędzie z problemem dowody przypięte do punktu: chipy „zdjęcie · 640 µm · „prawy tył, pod listwą””; dolny pasek „Czerwone flagi: 3 · Dealbreaker: 0”. Obok mały Hacz z latarką.
 
 ## 2. PROBLEM — „Znasz to?”
 Nagłówek: **Przy sprzedawcy pamiętasz połowę. Reszta wychodzi po tygodniu.**
@@ -41,7 +41,7 @@ Cztery karty (mobile: pionowo; od 720 px: 2×2) — cztery realne przewagi:
 
 ## 4. JAK DZIAŁA — 3 kroki
 1. **Kupujesz, dostajesz link.** Otwierasz na telefonie. Bez aplikacji, bez logowania.
-2. **Przy aucie tapiesz.** Najpierw Szybki filtr (10 minut), potem pełne oględziny: OK / Uwaga / Problem / Pomiń. Wpisujesz pomiary (np. lakier w µm), robisz zdjęcia, dopisujesz notatki.
+2. **Przy aucie tapiesz.** Najpierw Szybki filtr (10 minut), potem pełne oględziny: przy każdym punkcie odpowiedzi dopasowane do pytania, a pomiary (lakier w µm, licznik, bieżnik, wiek opon) ocenia system — sam porówna licznik z ogłoszeniem i z Historią pojazdu. Robisz zdjęcia, dopisujesz notatki.
 3. **Na końcu dostajesz raport.** Decyzja: kup / negocjuj / zawołaj mechanika / odpuść — z uzasadnieniem — oraz lista problemów i argumentów, z którymi wejdziesz do negocjacji.
 
 ## 5. CO DOKŁADNIE DOSTAJESZ — 7 etapów

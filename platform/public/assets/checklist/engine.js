@@ -203,6 +203,108 @@
   /* ------------------------------------------------------------------ content */
   const STATE_LABEL = { ok: 'OK', uwaga: 'Uwaga', problem: 'Problem', pomin: 'Pomiń' };
   const DEFAULT_STATES = ['ok', 'uwaga', 'problem', 'pomin'];
+  const fmtKm = (n) => { try { return Math.round(n).toLocaleString('pl-PL') + ' km'; } catch (e) { return Math.round(n) + ' km'; } };
+  /** Automatic evaluation of typed values. Each rule gets (app, item, car, carId) and returns { state, text, force?, setVin? } or null (no input yet).
+   * state null = cannot decide yet (text explains what is missing). `force` = a mixed (choice + auto) item is overridden regardless of the tap. */
+  const AUTO_RULES = {
+    vin_present: function (app, it, car) {
+      const vin = String(car.vin || '');
+      if (vin.length === 17) return { state: 'ok', text: 'VIN masz: ' + vin + '. Sprawdzisz go w Historii pojazdu (krok 2) i na aucie w trzech miejscach (etap 2).' };
+      const m = app.intakeStatus(car, 'vin');
+      return { state: null, text: m === 'refused' ? 'Sprzedawca odmówił podania VIN — zaznacz „Odmówił podania”.' : m === 'missing' ? 'VIN zaznaczony jako „nie ma” — dostaniesz gotowe zdanie w kroku „Rozmowa”.' : 'Wpisz VIN w „Danych z ogłoszenia” wyżej albo zaznacz tam „nie ma”.' };
+    },
+    km_per_year: function (app, it, car) {
+      const odo = app.intakeNum(car, 'odo_ad'); const year = app.intakeNum(car, 'year');
+      if (odo == null || year == null) return { state: null, text: 'Wpisz przebieg i rocznik w „Danych z ogłoszenia” wyżej — policzę kilometry na rok.' };
+      const now = new Date(); const nowY = now.getFullYear() + now.getMonth() / 12;
+      if (year < 1950 || year > now.getFullYear() + 1) return { state: null, text: 'Sprawdź rocznik (' + year + ') — wygląda na literówkę.' };
+      const age = Math.max(0.5, nowY - year - 0.5); const kpy = Math.round(odo / age / 100) * 100; const k = fmtKm(kpy) + '/rok';
+      if (kpy < 7000) return { state: 'uwaga', text: '≈ ' + k + ' — bardzo mało jak na wiek. Jutro porównaj z zużyciem kierownicy, fotela i pedałów (etap 4) i z odczytami w Historii pojazdu.' };
+      if (kpy > 25000) return { state: 'uwaga', text: '≈ ' + k + ' — dużo. Zapytaj o flotę, taxi, przedstawiciela handlowego; poproś o faktury serwisowe z przebiegami.' };
+      return { state: 'ok', text: '≈ ' + k + ' — typowo jak na wiek auta.' };
+    },
+    price_vs_market: function (app, it, car) {
+      const m = app.numInput(it.id, car); if (m == null) return null;
+      const price = app.intakeNum(car, 'price'); if (price == null) return { state: null, text: 'Wpisz cenę z ogłoszenia w „Danych z ogłoszenia”, żeby porównać.' };
+      const r = price / m; const pct = Math.round(Math.abs(1 - r) * 100);
+      if (r <= 0.75) return { state: 'uwaga', text: 'Ok. ' + pct + '% taniej niż podobne oferty. Tak duża różnica ma powód — jutro szukasz go w dokumentach, lakierze i historii.' };
+      if (r <= 0.88) return { state: 'uwaga', text: 'Ok. ' + pct + '% taniej niż podobne oferty. Zapytaj wprost o powód.' };
+      if (r >= 1.15) return { state: 'ok', text: 'Ok. ' + pct + '% drożej niż podobne oferty — argument w negocjacji, nie wada.' };
+      return { state: 'ok', text: 'Cena w rynku (różnica ok. ' + pct + '%).' };
+    },
+    odo_registry: function (app, it, car) {
+      const r = app.numInput(it.id, car); if (r == null) return null;
+      const ad = app.intakeNum(car, 'odo_ad');
+      if (ad != null && ad + 500 < r) return { state: 'problem', force: true, text: 'W ogłoszeniu ' + fmtKm(ad) + ', a przy ostatnim badaniu już ' + fmtKm(r) + ' — ogłoszenie podaje mniej niż rejestr. To wygląda na cofnięty licznik: zapytaj i nie jedź bez wyjaśnienia.' };
+      return { state: null, text: 'Zapisane: ' + fmtKm(r) + '. Jutro licznik musi pokazać co najmniej tyle' + (ad != null ? '; ogłoszenie (' + fmtKm(ad) + ') się z tym zgadza.' : '.') };
+    },
+    odo_dashboard: function (app, it, car) {
+      const v = app.numInput(it.id, car); if (v == null) return null;
+      const reg = app.registryOdo(car); const ad = app.intakeNum(car, 'odo_ad');
+      if (reg != null && v < reg) return { state: 'problem', text: 'Licznik ' + fmtKm(v) + ' pokazuje MNIEJ niż ostatni odczyt z badania w Historii pojazdu (' + fmtKm(reg) + '). To cofnięty licznik — kończysz oględziny.' };
+      if (ad != null && v + 300 < ad) return { state: 'problem', text: 'Licznik ' + fmtKm(v) + ' pokazuje mniej niż ogłoszenie (' + fmtKm(ad) + '). Auto nie jeździ do tyłu — pytaj, skąd różnica, i nie kupuj bez wyjaśnienia.' };
+      if (ad != null && v > ad + 3000) return { state: 'uwaga', text: 'Licznik ' + fmtKm(v) + ' — o ' + fmtKm(v - ad) + ' więcej niż w ogłoszeniu. Ogłoszenie nieaktualne albo auto dużo jeździ; zapytaj.' };
+      if (reg == null && ad == null) return { state: 'uwaga', text: 'Zapisane ' + fmtKm(v) + ', ale nie mam z czym porównać: brak przebiegu z ogłoszenia (krok 1) i odczytu z Historii pojazdu (krok 2). Bez tego cofniętego licznika nie wykryjesz.' };
+      return { state: 'ok', text: 'Licznik ' + fmtKm(v) + (reg != null ? ' ≥ ostatnie badanie (' + fmtKm(reg) + ')' : '') + (ad != null ? (reg != null ? ', ' : ' — ') + 'zgodny z ogłoszeniem (' + fmtKm(ad) + ')' : '') + '.' };
+    },
+    vin_doc: function (app, it, car) {
+      const v = app.strInput(it.id, car); if (!v) return null;
+      if (v.length !== 17) return { state: null, text: v.length + '/17 znaków — VIN ma dokładnie 17 (bez liter I, O, Q).' };
+      const seller = String(car.vin || '');
+      if (seller.length === 17) return seller === v ? { state: 'ok', text: 'Zgodny z VIN-em od sprzedawcy. Teraz ten sam ciąg na aucie: podszybie, tabliczka, nadwozie.' } : { state: 'problem', text: 'INNY niż VIN podany przed spotkaniem (' + seller + '). Zapytaj dlaczego; bez prostego wyjaśnienia (literówka w SMS-ie) kończysz.' };
+      return { state: 'ok', text: 'Zapisany. Porównasz go z autem w następnej sekcji.', setVin: v };
+    },
+    inspection_valid: function (app, it, car) {
+      const ds = app.dateInputOf(it.id, car); if (!ds) return null; const left = daysBetween(todayStr(), ds);
+      if (left < 0) return { state: 'problem', text: 'Badanie nieważne od ' + Math.abs(left) + ' ' + plural(Math.abs(left), 'dnia', 'dni', 'dni') + '. Auto nie powinno wyjechać na jazdę próbną; to koszt i pytanie, dlaczego stało.' };
+      if (left <= 60) return { state: 'uwaga', text: 'Badanie kończy się za ' + left + ' ' + plural(left, 'dzień', 'dni', 'dni') + ' (' + fmtPl(ds) + ') — świeże badanie przed odbiorem to dobry punkt do negocjacji.' };
+      return { state: 'ok', text: 'Badanie ważne do ' + fmtPl(ds) + '.' };
+    },
+    oc_valid: function (app, it, car) {
+      const ds = app.dateInputOf(it.id, car); if (!ds) return null; const left = daysBetween(todayStr(), ds);
+      if (left < 0) return { state: 'problem', text: 'OC nieważne od ' + Math.abs(left) + ' ' + plural(Math.abs(left), 'dnia', 'dni', 'dni') + ' — jazda próbna wyłącznie na Twoje ryzyko; nie jedź.' };
+      if (left <= 14) return { state: 'uwaga', text: 'OC kończy się za ' + left + ' ' + plural(left, 'dzień', 'dni', 'dni') + ' — po zakupie od razu nowa polisa.' };
+      return { state: 'ok', text: 'OC ważne do ' + fmtPl(ds) + '.' };
+    },
+    prod_year: function (app, it, car) {
+      const y = app.numInput(it.id, car); if (y == null) return null; const ad = app.intakeNum(car, 'year');
+      if (ad == null) return { state: 'ok', text: 'Zapisany rok ' + y + '. Nie mam rocznika z ogłoszenia (krok 1) do porównania.' };
+      if (y < ad) { const n = ad - y; return { state: 'problem', text: 'W dowodzie ' + y + ', w ogłoszeniu ' + ad + ' — rocznik zawyżony o ' + n + ' ' + plural(n, 'rok', 'lata', 'lat') + '. To inne auto (i inna cena) niż obiecywane.' }; }
+      if (y > ad) return { state: 'ok', text: 'W dowodzie ' + y + ' — nowszy niż w ogłoszeniu (' + ad + ').' };
+      return { state: 'ok', text: 'Rok produkcji ' + y + ' zgodny z ogłoszeniem.' };
+    },
+    keys: function (app, it, car) {
+      const n = app.numInput(it.id, car); if (n == null) return null;
+      if (n >= 2) return { state: 'ok', text: n + ' ' + plural(n, 'kluczyk', 'kluczyki', 'kluczyków') + ' — komplet. Sprawdź każdy: zamek, pilot, rozruch.' };
+      if (n >= 1) return { state: 'uwaga', text: 'Jeden kluczyk: koszt dorobienia i pytanie, gdzie jest drugi. Punkt do negocjacji.' };
+      return { state: 'problem', text: 'Bez sprawnego kluczyka nie odbierzesz auta.' };
+    },
+    dot_year: function (app, it, car) {
+      const y = app.numInput(it.id, car); if (y == null) return null; const age = new Date().getFullYear() - y;
+      if (y < 1990 || age < 0) return { state: null, text: 'Sprawdź rok: DOT to 4 cyfry, dwie ostatnie to rok (np. 2319 = 2019).' };
+      if (age >= 10) return { state: 'problem', text: 'Najstarsza opona ma ' + age + ' lat — do wymiany od razu, niezależnie od bieżnika (producenci mówią o ok. 10 latach jako granicy).' };
+      if (age >= 6) return { state: 'uwaga', text: 'Najstarsza opona ma ' + age + ' lat — obejrzyj pęknięcia boków i planuj wymianę.' };
+      return { state: 'ok', text: 'Najstarsza opona z ' + y + ' r. (' + age + ' ' + plural(age, 'rok', 'lata', 'lat') + ').' };
+    },
+    tread_mm: function (app, it, car) {
+      const t = app.numInput(it.id, car); if (t == null) return null;
+      if (t < 1.6) return { state: 'problem', text: fmtNum(t) + ' mm — poniżej prawnego minimum 1,6 mm. Opony do wymiany przed jazdą.' };
+      if (t < 3) return { state: 'uwaga', text: fmtNum(t) + ' mm — blisko minimum; planuj wymianę (letnie ok. 3 mm, zimowe ok. 4 mm).' };
+      if (t < 4) return { state: 'ok', text: fmtNum(t) + ' mm — w porządku dla letnich; zimowe poniżej 4 mm już do wymiany.' };
+      return { state: 'ok', text: fmtNum(t) + ' mm — dobry bieżnik.' };
+    },
+    paint_panel: function (app, it, car, carId) {
+      const v = app.numInput(it.id, car); if (v == null) return null;
+      const key = app.content.panelOfItem[it.id]; const pd = app.paintData(carId); const p = PANEL_INDEX[key]; const name = p ? p.label : 'element';
+      if (key === 'roof') return { state: 'ok', text: 'Dach ' + fmtNum(v) + ' µm — to Twoja baza. Pozostałe elementy porównuję z nią.' };
+      if (pd.baseSrc !== 'roof' && pd.count < 3) return { state: null, text: 'Zmierz też dach — bez bazy nie ocenię ' + fmtNum(v) + ' µm.' };
+      const lv = pd.levels[key]; const base = pd.baseline; const ratio = base ? ratioText(v / base) : '';
+      const bs = pd.baseSrc === 'roof' ? 'dachu' : 'mediany';
+      if (lv === 'bad') return { state: 'problem', text: name + ': ' + fmtNum(v) + ' µm, ' + ratio + ' ' + bs + ' (' + fmtNum(base) + ' µm) — wyraźnie wyższy: szpachla lub naprawa. Zrób zdjęcie i zapytaj, co tu było.' };
+      if (lv === 'warn') return { state: 'uwaga', text: name + ': ' + fmtNum(v) + ' µm, ' + ratio + ' ' + bs + ' (' + fmtNum(base) + ' µm) — podwyższony: element lakierowany. Argument w rozmowie o cenie.' };
+      return { state: 'ok', text: name + ': ' + fmtNum(v) + ' µm, ' + ratio + ' ' + bs + ' — w normie.' };
+    },
+  };
   function normalize(raw) {
     const c = Object.assign({}, raw);
     c.meta = c.meta || {};
@@ -217,6 +319,7 @@
           if (!it.id) it.id = ph.id + '-' + (ph.items.length + 1);
           if (!it.severity) it.severity = 'yellow';
           it.tags = Array.isArray(it.tags) ? it.tags : [];
+          it.ctrl = normCtrl(it.ctrl, c.answer_states);
           ph.items.push(it); c.items.push(it); c.itemById[it.id] = it; c.phaseOfItem[it.id] = ph;
         });
       });
@@ -276,14 +379,29 @@
     if (scr && Array.isArray(scr.questions)) {
       scr.questions.forEach((q, i) => {
         if (!q || typeof q.q !== 'string' || !q.q.trim()) return;
-        const it = { id: 'call:q' + (i + 1), n: c.callItems.length + 1, call: true, text: q.q, watch_for: q.watch_for || '', if_dodges: q.if_dodges || '', flag_label: q.flag_label || ('Rozmowa: ' + q.q), severity: 'yellow', tags: ['rozmowa'], photo: false, input: null };
+        const it = { id: 'call:q' + (i + 1), n: c.callItems.length + 1, call: true, text: q.q, watch_for: q.watch_for || '', if_dodges: q.if_dodges || '', flag_label: q.flag_label || ('Rozmowa: ' + q.q), severity: 'yellow', tags: ['rozmowa'], photo: false, input: null, ctrl: normCtrl(q.ctrl, c.answer_states), ref: Array.isArray(q.ref) ? q.ref : [] };
         c.callItems.push(it); c.callById[it.id] = it; c.itemById[it.id] = it;
         if (c.phases[0]) c.phaseOfItem[it.id] = c.phases[0];
       });
     }
     c.callPhase = { id: 'call', title: 'Rozmowa ze sprzedawcą', items: c.callItems, virtual: true };
+    // Intake („Dane z ogłoszenia”): typed fields kept per car in car.d (VIN in car.vin); missing ones become sentences in the call step.
+    const ik = c.intake && typeof c.intake === 'object' ? c.intake : null;
+    c.intake = ik && Array.isArray(ik.fields) && ik.fields.length ? Object.assign({}, ik, { fields: ik.fields.filter((f) => f && f.id && f.type), byId: {} }) : null;
+    if (c.intake) c.intake.fields.forEach((f) => { c.intake.byId[f.id] = f; });
+    c.autoItems = c.items.filter((it) => it.ctrl.auto);
     c.wizard = buildWizard(c, scr);
     return c;
+  }
+  /** Per-item control: `choice` (options → states, optional `auto` rule and skip label) or `auto` (state computed from the input by a rule).
+   * Without `ctrl` an item keeps the classic OK / Uwaga / Problem / Pomiń bar. */
+  function normCtrl(raw, states) {
+    const skipDefault = 'Pomiń';
+    if (!raw || typeof raw !== 'object') return { type: 'choice', options: states.filter((st) => st !== 'pomin').map((st) => ({ label: STATE_LABEL[st] || st, state: st, v: st })), skip: states.indexOf('pomin') >= 0 ? skipDefault : false, auto: null, generic: true };
+    const type = raw.type === 'auto' ? 'auto' : 'choice';
+    const opts = type === 'choice' && Array.isArray(raw.options) ? raw.options.filter((o) => o && typeof o.label === 'string' && states.indexOf(o.state) >= 0).map((o, i) => ({ label: o.label, state: o.state, v: typeof o.v === 'string' && o.v ? o.v : o.state + (i ? String(i) : '') })) : [];
+    if (type === 'choice' && !opts.length) return normCtrl(null, states);
+    return { type: type, options: opts, skip: raw.skip === false ? false : (typeof raw.skip === 'string' && raw.skip.trim() ? raw.skip.trim() : skipDefault), auto: typeof raw.auto === 'string' && AUTO_RULES[raw.auto] ? raw.auto : null, generic: false };
   }
   /** Wizard „Zanim pojedziesz”: phase 1 split into one screen per section; the call-script section merges with the agreements
    * section into the „Rozmowa” step. Content without a call script (the upsell) gets no wizard and keeps the classic phase view. */
@@ -294,12 +412,12 @@
     const agreeSec = ph.sections.find((sec) => sec.items.some((it) => agreeIds.indexOf(it.id) >= 0)) || null;
     const callSec = ph.sections.find((sec) => sec !== agreeSec && /telefon|rozmow|zadzwo/i.test(sec.title || ''))
       || ph.sections.find((sec) => sec !== agreeSec && sec.items.some((it) => /skrypt|zadzwo/i.test(it.text || ''))) || null;
-    const shortTitle = (sec) => { const t = String(sec.title || '').replace(/\s*[(:—–].*$/, '').trim(); return /\bVIN\b/i.test(t) ? 'VIN i historia' : (t || 'Krok'); };
+    const shortTitle = (sec) => { const t = String(sec.title || '').replace(/\s*[(:—–].*$/, '').trim(); return /\bVIN\b/i.test(t) ? 'VIN i historia' : (/^Historia pojazdu/i.test(t) ? 'Historia' : (t || 'Krok')); };
     const steps = []; const stepOfItem = {};
     const isAgree = (it) => agreeIds.indexOf(it.id) >= 0;
     ph.sections.forEach((sec) => {
       if (sec === agreeSec && callSec && sec !== callSec) return; // merged into the call step
-      const st = { sections: [sec], title: shortTitle(sec), hint: sec.hint || '', items: sec.items.slice(), call: sec === callSec, vin: /\bVIN\b/i.test(sec.title || '') };
+      const st = { sections: [sec], title: shortTitle(sec), hint: sec.hint || '', items: sec.items.slice(), call: sec === callSec, intake: !!c.intake && steps.length === 0, history: /histori|\bVIN\b/i.test(sec.title || '') };
       if (st.call) {
         st.title = 'Rozmowa';
         st.scriptItem = sec.items.find((it) => /skrypt/i.test(it.text || '')) || null; // represented by the embedded script itself
@@ -330,6 +448,7 @@
   /** Full text of an input value (lists, print, clipboard). */
   function inputText(it, v) {
     if (Array.isArray(v)) return v.map((e) => fmtPl(e.d, { day: 'numeric', month: 'short' }) + ': ' + e.t).join('; ');
+    if (!it.input && it.ctrl && Array.isArray(it.ctrl.options) && typeof v === 'string') { const o = it.ctrl.options.find((x) => x.v === v); return o ? o.label : ''; }
     if (it.input && (it.input.type === 'text' || it.input.type === 'choice')) return String(v == null ? '' : v);
     return fmtInput(it, v);
   }
@@ -337,7 +456,7 @@
   /* ------------------------------------------------------------------ mount */
   const Checklist = {
     mount(opts) { const app = new App(opts); app.init(); Checklist.app = app; window.OdhaczApp = app; return app; },
-    version: '1.2.0',
+    version: '1.3.0',
   };
   window.Checklist = Checklist;
 
@@ -378,6 +497,7 @@
       this.renderLoadError(err); return;
     }
     this.ensureCar();
+    this.reevalAuto({ silent: true });
     this.render();
     track('app_open', { product: this.opts.product, content_version: this.content.meta.version || '', cars: Object.keys(this.state.cars).length });
     this.verifyAccess();
@@ -406,9 +526,11 @@
   };
   App.prototype.car = function () { this.ensureCar(); return this.state.cars[this.state.active]; };
   App.prototype.ans = function (itemId) { return this.car().a[itemId] || null; };
-  App.prototype.setAnswer = function (itemId, patch) {
-    const car = this.car(); const cur = car.a[itemId] || [null, null, null];
+  App.prototype.setAnswer = function (itemId, patch) { return this.setAnswerFor(this.state.active, itemId, patch); };
+  App.prototype.setAnswerFor = function (carId, itemId, patch) {
+    const car = this.state.cars[carId] || this.car(); car.a = car.a || {}; const cur = car.a[itemId] || [null, null, null];
     if ('state' in patch) cur[0] = patch.state; if ('input' in patch) cur[1] = patch.input; if ('note' in patch) cur[2] = patch.note;
+    if ('auto' in patch) { if (patch.auto) cur[3] = 'a'; else if (cur.length > 3) cur[3] = null; } // [3] = 'a' → state set by a rule (a tap clears it)
     while (cur.length && (cur[cur.length - 1] == null || cur[cur.length - 1] === '')) cur.pop();
     if (!cur.length) delete car.a[itemId]; else car.a[itemId] = cur;
     car.u = nowIso();
@@ -486,6 +608,7 @@
         if (car.pd) row.pd = car.pd;
         if (car.st) row.st = car.st; // seller type (private | dealer)
         if (car.vin) row.vin = String(car.vin).slice(0, 17);
+        if (car.d && typeof car.d === 'object' && Object.keys(car.d).length) row.d = car.d; // intake („Dane z ogłoszenia”) + miss/got/ref flags
         out.cars[id] = row;
       });
       return out;
@@ -523,11 +646,11 @@
       const localT = this.state.t || ''; const remoteT = remote.t || '';
       if (remoteT && remoteT > localT) {
         const merged = {}; let keptLocal = false;
-        Object.keys(remote.cars).forEach((id) => { const rc = remote.cars[id]; merged[id] = { name: rc.name || 'Auto', created: rc.created || remoteT, a: rc.a || {}, q: rc.q, pd: rc.pd, st: rc.st, vin: rc.vin }; });
+        Object.keys(remote.cars).forEach((id) => { const rc = remote.cars[id]; merged[id] = { name: rc.name || 'Auto', created: rc.created || remoteT, a: rc.a || {}, q: rc.q, pd: rc.pd, st: rc.st, vin: rc.vin, d: rc.d && typeof rc.d === 'object' ? rc.d : undefined }; });
         Object.keys(this.state.cars).forEach((id) => { const lc = this.state.cars[id]; if (!merged[id] && lc.created && lc.created > remoteT && Object.keys(lc.a || {}).length) { merged[id] = lc; keptLocal = true; } });
         this.state.cars = merged; this.state.t = remoteT; this.state.dirty = keptLocal ? 1 : 0;
         if (remote.active && merged[remote.active]) this.state.active = remote.active;
-        this.ensureCar(); this.persist(false); this.render();
+        this.ensureCar(); this.reevalAuto({ silent: true }); this.persist(false); this.render();
         if (keptLocal) this.scheduleSync();
         this.toast('Wczytano postęp z innego urządzenia');
       } else if (this.state.dirty) this.scheduleSync();
@@ -671,7 +794,7 @@
     const total = c.meta.est_minutes_total;
     const w = c.wizard; const wp = w ? this.wizardProgress() : null; const nextTarget = this.nextTarget(cnt, wp);
     let haczLine;
-    if (cnt.answered === 0) haczLine = w ? 'Cześć, tu Hacz. Zacznij od kreatora „' + w.phase.title + '”: ' + wp.count + ' ' + plural(wp.count, 'krok', 'kroki', 'kroków') + ' wieczorem przed oględzinami, z rozmową ze sprzedawcą zdanie po zdaniu. Przy aucie odpalisz Szybki filtr.'
+    if (cnt.answered === 0) haczLine = w ? 'Cześć, tu Hacz. Zacznij od kreatora „' + w.phase.title + '”: ' + wp.count + ' ' + plural(wp.count, 'krok', 'kroki', 'kroków') + ' wieczorem przed oględzinami — dane z ogłoszenia, historia, rozmowa ze sprzedawcą zdanie po zdaniu. Przy aucie odpalisz Szybki filtr.'
       : (c.quick_start && c.quick_start.steps && c.quick_start.steps.length ? 'Cześć, tu Hacz. Zacznij od „' + (c.quick_start.title || 'Zacznij tu') + '” – kilka minut i wiesz, jak to działa. Potem etapy po kolei.' : 'Cześć, tu Hacz. Etapy po kolei, najlepiej w tej kolejności.');
     else if (wp && !wp.complete) haczLine = 'Jesteś na kroku ' + nextTarget.stepN + '/' + wp.count + ' kreatora. ' + (cnt.problem ? 'Już ' + cnt.problem + ' ' + plural(cnt.problem, 'czerwona flaga', 'czerwone flagi', 'czerwonych flag') + ' – zapisuj notatki, przydadzą się w negocjacji.' : 'Dokończ go w domu – przy aucie nie będzie na to czasu.');
     else if (cnt.answered < cnt.total) haczLine = 'Masz ' + cnt.answered + ' z ' + cnt.total + ' punktów. ' + (cnt.problem ? 'Już ' + cnt.problem + ' ' + plural(cnt.problem, 'czerwona flaga', 'czerwone flagi', 'czerwonych flag') + ' – zapisuj notatki, przydadzą się w negocjacji.' : 'Na razie czysto. Nie zwalniaj przy silniku i jeździe próbnej.');
@@ -847,14 +970,9 @@
     if (it.input && typeof it.input === 'object') row.append(this.inputField(it, a, row));
     // „Powiedz: …” – the exact sentence for the seller (agreements in the wizard)
     if (opts.say && typeof it.say === 'string' && it.say.trim()) row.append(el('blockquote', { class: 'say' }, el('b', null, 'Powiedz:'), '„' + it.say.trim() + '”'));
-    // answers
-    const answers = el('div', { class: 'answers' });
-    this.content.answer_states.forEach((st) => {
-      const b = el('button', { class: 'ans ans--' + st + (a[0] === st ? ' is-on' : ''), type: 'button', 'aria-pressed': a[0] === st ? 'true' : 'false', text: STATE_LABEL[st] || st });
-      b.addEventListener('click', () => self.tapState(it, st, row));
-      answers.append(b);
-    });
-    row.append(answers);
+    // automatic verdict (rule-driven items) + answers adapted to the question
+    if (it.ctrl && it.ctrl.auto) { const v = this.verdictEl(it); if (v) row.append(v); }
+    row.append(this.answerBar(it, a, row));
     // tools
     const tools = el('div', { class: 'item__tools' });
     const noteBox = el('div', { class: 'note', hidden: !a[2] });
@@ -873,7 +991,8 @@
   App.prototype.inputField = function (it, a, row) {
     const self = this; const inp = it.input; const type = inp.type || 'text'; const val = a[1];
     const wrap = el('div', { class: 'field' }); if (inp.label) wrap.append(el('label', { text: inp.label }));
-    const save = (v) => { self.setAnswer(it.id, { input: v }); self.refreshBadges(it, row); if (DATE_TYPES[type]) self.refreshDeadlineTexts(); if (self.content.panelOfItem[it.id]) self.refreshPaintMaps(); };
+    let autoTimer = null;
+    const save = (v, final) => { self.setAnswer(it.id, { input: v }); self.refreshBadges(it, row); if (DATE_TYPES[type]) self.refreshDeadlineTexts(); if (self.content.panelOfItem[it.id]) self.refreshPaintMaps(); if (it.ctrl && it.ctrl.auto) { clearTimeout(autoTimer); if (final) self.afterAutoInput(it, row, true); else autoTimer = setTimeout(() => self.afterAutoInput(it, row, false), 450); } };
     if (type === 'choice' && Array.isArray(inp.options) && inp.options.length) {
       const box = el('div', { class: 'choices', role: 'group', 'aria-label': inp.label || 'Wybór' });
       inp.options.forEach((opt) => {
@@ -887,10 +1006,11 @@
       wrap.append(this.logField(it, row));
     } else {
       const htmlType = type === 'number' ? 'number' : type === 'date' ? 'date' : type === 'datetime' ? 'datetime-local' : 'text';
-      const field = el('input', { type: htmlType, inputmode: type === 'number' ? 'decimal' : null, step: type === 'number' ? 'any' : null, placeholder: type === 'number' ? '0' : null, value: val != null && !Array.isArray(val) ? val : '', 'aria-label': inp.label || 'Pomiar', maxlength: htmlType === 'text' ? '300' : null });
+      const field = el('input', { type: htmlType, inputmode: type === 'number' ? 'decimal' : null, step: type === 'number' ? 'any' : null, placeholder: type === 'number' ? '0' : type === 'vin' ? 'np. WVWZZZ1KZ5W000000' : null, value: val != null && !Array.isArray(val) ? val : '', 'aria-label': inp.label || 'Pomiar', maxlength: type === 'vin' ? '17' : htmlType === 'text' ? '300' : null, autocapitalize: type === 'vin' ? 'characters' : null, autocomplete: type === 'vin' ? 'off' : null, spellcheck: type === 'vin' ? 'false' : null, class: type === 'vin' ? 'vin-in' : null });
       let last = field.value;
-      const onChange = () => { if (field.value === last) return; last = field.value; const v = field.value === '' ? null : (type === 'number' ? Number(field.value) : field.value); save(v); };
-      field.addEventListener('input', onChange); field.addEventListener('change', onChange);
+      const cur = () => (field.value === '' ? null : (type === 'number' ? Number(field.value) : field.value));
+      field.addEventListener('input', () => { if (type === 'vin') { const v = field.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 17); if (v !== field.value) field.value = v; } if (field.value === last) return; last = field.value; save(cur(), false); });
+      field.addEventListener('change', () => { if (field.value !== last) { last = field.value; save(cur(), true); } else if (it.ctrl && it.ctrl.auto) { clearTimeout(autoTimer); self.afterAutoInput(it, row, true); } });
       wrap.append(el('div', { class: 'inwrap', style: 'grid-column:1/-1' }, field, inp.unit ? el('span', { class: 'unit', text: inp.unit }) : null));
     }
     if (inp.hint) wrap.append(el('span', { class: 'hint', text: inp.hint }));
@@ -947,20 +1067,102 @@
     const self = this;
     this.root.querySelectorAll('.item[data-item]').forEach((rowEl) => { const it = self.content.itemById[rowEl.getAttribute('data-item')]; const n = $('.dl-inline', rowEl); if (it && it.deadlineRow && n) { n.innerHTML = ''; n.append(el('b', null, 'Termin: '), self.deadlineText(it.deadlineRow)); } });
   };
-  App.prototype.refreshBadges = function (it, row) {
-    const fresh = this.itemRow(it, row._opts); const oldB = $('.item__badges', row); const newB = $('.item__badges', fresh);
-    // keep thumbs already loaded
-    const oldThumbs = $('.item__badges > .row', row); const newThumbs = $('.item__badges > .row', fresh);
-    if (oldThumbs && newThumbs) newThumbs.replaceWith(oldThumbs);
-    if (oldB && newB) oldB.replaceWith(newB);
+  /* ------------------------------------------------------------------ controls adapted to the question, automatic evaluation, intake (v1.3) */
+  App.prototype.numInput = function (itemId, car) { const a = car && car.a && car.a[itemId]; const v = a && a[1]; if (v == null || v === '' || Array.isArray(v)) return null; const n = typeof v === 'number' ? v : Number(String(v).replace(',', '.')); return isFinite(n) ? n : null; };
+  App.prototype.strInput = function (itemId, car) { const a = car && car.a && car.a[itemId]; const v = a && a[1]; return v == null || Array.isArray(v) ? '' : String(v); };
+  App.prototype.dateInputOf = function (itemId, car) { const v = this.strInput(itemId, car); const m = /^(\d{4}-\d{2}-\d{2})/.exec(v); return m && parseDate(m[1]) ? m[1] : null; };
+  /** Per-car intake data (VIN lives in car.vin; the rest in car.d with `miss` / `got` / `ref` flags per field). */
+  App.prototype.carData = function (car) { car.d = car.d && typeof car.d === 'object' && !Array.isArray(car.d) ? car.d : {}; car.d.miss = car.d.miss || {}; car.d.got = car.d.got || {}; car.d.ref = car.d.ref || {}; return car.d; };
+  App.prototype.intakeVal = function (car, fid) { if (!car) return null; if (fid === 'vin') return car.vin ? String(car.vin) : null; const d = car.d || {}; const v = d[fid]; return v == null || v === '' ? null : v; };
+  App.prototype.intakeNum = function (car, fid) { const v = this.intakeVal(car, fid); if (v == null) return null; const n = typeof v === 'number' ? v : Number(String(v).replace(',', '.')); return isFinite(n) ? n : null; };
+  /** 'have' | 'missing' (empty or marked „nie ma”) | 'refused' (the seller would not give it). */
+  App.prototype.intakeStatus = function (car, fid) {
+    const d = (car && car.d) || {}; if (d.ref && d.ref[fid]) return 'refused';
+    const f = this.content.intake && this.content.intake.byId[fid]; const v = this.intakeVal(car, fid);
+    if (f && f.type === 'yesno') return v === 'yes' ? 'have' : 'missing';
+    return v != null && v !== '' ? 'have' : 'missing';
   };
-  App.prototype.tapState = function (it, st, row) {
-    const cur = this.stateOf(it.id); const next = cur === st ? null : st;
-    const wasComplete = this.phaseComplete(it);
-    this.setAnswer(it.id, { state: next });
+  App.prototype.intakeText = function (car, fid) {
+    const f = this.content.intake && this.content.intake.byId[fid]; const v = this.intakeVal(car, fid); if (v == null) return '';
+    if (!f) return String(v);
+    if (f.type === 'date') return fmtPl(String(v)) || String(v);
+    if (f.type === 'yesno') return v === 'yes' ? (f.yes || 'tak') : (f.no || 'nie');
+    if (f.type === 'number') { const n = Number(v); if (!isFinite(n)) return String(v); if (f.unit === 'km') return fmtKm(n); if (f.unit === 'zł') { try { return n.toLocaleString('pl-PL') + ' zł'; } catch (e) { return n + ' zł'; } } return String(n); }
+    return String(v);
+  };
+  App.prototype.intakeShortLabel = function (f) { return String(f.label || f.id).replace(/\s*\(.*$/, ''); };
+  App.prototype.registryOdo = function (car) { const it = this.content.autoItems.find((x) => x.ctrl.auto === 'odo_registry'); return it ? this.numInput(it.id, car) : null; };
+  App.prototype.evalAuto = function (it, carId) {
+    const rule = it && it.ctrl && it.ctrl.auto && AUTO_RULES[it.ctrl.auto]; if (!rule) return null;
+    const id = carId || this.state.active; const car = this.state.cars[id]; if (!car) return null;
+    try { return rule(this, it, car, id); } catch (e) { return null; }
+  };
+  /** Apply a rule to the stored state. Pure `auto` items always follow the rule (a „Pomiń” survives until the input changes);
+   * mixed items (choice + auto) only when their own input changed (`fromInput`) or the rule forces a verdict. */
+  App.prototype.applyAuto = function (it, opts) {
+    opts = opts || {}; const carId = opts.carId || this.state.active; const car = this.state.cars[carId]; if (!car || !it.ctrl || !it.ctrl.auto) return null;
+    const res = this.evalAuto(it, carId); const tup = (car.a && car.a[it.id]) || []; const cur = tup[0] || null; const wasAuto = tup[3] === 'a'; const pure = it.ctrl.type === 'auto';
+    let next = cur;
+    if (pure) { if (!(cur === 'pomin' && !opts.fromInput)) next = res && res.state ? res.state : null; }
+    else if (res && res.state) { if (opts.fromInput || res.force || wasAuto || cur == null) next = res.state; }
+    else if (wasAuto) next = null; // the basis of the system's answer is gone – back to unanswered
+    if (res && res.setVin && !car.vin) { car.vin = res.setVin; car.u = nowIso(); }
+    if (next !== cur) { this.setAnswerFor(carId, it.id, { state: next, auto: !!next }); return { changed: true, state: next, prev: cur, res: res }; }
+    return { changed: false, state: cur, prev: cur, res: res };
+  };
+  /** Re-evaluate every rule-driven item of a car (after intake, registry or paint changes) and refresh what is on screen. */
+  App.prototype.reevalAuto = function (opts) {
+    opts = opts || {}; const carId = opts.carId || this.state.active; const changed = [];
+    (this.content.autoItems || []).forEach((it) => { if (opts.except === it.id) return; const r = this.applyAuto(it, { carId: carId }); if (r && r.changed) changed.push(it); });
+    if (carId !== this.state.active || opts.silent || !this.root) return changed;
+    changed.forEach((it) => this.refreshRow(it));
+    if (changed.length) { this.updateFlagbar(); if (this.route.view === 'start') this.refreshWizard(); if (this.route.view === 'filtr') this.refreshFilter(); }
+    if (this.content.hasPaint && (opts.paint || changed.some((it) => this.content.panelOfItem[it.id]))) this.refreshPaintMaps();
+    return changed;
+  };
+  /** Re-render one item row in place (keeps the expanded state and loaded thumbnails). */
+  App.prototype.refreshRow = function (it) {
+    const row = this.itemEl(it.id); if (!row) return;
+    const fresh = this.itemRow(it, row._opts); const oldThumbs = $('.item__badges > .row', row); const newThumbs = $('.item__badges > .row', fresh);
+    if (oldThumbs && newThumbs) newThumbs.replaceWith(oldThumbs);
+    row.replaceWith(fresh);
+  };
+  /** „Ocena: …” line under a rule-driven item. */
+  App.prototype.verdictEl = function (it, carId) {
+    if (!it.ctrl || !it.ctrl.auto) return null;
+    const res = this.evalAuto(it, carId); const pure = it.ctrl.type === 'auto';
+    if (!res || !res.text) { if (pure) return el('div', { class: 'autov autov--none', role: 'status' }, el('span', { class: 'autov__i', html: ICON.info }), el('span', null, 'Wpisz wartość — ocenię automatycznie.')); return el('div', { class: 'autov autov--none', hidden: true }); }
+    const st = res.state || 'none'; const ic = st === 'problem' ? ICON.flag : st === 'uwaga' ? ICON.alert : st === 'ok' ? ICON.check : ICON.info;
+    return el('div', { class: 'autov autov--' + st, role: 'status', 'data-testid': 'autov' }, el('span', { class: 'autov__i', html: ic }), el('span', null, el('b', null, st === 'none' ? 'Hacz: ' : 'Ocena: '), res.text));
+  };
+  /** Answer buttons for an item: the classic bar, options adapted to the question, or just the skip button of a rule-driven item. */
+  App.prototype.answerBar = function (it, a, row) {
+    const self = this; const ctrl = it.ctrl || normCtrl(null, this.content.answer_states); const opts = ctrl.type === 'auto' ? [] : ctrl.options;
+    const hasV = !it.input && !ctrl.generic && typeof a[1] === 'string' && opts.some((o) => o.v === a[1]);
+    const firstOf = (st) => opts.find((o) => o.state === st) || null;
+    const cols = opts.length + (ctrl.skip ? 1 : 0); const longest = opts.reduce((m, o) => Math.max(m, o.label.length), 0);
+    const stack = ctrl.type !== 'auto' && cols >= 3 && longest > 22;
+    const bar = el('div', { class: 'answers' + (ctrl.generic ? '' : ' answers--custom') + (stack ? ' answers--stack' : '') + (ctrl.type === 'auto' ? ' answers--auto' : ''), style: '--cols:' + Math.max(1, stack ? 1 : cols) });
+    opts.forEach((o) => {
+      const on = a[0] === o.state && (hasV ? a[1] === o.v : firstOf(o.state) === o);
+      const b = el('button', { class: 'ans ans--' + o.state + (on ? ' is-on' : ''), type: 'button', 'aria-pressed': on ? 'true' : 'false', 'data-v': o.v, text: o.label });
+      b.addEventListener('click', () => self.tapOption(it, o, row)); bar.append(b);
+    });
+    if (ctrl.skip) { const on = a[0] === 'pomin'; const b = el('button', { class: 'ans ans--pomin' + (on ? ' is-on' : ''), type: 'button', 'aria-pressed': on ? 'true' : 'false', text: ctrl.skip }); b.addEventListener('click', () => self.tapState(it, 'pomin', row)); bar.append(b); }
+    return bar;
+  };
+  App.prototype.tapOption = function (it, o, row) {
+    const a = this.ans(it.id) || []; const storeV = !it.input && !it.ctrl.generic; const curV = storeV && typeof a[1] === 'string' ? a[1] : null;
+    const same = a[0] === o.state && (curV ? curV === o.v : true);
+    const patch = { state: same ? null : o.state }; if (storeV) patch.input = same ? null : o.v;
+    this.applyState(it, patch, row);
+  };
+  App.prototype.tapState = function (it, st, row) { const cur = this.stateOf(it.id); const patch = { state: cur === st ? null : st }; if (!it.input && it.ctrl && !it.ctrl.generic) patch.input = null; this.applyState(it, patch, row); };
+  App.prototype.applyState = function (it, patch, row) {
+    const next = patch.state; const wasComplete = this.phaseComplete(it);
+    this.setAnswer(it.id, Object.assign({ auto: false }, patch));
     if (it.call) this.afterCallAnswer();
-    row.className = row.className.replace(/\bis-(ok|uwaga|problem|pomin)\b/g, '').trim(); if (next) row.classList.add('is-' + next);
-    row.querySelectorAll('.ans').forEach((b) => { const on = next && b.classList.contains('ans--' + next); b.classList.toggle('is-on', !!on); b.setAttribute('aria-pressed', on ? 'true' : 'false'); });
+    if (row) this.syncRowState(it, row);
     this.updateFlagbar();
     const cnt = this.counts(); const ph = this.content.phaseOfItem[it.id]; const p = cnt.phases[ph.id];
     const chip = $('#phase-progress', this.root); if (chip) chip.textContent = p.answered + '/' + p.total + ' odhaczone';
@@ -969,6 +1171,175 @@
     if (next === 'problem' && it.dealbreaker) this.sheetDealbreaker(it, row);
     else if (next === 'problem' && navigator.vibrate) { try { navigator.vibrate(30); } catch (e) { /* ignore */ } }
     if (!wasComplete && p.total && p.answered === p.total) { this.toast('Etap odhaczony ✓'); track('phase_done', { phase_id: ph.id, answered: p.answered, problems: p.problem, uwagi: p.uwaga }); }
+  };
+  /** Row after a tap or an automatic verdict: left border, buttons, verdict line, badges — inputs stay untouched (focus survives). */
+  App.prototype.syncRowState = function (it, row) {
+    const a = this.ans(it.id) || []; const st = a[0] || null;
+    row.className = row.className.replace(/\bis-(ok|uwaga|problem|pomin)\b/g, '').replace(/\s+/g, ' ').trim(); if (st) row.classList.add('is-' + st);
+    const oldBar = $('.answers', row); if (oldBar) oldBar.replaceWith(this.answerBar(it, a, row));
+    const oldV = $('.autov', row); const nv = this.verdictEl(it); if (oldV && nv) oldV.replaceWith(nv);
+    this.refreshBadges(it, row);
+  };
+  /** After an input of a rule-driven item changed: verdict for this row, dependent rows, counters; the dealbreaker sheet only on a final change. */
+  App.prototype.afterAutoInput = function (it, row, final) {
+    if (!it.ctrl || !it.ctrl.auto) return;
+    const r = this.applyAuto(it, { fromInput: true });
+    if (row) this.syncRowState(it, row);
+    this.reevalAuto({ except: it.id, paint: !!this.content.panelOfItem[it.id] });
+    this.updateFlagbar();
+    const ph = this.content.phaseOfItem[it.id]; const p = this.counts().phases[ph.id]; const chip = $('#phase-progress', this.root); if (chip) chip.textContent = p.answered + '/' + p.total + ' odhaczone';
+    if (this.route.view === 'start') this.refreshWizard(); if (this.route.view === 'filtr') this.refreshFilter();
+    if (final && r && r.changed && r.state === 'problem' && it.dealbreaker) this.sheetDealbreaker(it, row);
+  };
+
+  /* ------------------------------------------------------------------ intake („Dane z ogłoszenia”) */
+  App.prototype.setIntake = function (fid, value, flags) {
+    const car = this.car(); const d = this.carData(car); flags = flags || {};
+    if (fid === 'vin') { const v = String(value == null ? '' : value).toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 17); if (v) car.vin = v; else delete car.vin; }
+    else if (value == null || value === '') delete d[fid]; else d[fid] = value;
+    if ('miss' in flags) { if (flags.miss) d.miss[fid] = 1; else delete d.miss[fid]; }
+    if ('got' in flags) { if (flags.got) d.got[fid] = 1; else delete d.got[fid]; }
+    if ('ref' in flags) { if (flags.ref) d.ref[fid] = 1; else delete d.ref[fid]; }
+    const has = value != null && value !== '' && !(fid !== 'vin' && this.content.intake && this.content.intake.byId[fid] && this.content.intake.byId[fid].type === 'yesno' && value === 'no');
+    if (has && !flags.keepMiss) delete d.miss[fid];
+    if (has && !flags.ref) delete d.ref[fid];
+    car.u = nowIso(); this.persist();
+    this.reevalAuto();
+  };
+  /** One intake field (intake card or the call step's „zdobądź” card). onDone(typing) – typing=true while the user is still in the field. */
+  App.prototype.intakeField = function (f, compact, onDone) {
+    const self = this; const ik = this.content.intake; const car = this.car(); const d = this.carData(car); const cur = this.intakeVal(car, f.id);
+    const wrap = el('div', { class: 'ikf' + (compact ? ' ikf--compact' : ''), 'data-field': f.id });
+    const lab = el('div', { class: 'ikf__lab' }, el('span', { text: f.label }), d.got[f.id] && this.intakeStatus(car, f.id) === 'have' ? el('span', { class: 'chip chip--got' }, ik.got_label || 'z rozmowy') : null);
+    wrap.append(lab);
+    if (f.type === 'yesno') {
+      const seg = el('div', { class: 'seg seg--wrap ikf__seg', role: 'group', 'aria-label': f.label });
+      [['yes', f.yes || 'Tak'], ['no', f.no || 'Nie']].forEach((p) => seg.append(el('button', { type: 'button', class: cur === p[0] ? 'is-on' : '', 'aria-pressed': cur === p[0] ? 'true' : 'false', onclick: () => { const nv = cur === p[0] ? null : p[0]; self.setIntake(f.id, nv, { miss: nv === 'no', got: false, ref: false }); if (onDone) onDone(false); } }, p[1])));
+      wrap.append(seg);
+      if (cur === 'no') wrap.append(el('span', { class: 'ikf__hint' }, el('span', { class: 'chip chip--miss' }, ik.missing_hint || 'zapytasz w rozmowie')));
+      return wrap;
+    }
+    if (!compact && d.miss[f.id] && cur == null) {
+      wrap.append(el('div', { class: 'ikf__miss' }, el('span', { class: 'chip chip--miss' }, el('span', { html: ICON.phone, style: 'width:16px;height:16px;display:inline-flex' }), ik.missing_hint || 'zapytasz w rozmowie'), el('button', { class: 'linkbtn', type: 'button', style: 'min-height:32px;padding:0;font-size:15px', onclick: () => { self.setIntake(f.id, null, { miss: false }); if (onDone) onDone(false); } }, 'jednak mam')));
+      return wrap;
+    }
+    const htmlType = f.type === 'number' ? 'number' : f.type === 'date' ? 'date' : 'text';
+    const inp = el('input', { type: htmlType, inputmode: f.type === 'number' ? 'numeric' : null, step: f.type === 'number' ? '1' : null, value: cur != null ? cur : '', 'aria-label': f.label, maxlength: f.type === 'vin' ? '17' : (htmlType === 'text' ? '20' : null), autocapitalize: f.type === 'vin' || f.type === 'text' ? 'characters' : null, autocomplete: 'off', spellcheck: 'false', placeholder: f.type === 'vin' ? 'np. WVWZZZ1KZ5W000000' : f.type === 'number' ? '0' : null, 'data-testid': 'ik-' + f.id });
+    let last = inp.value;
+    const commit = (final) => {
+      let v = inp.value;
+      if (f.type === 'vin') { v = v.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 17); if (v !== inp.value) inp.value = v; }
+      if (f.type === 'text') v = v.toUpperCase().replace(/\s+/g, ' ').trim();
+      if (v !== last) { last = v; self.setIntake(f.id, v === '' ? null : (f.type === 'number' ? Number(v) : v), null); self.refreshIntakeDerived(); if (onDone) onDone(true); }
+      if (final && v !== '' && onDone) onDone(false, true); // field completed (blur/enter) – the intake card ignores it, the call card moves the field to „done”
+    };
+    inp.addEventListener('input', () => commit(false)); inp.addEventListener('change', () => commit(true));
+    const row = el('div', { class: 'ikf__row' + (compact ? ' ikf__row--single' : '') }, el('div', { class: 'inwrap' }, inp, f.unit ? el('span', { class: 'unit', text: f.unit }) : null),
+      compact ? null : el('button', { class: 'missbtn', type: 'button', 'data-testid': 'ik-miss-' + f.id, 'aria-label': (ik.missing_label || 'nie ma') + ': ' + f.label, onclick: () => { self.setIntake(f.id, null, { miss: true }); if (onDone) onDone(false); } }, ik.missing_label || 'nie ma'));
+    wrap.append(row);
+    if (f.type === 'vin') { const st = el('span', { class: 'ikf__hint' }); const upd = () => { const v = String(inp.value || ''); const bad = /[IOQ]/i.test(v); st.textContent = !v ? '17 znaków z dowodu (pole E) albo z podszybia.' : v.length === 17 && !bad ? '17/17 – komplet' : v.length + '/17' + (bad ? ' · VIN nie zawiera liter I, O ani Q' : ''); }; inp.addEventListener('input', upd); upd(); wrap.append(st); }
+    return wrap;
+  };
+  App.prototype.intakeCard = function () {
+    const self = this; const ik = this.content.intake; if (!ik) return null;
+    const card = el('div', { class: 'card intake', 'data-testid': 'intake' });
+    const rerender = () => { const fresh = self.intakeCard(); if (fresh) card.replaceWith(fresh); };
+    card.append(el('h2', null, ik.title || 'Dane z ogłoszenia'));
+    if (ik.intro) card.append(el('p', { class: 'muted' }, ik.intro));
+    const grid = el('div', { class: 'ikgrid' });
+    ik.fields.forEach((f) => grid.append(this.intakeField(f, false, (typing, completed) => { if (!typing && !completed) rerender(); })));
+    card.append(grid);
+    card.append(el('div', { class: 'ikderived', id: 'ik-derived' }, this.intakeDerived()));
+    return card;
+  };
+  /** What follows from the intake: km/year, first registration vs production year, refusals, what is still missing. */
+  App.prototype.intakeDerived = function () {
+    const car = this.car(); const ik = this.content.intake; const out = []; const lines = [];
+    const odo = this.intakeNum(car, 'odo_ad'); const year = this.intakeNum(car, 'year'); const fr = this.intakeVal(car, 'first_reg');
+    if (odo != null && year != null) { const r = AUTO_RULES.km_per_year(this, null, car); if (r && r.text) lines.push({ st: r.state || 'none', text: r.state ? r.text.split(' — ')[0] + (r.state === 'ok' ? ' — typowo jak na wiek' : /mało/.test(r.text) ? ' — mało jak na wiek: jutro licznik kontra zużycie' : ' — dużo: zapytaj o flotę, taxi, przedstawiciela') : r.text }); }
+    if (year != null && fr) { const fy = parseInt(String(fr).slice(0, 4), 10); if (fy) { const diff = fy - year; if (diff < 0) lines.push({ st: 'problem', text: 'Pierwsza rejestracja (' + fy + ') wcześniejsza niż rok produkcji (' + year + ') — coś się nie zgadza, zapytaj.' }); else if (diff >= 2) lines.push({ st: 'uwaga', text: 'Pierwsza rejestracja ' + diff + ' ' + plural(diff, 'rok', 'lata', 'lat') + ' po roku produkcji — auto długo stało w salonie lub na placu albo rocznik jest naciągany. Zapytaj.' }); else lines.push({ st: 'ok', text: 'Pierwsza rejestracja (' + fy + ') zgodna z rocznikiem.' }); } }
+    const refused = ik.fields.filter((f) => this.intakeStatus(car, f.id) === 'refused'); const miss = ik.fields.filter((f) => this.intakeStatus(car, f.id) === 'missing');
+    refused.forEach((f) => lines.push({ st: 'problem', text: 'Sprzedawca odmówił: ' + this.intakeShortLabel(f) + '.' + (f.id === 'vin' ? ' Bez VIN nie sprawdzisz nic — to koniec tematu.' : '') }));
+    if (lines.length) { out.push(el('div', { class: 'ikderived__t' }, ik.derived_intro || 'Co z tego wynika:')); lines.forEach((l) => out.push(el('div', { class: 'autov autov--' + l.st }, el('span', { class: 'autov__i', html: l.st === 'problem' ? ICON.flag : l.st === 'uwaga' ? ICON.alert : l.st === 'ok' ? ICON.check : ICON.info }), el('span', null, l.text)))); }
+    if (miss.length) out.push(el('p', { class: 'ikmiss', 'data-testid': 'intake-missing' }, el('span', { html: ICON.phone }), el('span', null, el('b', null, 'Do zdobycia w rozmowie (krok 3): '), miss.map((f) => this.intakeShortLabel(f)).join(', ') + '. Dostaniesz tam gotowe zdania.')));
+    else out.push(el('p', { class: 'ikmiss ikmiss--ok', 'data-testid': 'intake-complete' }, el('span', { html: ICON.check }), el('span', null, 'Komplet danych z ogłoszenia.')));
+    return out;
+  };
+  App.prototype.refreshIntakeDerived = function () { const n = $('#ik-derived', this.root); if (n) { n.innerHTML = ''; append(n, this.intakeDerived()); } const nd = $('#intake-nudge', this.root); if (nd) { nd.innerHTML = ''; append(nd, this.intakeNudge()); } };
+  /** Soft reminder under step 1 when price / year / mileage are neither typed nor marked „nie ma”. */
+  App.prototype.intakeNudge = function () {
+    const c = this.content; const car = this.car(); if (!c.intake) return null;
+    const req = ['price', 'year', 'odo_ad'].filter((id) => c.intake.byId[id] && this.intakeStatus(car, id) === 'missing' && !(car.d && car.d.miss && car.d.miss[id]));
+    if (!req.length) return null;
+    return el('p', { class: 'small muted', 'data-testid': 'intake-nudge' }, 'Wpisz ' + req.map((id) => this.intakeShortLabel(c.intake.byId[id]).toLowerCase()).join(', ') + ' w danych z ogłoszenia (wyżej) albo tapnij „nie ma” — bez tego nie policzę kilometrów na rok i nie porównam licznika.');
+  };
+  /** Step „Historia”: the three data the free government report needs, with where to get the missing ones. */
+  App.prototype.historyCard = function () {
+    const self = this; const car = this.car(); const ik = this.content.intake;
+    const need = ik ? ['vin', 'reg', 'first_reg'].filter((id) => ik.byId[id]) : ['vin'];
+    const miss = need.filter((id) => this.intakeStatus(car, id) !== 'have');
+    const card = el('div', { class: 'card hist', 'data-testid': 'history-card' });
+    card.append(el('h2', null, 'Trzy dane do Historii pojazdu'));
+    const ul = el('ul', { class: 'hist__list' });
+    need.forEach((id) => { const f = ik ? ik.byId[id] : { label: 'VIN' }; const st = this.intakeStatus(car, id); ul.append(el('li', { class: 'hist__row is-' + st }, el('span', { class: 'hist__i', html: st === 'have' ? ICON.check : st === 'refused' ? ICON.flag : ICON.phone }), el('span', { class: 'grow' }, el('b', null, this.intakeShortLabel(f) + ': '), st === 'have' ? this.intakeText(car, id) : st === 'refused' ? 'sprzedawca odmówił' : 'brak — zapytasz w rozmowie'))); });
+    card.append(ul);
+    card.append(el('p', { class: 'muted' }, miss.length ? 'Bez kompletu raport się nie otworzy. Zdobądź brakujące dane w kroku 3 (dostaniesz gotowe zdania) i wróć tu — to 5 minut. Jeśli już je masz, wpisz je w kroku 1.' : 'Masz komplet. Otwórz raport, przepisz trzy dane, zapisz PDF i odhacz punkty niżej.'));
+    const row = el('div', { class: 'btnrow' }, el('a', { class: 'btn' + (miss.length ? '' : ' btn--primary'), href: 'https://historiapojazdu.gov.pl/', target: '_blank', rel: 'noopener noreferrer', 'data-testid': 'vin-gov' }, 'Otwórz historiapojazdu.gov.pl', el('span', { html: ICON.ext, style: 'width:18px;height:18px;display:inline-flex' })));
+    if (car.vin) row.append(el('button', { class: 'btn', type: 'button', onclick: async () => { const ok = await copyText(car.vin); self.toast(ok ? 'VIN skopiowany' : 'Nie udało się skopiować', !ok); } }, el('span', { html: ICON.copy }), 'Kopiuj VIN'));
+    if (miss.length && this.content.wizard && this.content.wizard.callStep) row.append(el('button', { class: 'btn btn--primary', type: 'button', 'data-testid': 'hist-to-call', onclick: () => self.go('start/' + self.content.wizard.callStep.n) }, el('span', { html: ICON.phone }), 'Zdobądź w rozmowie'));
+    card.append(row);
+    return card;
+  };
+  /** Call step: the data missing from the listing, each as the sentence to say plus a field to type the answer (or mark a refusal). */
+  App.prototype.getCard = function () {
+    const self = this; const ik = this.content.intake; if (!ik) return null; const car = this.car(); this.carData(car);
+    const pending = ik.fields.filter((f) => this.intakeStatus(car, f.id) === 'missing'); const refused = ik.fields.filter((f) => this.intakeStatus(car, f.id) === 'refused');
+    const card = el('div', { class: 'card getcard' + (pending.length ? '' : ' getcard--done'), 'data-testid': 'getcard' });
+    const rerender = () => { const fresh = self.getCard(); if (fresh) card.replaceWith(fresh); };
+    if (!pending.length) {
+      card.append(el('div', { class: 'row' }, el('span', { class: 'autov__i', html: ICON.check, style: 'color:var(--ok)' }), el('b', null, ik.call_done || 'Masz komplet danych.')));
+      if (refused.length) card.append(el('div', { class: 'autov autov--problem', style: 'margin:10px 0 0' }, el('span', { class: 'autov__i', html: ICON.flag }), el('span', null, 'Odmowa: ' + refused.map((f) => self.intakeShortLabel(f)).join(', ') + '.')));
+      return card;
+    }
+    card.append(el('h2', null, ik.call_title || 'Najpierw zdobądź brakujące dane'));
+    if (ik.call_intro) card.append(el('p', { class: 'muted' }, ik.call_intro));
+    pending.forEach((f) => {
+      const box = el('div', { class: 'getrow', 'data-field': f.id });
+      if (f.ask) box.append(el('blockquote', { class: 'say' }, el('b', null, 'Powiedz:'), '„' + f.ask + '”'));
+      const refuse = f.refusable ? el('button', { class: 'linkbtn getrow__ref', type: 'button', 'data-testid': 'ik-ref-' + f.id, style: 'min-height:36px;padding:4px 0;font-size:15px', onclick: () => { self.setIntake(f.id, f.type === 'yesno' ? 'no' : null, { ref: true, keepMiss: true }); self.afterRefusal(f.id); rerender(); } }, ik.refused_label || 'Odmówił') : null;
+      if (f.type === 'yesno') box.append(el('div', { class: 'btnrow' }, el('button', { class: 'btn btn--small btn--primary', type: 'button', onclick: () => { self.setIntake(f.id, 'yes', { got: true, keepMiss: true }); rerender(); } }, 'Zgodził się'), refuse));
+      else box.append(this.intakeField(f, true, (typing) => { if (!typing) { const car2 = self.car(); if (self.intakeStatus(car2, f.id) === 'have') { self.setIntake(f.id, self.intakeVal(car2, f.id), { got: true, keepMiss: true }); } rerender(); } }), refuse);
+      card.append(box);
+    });
+    return card;
+  };
+  App.prototype.afterRefusal = function (fid) {
+    if (fid !== 'vin') return;
+    const it = this.content.itemById.p1s1i2 && this.content.itemById.p1s1i2.ctrl && this.content.itemById.p1s1i2.ctrl.auto === 'vin_present' ? this.content.itemById.p1s1i2 : (this.content.autoItems || []).find((x) => x.ctrl.auto === 'vin_present');
+    if (!it) return; const o = (it.ctrl.options || []).find((x) => x.state === 'problem');
+    this.applyState(it, { state: 'problem', input: o ? o.v : null }, this.itemEl(it.id));
+  };
+  /** „Z ogłoszenia: …” chips under a call question that refers to intake fields. */
+  App.prototype.refText = function (fid) {
+    const car = this.car(); const f = this.content.intake && this.content.intake.byId[fid]; if (!f) return '';
+    const st = this.intakeStatus(car, fid); const lab = this.intakeShortLabel(f);
+    if (st === 'have') return lab + ': ' + this.intakeText(car, fid);
+    if (st === 'refused') return lab + ': odmowa';
+    return lab + ': brak (poproś wyżej)';
+  };
+  /** Intake rows for the report („Pomiary i dane”). */
+  App.prototype.intakeRows = function (carId) {
+    const car = this.state.cars[carId]; const ik = this.content.intake; if (!car || !ik) return [];
+    const rows = [];
+    ik.fields.forEach((f) => { const st = this.intakeStatus(car, f.id); if (st === 'have') rows.push({ label: this.intakeShortLabel(f) + (f.id === 'odo_ad' || f.id === 'price' ? ' (ogłoszenie)' : ''), value: this.intakeText(car, f.id) + (car.d && car.d.got && car.d.got[f.id] ? ' (z rozmowy)' : '') }); else if (st === 'refused') rows.push({ label: this.intakeShortLabel(f), value: 'sprzedawca odmówił' }); });
+    return rows;
+  };
+  App.prototype.refreshBadges = function (it, row) {
+    const fresh = this.itemRow(it, row._opts); const oldB = $('.item__badges', row); const newB = $('.item__badges', fresh);
+    // keep thumbs already loaded
+    const oldThumbs = $('.item__badges > .row', row); const newThumbs = $('.item__badges > .row', fresh);
+    if (oldThumbs && newThumbs) newThumbs.replaceWith(oldThumbs);
+    if (oldB && newB) oldB.replaceWith(newB);
   };
   App.prototype.phaseComplete = function (it) { const ph = this.content.phaseOfItem[it.id]; const p = this.counts().phases[ph.id]; return p.total > 0 && p.answered === p.total; };
   App.prototype.loadPhotos = async function (it, row, quiet) {
@@ -1042,7 +1413,8 @@
       g.rows.forEach((r) => {
         let l = '- [' + (STATE_LABEL[r.state] || r.state).toUpperCase() + '] ' + (r.item.flag_label && r.state === 'problem' ? r.item.flag_label : r.item.text);
         if (r.item.dealbreaker && r.state === 'problem') l += ' (DEALBREAKER)';
-        if (r.input != null && r.input !== '') l += ' – ' + inputText(r.item, r.input);
+        const itxt = r.input != null && r.input !== '' ? inputText(r.item, r.input) : ''; if (itxt) l += ' – ' + itxt;
+        if (r.item.ctrl && r.item.ctrl.auto) { const res = this.evalAuto(r.item); if (res && res.text && res.state) l += ' – ' + res.text; }
         if (r.note) l += ' – ' + r.note;
         lines.push(l);
       });
@@ -1178,8 +1550,10 @@
     if (step.hint) out.push(el('div', { class: 'bubble bubble--inline', 'data-testid': 'wiz-hint' }, mascot(), el('div', null, el('b', null, 'Hacz: '), step.hint, el('span', { class: 'sign' }, 'Hacz – asystent AI marki Odhacz'))));
     if (step.call) this.callStepBody(step, out);
     else {
-      if (step.vin) out.push(this.vinCard(car));
+      if (step.intake && c.intake) out.push(this.intakeCard());
+      if (step.history) out.push(this.historyCard());
       step.sections.forEach((sec) => { if (step.sections.length > 1 && sec.title) out.push(el('div', { class: 'section-title' }, sec.title)); sec.items.forEach((it) => out.push(this.itemRow(it))); });
+      if (step.intake && c.intake) out.push(el('div', { id: 'intake-nudge' }, this.intakeNudge()));
     }
     const nav = el('div', { class: 'wiznav' });
     const nextPh = c.phases[w.phase.index + 1];
@@ -1193,23 +1567,6 @@
     else nav.append(el('button', { class: 'btn btn--ghost wiznav__back', type: 'button', onclick: () => self.go('') }, el('span', { html: ICON.home }), 'Start'));
     out.push(nav);
     return out;
-  };
-  /** VIN per car (step „VIN i historia”): saved in car.vin, synced, printed in the report; link to the free government history check. */
-  App.prototype.vinCard = function (car) {
-    const self = this;
-    const card = el('div', { class: 'card vin', 'data-testid': 'vin-card' });
-    card.append(el('h2', null, 'VIN tego auta'));
-    card.append(el('p', { class: 'muted' }, '17 znaków z dowodu rejestracyjnego (pole E) albo z podszybia. Zapisz go tu – trafi do raportu, a link niżej otwiera bezpłatną Historię pojazdu.'));
-    const inp = el('input', { type: 'text', id: 'vin-input', 'data-testid': 'vin-input', autocapitalize: 'characters', autocomplete: 'off', spellcheck: 'false', maxlength: '17', placeholder: 'np. WVWZZZ1KZ5W000000', 'aria-label': 'VIN', value: car.vin || '' });
-    const status = el('span', { class: 'hint', id: 'vin-status' });
-    const upd = () => { const v = String(inp.value || ''); const bad = /[IOQ]/i.test(v); status.textContent = !v ? 'Wpisz 17 znaków bez spacji.' : v.length === 17 && !bad ? '17/17 – komplet' : v.length + '/17' + (bad ? ' · VIN nie zawiera liter I, O ani Q' : ''); };
-    inp.addEventListener('input', () => { const v = inp.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 17); if (v !== inp.value) inp.value = v; const cur = self.car(); if (v) cur.vin = v; else delete cur.vin; cur.u = nowIso(); self.persist(); upd(); });
-    upd();
-    card.append(el('div', { class: 'field', style: 'margin:0 0 10px' }, el('div', { class: 'inwrap', style: 'grid-column:1/-1' }, inp), status));
-    card.append(el('div', { class: 'btnrow' },
-      el('a', { class: 'btn btn--primary', href: 'https://historiapojazdu.gov.pl/', target: '_blank', rel: 'noopener noreferrer', 'data-testid': 'vin-gov' }, 'Otwórz historiapojazdu.gov.pl', el('span', { html: ICON.ext, style: 'width:18px;height:18px;display:inline-flex' })),
-      el('button', { class: 'btn', type: 'button', onclick: async () => { const v = self.car().vin; if (!v) { self.toast('Najpierw wpisz VIN', true); return; } const ok = await copyText(v); self.toast(ok ? 'VIN skopiowany' : 'Nie udało się skopiować', !ok); } }, el('span', { html: ICON.copy }), 'Kopiuj VIN')));
-    return card;
   };
   /** The „Rozmowa” step body, appended to `out`. */
   App.prototype.callStepBody = function (step, out) {
@@ -1235,21 +1592,37 @@
     if (type && type.hint) typeCard.append(el('p', { class: 'typecard__hint' }, type.hint));
     if (!type && s.unknown_type_note) typeCard.append(el('p', { class: 'small muted', style: 'margin:10px 0 0' }, s.unknown_type_note));
     out.push(typeCard);
-    if (!type) { out.push(el('p', { class: 'muted center', style: 'margin:16px 0' }, 'Wybierz, a poniżej pojawi się skrypt: zdanie na start, ' + (c.callItems.length || '') + ' pytań i ustalenia przed spotkaniem.')); return; }
+    if (!type) { out.push(el('p', { class: 'muted center', style: 'margin:16px 0' }, 'Wybierz, a poniżej pojawi się scenariusz: zdanie na start, dane do zdobycia, ' + (c.callItems.length || '') + ' pytań i ustalenia przed spotkaniem.')); return; }
     // (b) before the call – collapsed
     const before = strList(s.before);
     if (before.length || s.intro) out.push(this.foldCard('call:before', 'Zanim zadzwonisz', [s.intro ? el('p', { class: 'muted' }, s.intro) : null, before.length ? el('ul', { class: 'rules' }, before.map((t) => el('li', null, t))) : null]));
     // (c) exactly one opening line for the chosen type
     const opening = strList(type.opening)[0];
     if (opening) out.push(el('div', { class: 'card card--accent', 'data-testid': 'opening' }, el('h2', null, 'Powiedz:'), el('div', { class: 'line line--stack' }, el('blockquote', { class: 'phrase opening' }, opening), this.copyBtn(opening, 'Kopiuj zdanie na start', { name: 'script_opening_copied', props: { type: type.id } }))));
-    // (d) private → „czy to nie handlarz” (3 questions + verdict + switch); dealer → 3 extra questions
+    // (c2) the data missing from the listing – sentence to say + field to type the answer
+    const gc = this.getCard(); if (gc) out.push(gc);
+    // (d) private → „czy to nie handlarz” (3 questions answered private/dealer + verdict + switch); dealer → 3 extra questions
     if (type.check && Array.isArray(type.check.questions) && type.check.questions.length) {
       const ch = type.check; const card = el('div', { class: 'card checkcard', 'data-testid': 'dealer-check' }, el('h2', null, ch.title || 'Sprawdź, czy to nie handlarz'));
       if (ch.intro) card.append(el('p', { class: 'muted' }, ch.intro));
-      ch.questions.forEach((q, i) => { if (q && q.q) card.append(tickRow('c' + i, q.q, q.watch_for)); });
-      if (ch.verdict) card.append(el('p', { class: 'verdict' }, ch.verdict));
+      const qs = ch.questions.filter((q) => q && q.q);
+      const verdictEl = el('p', { class: 'verdict', 'data-testid': 'dealer-verdict' });
       const dealer = types.find((t) => t.id === 'dealer') || types.find((t) => t !== type);
-      if (dealer) card.append(el('button', { class: 'btn btn--block', type: 'button', 'data-testid': 'switch-dealer', onclick: () => self.setSellerType(dealer.id, true) }, 'To handlarz → przełącz'));
+      const switchBtn = dealer ? el('button', { class: 'btn btn--block', type: 'button', 'data-testid': 'switch-dealer', onclick: () => self.setSellerType(dealer.id, true) }, 'To handlarz → przełącz') : null;
+      const updVerdict = () => {
+        let nd = 0, np = 0; qs.forEach((q, i) => { const v = ticks['c' + i]; if (v === 'd') nd++; else if (v === 'p') np++; });
+        let cls = '', txt = ch.verdict || '';
+        if (nd >= 2) { txt = ch.verdict_dealer || 'To brzmi jak handel — przełącz i pytaj jak firmę.'; cls = 'verdict--dealer'; }
+        else if (nd + np === qs.length && qs.length) { txt = ch.verdict_private || 'Odpowiedzi brzmią jak osoba prywatna. Pytaj dalej.'; cls = 'verdict--private'; }
+        verdictEl.textContent = txt; verdictEl.className = 'verdict' + (cls ? ' ' + cls : ''); if (switchBtn) switchBtn.classList.toggle('btn--primary', nd >= 2);
+      };
+      qs.forEach((q, i) => {
+        const key = 'c' + i; const cur = ticks[key];
+        const seg = el('div', { class: 'seg seg--wrap dc__seg', role: 'group', 'aria-label': q.q });
+        [['p', q.a_private || 'Osoba prywatna'], ['d', q.a_dealer || 'Handel']].forEach((o) => seg.append(el('button', { type: 'button', class: (cur === o[0] ? 'is-on' : '') + (o[0] === 'd' ? ' dc__d' : ''), 'aria-pressed': cur === o[0] ? 'true' : 'false', 'data-o': o[0], onclick: () => { const now = ticks[key] === o[0] ? null : o[0]; if (now) ticks[key] = now; else delete ticks[key]; car.u = nowIso(); self.persist(); seg.querySelectorAll('button').forEach((x) => { const on = !!now && x.getAttribute('data-o') === now; x.classList.toggle('is-on', on); x.setAttribute('aria-pressed', on ? 'true' : 'false'); }); updVerdict(); } }, o[1])));
+        card.append(el('div', { class: 'dc' }, el('div', { class: 'dc__q' }, q.q), q.watch_for ? el('div', { class: 'watch' }, el('b', null, 'Jak to czytać: '), q.watch_for) : null, seg));
+      });
+      card.append(verdictEl); if (switchBtn) card.append(switchBtn); updVerdict();
       out.push(card);
     }
     if (Array.isArray(type.extra_questions) && type.extra_questions.length) {
@@ -1261,7 +1634,7 @@
     const items = c.callItems;
     if (items.length) {
       out.push(el('div', { class: 'row', style: 'justify-content:space-between;margin:18px 0 6px' }, el('h2', { style: 'margin:0' }, items.length + ' ' + plural(items.length, 'pytanie', 'pytania', 'pytań')), el('span', { class: 'chip', id: 'call-progress' }, cs.answered + '/' + items.length + ' odpowiedzi')));
-      out.push(el('p', { class: 'muted' }, 'Zaznaczaj w trakcie: OK, Uwaga albo Problem. Notatka = dosłowny cytat; jutro zderzysz go z faktami.'));
+      out.push(el('p', { class: 'muted' }, 'Zaznaczaj w trakcie — odpowiedzi pasują do pytania. Notatka = dosłowny cytat; jutro zderzysz go z faktami.'));
       items.forEach((it) => out.push(this.callCard(it)));
     }
     // (f) agreements with „Powiedz: …”
@@ -1297,6 +1670,7 @@
     const badges = el('div', { class: 'item__badges' });
     if (a[2]) badges.append(el('span', { class: 'badge badge--note' }, el('span', { html: ICON.note, style: 'width:14px;height:14px;display:inline-flex' }), el('span', { text: a[2] })));
     row.append(el('div', { class: 'qitem__head' }, el('span', { class: 'qitem__n', text: it.n + '/' + n }), el('div', { class: 'grow' }, el('div', { class: 'qitem__q', text: it.text }), badges)));
+    if (it.ref && it.ref.length && this.content.intake) { const parts = it.ref.map((fid) => this.refText(fid)).filter(Boolean); if (parts.length) row.append(el('div', { class: 'refline' }, el('b', null, 'Z ogłoszenia: '), parts.join(' · '))); }
     if (it.watch_for) row.append(el('div', { class: 'watch' }, el('b', null, 'Uważaj na: '), it.watch_for));
     if (it.if_dodges) {
       const dodge = el('div', { class: 'dodge', hidden: true }, el('b', null, 'Jeśli kręci: '), it.if_dodges);
@@ -1304,9 +1678,7 @@
       tb.addEventListener('click', () => { dodge.hidden = !dodge.hidden; tb.setAttribute('aria-expanded', dodge.hidden ? 'false' : 'true'); });
       row.append(tb, dodge);
     }
-    const answers = el('div', { class: 'answers' });
-    this.content.answer_states.forEach((st) => { const b = el('button', { class: 'ans ans--' + st + (a[0] === st ? ' is-on' : ''), type: 'button', 'aria-pressed': a[0] === st ? 'true' : 'false', text: STATE_LABEL[st] || st }); b.addEventListener('click', () => self.tapState(it, st, row)); answers.append(b); });
-    row.append(answers);
+    row.append(this.answerBar(it, a, row));
     const tools = el('div', { class: 'item__tools' });
     const noteBox = el('div', { class: 'note', hidden: !a[2] });
     const ta = el('textarea', { placeholder: 'Zapisz dosłownie, co powiedział sprzedawca…', 'aria-label': 'Notatka' }); ta.value = a[2] || '';
@@ -1541,7 +1913,9 @@
         const it = r.item; const box = el('div', { class: 'rep-item s-' + r.state, 'data-item': it.id });
         box.append(el('div', { class: 'rep-item__t' }, el('span', { class: 'rep-state', text: STATE_LABEL[r.state] || r.state }), el('span', null, r.state === 'problem' && it.flag_label ? it.flag_label : it.text, it.dealbreaker && r.state === 'problem' ? el('span', { class: 'db' }, ' · dealbreaker') : null)));
         if (r.state === 'problem' && it.flag_label) box.append(el('div', { class: 'rep-item__sub', text: it.text }));
-        if (r.input != null && r.input !== '') box.append(el('div', { class: 'rep-item__meta' }, el('b', null, (it.input && it.input.label ? it.input.label : 'Pomiar') + ': '), inputText(it, r.input)));
+        const itxt = r.input != null && r.input !== '' ? inputText(it, r.input) : '';
+        if (itxt) box.append(el('div', { class: 'rep-item__meta' }, el('b', null, (it.input && it.input.label ? it.input.label : it.ctrl && !it.ctrl.generic ? 'Odpowiedź' : 'Pomiar') + ': '), itxt));
+        if (it.ctrl && it.ctrl.auto) { const res = this.evalAuto(it, id); if (res && res.text && res.state) box.append(el('div', { class: 'rep-item__meta' }, el('b', null, 'Ocena: '), res.text)); }
         if (r.note) box.append(el('div', { class: 'rep-item__meta' }, el('b', null, 'Notatka: '), r.note));
         if (it.photo) { const ph = el('div', { class: 'rep-photos', 'data-photos': it.id }); const l = photos && photos[this.photoKeyFor(id, it.id)]; if (l && l.length) l.forEach((u, i) => ph.append(el('img', { src: u, alt: 'Zdjęcie ' + (i + 1) }))); box.append(ph); }
         list.append(box);
@@ -1549,7 +1923,8 @@
     });
     doc.append(list);
     const inputs = []; c.items.forEach((it) => { const v = car.a && car.a[it.id] && car.a[it.id][1]; if (it.input && v != null && v !== '') inputs.push({ it: it, v: v }); });
-    if (inputs.length) doc.append(el('section', { class: 'card' }, el('h2', null, 'Pomiary i dane'), el('dl', { class: 'rep-data' }, inputs.map((x) => [el('dt', { text: x.it.input.label || x.it.text }), el('dd', { text: inputText(x.it, x.v) })]))));
+    const ikRows = this.intakeRows(id);
+    if (inputs.length || ikRows.length) doc.append(el('section', { class: 'card' }, el('h2', null, 'Pomiary i dane'), el('dl', { class: 'rep-data' }, ikRows.map((x) => [el('dt', { text: x.label }), el('dd', { text: x.value })]).concat(inputs.map((x) => [el('dt', { text: x.it.input.label || x.it.text }), el('dd', { text: inputText(x.it, x.v) })])))));
     const qs = this.reportQuestions(id, cnt, d, groups);
     if (qs.length) doc.append(el('section', { class: 'card' }, el('h2', null, 'Pytania, które warto zadać przed decyzją'), el('ol', { class: 'rep-q' }, qs.map((q) => el('li', null, q)))));
     if (Array.isArray(rules.safe_deal_rules) && rules.safe_deal_rules.length) doc.append(el('section', { class: 'card' }, el('h2', null, 'Zasady bezpiecznej transakcji'), el('ul', { class: 'rules' }, rules.safe_deal_rules.map((r) => el('li', null, r)))));
@@ -1567,7 +1942,8 @@
     const rows = []; groups.forEach((g) => g.rows.forEach((r) => rows.push(r)));
     rows.filter((r) => r.state === 'problem').concat(rows.filter((r) => r.state === 'uwaga')).slice(0, 5).forEach((r) => {
       const label = r.state === 'problem' && r.item.flag_label ? r.item.flag_label : r.item.text;
-      out.push(r.state === 'problem' ? 'Skąd „' + label + '”? Jest na to dokument, faktura albo wyjaśnienie, które da się sprawdzić?' : 'Czy cena uwzględnia: ' + label + '?');
+      const pre = r.item.call || c.phaseOfItem[r.item.id] === c.phases[0];
+      out.push(r.state === 'problem' ? 'Skąd „' + label + '”? Jest na to dokument, faktura albo wyjaśnienie, które da się sprawdzić?' : pre ? 'Wyjaśnij przed decyzją: ' + label + '.' : 'Czy cena uwzględnia: ' + label + '?');
     });
     const pd = c.hasPaint ? this.paintData(id) : null;
     if (pd && pd.flagged.length) out.push('Które elementy były lakierowane i dlaczego? Miernik pokazuje: ' + pd.flagged.slice(0, 3).map((f) => PANEL_INDEX[f.key].label.toLowerCase() + ' ' + fmtNum(f.value) + ' µm').join(', ') + (pd.baseline ? ' przy bazie ' + fmtNum(pd.baseline) + ' µm' : '') + '.');
@@ -1585,9 +1961,9 @@
     if (c.hasPaint) { const pd = this.paintData(id); if (pd.count) { L.push('MAPA LAKIERU — ' + this.paintBaseText(pd)); PANELS.forEach((p) => { if (!c.panelItem[p.key]) return; const v = pd.readings[p.key]; L.push('- ' + p.label + ': ' + (v != null ? fmtNum(v) + ' µm' + (pd.baseline ? ' (' + ratioText(v / pd.baseline) + ', ' + PAINT_LEVEL[pd.levels[p.key]] + ')' : '') : 'brak odczytu')); }); L.push(this.paintInterpretation(pd), ''); } }
     L.push('UWAGI I PROBLEMY');
     if (!groups.length) L.push('- brak');
-    groups.forEach((g) => { L.push(g.phase.title.toUpperCase()); g.rows.forEach((r) => { let l = '- [' + (STATE_LABEL[r.state] || r.state).toUpperCase() + '] ' + (r.item.flag_label && r.state === 'problem' ? r.item.flag_label + ' (' + r.item.text + ')' : r.item.text); if (r.item.dealbreaker && r.state === 'problem') l += ' — DEALBREAKER'; if (r.input != null && r.input !== '') l += ' — ' + (r.item.input && r.item.input.label ? r.item.input.label + ': ' : '') + inputText(r.item, r.input); if (r.note) l += ' — notatka: ' + r.note; L.push(l); }); });
+    groups.forEach((g) => { L.push(g.phase.title.toUpperCase()); g.rows.forEach((r) => { let l = '- [' + (STATE_LABEL[r.state] || r.state).toUpperCase() + '] ' + (r.item.flag_label && r.state === 'problem' ? r.item.flag_label + ' (' + r.item.text + ')' : r.item.text); if (r.item.dealbreaker && r.state === 'problem') l += ' — DEALBREAKER'; const itxt = r.input != null && r.input !== '' ? inputText(r.item, r.input) : ''; if (itxt) l += ' — ' + (r.item.input && r.item.input.label ? r.item.input.label + ': ' : '') + itxt; if (r.item.ctrl && r.item.ctrl.auto) { const res = this.evalAuto(r.item, id); if (res && res.text && res.state) l += ' — ocena: ' + res.text; } if (r.note) l += ' — notatka: ' + r.note; L.push(l); }); });
     L.push('');
-    const inputs = []; c.items.forEach((it) => { const v = car.a && car.a[it.id] && car.a[it.id][1]; if (it.input && v != null && v !== '') inputs.push('- ' + (it.input.label || it.text) + ': ' + inputText(it, v)); });
+    const inputs = this.intakeRows(id).map((x) => '- ' + x.label + ': ' + x.value); c.items.forEach((it) => { const v = car.a && car.a[it.id] && car.a[it.id][1]; if (it.input && v != null && v !== '') inputs.push('- ' + (it.input.label || it.text) + ': ' + inputText(it, v)); });
     if (inputs.length) { L.push('POMIARY I DANE'); inputs.forEach((x) => L.push(x)); L.push(''); }
     const qs = this.reportQuestions(id, cnt, d, groups); if (qs.length) { L.push('PYTANIA PRZED DECYZJĄ'); qs.forEach((q, i) => L.push((i + 1) + '. ' + q)); L.push(''); }
     if (Array.isArray(rules.safe_deal_rules) && rules.safe_deal_rules.length) { L.push('BEZPIECZNA TRANSAKCJA'); rules.safe_deal_rules.forEach((p) => L.push('- ' + p)); L.push(''); }
@@ -1605,7 +1981,7 @@
     const c = this.content; const car = this.state.cars[id]; const cnt = this.counts(id); const d = this.decide(cnt); const f = this.factItems();
     const val = (it) => { if (!it) return null; const v = car.a && car.a[it.id] && car.a[it.id][1]; return v == null || v === '' ? null : v; };
     const rows = []; this.negoGroups(id).forEach((g) => g.rows.forEach((r) => rows.push(r)));
-    return { id: id, car: car, cnt: cnt, d: d, pd: c.hasPaint ? this.paintData(id) : null, odo: val(f.odo), dot: val(f.dot), tread: val(f.tread), notes: rows.filter((r) => r.state === 'problem').concat(rows.filter((r) => r.state === 'uwaga')).slice(0, 2), date: this.carDate(car), rank: { ok: 0, nego: 1, todo: 2, mech: 3, walk: 4 }[d.kind] };
+    return { id: id, car: car, cnt: cnt, d: d, pd: c.hasPaint ? this.paintData(id) : null, odo: val(f.odo), dot: val(f.dot), tread: val(f.tread), price: this.intakeNum(car, 'price'), year: this.intakeNum(car, 'year'), odoAd: this.intakeNum(car, 'odo_ad'), notes: rows.filter((r) => r.state === 'problem').concat(rows.filter((r) => r.state === 'uwaga')).slice(0, 2), date: this.carDate(car), rank: { ok: 0, nego: 1, todo: 2, mech: 3, walk: 4 }[d.kind] };
   };
   App.prototype.viewCompare = function () {
     const self = this; const ids = Object.keys(this.state.cars);
@@ -1644,7 +2020,8 @@
     if (cnt.call) card.append(row('Rozmowa', cnt.call.answered ? el('span', { 'data-testid': 'cmp-call', class: cnt.call.problem ? 'is-bad' : (cnt.call.uwaga ? 'is-warn' : '') }, cnt.call.uwaga + ' ' + plural(cnt.call.uwaga, 'uwaga', 'uwagi', 'uwag') + ', ' + cnt.call.problem + ' ' + plural(cnt.call.problem, 'problem', 'problemy', 'problemów')) : dash()));
     card.append(row('Postęp', el('span', null, el('b', { text: cnt.answered + '/' + cnt.total }), el('span', { class: 'progress', style: 'display:block;margin-top:6px' }, el('i', { style: 'width:' + Math.round(100 * cnt.answered / Math.max(1, cnt.total)) + '%' })))));
     if (c.hasPaint) { const pd = f.pd; card.append(row('Lakier: max / dach', pd && pd.count && pd.max ? el('span', { class: 'chip chip--lv lv-' + pd.max.level, 'data-testid': 'cmp-paint' }, el('i', { class: 'dot' }), fmtNum(pd.max.value) + ' / ' + (pd.readings.roof ? fmtNum(pd.readings.roof) : '–') + ' µm') : dash())); }
-    if (fi.odo) card.append(row('Przebieg', f.odo != null ? fmtInput(fi.odo, f.odo) : dash()));
+    if (c.intake) { card.append(row('Cena (ogłoszenie)', f.price != null ? this.intakeText(f.car, 'price') : dash())); card.append(row('Rocznik', f.year != null ? String(f.year) : dash())); }
+    if (fi.odo) card.append(row('Przebieg (licznik)', f.odo != null ? fmtInput(fi.odo, f.odo) : (f.odoAd != null ? el('span', { class: 'muted' }, fmtKm(f.odoAd) + ' (ogł.)') : dash())));
     if (fi.dot) card.append(row('Najstarsza opona (DOT)', f.dot != null ? String(f.dot) : dash()));
     if (fi.tread) card.append(row('Bieżnik', f.tread != null ? fmtInput(fi.tread, f.tread) : dash()));
     card.append(row('Najważniejsze', f.notes.length ? el('ul', { class: 'cmp-notes' }, f.notes.map((r) => el('li', { class: 's-' + r.state }, (r.state === 'problem' && r.item.flag_label ? r.item.flag_label : r.item.text) + (r.note ? ' — ' + r.note : '')))) : el('span', { class: 'muted', text: cnt.answered ? 'bez uwag' : 'jeszcze nic' }), 'cmp-row--wide'));
@@ -1730,7 +2107,8 @@
     const car = this.state.cars[carId]; if (!car) return '';
     const w = this.content.wizard; const types = w && Array.isArray(w.script.seller_types) ? w.script.seller_types : [];
     const t = car.st ? types.find((x) => x && x.id === car.st) : null;
-    return (car.vin ? ' · VIN ' + car.vin : '') + (t ? ' · sprzedawca: ' + String(t.label || t.id).toLowerCase() : '');
+    const y = this.intakeNum(car, 'year'); const pr = this.intakeNum(car, 'price');
+    return (y != null ? ' · rocznik ' + y : '') + (pr != null ? ' · ' + this.intakeText(car, 'price') : '') + (car.vin ? ' · VIN ' + car.vin : '') + (t ? ' · sprzedawca: ' + String(t.label || t.id).toLowerCase() : '');
   };
   App.prototype.buildIcs = function (rows) {
     const c = this.content; const stamp = nowIso().replace(/[-:]/g, '').replace(/\.\d+Z$/, 'Z');
@@ -1854,7 +2232,7 @@
     this.sheet((sh, close) => {
       sh.append(el('div', { class: 'row' }, el('span', { class: 'badge badge--db' }, el('span', { html: ICON.warn, style: 'width:16px;height:16px;display:inline-flex' }), 'dealbreaker')), el('h2', null, 'To zwykle koniec oglądania.'), el('p', null, 'Chcesz zobaczyć dlaczego?'), el('p', { class: 'muted' }, it.text),
         el('div', { class: 'btnrow' },
-          el('button', { class: 'btn btn--primary', type: 'button', onclick: () => { close(); self.openItems[it.id] = true; row.classList.add('is-open'); const h = $('.item__head', row); if (h) h.setAttribute('aria-expanded', 'true'); self.loadPhotos(it, row); row.scrollIntoView({ block: 'center', behavior: 'smooth' }); } }, 'Pokaż dlaczego'),
+          el('button', { class: 'btn btn--primary', type: 'button', onclick: () => { close(); self.openItems[it.id] = true; if (!row) return; row.classList.add('is-open'); const h = $('.item__head', row); if (h) h.setAttribute('aria-expanded', 'true'); self.loadPhotos(it, row); row.scrollIntoView({ block: 'center', behavior: 'smooth' }); } }, 'Pokaż dlaczego'),
           el('button', { class: 'btn', type: 'button', onclick: close }, 'Wiem, idę dalej')));
     });
   };
@@ -1900,11 +2278,13 @@
   };
   App.prototype.showOnboarding = function () {
     const self = this; let step = 0;
-    const phs = this.content.phases; const upsell = this.opts.kind === 'upsell';
+    const phs = this.content.phases; const upsell = this.opts.kind === 'upsell'; const adapted = this.content.items.some((it) => it.ctrl && !it.ctrl.generic);
     const path = phs.length > 1 ? 'od „' + phs[0].title + '” po „' + phs[phs.length - 1].title + '”' : '';
     const screens = [
       { title: 'Jak to działa', text: phs.length + ' ' + plural(phs.length, 'etap', 'etapy', 'etapów') + ' po kolei' + (path ? ', ' + path : '') + '. Każdy punkt mówi, co sprawdzić i jak' + (upsell ? ' – bez prawnika.' : ' – bez bycia mechanikiem.'), demo: 'phases' },
-      { title: 'Odpowiadasz jednym tapnięciem', text: 'OK, Uwaga, Problem albo Pomiń. Dealbreakery są oznaczone – gdy trafisz, powiemy, że to zwykle koniec' + (upsell ? ' rozmowy o zakupie.' : ' oglądania.'), demo: 'answers' },
+      adapted
+        ? { title: 'Odpowiadasz jednym tapnięciem', text: 'Przy każdym punkcie odpowiedzi pasują do pytania: „zgadza się / różni się”, „sucho / kapie”, „jest / nie ma”. Tam, gdzie wpisujesz liczbę – lakier, licznik, bieżnik – ocenę robi system. Dealbreakery są oznaczone: gdy trafisz, powiemy, że to zwykle koniec oglądania.', demo: 'answers' }
+        : { title: 'Odpowiadasz jednym tapnięciem', text: 'OK, Uwaga, Problem albo Pomiń. Dealbreakery są oznaczone – gdy trafisz, powiemy, że to zwykle koniec' + (upsell ? ' rozmowy o zakupie.' : ' oglądania.'), demo: 'answers' },
       upsell && this.content.deadlineRows.length
         ? { title: 'Terminy liczą się same', text: 'Wpisujesz datę z umowy, dostajesz daty PCC-3, rejestracji i końca OC – z plikiem do kalendarza. Na końcu lista braków do skopiowania lub PDF.', demo: 'flags' }
         : { title: 'Na końcu dostajesz raport', text: 'Licznik czerwonych flag cały czas na dole. Na końcu: decyzja z uzasadnieniem, mapa lakieru i raport z oględzin – do PDF, do skopiowania, do porównania z kolejnym autem.', demo: 'flags' },
@@ -1916,7 +2296,7 @@
       const s = screens[step]; ov.innerHTML = '';
       ov.append(el('button', { class: 'onb__skip', type: 'button', onclick: finish }, 'Pomiń'));
       let demo = null;
-      if (s.demo === 'answers') { demo = el('div', { class: 'onb__demo' }); ['ok', 'uwaga', 'problem', 'pomin'].forEach((st) => { const b = el('button', { class: 'ans ans--' + st + (st === 'ok' ? ' is-on' : ''), type: 'button', text: STATE_LABEL[st] }); b.addEventListener('click', () => { demo.querySelectorAll('.ans').forEach((x) => x.classList.remove('is-on')); b.classList.add('is-on'); }); demo.append(b); }); }
+      if (s.demo === 'answers') { demo = el('div', { class: 'onb__demo' + (adapted ? ' onb__demo--3' : '') }); (adapted ? [['ok', 'Zgadza się'], ['uwaga', 'Nie znalazłem'], ['problem', 'Różni się']] : [['ok', 'OK'], ['uwaga', 'Uwaga'], ['problem', 'Problem'], ['pomin', 'Pomiń']]).forEach((x) => { const b = el('button', { class: 'ans ans--' + x[0] + (x[0] === 'ok' ? ' is-on' : ''), type: 'button', text: x[1] }); b.addEventListener('click', () => { demo.querySelectorAll('.ans').forEach((y) => y.classList.remove('is-on')); b.classList.add('is-on'); }); demo.append(b); }); }
       if (s.demo === 'flags') demo = el('div', { class: 'mockflag' }, el('b', null, '3'), el('span', null, 'czerwone flagi · 1 dealbreaker'));
       ov.append(el('div', { class: 'onb__body' }, mascot(), el('h2', { text: s.title }), el('p', null, s.text), demo));
       ov.append(el('div', { class: 'onb__dots' }, screens.map((x, i) => el('i', { class: i === step ? 'is-on' : '' }))));

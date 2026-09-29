@@ -80,16 +80,18 @@ test('full mock purchase flow with upsell, access, progress sync and admin funne
   assert.ok((await page.getByTestId('access-status').textContent()).includes('upsell'), 'products_owned lists the upsell too');
 
   // 6. Progress sync: answer an item (localStorage + debounced Access.saveProgress), read back, survives reload
-  await page.goto(`${srv.base}/app/#/`);
-  await page.locator('.phase-row').first().click();
-  await page.locator('.item').first().locator('.ans--ok').click();
+  await page.goto(`${srv.base}/app/#/phase/p3`);
+  await page.locator('[data-item="p3s1i1"] .ans--ok').click(); // „Równe i symetryczne” – an option adapted to the question, state ok
   await page.evaluate(() => window.OdhaczApp.flushSync());
   const remote = await page.evaluate(() => window.Access.loadProgress());
   assert.equal(remote.v, 1);
-  assert.deepEqual(Object.values(Object.values(remote.cars)[0].a), [['ok']], 'compact [state, input, note] tuples per item id');
+  const tuples = Object.values(Object.values(remote.cars)[0].a);
+  assert.equal(tuples.length, 1);
+  assert.equal(tuples[0][0], 'ok', 'compact [state, option, note] tuple per item id');
+  assert.equal(tuples[0][1], 'good', 'the chosen option id is kept next to the state');
   await page.reload();
   await page.locator('.item.is-ok').first().waitFor();
-  await page.locator('.item').nth(1).locator('.ans--uwaga').click();
+  await page.locator('[data-item="p3s1i2"] .ans--uwaga').click(); // „Trzeba docisnąć”
   await page.locator('.item.is-uwaga').first().waitFor();
   await page.evaluate(() => window.OdhaczApp.flushSync());
   assert.equal(Object.keys(Object.values((await page.evaluate(() => window.Access.loadProgress())).cars)[0].a).length, 2);

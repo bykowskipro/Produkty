@@ -75,7 +75,7 @@
       <div class="hero-copy">
         <p class="overline"><b>Odhacz Auto</b><span class="ov-sep" aria-hidden="true"> · </span><span>prowadzenie przy aucie, dowody, raport</span></p>
         <h1>Obejrzyj używane auto <span class="hl">jak fachowiec</span>. Wyjdź z&nbsp;listą uwag do&nbsp;negocjacji.</h1>
-        <p class="lead">Otwierasz link w telefonie przy aucie. Prowadzimy Cię krok po kroku: tapiesz OK / Uwaga / Problem, wpisujesz pomiar lakieru, robisz zdjęcie problemu. Na końcu masz decyzję, raport z&nbsp;oględzin i&nbsp;listę problemów i&nbsp;argumentów, z&nbsp;którymi wejdziesz do negocjacji. To strona, nie plik i&nbsp;nie apka. Nie musisz być mechanikiem.</p>
+        <p class="lead">Otwierasz link w telefonie przy aucie. Prowadzimy Cię krok po kroku: przy każdym punkcie odpowiedzi pasują do pytania („zgadza się / różni się”, „sucho / kapie”), a&nbsp;pomiary — lakier, licznik, bieżnik — ocenia system. Do problemu przypinasz zdjęcie. Na końcu masz decyzję, raport z&nbsp;oględzin i&nbsp;listę problemów i&nbsp;argumentów, z&nbsp;którymi wejdziesz do negocjacji. To strona, nie plik i&nbsp;nie apka. Nie musisz być mechanikiem.</p>
         <div class="hero-cta">
           <button type="button" class="btn btn-lime" data-buy="main" data-testid="cta-main">Kupuję za 39 zł</button>
           <a class="link-arrow" href="#demo">Zobacz, jak działa <svg aria-hidden="true"><use href="#i-arrow-down"/></svg></a>
@@ -96,16 +96,16 @@
               <div class="scr-bar"><i></i></div>
             </div>
             <div class="mrow">
-              <div class="mrow-h"><div><div class="mrow-t">Grubość lakieru: maska</div><div class="mrow-s">118 µm · jak dach</div></div></div>
-              <div class="mseg"><span class="on-ok">OK</span><span>Uwaga</span><span>Problem</span><span>Pomiń</span></div>
+              <div class="mrow-h"><div><div class="mrow-t">Grubość lakieru: maska</div><div class="mrow-s">wpisujesz: 118 µm</div></div></div>
+              <div class="mauto ok"><svg aria-hidden="true"><use href="#i-check"/></svg><span><b>Ocena:</b> 1,1× dachu — w normie</span></div>
             </div>
             <div class="mrow">
-              <div class="mrow-h"><div><div class="mrow-t">Odcień drzwi kierowcy</div><div class="mrow-s">lekko inny niż błotnik</div></div></div>
-              <div class="mseg"><span>OK</span><span class="on-warn">Uwaga</span><span>Problem</span><span>Pomiń</span></div>
+              <div class="mrow-h"><div><div class="mrow-t">Różnice odcienia lakieru</div><div class="mrow-s">z 3–4 m i pod kątem</div></div></div>
+              <div class="mseg mseg--3"><span>Jednolity</span><span class="on-warn">Jeden element inny</span><span>Kilka elementów</span></div>
             </div>
             <div class="mrow is-bad">
-              <div class="mrow-h"><div><div class="mrow-t">Szpachla na tylnym błotniku</div><div class="mrow-s">grubościomierz: 640 µm</div></div><span class="flag"><svg><use href="#i-flag"/></svg>czerwona flaga</span></div>
-              <div class="mseg"><span>OK</span><span>Uwaga</span><span class="on-bad">Problem</span><span>Pomiń</span></div>
+              <div class="mrow-h"><div><div class="mrow-t">Grubość lakieru: ćwiartka tylna prawa</div><div class="mrow-s">wpisujesz: 640 µm</div></div><span class="flag"><svg><use href="#i-flag"/></svg>czerwona flaga</span></div>
+              <div class="mauto bad"><svg aria-hidden="true"><use href="#i-flag"/></svg><span><b>Ocena:</b> 5,8× dachu — szpachla lub naprawa</span></div>
               <div class="mrow-ev"><span><svg><use href="#i-camera"/></svg>zdjęcie</span><span><svg><use href="#i-ruler"/></svg>640 µm</span><span><svg><use href="#i-note"/></svg>„prawy tył, pod listwą”</span></div>
             </div>
             <div class="scr-more">Dalej: spasowanie, śruby, szyby, rdza, opony…</div>
@@ -185,7 +185,7 @@
       </div>
       <ol class="steps">
         <li class="step"><span class="step-n" aria-hidden="true">1</span><h3>Kupujesz, dostajesz link.</h3><p>Otwierasz na telefonie. Bez aplikacji, bez logowania.</p></li>
-        <li class="step"><span class="step-n" aria-hidden="true">2</span><h3>Przy aucie tapiesz.</h3><p>Najpierw Szybki filtr (10 minut), potem pełne oględziny: OK / Uwaga / Problem / Pomiń. Wpisujesz pomiary (np. lakier w µm), robisz zdjęcia, dopisujesz notatki.</p></li>
+        <li class="step"><span class="step-n" aria-hidden="true">2</span><h3>Przy aucie tapiesz.</h3><p>Najpierw Szybki filtr (10 minut), potem pełne oględziny: przy każdym punkcie odpowiedzi dopasowane do pytania, a pomiary (lakier w µm, licznik, bieżnik, wiek opon) ocenia system — sam porówna licznik z ogłoszeniem i z Historią pojazdu. Robisz zdjęcia, dopisujesz notatki.</p></li>
         <li class="step"><span class="step-n" aria-hidden="true">3</span><h3>Na końcu dostajesz raport.</h3><p>Decyzja: kup / negocjuj / zawołaj mechanika / odpuść — z uzasadnieniem — oraz lista problemów i argumentów, z którymi wejdziesz do negocjacji.</p></li>
       </ol>
     </div>
@@ -202,7 +202,7 @@
       <table class="phases">
         <thead><tr><th scope="col">Etap</th><th scope="col">Czas</th><th scope="col">Co w środku</th></tr></thead>
         <tbody>
-          <tr><td class="ph-name"><span class="ph-label"><i aria-hidden="true">1</i><span>Zanim pojedziesz</span></span></td><td class="ph-time"><span class="time">15 min</span></td><td class="ph-what">czerwone flagi w ogłoszeniu, VIN i historia, skrypt rozmowy telefonicznej ze sprzedawcą, co zabrać</td></tr>
+          <tr><td class="ph-name"><span class="ph-label"><i aria-hidden="true">1</i><span>Zanim pojedziesz</span></span></td><td class="ph-time"><span class="time">15 min</span></td><td class="ph-what">dane z ogłoszenia (czego brakuje — pytasz w rozmowie), historia po VIN, rozmowa ze sprzedawcą zdanie po zdaniu, ustalenia, co zabrać</td></tr>
           <tr><td class="ph-name"><span class="ph-label"><i aria-hidden="true">2</i><span>Dokumenty i tożsamość</span></span></td><td class="ph-time"><span class="time">5 min</span></td><td class="ph-what">dowód rejestracyjny, zgodność VIN w 3 miejscach, czy sprzedający jest właścicielem, serwis, import</td></tr>
           <tr><td class="ph-name"><span class="ph-label"><i aria-hidden="true">3</i><span>Nadwozie i lakier</span></span></td><td class="ph-time"><span class="time">15 min</span></td><td class="ph-what">pomiar lakieru element po elemencie (mapa lakieru), spasowanie, śruby, szyby, rdza, opony</td></tr>
           <tr><td class="ph-name"><span class="ph-label"><i aria-hidden="true">4</i><span>Wnętrze i elektryka</span></span></td><td class="ph-time"><span class="time">10 min</span></td><td class="ph-what">kontrolki przy zapłonie, wilgoć, przebieg vs zużycie, klimatyzacja, airbag</td></tr>
