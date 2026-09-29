@@ -887,6 +887,8 @@
       if (redNonDb.length) reasons.push(redNonDb.length + ' ' + plural(redNonDb.length, 'problem', 'problemy', 'problemów') + ' oznaczone jako czerwona flaga: ' + redNonDb.map((it) => it.flag_label || it.text).slice(0, 3).join('; ') + (redNonDb.length > 3 ? '…' : ''));
       if (cnt.problems.length >= 3) reasons.push('Łącznie ' + cnt.problems.length + ' problemów – przy takiej liczbie nie kupuj „na oko”.');
       lead = 'Nie mówimy „nie”. Mówimy: nie płać, zanim ktoś z podnośnikiem i komputerem tego nie obejrzy (80–200 zł w stacji diagnostycznej).';
+    } else if (!cnt.problems.length && cnt.uwagi.length && cnt.answered < Math.max(8, Math.round(cnt.total * 0.25))) {
+      kind = 'todo'; title = 'Za wcześnie na decyzję'; lead = 'Masz ' + cnt.uwagi.length + ' ' + plural(cnt.uwagi.length, 'uwagę', 'uwagi', 'uwag') + ', ale odhaczone dopiero ' + cnt.answered + ' z ' + cnt.total + ' punktów. Przejdź dokumenty, silnik i jazdę próbną, zanim zaczniesz rozmawiać o cenie.';
     } else if (cnt.problems.length || cnt.uwagi.length) {
       kind = 'nego'; title = 'Negocjuj';
       lead = 'Masz ' + (cnt.problems.length ? cnt.problems.length + ' ' + plural(cnt.problems.length, 'problem', 'problemy', 'problemów') + ' i ' : '') + cnt.uwagi.length + ' ' + plural(cnt.uwagi.length, 'uwagę', 'uwagi', 'uwag') + '. Nic z tego nie przekreśla auta, ale każda pozycja to argument w rozmowie o cenie.';
