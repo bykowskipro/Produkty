@@ -39,7 +39,7 @@ Tura 1 (300 zł) = tylko A, D, F (wg `ads/01-angles-i-copy.md` v2); B, C, E czek
 
 - **65%** występuje tylko z gwiazdką i atrybucją na grafice: „*dane AAA AUTO 2025, auta zgłaszane do skupu sieci; źródło: rp.pl / Polskie Radio 24” (przypis ≥ 22 px; na 4:5 26 px). Sformułowanie = v2 („technicy odrzucają z powodu wad technicznych lub prawnych”), nie „nie nadaje się do zakupu”. W tekście reklamy zawsze „wg AAA AUTO”.
 - **Brak cech odbiorcy**: nagłówki pytają o sytuację/czynność („Jedziesz oglądać…?”, „Jutro oglądasz auto?”, „Sprzedawca przyjechał ciepłym autem?”), nie o osobę; sub Angle A mówi o liście („z listy zostają cztery”), nie o pamięci odbiorcy. Brak „przed/po”, „sekretów”, gwarancji wyniku, nazw marek aut.
-- **Hacz** = postać AI: na każdym poście z jego głosem stopka „Hacz — przewodnik Odhacz, postać stworzona z pomocą AI, nie mechanik.”; przy ilustracji dodatkowo „Ilustracja zaprojektowana cyfrowo.” Maskotka stylizowana, bez atrybutów zawodu regulowanego.
+- **Hacz** = maskotka: na każdym poście z jego głosem stopka „Hacz — maskotka Odhacz, nie mechanik.”; przy ilustracji dodatkowo „Ilustracja zaprojektowana cyfrowo.” Maskotka stylizowana, bez atrybutów zawodu regulowanego.
 - **Tekst na grafice**: nagłówki ≥ 72 px, tekst ≥ 28 px (elementy UI w makiecie ≥ 22 px), marginesy ~6 %; wizual (telefon/karta/schemat) dominuje nad tekstem.
 
 ## Do sprawdzenia przez człowieka przed publikacją

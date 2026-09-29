@@ -22,7 +22,7 @@ Legenda: ☐ do zrobienia · **MUST** = wymóg prawny/platformowy · SHOULD = mo
 | ☐ **Polityka prywatności** (MUST) | administrator; cele i podstawy (umowa – art. 6 ust. 1 lit. b RODO; obowiązek prawny – lit. c, dokumentacja podatkowa 5 lat; uzasadniony interes – lit. f: reklamacje, bezpieczeństwo, statystyka bezcookie’owa; **zgoda – lit. a: newsletter, cookies marketingowe / Meta Pixel**); odbiorcy: Stripe Payments Europe (płatności; możliwy transfer do Stripe Inc. USA – Data Privacy Framework), operator e-mail (Resend/MailerLite), hosting VPS, **Meta Platforms Ireland (Pixel/CAPI – współadministrowanie w zakresie zbierania i przesyłania danych)**; okresy przechowywania; prawa osoby; skarga do Prezesa UODO; informacja o profilowaniu reklamowym | art. 13 RODO; TSUE C-40/17 (Fashion ID) |
 | ☐ **Polityka cookies** (może być sekcją polityki prywatności) | lista cookies/skryptów z celem, czasem i dostawcą; kategorie: niezbędne / analityczne / marketingowe; jak zmienić zgodę (link „Ustawienia cookies” w stopce) | art. 399–400 Prawa komunikacji elektronicznej (Dz.U. 2024 poz. 1221) |
 | ☐ **Kontakt / reklamacje** | e-mail, czas odpowiedzi (≤ 14 dni), co zawrzeć w zgłoszeniu | art. 7a UPK |
-| ☐ **Strona „O marce / o awatarze”** (SHOULD) | jasna informacja, że „[Imię] to przewodnik marki – postać stworzona z pomocą AI, nie prawdziwa osoba ani ekspert”; kto stoi za marką (podmiot z pkt 1) | Meta – zasady treści AI; AI Act art. 50 (od 2.08.2026) |
+| ☐ **Strona „O marce / o awatarze”** (SHOULD) | jasna informacja, że „[Imię] to maskotka marki, nie prawdziwa osoba ani ekspert”; kto stoi za marką (podmiot z pkt 1) | Meta – zasady treści AI; AI Act art. 50 (od 2.08.2026) |
 
 ## 3. Karta produktu / landing page – elementy prawne
 

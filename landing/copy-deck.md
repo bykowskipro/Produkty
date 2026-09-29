@@ -109,7 +109,7 @@ Zdanie pod tabelą: **Darmowe listy są dobre do przeczytania w domu. Płacisz z
 - **„Są darmowe checklisty PDF.”** Są — i do sprawdzenia ogłoszenia i historii pojazdu wystarczą darmowe narzędzia (korzystaj). Różnica zaczyna się przy aucie: prowadzenie krok po kroku, dowód przypięty do każdego problemu, dealbreakery z wyjaśnieniem, a na końcu raport i lista argumentów. Punkt po punkcie masz to w tabeli wyżej *(link do #porownanie)*. Za 39 zł kupujesz godzinę prowadzenia za rękę, nie kartkę.
 - **„Wolę zapłacić mechanikowi.”** My też — przy aucie, które przejdzie Szybki filtr i pierwsze etapy. Drabinka jest prosta: 0 zł ogłoszenie i CEPiK → 39 zł Odhacz przy aucie → ok. 90 zł raport historii VIN → 350–750 zł mechanik przy egzemplarzu, który chcesz kupić. Odhacz mówi Ci, kiedy wejść na kolejny szczebel — żebyś nie płacił 500 zł za auto, które odpada przy dokumentach.
 - **„Nie mam grubościomierza.”** Każdy punkt ma wersję bez narzędzi. Grubościomierz kosztuje tyle co tankowanie i pokazujemy, jak go użyć w 60 sekund.
-- **„Nie znam Was.”** Za Odhacz stoi [[SPRZEDAWCA_NAZWA]] z [[MIASTO]], NIP [[NIP]] — te same dane zobaczysz w Bibliotece reklam Meta, w stopce i w regulaminie. Płacisz przez Stripe (BLIK, karta, Przelewy24). Jeśli narzędzie Ci nie pomoże, w 14 dni oddajemy pieniądze — bez tłumaczenia. Hacz, nasz przewodnik, jest postacią AI: nie udaje mechanika i nie ocenia, czy auto jest bezpieczne. (Zasada: człowiek/firma zawsze przed maskotką.)
+- **„Nie znam Was.”** Za Odhacz stoi [[SPRZEDAWCA_NAZWA]] z [[MIASTO]], NIP [[NIP]] — te same dane zobaczysz w Bibliotece reklam Meta, w stopce i w regulaminie. Płacisz przez Stripe (BLIK, karta, Przelewy24). Jeśli narzędzie Ci nie pomoże, w 14 dni oddajemy pieniądze — bez tłumaczenia. Hacz, nasza maskotka, nie udaje mechanika i nie ocenia, czy auto jest bezpieczne. (Zasada: człowiek/firma zawsze przed maskotką.)
 
 ## 11. SKĄD TO WIEMY (nowa, przed FAQ)
 Kicker: Zaufanie · H2: **Skąd to wiemy.** Cztery pozycje (dwie widoczne od razu, dwie ukryte w komentarzu HTML do czasu wypełnienia):
@@ -151,7 +151,7 @@ Lewa: „Odhacz Auto · 39 zł raz” · Prawa: przycisk **Kupuję**.
 ## Stopka
 [[SPRZEDAWCA_NAZWA]] · [[SPRZEDAWCA_ADRES]] · NIP [[NIP]] · [[EMAIL_KONTAKT]]
 Regulamin · Polityka prywatności · O marce i o Haczu · Ustawienia cookies
-„Hacz to przewodnik marki — postać stworzona z pomocą AI, nie mechanik. W narzędziu nie działa sztuczna inteligencja: oceny to jawne reguły. Ilustracje zaprojektowane cyfrowo. Raport i porównanie aut na tej stronie to przykłady, nie wyniki prawdziwych oględzin.”
+„Hacz to maskotka Odhacz, nie mechanik. Ilustracje zaprojektowane cyfrowo. Raport i porównanie aut na tej stronie to przykłady, nie wyniki prawdziwych oględzin.”
 „Odhacz Auto to narzędzie edukacyjne i pomocnicze: nie zastępuje mechanika ani rzeczoznawcy, nie wycenia napraw i nie gwarantuje wykrycia każdej wady.”
 
 ## Meta / SEO

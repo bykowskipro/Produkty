@@ -94,7 +94,7 @@
 
   /* ------------------------------------------------------------------ mascot (Hacz) */
   // Placeholder: rounded lime check-mark character with eyes and a headlamp (Auto version). Replaced by /assets/brand/hacz.svg when present.
-  const HACZ_SVG = '<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hacz – przewodnik Odhacz">'
+  const HACZ_SVG = '<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hacz – maskotka Odhacz">'
     + '<circle cx="60" cy="60" r="56" fill="#0B0F19"/>'
     + '<path d="M28 62 L50 84 L94 38" fill="none" stroke="#C6F135" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"/>'
     + '<circle cx="52" cy="51" r="6.5" fill="#0B0F19"/><circle cx="68" cy="43" r="6.5" fill="#0B0F19"/>'
@@ -114,7 +114,7 @@
   }
   function mascot(cls) {
     const wrap = el('span', { class: 'mascot ' + (cls || ''), html: HACZ_SVG });
-    const swap = () => { wrap.innerHTML = ''; wrap.append(el('img', { src: haczSrc, alt: 'Hacz – przewodnik Odhacz' })); };
+    const swap = () => { wrap.innerHTML = ''; wrap.append(el('img', { src: haczSrc, alt: 'Hacz – maskotka Odhacz' })); };
     if (haczReady === true) swap(); else if (haczReady === null) { haczWaiters.push(swap); probeHacz(); }
     return wrap;
   }
@@ -799,7 +799,7 @@
     else if (wp && !wp.complete) haczLine = 'Jesteś na kroku ' + nextTarget.stepN + '/' + wp.count + ' kreatora. ' + (cnt.problem ? 'Już ' + cnt.problem + ' ' + plural(cnt.problem, 'czerwona flaga', 'czerwone flagi', 'czerwonych flag') + ' – zapisuj notatki, przydadzą się w negocjacji.' : 'Dokończ go w domu – przy aucie nie będzie na to czasu.');
     else if (cnt.answered < cnt.total) haczLine = 'Masz ' + cnt.answered + ' z ' + cnt.total + ' punktów. ' + (cnt.problem ? 'Już ' + cnt.problem + ' ' + plural(cnt.problem, 'czerwona flaga', 'czerwone flagi', 'czerwonych flag') + ' – zapisuj notatki, przydadzą się w negocjacji.' : 'Na razie czysto. Nie zwalniaj przy silniku i jeździe próbnej.');
     else haczLine = 'Wszystko odhaczone. Sprawdź podsumowanie i zabierz listę uwag do rozmowy.';
-    out.push(el('div', { class: 'bubble' }, el('b', null, 'Hacz: '), haczLine, el('span', { class: 'sign' }, 'Hacz – przewodnik Odhacz')));
+    out.push(el('div', { class: 'bubble' }, el('b', null, 'Hacz: '), haczLine, el('span', { class: 'sign' }, 'Hacz – maskotka Odhacz')));
     // ONE primary card: „Kontynuuj: <następny krok>” (wizard step → next phase with unanswered items → summary)
     const kont = el('div', { class: 'card kontynuuj', 'data-testid': 'kontynuuj' },
       el('div', { class: 'kontynuuj__eyebrow' }, nextTarget.eyebrow),
@@ -883,7 +883,7 @@
     const self = this; const q = this.content.quick_start;
     if (!q) return [this.topbar('Quick start', ''), this.lockedCard('Ta wersja nie ma Quick startu.')];
     const out = [this.topbar(q.title || 'Quick start', '')];
-    out.push(el('div', { class: 'bubble bubble--inline' }, mascot(), el('div', null, el('b', null, 'Hacz: '), 'Trzy minuty, żeby oswoić narzędzie. Odhacz kroki, a potem wchodzisz w pierwszy etap.', el('span', { class: 'sign' }, 'Hacz – przewodnik Odhacz'))));
+    out.push(el('div', { class: 'bubble bubble--inline' }, mascot(), el('div', null, el('b', null, 'Hacz: '), 'Trzy minuty, żeby oswoić narzędzie. Odhacz kroki, a potem wchodzisz w pierwszy etap.', el('span', { class: 'sign' }, 'Hacz – maskotka Odhacz'))));
     const card = el('div', { class: 'card' });
     const list = el('ol', { class: 'steps' });
     const done = this.state.ui.qsSteps || {};
@@ -916,7 +916,7 @@
     chips.append(el('span', { class: 'chip', id: 'phase-progress' }, p.answered + '/' + p.total + ' odhaczone'));
     out.push(chips);
     if (ph.when) out.push(el('p', { class: 'when' }, el('span', { html: ICON.pin }), el('span', null, el('b', null, 'Kiedy: '), ph.when)));
-    if (ph.intro) out.push(el('div', { class: 'phase-intro' }, mascot(), el('div', { class: 'bubble' }, el('b', null, 'Hacz: '), ph.intro, el('span', { class: 'sign' }, 'Hacz – przewodnik Odhacz'))));
+    if (ph.intro) out.push(el('div', { class: 'phase-intro' }, mascot(), el('div', { class: 'bubble' }, el('b', null, 'Hacz: '), ph.intro, el('span', { class: 'sign' }, 'Hacz – maskotka Odhacz'))));
     ph.sections.forEach((sec) => {
       if (sec.title) out.push(el('div', { class: 'section-title' }, sec.title));
       if (c.paintSection === sec) out.push(this.paintCard({ interactive: true, live: true }));
@@ -1547,7 +1547,7 @@
     out.push(el('div', { class: 'wiz-head' }, el('h1', { 'data-testid': 'wiz-title' }, 'Krok ' + n + '/' + N + ' · ' + step.title), el('span', { class: 'chip', id: 'wiz-progress', 'aria-label': 'Odhaczone w tym kroku' }, sp.answered + '/' + sp.total)));
     out.push(el('div', { class: 'progress wiz-bar' }, el('i', { id: 'wiz-bar', style: 'width:' + (sp.total ? Math.round(100 * sp.answered / sp.total) : 0) + '%' })));
     if (n === 1 && w.phase.when) out.push(el('p', { class: 'when' }, el('span', { html: ICON.pin }), el('span', null, el('b', null, 'Kiedy: '), w.phase.when)));
-    if (step.hint) out.push(el('div', { class: 'bubble bubble--inline', 'data-testid': 'wiz-hint' }, mascot(), el('div', null, el('b', null, 'Hacz: '), step.hint, el('span', { class: 'sign' }, 'Hacz – przewodnik Odhacz'))));
+    if (step.hint) out.push(el('div', { class: 'bubble bubble--inline', 'data-testid': 'wiz-hint' }, mascot(), el('div', null, el('b', null, 'Hacz: '), step.hint, el('span', { class: 'sign' }, 'Hacz – maskotka Odhacz'))));
     if (step.call) this.callStepBody(step, out);
     else {
       if (step.intake && c.intake) out.push(this.intakeCard());
@@ -1843,7 +1843,7 @@
     out.push(el('h1', { style: 'font-size:26px;margin-top:4px' }, 'Najpierw odsiej. Potem sprawdzaj dokładnie.'));
     out.push(el('p', { class: 'muted' }, s.total + ' ' + plural(s.total, 'punkt', 'punkty', 'punktów') + ' z całej checklisty. Te same odpowiedzi co w etapach — nic nie robisz dwa razy.'));
     out.push(el('div', { class: 'chips' }, el('span', { class: 'chip' }, el('span', { html: ICON.clock }), '~10 min'), el('span', { class: 'chip', id: 'filtr-progress' }, s.answered + '/' + s.total + ' odhaczone')));
-    out.push(el('div', { class: 'bubble bubble--inline' }, mascot(), el('div', null, el('b', null, 'Hacz: '), 'Jeśli tu coś nie gra, reszta nie ma znaczenia — i oszczędzasz godzinę. Jeśli gra, dopiero zaczynasz.', el('span', { class: 'sign' }, 'Hacz – przewodnik Odhacz'))));
+    out.push(el('div', { class: 'bubble bubble--inline' }, mascot(), el('div', null, el('b', null, 'Hacz: '), 'Jeśli tu coś nie gra, reszta nie ma znaczenia — i oszczędzasz godzinę. Jeśli gra, dopiero zaczynasz.', el('span', { class: 'sign' }, 'Hacz – maskotka Odhacz'))));
     c.quickByPhase.forEach((g) => { out.push(el('div', { class: 'section-title' }, g.phase.title)); g.items.forEach((it) => out.push(this.itemRow(it))); });
     out.push(el('div', { id: 'filtr-verdict', 'data-testid': 'filtr-verdict' }, this.filterVerdict(s)));
     return out;
@@ -2137,7 +2137,7 @@
     const self = this; const t = this.content.contract_template;
     const out = [this.topbar(t ? (t.title || 'Wzór umowy') : 'Wzór umowy', '')];
     if (!t) { out.push(this.lockedCard('Wzór umowy jest częścią dodatku „Odhacz Auto: Po zakupie”.', true)); return out; }
-    out.push(el('div', { class: 'bubble bubble--inline' }, mascot(), el('div', null, el('b', null, 'Hacz: '), 'Wydrukuj dwa egzemplarze albo przepisz do dokumentu. Pola z kropkami wypełniasz długopisem przy sprzedawcy. To wzór edukacyjny, nie porada prawna.', el('span', { class: 'sign' }, 'Hacz – przewodnik Odhacz'))));
+    out.push(el('div', { class: 'bubble bubble--inline' }, mascot(), el('div', null, el('b', null, 'Hacz: '), 'Wydrukuj dwa egzemplarze albo przepisz do dokumentu. Pola z kropkami wypełniasz długopisem przy sprzedawcy. To wzór edukacyjny, nie porada prawna.', el('span', { class: 'sign' }, 'Hacz – maskotka Odhacz'))));
     out.push(el('button', { class: 'btn btn--primary btn--block mb', type: 'button', onclick: async () => { await self.preparePrint('contract'); track('contract_printed', {}); window.print(); } }, el('span', { html: ICON.print }), 'Drukuj wzór umowy'));
     out.push(el('div', { class: 'card' }, this.contractDom(false)));
     out.push(this.disclaimer());
@@ -2195,7 +2195,7 @@
         el('button', { class: 'btn', type: 'button', onclick: () => { download('odhacz-' + self.opts.product + '-kopia-' + todayStr() + '.json', 'application/json', JSON.stringify({ v: 1, t: self.state.t, active: self.state.active, cars: self.state.cars, product: self.opts.product, exported: nowIso() }, null, 1)); self.toast('Kopia pobrana'); } }, el('span', { html: ICON.download }), 'Eksport JSON'),
         el('button', { class: 'btn', type: 'button', onclick: () => fileInp.click() }, el('span', { html: ICON.upload }), 'Import JSON')), fileInp);
     out.push(card3);
-    out.push(el('div', { class: 'card card--soft' }, el('p', { class: 'small', style: 'margin:0' }, 'Hacz to przewodnik marki Odhacz: postać stworzona z pomocą AI, nie mechanik i nie rzeczoznawca. Mówi tekstami przygotowanymi przez zespół. W aplikacji nie działa żadna sztuczna inteligencja: oceny to jawne reguły, a Twoje dane nie trafiają do żadnego modelu AI. Ilustracje wygenerowane cyfrowo. ', el('a', { href: '/legal/regulamin.html' }, 'Regulamin'), ' · ', el('a', { href: '/legal/polityka-prywatnosci.html' }, 'Prywatność'), ' · ', el('a', { href: this.opts.shopUrl }, 'Sklep'))));
+    out.push(el('div', { class: 'card card--soft' }, el('p', { class: 'small', style: 'margin:0' }, 'Hacz to maskotka Odhacz – nie mechanik, nie rzeczoznawca. Oceny w aplikacji to jawne reguły opisane przy każdym punkcie. Ilustracje zaprojektowane cyfrowo. ', el('a', { href: '/legal/regulamin.html' }, 'Regulamin'), ' · ', el('a', { href: '/legal/polityka-prywatnosci.html' }, 'Prywatność'), ' · ', el('a', { href: this.opts.shopUrl }, 'Sklep'))));
     out.push(this.disclaimer());
     return out;
   };

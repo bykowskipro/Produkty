@@ -79,8 +79,8 @@ const FACES = {
     inkStroke(`M${HEAD.x + 4} ${HEAD.y - 22}Q${HEAD.x + 13} ${HEAD.y - 30} ${HEAD.x + 22} ${HEAD.y - 22}`),   // right brow (raised)
 };
 function hacz({ name, face, behind = '', front = '', spark = sparkle(236, 36) }) {
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" role="img" aria-label="Hacz — przewodnik Odhacz (postać stworzona z pomocą AI)">\n` +
-    `  <title>Hacz — przewodnik Odhacz (postać stworzona z pomocą AI)</title>\n  <!-- ${name}. Kolory: lime ${C.lime}, ink ${C.ink}, violet ${C.violet}. Nie przebarwiać. -->\n` +
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" role="img" aria-label="Hacz — maskotka Odhacz">\n` +
+    `  <title>Hacz — maskotka Odhacz</title>\n  <!-- ${name}. Kolory: lime ${C.lime}, ink ${C.ink}, violet ${C.violet}. Nie przebarwiać. -->\n` +
     (behind ? `  <g id="behind">\n    ${behind}\n  </g>\n` : '') +
     `  <g id="body">\n    ${limb(BODY)}\n  </g>\n` +
     `  <g id="face">\n    ${face}\n  </g>\n` +

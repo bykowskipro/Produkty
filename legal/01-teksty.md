@@ -8,7 +8,7 @@ Ten plik jest instrukcją dla właściciela. Same dokumenty leżą w `platform/p
 |---|---|
 | `platform/public/legal/regulamin.html` | Regulamin **v1 z 28.09.2026** – 14 paragrafów + załącznik 1 (wzór formularza odstąpienia, zał. nr 2 UPK) + załącznik 2 (wzór reklamacji/gwarancji) |
 | `platform/public/legal/polityka-prywatnosci.html` | Polityka prywatności **i cookies** (administrator, cele/podstawy, odbiorcy: Stripe, Resend, VPS, Meta – współadministrowanie, transfery, tabela cookies, prawa, UODO) |
-| `platform/public/legal/o-marce.html` | „O marce i o Haczu”: kto prowadzi markę, Hacz = postać AI (nie ekspert), ilustracje generowane cyfrowo |
+| `platform/public/legal/o-marce.html` | „O marce i o Haczu”: kto prowadzi markę, Hacz = maskotka (nie ekspert), ilustracje generowane cyfrowo |
 | `platform/public/legal/archiwum.html` | Archiwum wersji regulaminu i polityki (tabela: wersja, od–do, co się zmieniło, link) |
 | `platform/public/legal/legal.css` | Wspólny arkusz (kolory/fonty marki użyte oszczędnie; bez ładowania czcionek z Google – zero żądań do podmiotów trzecich) |
 | `platform/emails/delivery.html`, `delivery.txt` | E-mail z dostępem + **potwierdzenie zawarcia umowy na trwałym nośniku** (art. 21 UPK): numer i data zamówienia, tabela produktów z cenami, sposób płatności, okres dostępu, wymagania techniczne, **blok o zgodzie na natychmiastowe dostarczenie**, gwarancja, reklamacje, faktura na życzenie, dane sprzedawcy, stopka transakcyjna |
@@ -75,22 +75,22 @@ Zdanie pod przyciskiem (już jest w placeholderze, zostaw): „Płatność obsł
     <button type="button" onclick="Consent.show()">Ustawienia cookies</button>
   </nav>
   <p>Płatności: Stripe (karta, BLIK, Przelewy24, Link). Ceny końcowe w zł. Materiał edukacyjny i pomocniczy – nie zastępuje mechanika ani rzeczoznawcy.</p>
-  <p>Ilustracje i postać Hacza zostały wygenerowane i zaprojektowane cyfrowo (z użyciem AI). Hacz — przewodnik marki, postać stworzona z pomocą AI, nie ekspert; w narzędziu nie działa sztuczna inteligencja.</p>
+  <p>Ilustracje i postać Hacza zaprojektowane cyfrowo. Hacz to maskotka Odhacz, nie ekspert.</p>
   <p>© 2026 Odhacz</p>
 </footer>
 ```
 
-### 3.5 Oznaczenie AI (jeśli nie w stopce, to przy pierwszym wystąpieniu Hacza)
+### 3.5 Podpis Hacza
 
-„Hacz — przewodnik Odhacz. Postać i ilustracje stworzone z pomocą AI.” W bio FB/IG/TikTok: „Hacz to przewodnik marki Odhacz – postać stworzona z pomocą AI, nie mechanik”. Nigdy „asystent AI”: w produkcie nie działa AI.
+„Hacz — maskotka Odhacz.” W bio FB/IG/TikTok: „Hacz to maskotka Odhacz, nie mechanik”. Bez słów „AI” i „asystent” w podpisach.
 
 ## 4. Zastrzeżenie produktu (disclaimer) – na landingu (sekcja FAQ/„Czym to nie jest”) **i** w narzędziu (ekran „O narzędziu” + stopka aplikacji) **i** w § 3.3 regulaminu (już jest)
 
 Wersja pełna (LP + ekran „O narzędziu”):
 
-> Odhacz Auto to materiał pomocniczy o charakterze edukacyjnym i informacyjnym, opracowany na podstawie powszechnie dostępnej wiedzy i praktyki oględzin używanych samochodów. **Nie zastępuje przeglądu u mechanika, opinii rzeczoznawcy ani – w razie sporu ze sprzedawcą – porady prawnej.** Nie wycenia napraw i nie gwarantuje wykrycia każdej wady; efekt zależy od Twojej sytuacji i staranności. Podpowiada za to, kiedy zawołać mechanika. Hacz to postać AI, nie mechanik. Część „Po zakupie” (umowa, PCC-3, rejestracja, OC) odzwierciedla stan prawny na 28.09.2026 – przed załatwieniem formalności sprawdź aktualne wymagania.
+> Odhacz Auto to materiał pomocniczy o charakterze edukacyjnym i informacyjnym, opracowany na podstawie powszechnie dostępnej wiedzy i praktyki oględzin używanych samochodów. **Nie zastępuje przeglądu u mechanika, opinii rzeczoznawcy ani – w razie sporu ze sprzedawcą – porady prawnej.** Nie wycenia napraw i nie gwarantuje wykrycia każdej wady; efekt zależy od Twojej sytuacji i staranności. Podpowiada za to, kiedy zawołać mechanika. Hacz to maskotka Odhacz, nie mechanik. Część „Po zakupie” (umowa, PCC-3, rejestracja, OC) odzwierciedla stan prawny na 28.09.2026 – przed załatwieniem formalności sprawdź aktualne wymagania.
 
-Wersja krótka (stopka aplikacji, jedna linia): „Materiał pomocniczy, nie ekspertyza. Nie zastępuje mechanika ani rzeczoznawcy. Hacz to postać AI. Stan prawny: 28.09.2026.”
+Wersja krótka (stopka aplikacji, jedna linia): „Materiał pomocniczy, nie ekspertyza. Nie zastępuje mechanika ani rzeczoznawcy. Hacz to maskotka, nie ekspert. Stan prawny: 28.09.2026.”
 
 Zasady treści (z `00-wymogi.md` sekcja 8): nie używać słowa „doradztwo” (VAT art. 113 ust. 13 + klasyfikatory Meta), nie obiecywać „wykryjesz każdą wadę”, nie podawać wycen napraw jako pewnych, nie kopiować cudzych checklist.
 
@@ -118,7 +118,7 @@ Zasady treści (z `00-wymogi.md` sekcja 8): nie używać słowa „doradztwo” 
 5. ☐ `.env`: `SITE_NAME=Odhacz`, `EMAIL_REPLY_TO=[[EMAIL_KONTAKT]]`, `CHECKOUT_SUBMIT_TEXT`; DNS Resend (SPF/DKIM/DMARC) zweryfikowany.
 6. ☐ Polityka: wpisz `[[HOSTING]]` (EOG); sprawdź DPA Resend (podstawa transferu do USA / region UE); jeśli landing ładuje Google Fonts – dodaj wiersz w pkt 4 polityki albo hostuj czcionki lokalnie (zalecane).
 7. ☐ Test banera na telefonie: przed „Akceptuję” **zero** żądań do `facebook.com`/`connect.facebook.net` (DevTools → Network), po „Odrzucam” brak `_fbp`/`_fbc`; w stopce landingu działa „Ustawienia cookies”; zdarzenie `cookie_consent` widać w `/admin/export.csv`.
-8. ☐ Meta: beneficjent i płatnik (DSA) = podmiot z § 1 regulaminu; bio „Hacz — przewodnik Odhacz, postać stworzona z pomocą AI”; brak zdań o cechach odbiorcy w reklamach.
+8. ☐ Meta: beneficjent i płatnik (DSA) = podmiot z § 1 regulaminu; bio „Hacz — maskotka Odhacz”; brak zdań o cechach odbiorcy w reklamach.
 9. ☐ Ewidencja i retencja: comiesięczny eksport zamówień (`/admin/export.csv` + CSV ze Stripe) do własnej ewidencji; kopia `data/`; skasowanie zdarzeń analitycznych starszych niż 24 mies., logów po 30 dniach, postępu 90 dni po końcu dostępu (ręcznie/cron – polityka to obiecuje).
 10. ☐ Zapisz regulamin v1 jako PDF (Drukuj → PDF) do własnego archiwum; każda zmiana = v2 + wiersz w `archiwum.html` + poprzednia wersja pod `/legal/archiwum/regulamin-v1.html` + zmiana „wersja v1” w szablonach e-mail + e-mail do klientów w trakcie dostępu 14 dni wcześniej.
 

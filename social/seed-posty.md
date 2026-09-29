@@ -3,7 +3,7 @@
 Cel: profil nie wygląda martwo, a każdy post jest użyteczny sam w sobie. Grafiki: 1080×1350 (feed) z szablonów w `creatives/templates/` (agent kreacji). Bez fałszywych opinii, bez „już 1000 klientów”.
 
 1. **Kim jest Hacz** — grafika: maskotka + „Zero zgadywania.”
-   „Cześć, jestem Hacz. Jestem postacią stworzoną z pomocą AI i nie udaję mechanika. Robię jedno: pilnuję, żebyś przy aucie sprawdził wszystko po kolei i wiedział, kiedy odpuścić. Pierwsza checklista: Odhacz Auto. Szczegóły wkrótce.”
+   „Cześć, jestem Hacz. Jestem maskotką Odhacz i nie udaję mechanika. Robię jedno: pilnuję, żebyś przy aucie sprawdził wszystko po kolei i wiedział, kiedy odpuścić. Pierwsza checklista: Odhacz Auto. Szczegóły wkrótce.”
 2. **Ciepły silnik** — grafika: „Sprzedawca przyjechał ciepłym autem? To nie przypadek.”
    „Zimny start pokazuje stuki, dym i nierówną pracę. Rozgrzany silnik to zasłona. Umawiając oględziny, powiedz wprost: auto ma być zimne. Jeśli na miejscu jest ciepłe — to już jest informacja.”
 3. **Skrypt telefonu: 5 pytań zanim wyjedziesz** — grafika: lista 5 pytań.
