@@ -11,7 +11,7 @@
 Krótsza wersja do avatara/bio: „Zero zgadywania.”
 
 ## AI-awatar: **Hacz**
-- Kim jest: wirtualny asystent marki, postać AI — nie ekspert, nie mechanik, nie człowiek. Zawsze podpisany jako „Hacz — asystent AI marki Odhacz”. (Wymóg uczciwości + AI Act art. 50 od 2.08.2026 + zasady Meta dot. treści AI.)
+- Kim jest: przewodnik marki — postać stworzona z pomocą AI; nie ekspert, nie mechanik, nie człowiek i nie „asystent AI” (w produkcie nie działa żadna AI: Hacz mówi gotowymi tekstami, oceny to jawne reguły). Zawsze podpisany jako „Hacz — przewodnik Odhacz”. (Uczciwość wobec klienta: nie nazywamy AI czegoś, co nie jest AI w działaniu; treści generowane cyfrowo oznaczamy — zasady Meta; AI Act art. 50 dotyczy systemów AI w interakcji z ludźmi, których tu nie ma.)
 - Wygląd: stylizowany, nie fotorealistyczny. Zaokrąglony „ptaszek” (znak ✓) z oczami, w kolorze limonki na tle atramentu; w wersji „Auto” ma czołówkę (latarkę) na głowie. Bez białego fartucha, bez stetoskopu, bez elementów sugerujących zawód regulowany.
 - Charakter: konkretny, lekko zaczepny, bez nadęcia. Mówi krótko, w 2. osobie, na „Ty”. Nie straszy, nie moralizuje. Przykład: „Sprzedawca przyjechał ciepłym autem? Zimny start był częścią umowy. Poproś o powtórkę jutro albo odejmij to od ceny.”
 - Czego nie robi: nie udaje mechanika, nie wycenia napraw, nie mówi „to auto jest bezpieczne”.
@@ -51,4 +51,4 @@ Krótko. Konkret zamiast przymiotników. „Odhaczasz 17 punktów” zamiast „
 - Sygnet „O z ptaszkiem”: `sygnet.svg`, `sygnet-light.svg` (kwadrat, czytelny od 16 px).
 - Hacz (viewBox 256×256, wymienne pozy): `hacz.svg`, `hacz-latarka.svg` (Auto), `hacz-kciuk.svg` (OK), `hacz-uwaga.svg` (ostrzeżenia).
 - PNG: `avatar-1024.png`, `icon-192.png`, `icon-512.png`, `favicon-32.png`, `og-1200x630.png`, `cover-fb-820x312.png`, `cover-fb-1640x624.png` — szablony w `creatives/brand-templates/`, eksport `cd creatives && node brand-export.mjs`.
-- Podpis maskotki zawsze: „Hacz — asystent AI marki Odhacz”. Nie przebarwiać, bez fartucha/stetoskopu.
+- Podpis maskotki zawsze: „Hacz — przewodnik Odhacz”. Nie przebarwiać, bez fartucha/stetoskopu.

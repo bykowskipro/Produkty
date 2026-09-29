@@ -151,7 +151,7 @@ Lewa: „Odhacz Auto · 39 zł raz” · Prawa: przycisk **Kupuję**.
 ## Stopka
 [[SPRZEDAWCA_NAZWA]] · [[SPRZEDAWCA_ADRES]] · NIP [[NIP]] · [[EMAIL_KONTAKT]]
 Regulamin · Polityka prywatności · O marce i o Haczu · Ustawienia cookies
-„Hacz to postać AI — wirtualny asystent marki, nie mechanik. Ilustracje zaprojektowane cyfrowo. Raport i porównanie aut na tej stronie to przykłady, nie wyniki prawdziwych oględzin.”
+„Hacz to przewodnik marki — postać stworzona z pomocą AI, nie mechanik. W narzędziu nie działa sztuczna inteligencja: oceny to jawne reguły. Ilustracje zaprojektowane cyfrowo. Raport i porównanie aut na tej stronie to przykłady, nie wyniki prawdziwych oględzin.”
 „Odhacz Auto to narzędzie edukacyjne i pomocnicze: nie zastępuje mechanika ani rzeczoznawcy, nie wycenia napraw i nie gwarantuje wykrycia każdej wady.”
 
 ## Meta / SEO

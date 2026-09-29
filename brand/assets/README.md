@@ -12,7 +12,7 @@ od zainstalowanych fontów. Kolory: ink `#0B0F19`, paper `#FFFFFF`, lime `#C6F13
 | `wordmark-light.svg` | Logotyp w wersji jasnej: litery paper, ptaszek lime | Tło ink lub przyciemnione zdjęcia: hero, kreacje, OG, cover |
 | `sygnet.svg` | Sam znak „O z ptaszkiem” (ink + violet), kwadrat 64×64, czytelny od 16 px | Jasne tła: ikona w aplikacji, wypunktowania, pieczątka |
 | `sygnet-light.svg` | Sygnet jasny (paper + lime) | Ciemne tła; źródło ikon PWA i favicony |
-| `hacz.svg` | **Hacz** — asystent AI marki, poza podstawowa (uśmiech). viewBox 256×256 | Avatar, sekcja „Kim jest Hacz”, dymki z podpowiedziami |
+| `hacz.svg` | **Hacz** — przewodnik marki, poza podstawowa (uśmiech). viewBox 256×256 | Avatar, sekcja „Kim jest Hacz”, dymki z podpowiedziami |
 | `hacz-latarka.svg` | Hacz z czołówką (ta sama geometria, te same proporcje) | Produkt **Odhacz Auto**: etapy „Pod maską”, kreacje Auto |
 | `hacz-kciuk.svg` | Hacz z kciukiem w górę | Stan OK, ekran sukcesu po zakupie, potwierdzenia |
 | `hacz-uwaga.svg` | Hacz z uniesioną brwią, wskazuje palcem | Ostrzeżenia, „czerwona flaga”, wskazówki „na co uważać” |
@@ -38,5 +38,5 @@ przez `@font-face` — Chromium w środowisku buildu nie ufa proxy dla Google Fo
 2. **Minimalne rozmiary:** wordmark 96 px szerokości (druk 25 mm), sygnet 16 px, Hacz 48 px (twarz musi być czytelna), pozy „latarka” i „uwaga” 64 px.
 3. **Kolory tylko z plików:** ink + violet na jasnym tle, paper + lime na ink. **Nigdy nie przebarwiaj Hacza** (lime/ink/violet), bez gradientów, cieni, obrysów, rozciągania i obracania; stany OK/Uwaga/Problem nie są kolorami marki.
 4. **Hacz nigdy** nie nosi białego fartucha, stetoskopu, kombinezonu mechanika ani niczego, co sugeruje zawód regulowany; nie jest fotorealistyczny i nie „mówi” w pierwszej osobie jako człowiek.
-5. **Podpis obowiązkowy:** przy każdym użyciu Hacza z wypowiedzią lub w materiale marketingowym podpis „Hacz — asystent AI marki Odhacz” (skrót „Hacz · asystent AI”, gdy brakuje miejsca) — wymóg AI Act art. 50 i zasad Meta.
+5. **Podpis obowiązkowy:** przy każdym użyciu Hacza z wypowiedzią lub w materiale marketingowym podpis „Hacz — przewodnik marki Odhacz” (skrót „Hacz · asystent AI”, gdy brakuje miejsca) — wymóg AI Act art. 50 i zasad Meta.
 6. **Jedna marka, jeden znak:** nie łącz sygnetu z innym „O”, nie twórz własnych wariantów logotypu (kontur, 3D, inne fonty); nowe pozy Hacza tylko przez `gen-svg.mjs`, z tą samą geometrią ciała i viewBox 256×256.

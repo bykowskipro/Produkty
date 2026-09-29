@@ -75,14 +75,14 @@ Zdanie pod przyciskiem (już jest w placeholderze, zostaw): „Płatność obsł
     <button type="button" onclick="Consent.show()">Ustawienia cookies</button>
   </nav>
   <p>Płatności: Stripe (karta, BLIK, Przelewy24, Link). Ceny końcowe w zł. Materiał edukacyjny i pomocniczy – nie zastępuje mechanika ani rzeczoznawcy.</p>
-  <p>Ilustracje i postać Hacza zostały wygenerowane i zaprojektowane cyfrowo (z użyciem AI). Hacz — asystent AI marki Odhacz, nie ekspert.</p>
+  <p>Ilustracje i postać Hacza zostały wygenerowane i zaprojektowane cyfrowo (z użyciem AI). Hacz — przewodnik marki, postać stworzona z pomocą AI, nie ekspert; w narzędziu nie działa sztuczna inteligencja.</p>
   <p>© 2026 Odhacz</p>
 </footer>
 ```
 
 ### 3.5 Oznaczenie AI (jeśli nie w stopce, to przy pierwszym wystąpieniu Hacza)
 
-„Hacz — asystent AI marki Odhacz. Postać i ilustracje wygenerowane cyfrowo.” W bio FB/IG/TikTok: „Hacz to postać AI – wirtualny asystent marki Odhacz”.
+„Hacz — przewodnik Odhacz. Postać i ilustracje stworzone z pomocą AI.” W bio FB/IG/TikTok: „Hacz to przewodnik marki Odhacz – postać stworzona z pomocą AI, nie mechanik”. Nigdy „asystent AI”: w produkcie nie działa AI.
 
 ## 4. Zastrzeżenie produktu (disclaimer) – na landingu (sekcja FAQ/„Czym to nie jest”) **i** w narzędziu (ekran „O narzędziu” + stopka aplikacji) **i** w § 3.3 regulaminu (już jest)
 
@@ -118,7 +118,7 @@ Zasady treści (z `00-wymogi.md` sekcja 8): nie używać słowa „doradztwo” 
 5. ☐ `.env`: `SITE_NAME=Odhacz`, `EMAIL_REPLY_TO=[[EMAIL_KONTAKT]]`, `CHECKOUT_SUBMIT_TEXT`; DNS Resend (SPF/DKIM/DMARC) zweryfikowany.
 6. ☐ Polityka: wpisz `[[HOSTING]]` (EOG); sprawdź DPA Resend (podstawa transferu do USA / region UE); jeśli landing ładuje Google Fonts – dodaj wiersz w pkt 4 polityki albo hostuj czcionki lokalnie (zalecane).
 7. ☐ Test banera na telefonie: przed „Akceptuję” **zero** żądań do `facebook.com`/`connect.facebook.net` (DevTools → Network), po „Odrzucam” brak `_fbp`/`_fbc`; w stopce landingu działa „Ustawienia cookies”; zdarzenie `cookie_consent` widać w `/admin/export.csv`.
-8. ☐ Meta: beneficjent i płatnik (DSA) = podmiot z § 1 regulaminu; bio „Hacz — asystent AI marki Odhacz”; brak zdań o cechach odbiorcy w reklamach.
+8. ☐ Meta: beneficjent i płatnik (DSA) = podmiot z § 1 regulaminu; bio „Hacz — przewodnik Odhacz, postać stworzona z pomocą AI”; brak zdań o cechach odbiorcy w reklamach.
 9. ☐ Ewidencja i retencja: comiesięczny eksport zamówień (`/admin/export.csv` + CSV ze Stripe) do własnej ewidencji; kopia `data/`; skasowanie zdarzeń analitycznych starszych niż 24 mies., logów po 30 dniach, postępu 90 dni po końcu dostępu (ręcznie/cron – polityka to obiecuje).
 10. ☐ Zapisz regulamin v1 jako PDF (Drukuj → PDF) do własnego archiwum; każda zmiana = v2 + wiersz w `archiwum.html` + poprzednia wersja pod `/legal/archiwum/regulamin-v1.html` + zmiana „wersja v1” w szablonach e-mail + e-mail do klientów w trakcie dostępu 14 dni wcześniej.
 
