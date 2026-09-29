@@ -1,7 +1,7 @@
 {
  "meta": {
   "product_id": "auto",
-  "version": "1.0",
+  "version": "1.1",
   "title": "Oględziny używanego auta",
   "est_minutes_total": 75,
   "disclaimer": "Narzędzie ma charakter edukacyjny i porządkuje oględziny — nie zastępuje sprawdzenia przez mechanika lub rzeczoznawcę i nie ocenia konkretnego egzemplarza. Decyzja o zakupie i jej skutki należą do Ciebie."
@@ -61,6 +61,7 @@
        "severity": "red",
        "flag_label": "Sprzedawca odmówił podania VIN lub zdjęcia licznika przed spotkaniem",
        "dealbreaker": true,
+       "quick": true,
        "photo": false,
        "input": null,
        "tags": [
@@ -175,6 +176,7 @@
        "severity": "red",
        "flag_label": "Odczyty licznika w Historii pojazdu nie rosną / niespójne z ogłoszeniem",
        "dealbreaker": true,
+       "quick": true,
        "photo": false,
        "input": {
         "type": "number",
@@ -313,6 +315,7 @@
        "severity": "red",
        "flag_label": "Sprzedawca nie zgodził się na oględziny na zimnym silniku",
        "dealbreaker": true,
+       "quick": true,
        "photo": false,
        "input": null,
        "tags": [
@@ -343,6 +346,7 @@
        "severity": "red",
        "flag_label": "Odmowa lub ograniczenie jazdy próbnej",
        "dealbreaker": true,
+       "quick": true,
        "photo": false,
        "input": null,
        "tags": [
@@ -519,6 +523,7 @@
        "severity": "red",
        "flag_label": "Brak oryginału dowodu rejestracyjnego na miejscu",
        "dealbreaker": true,
+       "quick": true,
        "photo": true,
        "input": null,
        "tags": [
@@ -613,6 +618,7 @@
        "severity": "red",
        "flag_label": "VIN na podszybiu nieczytelny/niezgodny z dowodem rejestracyjnym",
        "dealbreaker": true,
+       "quick": true,
        "photo": true,
        "input": null,
        "tags": [
@@ -627,6 +633,7 @@
        "severity": "red",
        "flag_label": "Tabliczka znamionowa uszkodzona, przeklejana lub VIN niezgodny",
        "dealbreaker": true,
+       "quick": true,
        "photo": true,
        "input": null,
        "tags": [
@@ -641,6 +648,7 @@
        "severity": "red",
        "flag_label": "VIN w nadwoziu nieczytelny, przebijany lub z śladami ingerencji",
        "dealbreaker": true,
+       "quick": true,
        "photo": true,
        "input": null,
        "tags": [
@@ -676,6 +684,7 @@
        "severity": "red",
        "flag_label": "Sprzedający nie potwierdził tożsamości lub nie jest właścicielem z dowodu",
        "dealbreaker": true,
+       "quick": true,
        "photo": false,
        "input": null,
        "tags": [
@@ -690,6 +699,7 @@
        "severity": "red",
        "flag_label": "Sprzedaje osoba trzecia bez pisemnego pełnomocnictwa właściciela",
        "dealbreaker": true,
+       "quick": true,
        "photo": true,
        "input": null,
        "tags": [
@@ -954,6 +964,7 @@
         "unit": "µm",
         "hint": "Orientacyjnie: stal fabrycznie najczęściej ok. 80–180 µm (średnio ok. 100–150). Ok. 180–300 µm: element prawdopodobnie lakierowany ponownie. Powyżej ok. 300 µm: możliwa szpachla. To widełki, nie wyrok — porównuj z dachem i sąsiednimi elementami tego samego auta. Aluminium tani miernik (Fe) nie zmierzy."
        },
+       "panel": "roof",
        "tags": [
         "lakier",
         "pomiar"
@@ -974,6 +985,7 @@
         "unit": "µm",
         "hint": "Orientacyjnie: stal fabrycznie najczęściej ok. 80–180 µm (średnio ok. 100–150). Ok. 180–300 µm: element prawdopodobnie lakierowany ponownie. Powyżej ok. 300 µm: możliwa szpachla. To widełki, nie wyrok — porównuj z dachem i sąsiednimi elementami tego samego auta. Aluminium tani miernik (Fe) nie zmierzy."
        },
+       "panel": "hood",
        "tags": [
         "lakier",
         "pomiar"
@@ -994,6 +1006,7 @@
         "unit": "µm",
         "hint": "Orientacyjnie: stal fabrycznie najczęściej ok. 80–180 µm (średnio ok. 100–150). Ok. 180–300 µm: element prawdopodobnie lakierowany ponownie. Powyżej ok. 300 µm: możliwa szpachla. To widełki, nie wyrok — porównuj z dachem i sąsiednimi elementami tego samego auta. Aluminium tani miernik (Fe) nie zmierzy."
        },
+       "panel": "fl_fender",
        "tags": [
         "lakier",
         "pomiar"
@@ -1014,6 +1027,7 @@
         "unit": "µm",
         "hint": "Orientacyjnie: stal fabrycznie najczęściej ok. 80–180 µm (średnio ok. 100–150). Ok. 180–300 µm: element prawdopodobnie lakierowany ponownie. Powyżej ok. 300 µm: możliwa szpachla. To widełki, nie wyrok — porównuj z dachem i sąsiednimi elementami tego samego auta. Aluminium tani miernik (Fe) nie zmierzy."
        },
+       "panel": "fl_door",
        "tags": [
         "lakier",
         "pomiar"
@@ -1034,6 +1048,7 @@
         "unit": "µm",
         "hint": "Orientacyjnie: stal fabrycznie najczęściej ok. 80–180 µm (średnio ok. 100–150). Ok. 180–300 µm: element prawdopodobnie lakierowany ponownie. Powyżej ok. 300 µm: możliwa szpachla. To widełki, nie wyrok — porównuj z dachem i sąsiednimi elementami tego samego auta. Aluminium tani miernik (Fe) nie zmierzy."
        },
+       "panel": "rl_door",
        "tags": [
         "lakier",
         "pomiar"
@@ -1054,6 +1069,7 @@
         "unit": "µm",
         "hint": "Orientacyjnie: stal fabrycznie najczęściej ok. 80–180 µm (średnio ok. 100–150). Ok. 180–300 µm: element prawdopodobnie lakierowany ponownie. Powyżej ok. 300 µm: możliwa szpachla. To widełki, nie wyrok — porównuj z dachem i sąsiednimi elementami tego samego auta. Aluminium tani miernik (Fe) nie zmierzy."
        },
+       "panel": "rl_quarter",
        "tags": [
         "lakier",
         "pomiar"
@@ -1074,6 +1090,7 @@
         "unit": "µm",
         "hint": "Orientacyjnie: stal fabrycznie najczęściej ok. 80–180 µm (średnio ok. 100–150). Ok. 180–300 µm: element prawdopodobnie lakierowany ponownie. Powyżej ok. 300 µm: możliwa szpachla. To widełki, nie wyrok — porównuj z dachem i sąsiednimi elementami tego samego auta. Aluminium tani miernik (Fe) nie zmierzy."
        },
+       "panel": "trunk",
        "tags": [
         "lakier",
         "pomiar"
@@ -1094,6 +1111,7 @@
         "unit": "µm",
         "hint": "Orientacyjnie: stal fabrycznie najczęściej ok. 80–180 µm (średnio ok. 100–150). Ok. 180–300 µm: element prawdopodobnie lakierowany ponownie. Powyżej ok. 300 µm: możliwa szpachla. To widełki, nie wyrok — porównuj z dachem i sąsiednimi elementami tego samego auta. Aluminium tani miernik (Fe) nie zmierzy."
        },
+       "panel": "rr_quarter",
        "tags": [
         "lakier",
         "pomiar"
@@ -1114,6 +1132,7 @@
         "unit": "µm",
         "hint": "Orientacyjnie: stal fabrycznie najczęściej ok. 80–180 µm (średnio ok. 100–150). Ok. 180–300 µm: element prawdopodobnie lakierowany ponownie. Powyżej ok. 300 µm: możliwa szpachla. To widełki, nie wyrok — porównuj z dachem i sąsiednimi elementami tego samego auta. Aluminium tani miernik (Fe) nie zmierzy."
        },
+       "panel": "rr_door",
        "tags": [
         "lakier",
         "pomiar"
@@ -1134,6 +1153,7 @@
         "unit": "µm",
         "hint": "Orientacyjnie: stal fabrycznie najczęściej ok. 80–180 µm (średnio ok. 100–150). Ok. 180–300 µm: element prawdopodobnie lakierowany ponownie. Powyżej ok. 300 µm: możliwa szpachla. To widełki, nie wyrok — porównuj z dachem i sąsiednimi elementami tego samego auta. Aluminium tani miernik (Fe) nie zmierzy."
        },
+       "panel": "fr_door",
        "tags": [
         "lakier",
         "pomiar"
@@ -1154,6 +1174,7 @@
         "unit": "µm",
         "hint": "Orientacyjnie: stal fabrycznie najczęściej ok. 80–180 µm (średnio ok. 100–150). Ok. 180–300 µm: element prawdopodobnie lakierowany ponownie. Powyżej ok. 300 µm: możliwa szpachla. To widełki, nie wyrok — porównuj z dachem i sąsiednimi elementami tego samego auta. Aluminium tani miernik (Fe) nie zmierzy."
        },
+       "panel": "fr_fender",
        "tags": [
         "lakier",
         "pomiar"
@@ -1174,6 +1195,7 @@
         "unit": "µm",
         "hint": "Orientacyjnie: stal fabrycznie najczęściej ok. 80–180 µm (średnio ok. 100–150). Ok. 180–300 µm: element prawdopodobnie lakierowany ponownie. Powyżej ok. 300 µm: możliwa szpachla. To widełki, nie wyrok — porównuj z dachem i sąsiednimi elementami tego samego auta. Aluminium tani miernik (Fe) nie zmierzy."
        },
+       "panel": "sills",
        "tags": [
         "lakier",
         "pomiar"
@@ -1208,6 +1230,7 @@
        "severity": "yellow",
        "flag_label": "Widoczna różnica odcienia/połysku między elementami",
        "dealbreaker": false,
+       "quick": true,
        "photo": true,
        "input": null,
        "tags": [
@@ -1529,6 +1552,7 @@
        "severity": "red",
        "flag_label": "Ślady spawania/prostowania elementów konstrukcyjnych (auto po ciężkim wypadku)",
        "dealbreaker": true,
+       "quick": true,
        "photo": true,
        "input": null,
        "tags": [
@@ -1561,6 +1585,7 @@
        "severity": "red",
        "flag_label": "Przebieg na liczniku niższy niż w Historii pojazdu / niezgodny z ogłoszeniem",
        "dealbreaker": true,
+       "quick": true,
        "photo": true,
        "input": {
         "type": "number",
@@ -1713,6 +1738,7 @@
        "severity": "red",
        "flag_label": "Nie wszystkie kontrolki zapalają się w autoteście (możliwe zamaskowanie błędu)",
        "dealbreaker": false,
+       "quick": true,
        "photo": true,
        "input": null,
        "tags": [
@@ -1728,6 +1754,7 @@
        "severity": "red",
        "flag_label": "Kontrolka airbag nie zapala się przy zapłonie lub świeci stale",
        "dealbreaker": true,
+       "quick": true,
        "photo": true,
        "input": null,
        "tags": [
@@ -1956,6 +1983,7 @@
        "severity": "red",
        "flag_label": "Silnik był rozgrzany przed oględzinami mimo ustaleń",
        "dealbreaker": true,
+       "quick": true,
        "photo": false,
        "input": null,
        "tags": [
@@ -2016,6 +2044,7 @@
        "severity": "red",
        "flag_label": "Emulsja pod korkiem wlewu oleju lub gruby nagar (zaniedbanie/uszczelka pod głowicą)",
        "dealbreaker": false,
+       "quick": true,
        "photo": true,
        "input": null,
        "tags": [
@@ -2145,6 +2174,7 @@
        "severity": "red",
        "flag_label": "Dym z wydechu (niebieski/biały/czarny) przy starcie lub przegazowaniu",
        "dealbreaker": false,
+       "quick": true,
        "photo": true,
        "input": null,
        "tags": [
@@ -2785,57 +2815,105 @@
   }
  ],
  "seller_call_script": {
-  "intro": "Dzwoń, nie pisz — przez telefon słychać wahanie. Zadawaj pytania po kolei, spokojnie, i zapisuj odpowiedzi w aplikacji: jutro porównasz je z dokumentami, miernikiem i licznikiem. Nie tłumacz, po co pytasz. Jeśli przy dwóch–trzech pytaniach słyszysz wykręty, oszczędź sobie dojazdu.",
+  "intro": "Ta rozmowa ma dwa cele: odsiać auto, do którego nie warto jechać, i ustalić warunki oględzin — zimny silnik, dokumenty na stole, jazda próbna, godzina. Dzwoń, nie pisz: przez telefon słychać wahanie, a każdą odpowiedź zapisz, bo jutro zderzysz ją z dokumentami, miernikiem i licznikiem.",
+  "before": [
+   "Ogłoszenie otwarte przed sobą: cena, rocznik, przebieg, opis — każdą odpowiedź porównujesz z tym, co sprzedawca sam napisał.",
+   "Jeśli masz już VIN, nr rejestracyjny i datę pierwszej rejestracji — raport z historiapojazdu.gov.pl z ostatnim odczytem licznika pod ręką. Jeśli nie masz, to pierwsza rzecz, o którą prosisz.",
+   "Kalendarz: 2–3 terminy, w które możesz przyjechać rano lub przed południem (za dnia, na zimny silnik).",
+   "Czas: 8–12 minut, ciche miejsce, ta aplikacja otwarta na skrypcie — odhaczasz pytania w trakcie, nie po.",
+   "Zapisuj dosłownie cztery rzeczy: przebieg, co było lakierowane, od kiedy ma auto, powód sprzedaży. Jutro te cztery zdania zderzysz z faktami."
+  ],
+  "opening": [
+   "Dzień dobry, dzwonię w sprawie [auto] z ogłoszenia — ma Pan/Pani chwilę na kilka pytań, zanim przyjadę?",
+   "Dzień dobry, w sprawie auta z ogłoszenia — jest jeszcze aktualne? (Celowo bez nazwy modelu: jeśli usłyszysz „którego?”, rozmawiasz z handlarzem.)",
+   "Dzień dobry, oglądam Pana/Pani ogłoszenie [auto] za [cena]. Nie chcę jechać [X] km na darmo, więc dopytam o kilka rzeczy — zajmie to może dziesięć minut, dobrze?"
+  ],
   "questions": [
    {
     "q": "Czy jest Pan/Pani właścicielem wpisanym w dowodzie rejestracyjnym? Czy jest współwłaściciel? Może mi Pan/Pani wysłać zdjęcie dowodu (VIN, nr rejestracyjny, data pierwszej rejestracji)?",
-    "watch_for": "„Sprzedaję dla brata/znajomego” bez słowa o pełnomocnictwie; „firma, ale sprzedaję prywatnie”; odmowa zdjęcia dowodu lub VIN — to koniec rozmowy."
+    "watch_for": "„Sprzedaję dla brata/znajomego” bez słowa o pełnomocnictwie; „firma, ale sprzedaję prywatnie”; odmowa zdjęcia dowodu lub VIN — to koniec rozmowy.",
+    "if_dodges": "„Rozumiem, to zapytam wprost: czyje nazwisko jest w dowodzie rejestracyjnym i czy ta osoba będzie przy podpisaniu umowy?” Jeśli i teraz nie pada nazwisko ani zgoda na zdjęcie dowodu — nie jedziesz."
    },
    {
     "q": "Od kiedy ma Pan/Pani to auto i od kogo je Pan/Pani kupił(a)? Jest umowa lub faktura z tamtego zakupu?",
-    "watch_for": "Kilka tygodni lub miesięcy posiadania = handel; „z Niemiec od znajomego” bez dokumentów; brak poprzedniej umowy."
+    "watch_for": "Kilka tygodni lub miesięcy posiadania = handel; „z Niemiec od znajomego” bez dokumentów; brak poprzedniej umowy.",
+    "if_dodges": "„Rozumiem, to zapytam wprost: w którym roku kupił(a) Pan/Pani to auto i czy pokaże mi Pan/Pani tamtą umowę na miejscu?” Brak roku albo „umowa gdzieś jest” znaczy, że sprzedawca zna to auto krócej, niż mówi — traktuj je jak auto z handlu i pytaj dalej o papiery."
    },
    {
     "q": "Jaki jest dokładny przebieg na dziś i czym jest udokumentowany (książka, faktury, badania)?",
-    "watch_for": "Zaokrąglenia („koło 180”), przebieg inny niż w ogłoszeniu, „książka się zgubiła”, brak faktur z przebiegami."
+    "watch_for": "Zaokrąglenia („koło 180”), przebieg inny niż w ogłoszeniu, „książka się zgubiła”, brak faktur z przebiegami.",
+    "if_dodges": "„Rozumiem, to zapytam wprost: jaką dokładnie liczbę pokaże licznik, kiedy przyjadę?” Jeśli zamiast liczby pada „koło” albo „mniej więcej”, zapisz to dosłownie — jutro pierwsze, co robisz, to licznik kontra Historia pojazdu."
    },
    {
     "q": "Które elementy były lakierowane lub wymieniane i z jakiego powodu?",
-    "watch_for": "„Nic, bezwypadkowy” przy kilkuletnim aucie — zapisz dosłownie, porównasz z miernikiem; „tylko zderzak” bez powodu; irytacja przy pytaniu."
+    "watch_for": "„Nic, bezwypadkowy” przy kilkuletnim aucie — zapisz dosłownie, porównasz z miernikiem; „tylko zderzak” bez powodu; irytacja przy pytaniu.",
+    "if_dodges": "„Rozumiem, to zapytam wprost: czy jest choć jeden element, który był lakierowany albo wymieniany — choćby zderzak?” „Nic, na sto procent” przy kilkuletnim aucie zapisz dosłownie; jutro odpowie miernik, a Ty dowiesz się, ile są warte pozostałe zapewnienia."
    },
    {
     "q": "Czy auto miało jakąkolwiek szkodę — także parkingową, likwidowaną z OC lub AC, w Polsce albo za granicą?",
-    "watch_for": "Rozróżnianie „wypadek” od „stłuczka”; „to nie była szkoda, tylko otarcie”; brak jasnego „nie”."
+    "watch_for": "Rozróżnianie „wypadek” od „stłuczka”; „to nie była szkoda, tylko otarcie”; brak jasnego „nie”.",
+    "if_dodges": "„Rozumiem, to zapytam wprost: czy była jakakolwiek szkoda zgłaszana do ubezpieczyciela — z Pana/Pani OC, z cudzego OC albo z AC?” Jeśli zamiast „nie” słyszysz wykład, co jest szkodą, a co „tylko otarciem”, przyjmij, że szkoda była, i jutro szukaj jej miernikiem."
    },
    {
     "q": "Czy auto jest sprowadzone? Kiedy zarejestrowano je w Polsce i jakie są dokumenty z zagranicy?",
-    "watch_for": "„Krajowe” przy dacie pierwszej rejestracji w Polsce sprzed kilku lat dla starszego auta; brak zagranicznych papierów; „tłumaczenie gdzieś jest”."
+    "watch_for": "„Krajowe” przy dacie pierwszej rejestracji w Polsce sprzed kilku lat dla starszego auta; brak zagranicznych papierów; „tłumaczenie gdzieś jest”.",
+    "if_dodges": "„Rozumiem, to zapytam wprost: w którym roku auto zostało po raz pierwszy zarejestrowane w Polsce i z jakiego kraju przyjechało?” Jeśli sprzedawca nie zna tej daty ani kraju, historia sprzed importu jest dla Ciebie pusta — to auto oglądasz tylko z płatnym raportem VIN i z planem na mechanika."
    },
    {
     "q": "Kiedy był ostatni serwis olejowy, wymiana rozrządu, sprzęgła lub oleju w automacie — i czy są na to faktury?",
-    "watch_for": "„Niedawno”, „w zeszłym roku u znajomego”; wszystko „robione”, nic udokumentowane."
+    "watch_for": "„Niedawno”, „w zeszłym roku u znajomego”; wszystko „robione”, nic udokumentowane.",
+    "if_dodges": "„Rozumiem, to zapytam wprost: na co z tego ma Pan/Pani fakturę albo wpis w książce, a co było robione bez papieru?” Co nie ma dokumentu, traktuj jako niezrobione — i od razu wpisz na listę do rozmowy o cenie."
    },
    {
     "q": "Czy jakaś kontrolka świeci lub świeciła w ostatnich miesiącach? Były kasowane błędy?",
-    "watch_for": "„Tylko czujnik”; „mechanik skasował i jest ok”; pytanie zwrotne „a czemu Pan pyta?”."
+    "watch_for": "„Tylko czujnik”; „mechanik skasował i jest ok”; pytanie zwrotne „a czemu Pan pyta?”.",
+    "if_dodges": "„Rozumiem, to zapytam wprost: czy w ostatnim roku ktoś podłączał komputer do auta i kasował błędy — i po co?” Odpowiedź pytaniem („a czemu Pan pyta?”) to też odpowiedź: jutro sprawdzasz wszystkie kontrolki na zapłonie, a jeśli masz czytnik — monitory gotowości OBD2."
    },
    {
     "q": "Czy auto ma ważne badanie techniczne i OC? Czy jest wolne od zastawu, kredytu i leasingu?",
-    "watch_for": "„Badanie zrobię przed sprzedażą”; „kredyt spłacony, tylko jeszcze nie wykreślony”; „OC się skończyło, bo stało”."
+    "watch_for": "„Badanie zrobię przed sprzedażą”; „kredyt spłacony, tylko jeszcze nie wykreślony”; „OC się skończyło, bo stało”.",
+    "if_dodges": "„Rozumiem, to zapytam wprost: do kiedy jest ważne badanie techniczne i czy w dowodzie rejestracyjnym jest jakakolwiek adnotacja albo współwłaściciel?” Jeśli sprzedawca musi „sprawdzić” daty we własnym aucie albo kluczy przy słowie „zastaw”, nie umawiaj się, dopóki nie przyśle zdjęcia dowodu."
    },
    {
     "q": "Ile jest kluczyków i czy wszystkie działają (pilot, rozruch)?",
-    "watch_for": "Jeden kluczyk, „drugi został u poprzedniego właściciela”; pilot „tylko bateria”."
+    "watch_for": "Jeden kluczyk, „drugi został u poprzedniego właściciela”; pilot „tylko bateria”.",
+    "if_dodges": "„Rozumiem, to zapytam wprost: ile kluczyków dostanę do ręki przy umowie — jeden czy dwa?” Jeden kluczyk to nie powód, żeby nie jechać, ale „drugi się znajdzie” zapisz jako „jeden” i wróć do tego przy cenie."
    },
    {
     "q": "Czy mogę przyjechać na zimny silnik (proszę nie odpalać przed moim przyjazdem), sam poprowadzić na jeździe próbnej i podjechać na SKP lub do mechanika?",
-    "watch_for": "Warunki lub wykręty przy którymkolwiek punkcie: „nie mam czasu”, „już było sprawdzane”, „jazda tylko ze mną za kierownicą”."
+    "watch_for": "Warunki lub wykręty przy którymkolwiek punkcie: „nie mam czasu”, „już było sprawdzane”, „jazda tylko ze mną za kierownicą”.",
+    "if_dodges": "„Rozumiem, to zapytam wprost: czy auto będzie stało nieodpalane od rana, czy poprowadzę sam(a) i czy możemy podjechać na stację diagnostyczną — tak czy nie na każde z trzech?” „Nie” albo warunek przy którymkolwiek („tylko ze mną za kierownicą”) kończy rozmowę — bez tych trzech rzeczy nie sprawdzisz auta."
    },
    {
     "q": "Dlaczego sprzedaje Pan/Pani to auto i czy cena jest do rozmowy po oględzinach?",
-    "watch_for": "Powód niespójny z resztą („kupiłem 2 miesiące temu, ale zmieniam na większe”); „cena ostateczna, dużo chętnych, dziś decyzja”."
+    "watch_for": "Powód niespójny z resztą („kupiłem 2 miesiące temu, ale zmieniam na większe”); „cena ostateczna, dużo chętnych, dziś decyzja”.",
+    "if_dodges": "„Rozumiem, to zapytam wprost: jeśli po oględzinach pokażę konkretne uwagi, czy cena jest do rozmowy?” „Cena ostateczna, dużo chętnych, decyzja dziś” to presja, nie informacja — jeśli mimo to jedziesz, jedź z założeniem, że możesz wrócić bez auta."
    }
-  ]
+  ],
+  "closing": [
+   "Podsumuję, żebyśmy się dobrze rozumieli: przyjeżdżam [dzień] o [godzina], auto stoi nieodpalane od rana, na stole dowód rejestracyjny, Pana/Pani dowód osobisty, poprzednia umowa, książka serwisowa i faktury, wszystkie kluczyki; jazdę próbną robię ja, 20–30 minut. Zgadza się?",
+   "Dziękuję, wyślę SMS-a z potwierdzeniem godziny. Gdyby coś się zmieniło, proszę dać znać wcześniej — jadę [X] km specjalnie do Pana/Pani.",
+   "Gdy odpowiedzi dyskwalifikują: „Dziękuję za rozmowę i za szczerość. Na tym etapie to nie jest auto dla mnie — powodzenia ze sprzedażą.” Bez tłumaczenia się i bez wykładu, co jest nie tak."
+  ],
+  "message_templates": [
+   {
+    "title": "Pierwsza wiadomość (OLX/Otomoto)",
+    "text": "Dzień dobry, interesuje mnie [auto] z Pana/Pani ogłoszenia. Zanim umówię się na oględziny, poproszę o kilka rzeczy:\n– numer VIN (może być zdjęcie dowodu rejestracyjnego, dane adresowe można zasłonić),\n– aktualny przebieg i zdjęcie licznika,\n– informację, które elementy były lakierowane lub wymieniane i dlaczego,\n– jakie są faktury z serwisu (olej, rozrząd, sprzęgło/skrzynia).\nCzy auto będzie dostępne [dzień] przed południem? Chciał(a)bym zobaczyć je na zimnym silniku i przejechać się 20–30 minut. Z góry dziękuję i pozdrawiam, [imię]"
+   },
+   {
+    "title": "Gdy sprzedawca nie podaje VIN",
+    "text": "Rozumiem, że nie chce Pan/Pani wysyłać zdjęcia dowodu. Wystarczą mi trzy dane: VIN, numer rejestracyjny i data pierwszej rejestracji — potrzebuję ich wyłącznie do bezpłatnego raportu na historiapojazdu.gov.pl (badania techniczne, odczyty licznika, status). VIN widać też przez przednią szybę na podszybiu, wystarczy zdjęcie tej tabliczki. Bez tych danych nie mogę umówić się na oględziny — nie mam jak sprawdzić auta przed dojazdem [X] km. Dziękuję z góry, [imię]"
+   },
+   {
+    "title": "Potwierdzenie przed przyjazdem",
+    "text": "Dzień dobry, potwierdzam: [dzień] o [godzina], [adres]. Proszę nie odpalać auta przed moim przyjazdem — chcę zobaczyć zimny start. Poproszę o przygotowanie: dowodu rejestracyjnego, dowodu osobistego właściciela, poprzedniej umowy zakupu, książki serwisowej i faktur, wszystkich kluczyków oraz dokumentów z importu, jeśli auto było sprowadzone. Planuję jazdę próbną 20–30 minut za moją kierownicą, a jeśli auto mi się spodoba — krótkie sprawdzenie na stacji diagnostycznej lub u mechanika w okolicy, za moje pieniądze. Gdyby coś się zmieniło, proszę o wiadomość wcześniej. Do zobaczenia, [imię]"
+   },
+   {
+    "title": "Po oględzinach — oferta z listą uwag",
+    "text": "Dzień dobry, dziękuję za dzisiejsze oględziny [auto]. Auto mi się podoba, ale mam spisane rzeczy, które po zakupie biorę na siebie:\n[WKLEJ LISTĘ UWAG Z RAPORTU]\nDlatego proponuję [KWOTA] zł, odbiór [dzień]: płatność przy podpisaniu umowy, komplet kluczyków i dokumentów w tym samym momencie. Jeśli obniżka nie wchodzi w grę, mogę rozważyć cenę bliższą Pana/Pani oczekiwaniom przy [np. komplecie opon / świeżym badaniu technicznym] przed odbiorem, wpisanym do umowy. Proszę o odpowiedź do [dzień, godzina]. Pozdrawiam, [imię]"
+   }
+  ],
+  "no_call_note": "Nie lubisz dzwonić? Wiadomość daje mniej sygnałów niż telefon (nie słychać wahania ani zmyślania na bieżąco), ale jest lepsza niż nic — zadaj pisemnie koniecznie pytania 1, 3, 4, 5 i 11 (właściciel i VIN, dokładny przebieg, co lakierowane, szkody, zimny silnik i jazda próbna) i zachowaj odpowiedzi jako zrzut ekranu: jutro to Twój punkt odniesienia."
  },
  "summary_rules": {
   "walk_away_if": [

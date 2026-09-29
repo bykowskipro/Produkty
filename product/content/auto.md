@@ -14,6 +14,29 @@ Szacowany czas łącznie: 75 min. Stany odpowiedzi: ok, uwaga, problem, pomin.
 6. Dopiero teraz zimny start: stoisz przy masce i przy wydechu, nie w środku. Następnie 20–30 minut jazdy po różnych drogach — Ty prowadzisz, radio wyłączone.
 7. Na końcu aplikacja układa Twoją listę uwag: sprawdź, czy nie ma punktu „odpuść”, zdecyduj o mechaniku i negocjuj faktami z listy — bez wycen z internetu.
 
+## Szybki filtr (10 minut)
+
+Najpierw odsiej, potem sprawdzaj. 18 punktów z polem `quick: true`: 14 dealbreakerów i 4 szybkie testy bez narzędzi (każdy do ok. minuty). Kolejność jak w etapach; punkty z etapu 1 robisz przed wyjazdem, resztę w pierwszych 10 minutach przy aucie. W treści punktów oznaczone inline jako `[szybki filtr]`.
+
+1. `p1s1i2` Jest zdjęcie licznika i nr VIN? Jeśli nie — poproś _[ODPUŚĆ]_ — przed wyjazdem
+2. `p1s2i2` Historia pojazdu: odczyty licznika z badań rosną? _[ODPUŚĆ]_ — przed wyjazdem
+3. `p1s4i1` Silnik ma być zimny — powiedz to wprost _[ODPUŚĆ]_ — przed wyjazdem
+4. `p1s4i3` Jazda próbna: Ty prowadzisz, min. 20–30 minut, różne drogi _[ODPUŚĆ]_ — przed wyjazdem
+5. `p2s1i1` Oryginał dowodu rejestracyjnego w ręku (nie zdjęcie, nie ksero) _[ODPUŚĆ]_
+6. `p2s2i1` VIN na podszybiu (przez przednią szybę) = pole E _[ODPUŚĆ]_
+7. `p2s2i2` Tabliczka znamionowa (słupek/drzwi kierowcy lub komora silnika) = pole E _[ODPUŚĆ]_
+8. `p2s2i3` VIN wybity w nadwoziu (podłoga pod fotelem / gródź / bagażnik) _[ODPUŚĆ]_
+9. `p2s3i1` Dowód osobisty sprzedawcy = nazwisko w dowodzie rejestracyjnym _[ODPUŚĆ]_
+10. `p2s3i2` Sprzedaje ktoś inny niż właściciel: pisemne pełnomocnictwo _[ODPUŚĆ]_
+11. `p3s3i1` Różnice odcienia lakieru — z 3–4 m i pod kątem
+12. `p3s7i4` Ślady spawania, pofalowane podłużnice, łaty — konstrukcja _[ODPUŚĆ]_
+13. `p4s1i1` Licznik: wpisz przebieg i porównaj z ogłoszeniem i Historią pojazdu _[ODPUŚĆ]_
+14. `p4s3i1` Zapłon bez odpalania: wszystkie kontrolki zapalają się i gasną
+15. `p4s3i2` Kontrolka AIRBAG: MUSI się zapalić i zgasnąć _[ODPUŚĆ]_
+16. `p5s1i1` Test „czy naprawdę zimny”: maska, pokrywa silnika, przewód chłodnicy _[ODPUŚĆ]_
+17. `p5s1i5` Korek wlewu oleju od spodu: majonez/emulsja lub gruby nagar
+18. `p5s2i3` Dym z wydechu przy starcie i przy przegazowaniu — jaki kolor?
+
 ## 1. Zanim pojedziesz (15 min)
 
 *Ogłoszenie, historia po VIN, telefon do sprzedawcy, ustalenia, co zabrać*  
@@ -32,7 +55,7 @@ _[ŻÓŁTA]_
 - Tagi: ogloszenie, lakier
 
 #### `p1s1i2` Jest zdjęcie licznika i nr VIN? Jeśli nie — poproś  
-_[CZERWONA · ODPUŚĆ]_
+_[CZERWONA · ODPUŚĆ]_ [szybki filtr]
 
 - **Jak:** Brak zdjęcia deski rozdzielczej z przebiegiem i zamazany VIN to jeszcze nie wina, ale poproś o oba przed wyjazdem. VIN potrzebujesz do bezpłatnej Historii pojazdu. Odmowa podania VIN kończy temat.
 - **Dlaczego:** Bez VIN nie sprawdzisz nic — a uczciwy sprzedawca nie ma powodu go chować.
@@ -91,7 +114,7 @@ _[CZERWONA]_
 - Tagi: vin, historia
 
 #### `p1s2i2` Historia pojazdu: odczyty licznika z badań rosną?  
-_[CZERWONA · ODPUŚĆ]_
+_[CZERWONA · ODPUŚĆ]_ [szybki filtr]
 
 - **Jak:** W raporcie zobaczysz stany licznika spisane przez diagnostę przy badaniach technicznych (zbierane od 2014 r.) i z kontroli drogowych (od 2020 r.). Ułóż je chronologicznie: każdy kolejny musi być większy. Spadek albo „skok w dół” (np. 190 tys. → 130 tys.) to cofnięty licznik. Zapisz ostatni odczyt — jutro porównasz z licznikiem.
 - **Dlaczego:** Cofnięty licznik to przestępstwo (art. 306a kk) i najczęstsza wtopa na rynku wtórnym — tu wychodzi za darmo.
@@ -160,7 +183,7 @@ _[INFO]_
 ### Ustalenia przed spotkaniem
 
 #### `p1s4i1` Silnik ma być zimny — powiedz to wprost  
-_[CZERWONA · ODPUŚĆ]_
+_[CZERWONA · ODPUŚĆ]_ [szybki filtr]
 
 - **Jak:** „Proszę nie odpalać auta przed moim przyjazdem, chcę zobaczyć zimny start”. Ustal godzinę i przyjedź punktualnie. Jeśli sprzedawca kręci („muszę podjechać po córkę”, „stoi w innym miejscu”), to znaczy, że na zimnym coś słychać albo dymi.
 - **Dlaczego:** Na ciepłym silniku znika połowa objawów: stuki, dym, nierówna praca, ciężki rozruch.
@@ -176,7 +199,7 @@ _[ŻÓŁTA]_
 - Tagi: ustalenia, dokumenty
 
 #### `p1s4i3` Jazda próbna: Ty prowadzisz, min. 20–30 minut, różne drogi  
-_[CZERWONA · ODPUŚĆ]_
+_[CZERWONA · ODPUŚĆ]_ [szybki filtr]
 
 - **Jak:** Ustal, że prowadzisz Ty (weź prawo jazdy), trasa ma mieć kawałek szybszej drogi, miasto i nierówny odcinek. Upewnij się, że auto ma ważne OC (sprawdzisz w Historii pojazdu lub na ufg.pl). Odmowa jazdy próbnej = nie kupujesz.
 - **Dlaczego:** Skrzyni, zawieszenia i hamulców nie ocenisz na parkingu, a sprzedawca za kierownicą ukryje, co chce.
@@ -269,7 +292,7 @@ Zaczynasz od papierów, nie od lakieru. Jeśli tu coś się nie zgadza, reszta o
 ### Dowód rejestracyjny
 
 #### `p2s1i1` Oryginał dowodu rejestracyjnego w ręku (nie zdjęcie, nie ksero)  
-_[CZERWONA · ODPUŚĆ · zdjęcie]_
+_[CZERWONA · ODPUŚĆ · zdjęcie]_ [szybki filtr]
 
 - **Jak:** Weź dokument do ręki. Sprawdź, czy nie jest zniszczony lub „poprawiany”. Pamiętaj: zatrzymanie dowodu odbywa się dziś elektronicznie, więc kartka może być u sprzedawcy, a dokument i tak zatrzymany — dlatego wczoraj sprawdzałeś status w Historii pojazdu. Bez oryginału nie podpisujesz dziś niczego.
 - **Dlaczego:** Dowód rejestracyjny to jedyny dokument, który wiąże ten konkretny egzemplarz z właścicielem.
@@ -319,7 +342,7 @@ _[ŻÓŁTA]_
 ### VIN na aucie — 3 miejsca
 
 #### `p2s2i1` VIN na podszybiu (przez przednią szybę) = pole E  
-_[CZERWONA · ODPUŚĆ · zdjęcie]_
+_[CZERWONA · ODPUŚĆ · zdjęcie]_ [szybki filtr]
 
 - **Jak:** Stań po stronie kierowcy i przeczytaj tabliczkę widoczną u dołu szyby. Porównaj z dowodem znak po znaku. Zrób zdjęcie. Brak tabliczki, świeże ślady kleju, inna czcionka niż fabryczna — pytasz i notujesz.
 - **Dlaczego:** To najłatwiejsza do sprawdzenia kopia VIN — jeśli jej nie ma, ktoś miał powód.
@@ -327,7 +350,7 @@ _[CZERWONA · ODPUŚĆ · zdjęcie]_
 - Tagi: vin
 
 #### `p2s2i2` Tabliczka znamionowa (słupek/drzwi kierowcy lub komora silnika) = pole E  
-_[CZERWONA · ODPUŚĆ · zdjęcie]_
+_[CZERWONA · ODPUŚĆ · zdjęcie]_ [szybki filtr]
 
 - **Jak:** Znajdź metalową tabliczkę lub naklejkę z VIN, masami i często kodem lakieru. Sprawdź: oryginalne nity/naklejka bez pęcherzy, brak śladów odklejania, lakier wokół bez różnicy odcienia. Porównaj VIN znak po znaku i sfotografuj.
 - **Dlaczego:** Tabliczka przeklejona lub „przenitowana” to klasyczny ślad auta składanego z dwóch lub kradzionego.
@@ -335,7 +358,7 @@ _[CZERWONA · ODPUŚĆ · zdjęcie]_
 - Tagi: vin
 
 #### `p2s2i3` VIN wybity w nadwoziu (podłoga pod fotelem / gródź / bagażnik)  
-_[CZERWONA · ODPUŚĆ · zdjęcie]_
+_[CZERWONA · ODPUŚĆ · zdjęcie]_ [szybki filtr]
 
 - **Jak:** Zapytaj sprzedawcę, gdzie w tym modelu jest numer wybity w blasze (często pod dywanikiem przy fotelu pasażera, na grodzi w komorze silnika lub w podłodze bagażnika). Poświeć latarką: znaki równe, blacha wokół gładka, bez szlifowania, spawania, świeżej farby ani „łaty”. Sfotografuj.
 - **Dlaczego:** Numer w blasze jest najtrudniejszy do podrobienia — dlatego przy nim najczęściej widać ślady przeróbek.
@@ -353,7 +376,7 @@ _[ŻÓŁTA · zdjęcie]_
 ### Kto sprzedaje
 
 #### `p2s3i1` Dowód osobisty sprzedawcy = nazwisko w dowodzie rejestracyjnym  
-_[CZERWONA · ODPUŚĆ]_
+_[CZERWONA · ODPUŚĆ]_ [szybki filtr]
 
 - **Jak:** Poproś o dowód osobisty (lub mDowód w mObywatel) i porównaj nazwisko oraz PESEL z dowodem rejestracyjnym i z umową. Spisz dane do umowy z dokumentu, nie z dyktanda. Brak dokumentu tożsamości = nie podpisujesz.
 - **Dlaczego:** Umowa z osobą, której tożsamości nie potwierdziłeś, to papier bez wartości.
@@ -361,7 +384,7 @@ _[CZERWONA · ODPUŚĆ]_
 - Tagi: wlasciciel
 
 #### `p2s3i2` Sprzedaje ktoś inny niż właściciel: pisemne pełnomocnictwo  
-_[CZERWONA · ODPUŚĆ · zdjęcie]_
+_[CZERWONA · ODPUŚĆ · zdjęcie]_ [szybki filtr]
 
 - **Jak:** „Sprzedaję za brata/kolegę” wymaga pełnomocnictwa na piśmie: dane właściciela i pełnomocnika, dane auta (VIN, nr rej.), zakres (sprzedaż), podpis właściciela; do tego kopia dowodu właściciela. Zadzwoń do właściciela przy sprzedawcy. Bez tego — nie kupujesz, choćby cena była świetna.
 - **Dlaczego:** Bez pełnomocnictwa właściciel może zażądać zwrotu auta, a Ty zostaniesz z roszczeniem do „kolegi”.
@@ -495,7 +518,7 @@ _[ŻÓŁTA · zdjęcie]_
 ### Pomiar lakieru — element po elemencie
 
 #### `p3s2i1` Dach — 3–5 punktów, zapisz najwyższy odczyt  
-_[ŻÓŁTA]_
+_[ŻÓŁTA]_ [panel: roof]
 
 - **Jak:** Przyłóż sondę prostopadle: środek, dwa rogi, przy krawędziach. To Twój wzorzec: dach najrzadziej bywa naprawiany, więc jego wartość to „fabryka” dla tego egzemplarza (chyba że auto dachowało lub miało gradobicie — wtedy szpachla na dachu). Zanotuj najwyższy wynik i porównaj z dachem. Bez miernika: patrz pod kątem pod światło i szukaj różnicy odcienia, „skórki pomarańczy”, pyłu na uszczelkach.
 - **Dlaczego:** Bez punktu odniesienia liczby z miernika nic nie znaczą — dach go daje.
@@ -504,7 +527,7 @@ _[ŻÓŁTA]_
 - Tagi: lakier, pomiar
 
 #### `p3s2i2` Maska — 3–5 punktów, zapisz najwyższy odczyt  
-_[ŻÓŁTA]_
+_[ŻÓŁTA]_ [panel: hood]
 
 - **Jak:** Przyłóż sondę prostopadle: środek, dwa rogi, przy krawędziach. Zmierz też przy przedniej krawędzi (odpryski od kamieni bywają zaprawiane). Jeśli miernik pokazuje błąd lub zero — maska może być aluminiowa; wtedy oceniaj wzrokowo. Zanotuj najwyższy wynik i porównaj z dachem. Bez miernika: patrz pod kątem pod światło i szukaj różnicy odcienia, „skórki pomarańczy”, pyłu na uszczelkach.
 - **Dlaczego:** Lakierowana maska bywa niewinna (kamienie), ale często idzie w parze z naprawą przodu.
@@ -513,7 +536,7 @@ _[ŻÓŁTA]_
 - Tagi: lakier, pomiar
 
 #### `p3s2i3` Błotnik przedni lewy — 3–5 punktów, zapisz najwyższy odczyt  
-_[ŻÓŁTA]_
+_[ŻÓŁTA]_ [panel: fl_fender]
 
 - **Jak:** Przyłóż sondę prostopadle: środek, dwa rogi, przy krawędziach. Zmierz górę przy masce, bok przy drzwiach i dół przy progu. Zajrzyj na śruby mocujące błotnik pod maską: ślady klucza = błotnik był zdejmowany. Zanotuj najwyższy wynik i porównaj z dachem. Bez miernika: patrz pod kątem pod światło i szukaj różnicy odcienia, „skórki pomarańczy”, pyłu na uszczelkach.
 - **Dlaczego:** Błotnik przedni to najczęściej wymieniany element po stłuczce — łatwo go podmienić, trudniej dopasować.
@@ -522,7 +545,7 @@ _[ŻÓŁTA]_
 - Tagi: lakier, pomiar
 
 #### `p3s2i4` Drzwi przednie lewe — 3–5 punktów, zapisz najwyższy odczyt  
-_[ŻÓŁTA]_
+_[ŻÓŁTA]_ [panel: fl_door]
 
 - **Jak:** Przyłóż sondę prostopadle: środek, dwa rogi, przy krawędziach. Zmierz środek, przy klamce, przy dolnej krawędzi i w okolicy słupka. Sprawdź krawędź dolną od wewnątrz: tam widać granicę lakierowania. Zanotuj najwyższy wynik i porównaj z dachem. Bez miernika: patrz pod kątem pod światło i szukaj różnicy odcienia, „skórki pomarańczy”, pyłu na uszczelkach.
 - **Dlaczego:** Wysoki odczyt na drzwiach kierowcy przy „bezwypadkowym” to najczęstsza konfrontacja z opowieścią sprzedawcy.
@@ -531,7 +554,7 @@ _[ŻÓŁTA]_
 - Tagi: lakier, pomiar
 
 #### `p3s2i5` Drzwi tylne lewe — 3–5 punktów, zapisz najwyższy odczyt  
-_[ŻÓŁTA]_
+_[ŻÓŁTA]_ [panel: rl_door]
 
 - **Jak:** Przyłóż sondę prostopadle: środek, dwa rogi, przy krawędziach. Środek, dół, okolice klamki i tylnej krawędzi (styk z ćwiartką). Zanotuj najwyższy wynik i porównaj z dachem. Bez miernika: patrz pod kątem pod światło i szukaj różnicy odcienia, „skórki pomarańczy”, pyłu na uszczelkach.
 - **Dlaczego:** Uszkodzenia boku rzadko kończą się na jednym elemencie — porównaj z sąsiednimi.
@@ -540,7 +563,7 @@ _[ŻÓŁTA]_
 - Tagi: lakier, pomiar
 
 #### `p3s2i6` Ćwiartka tylna lewa (błotnik tylny) — 3–5 punktów, zapisz najwyższy odczyt  
-_[ŻÓŁTA]_
+_[ŻÓŁTA]_ [panel: rl_quarter]
 
 - **Jak:** Przyłóż sondę prostopadle: środek, dwa rogi, przy krawędziach. Zmierz nad kołem, przy lampie i przy klapie. Ćwiartka jest zespawana z nadwoziem — jej naprawa to prawdziwa blacharka, nie wymiana na śruby. Zajrzyj do nadkola i pod uszczelkę bagażnika: świeży lakier, ślady szlifowania. Zanotuj najwyższy wynik i porównaj z dachem. Bez miernika: patrz pod kątem pod światło i szukaj różnicy odcienia, „skórki pomarańczy”, pyłu na uszczelkach.
 - **Dlaczego:** Szpachla na ćwiartce zwykle oznacza poważniejszą naprawę tyłu, nie parkingową rysę.
@@ -549,7 +572,7 @@ _[ŻÓŁTA]_
 - Tagi: lakier, pomiar
 
 #### `p3s2i7` Klapa bagażnika — 3–5 punktów, zapisz najwyższy odczyt  
-_[ŻÓŁTA]_
+_[ŻÓŁTA]_ [panel: trunk]
 
 - **Jak:** Przyłóż sondę prostopadle: środek, dwa rogi, przy krawędziach. Środek, okolice emblematu, dolna krawędź. Jeśli odczyt błędny/zerowy — klapa może być aluminiowa lub plastikowa; wtedy sprawdź od wewnątrz ślady uszczelniacza i lakieru. Zanotuj najwyższy wynik i porównaj z dachem. Bez miernika: patrz pod kątem pod światło i szukaj różnicy odcienia, „skórki pomarańczy”, pyłu na uszczelkach.
 - **Dlaczego:** Lakierowana klapa + nowa lampa + inny odczyt na ćwiartce = uderzenie w tył.
@@ -558,7 +581,7 @@ _[ŻÓŁTA]_
 - Tagi: lakier, pomiar
 
 #### `p3s2i8` Ćwiartka tylna prawa (błotnik tylny) — 3–5 punktów, zapisz najwyższy odczyt  
-_[ŻÓŁTA]_
+_[ŻÓŁTA]_ [panel: rr_quarter]
 
 - **Jak:** Przyłóż sondę prostopadle: środek, dwa rogi, przy krawędziach. Nad kołem, przy lampie, przy klapie; zajrzyj do nadkola i pod uszczelkę bagażnika. Zanotuj najwyższy wynik i porównaj z dachem. Bez miernika: patrz pod kątem pod światło i szukaj różnicy odcienia, „skórki pomarańczy”, pyłu na uszczelkach.
 - **Dlaczego:** Prawa strona częściej „spotyka” słupki i krawężniki — nie pomijaj jej.
@@ -567,7 +590,7 @@ _[ŻÓŁTA]_
 - Tagi: lakier, pomiar
 
 #### `p3s2i9` Drzwi tylne prawe — 3–5 punktów, zapisz najwyższy odczyt  
-_[ŻÓŁTA]_
+_[ŻÓŁTA]_ [panel: rr_door]
 
 - **Jak:** Przyłóż sondę prostopadle: środek, dwa rogi, przy krawędziach. Środek, dół, klamka, tylna krawędź. Zanotuj najwyższy wynik i porównaj z dachem. Bez miernika: patrz pod kątem pod światło i szukaj różnicy odcienia, „skórki pomarańczy”, pyłu na uszczelkach.
 - **Dlaczego:** Dwa sąsiednie elementy z podwyższonym odczytem to już naprawa boku, nie przypadek.
@@ -576,7 +599,7 @@ _[ŻÓŁTA]_
 - Tagi: lakier, pomiar
 
 #### `p3s2i10` Drzwi przednie prawe — 3–5 punktów, zapisz najwyższy odczyt  
-_[ŻÓŁTA]_
+_[ŻÓŁTA]_ [panel: fr_door]
 
 - **Jak:** Przyłóż sondę prostopadle: środek, dwa rogi, przy krawędziach. Środek, klamka, dolna krawędź, okolica słupka. Zanotuj najwyższy wynik i porównaj z dachem. Bez miernika: patrz pod kątem pod światło i szukaj różnicy odcienia, „skórki pomarańczy”, pyłu na uszczelkach.
 - **Dlaczego:** Element po elemencie budujesz mapę auta — luki w niej wypełni sprzedawca.
@@ -585,7 +608,7 @@ _[ŻÓŁTA]_
 - Tagi: lakier, pomiar
 
 #### `p3s2i11` Błotnik przedni prawy — 3–5 punktów, zapisz najwyższy odczyt  
-_[ŻÓŁTA]_
+_[ŻÓŁTA]_ [panel: fr_fender]
 
 - **Jak:** Przyłóż sondę prostopadle: środek, dwa rogi, przy krawędziach. Góra przy masce, bok przy drzwiach, dół przy progu; śruby pod maską. Zanotuj najwyższy wynik i porównaj z dachem. Bez miernika: patrz pod kątem pod światło i szukaj różnicy odcienia, „skórki pomarańczy”, pyłu na uszczelkach.
 - **Dlaczego:** Wymieniony błotnik przedni prawy bywa jedynym śladem po naprawionym przodzie.
@@ -594,7 +617,7 @@ _[ŻÓŁTA]_
 - Tagi: lakier, pomiar
 
 #### `p3s2i12` Słupki i progi (punkty kontrolne) — 3–5 punktów, zapisz najwyższy odczyt  
-_[ŻÓŁTA]_
+_[ŻÓŁTA]_ [panel: sills]
 
 - **Jak:** Przyłóż sondę prostopadle: środek, dwa rogi, przy krawędziach. Zmierz słupek A i B po obu stronach (przy otwartych drzwiach) oraz progi w 2–3 punktach. To elementy konstrukcyjne: podwyższony odczyt tutaj waży więcej niż na drzwiach. Zanotuj najwyższy wynik i porównaj z dachem. Bez miernika: patrz pod kątem pod światło i szukaj różnicy odcienia, „skórki pomarańczy”, pyłu na uszczelkach.
 - **Dlaczego:** Naprawa słupka lub progu oznacza, że auto dostało mocno — to nie kategoria „rysa parkingowa”.
@@ -613,7 +636,7 @@ _[INFO · zdjęcie]_
 ### Odcienie, overspray, śruby
 
 #### `p3s3i1` Różnice odcienia lakieru — z 3–4 m i pod kątem  
-_[ŻÓŁTA · zdjęcie]_
+_[ŻÓŁTA · zdjęcie]_ [szybki filtr]
 
 - **Jak:** Odejdź na kilka metrów i patrz wzdłuż boku auta pod ostrym kątem, najlepiej pod słońce lub jasne niebo. Potem z bliska, pod kątem 45°: element lakierowany ma zwykle inny połysk, inną głębię metalika, czasem „cieniowanie” (rozmyta granica koloru na sąsiednim elemencie).
 - **Dlaczego:** Lakiernia odtwarza kolor z kodu, ale nie odtworzy dokładnie fabrycznego wypalania i starzenia.
@@ -783,7 +806,7 @@ _[ŻÓŁTA]_
 - Tagi: podwozie, wydech
 
 #### `p3s7i4` Ślady spawania, pofalowane podłużnice, łaty — konstrukcja  
-_[CZERWONA · ODPUŚĆ · zdjęcie]_
+_[CZERWONA · ODPUŚĆ · zdjęcie]_ [szybki filtr]
 
 - **Jak:** Latarką wzdłuż podłużnic (belki od zderzaka w głąb podwozia) z przodu i z tyłu, kielichów, podłogi i pasa przedniego: nierówne, nieregularne szwy spawalnicze inne niż fabryczne punktowe zgrzewy, pofalowana lub „pomarszczona” blacha, wstawiane łaty, uszczelniacz nałożony pędzlem. To ślady po ciężkim wypadku — auto sklejane lub prostowane na ramie.
 - **Dlaczego:** Naprawiona konstrukcja nigdy nie zachowa się w kolejnym zderzeniu tak jak fabryczna — to nie temat do negocjacji.
@@ -800,7 +823,7 @@ Wnętrze zdradza prawdziwy przebieg lepiej niż licznik i pokazuje, czy auto nie
 ### Przebieg kontra zużycie
 
 #### `p4s1i1` Licznik: wpisz przebieg i porównaj z ogłoszeniem i Historią pojazdu  
-_[CZERWONA · ODPUŚĆ · zdjęcie]_
+_[CZERWONA · ODPUŚĆ · zdjęcie]_ [szybki filtr]
 
 - **Jak:** Włącz zapłon i przepisz przebieg co do kilometra. Porównaj z tym, co zapisałeś wczoraj: musi być większy niż ostatni odczyt z badania technicznego w Historii pojazdu i zgodny z ogłoszeniem (kilkadziesiąt km różnicy to normalne). Niższy niż w rejestrze albo niż w ogłoszeniu — kończysz oględziny.
 - **Dlaczego:** To najprostszy w Polsce test na cofnięty licznik i większość kupujących go nie robi.
@@ -877,7 +900,7 @@ _[ŻÓŁTA · zdjęcie]_
 ### Test kontrolek — na samym zapłonie
 
 #### `p4s3i1` Zapłon bez odpalania: wszystkie kontrolki zapalają się i gasną  
-_[CZERWONA · zdjęcie]_
+_[CZERWONA · zdjęcie]_ [szybki filtr]
 
 - **Jak:** Przekręć kluczyk do pozycji zapłonu (lub wciśnij start bez sprzęgła/hamulca). Wszystkie kontrolki powinny zapalić się na chwilę (autotest), a większość zgasnąć po kilku sekundach. Zrób zdjęcie deski w momencie, gdy świecą wszystkie. Brak jednej z typowych (silnik, ABS, ESP, airbag, akumulator) = ktoś wyjął żarówkę lub zamaskował błąd.
 - **Dlaczego:** Kontrolka, której nie ma, to błąd, którego sprzedawca nie chce Ci pokazać.
@@ -885,7 +908,7 @@ _[CZERWONA · zdjęcie]_
 - Tagi: kontrolki, elektryka
 
 #### `p4s3i2` Kontrolka AIRBAG: MUSI się zapalić i zgasnąć  
-_[CZERWONA · ODPUŚĆ · zdjęcie]_
+_[CZERWONA · ODPUŚĆ · zdjęcie]_ [szybki filtr]
 
 - **Jak:** Szukaj żółtej/czerwonej ikony poduszki (lub napisu AIRBAG/SRS) w autoteście. Prawidłowo: świeci kilka sekund i gaśnie. Nie zapala się wcale = najczęściej wyjęta żarówka lub „oszukany” sterownik po wypadku, w którym poduszki wystrzeliły. Świeci stale = błąd systemu — poduszki mogą nie zadziałać.
 - **Dlaczego:** Auto bez działających poduszek wygląda jak auto z poduszkami — do pierwszego wypadku.
@@ -1004,7 +1027,7 @@ Zimny silnik nie umie kłamać: ciężki rozruch, stuki, dym i nierówna praca z
 ### Na wyłączonym, zimnym silniku
 
 #### `p5s1i1` Test „czy naprawdę zimny”: maska, pokrywa silnika, przewód chłodnicy  
-_[CZERWONA · ODPUŚĆ]_
+_[CZERWONA · ODPUŚĆ]_ [szybki filtr]
 
 - **Jak:** Zanim otworzysz maskę, połóż dłoń na masce nad silnikiem, potem na pokrywie silnika i górnym przewodzie chłodnicy: mają być w temperaturze otoczenia. Wskaźnik temperatury na samym dole, wentylator nie pracuje, brak „tykania” stygnącego metalu. Ciepły silnik mimo wczorajszej umowy = sprzedawca wiedział, co na zimnym słychać.
 - **Dlaczego:** Rozgrzany silnik przed Twoim przyjazdem to nie uprzejmość, tylko ukrywanie objawów.
@@ -1036,7 +1059,7 @@ _[ŻÓŁTA · zdjęcie]_
 - Tagi: silnik, olej
 
 #### `p5s1i5` Korek wlewu oleju od spodu: majonez/emulsja lub gruby nagar  
-_[CZERWONA · zdjęcie]_
+_[CZERWONA · zdjęcie]_ [szybki filtr]
 
 - **Jak:** Odkręć korek wlewu (silnik zimny), obejrzyj spód i szyjkę latarką. Jasnobrązowa, kremowa emulsja („majonez”) = woda w oleju: może to być efekt bardzo krótkich tras zimą, ale częściej — uszczelki pod głowicą. Gruby czarny szlam i nagar w szyjce = wymiany oleju robione rzadko. Czysty metal z cienkim filmem oleju = w porządku.
 - **Dlaczego:** Emulsja pod korkiem to jeden z niewielu objawów uszczelki pod głowicą widocznych bez narzędzi.
@@ -1102,7 +1125,7 @@ _[CZERWONA]_
 - Tagi: silnik, start
 
 #### `p5s2i3` Dym z wydechu przy starcie i przy przegazowaniu — jaki kolor?  
-_[CZERWONA · zdjęcie]_
+_[CZERWONA · zdjęcie]_ [szybki filtr]
 
 - **Jak:** Stań z tyłu przy starcie, potem poproś o 2–3 krótkie przegazowania. Niebieskawy, ostro pachnący = spalanie oleju (turbo, uszczelniacze zaworów, pierścienie). Biały gęsty, słodkawy, nieznikający po rozgrzaniu = płyn chłodniczy w cylindrach (uszczelka pod głowicą). Czarny = zbyt bogata mieszanka / wtrysk / w dieslu problemy z DPF. Przezroczysta para na zimno, znikająca po chwili — normalna. Nagraj krótki film.
 - **Dlaczego:** Kolor dymu to język, w którym silnik mówi o swoich najdroższych częściach.
@@ -1435,34 +1458,97 @@ _[INFO]_
 - **Na listę uwag:** „Zignorowano sygnał „odpuść bez dyskusji””
 - Tagi: podsumowanie, dealbreaker
 
-## Skrypt rozmowy telefonicznej ze sprzedawcą
+## Scenariusz rozmowy ze sprzedawcą (pełny)
 
-Dzwoń, nie pisz — przez telefon słychać wahanie. Zadawaj pytania po kolei, spokojnie, i zapisuj odpowiedzi w aplikacji: jutro porównasz je z dokumentami, miernikiem i licznikiem. Nie tłumacz, po co pytasz. Jeśli przy dwóch–trzech pytaniach słyszysz wykręty, oszczędź sobie dojazdu.
+Ta rozmowa ma dwa cele: odsiać auto, do którego nie warto jechać, i ustalić warunki oględzin — zimny silnik, dokumenty na stole, jazda próbna, godzina. Dzwoń, nie pisz: przez telefon słychać wahanie, a każdą odpowiedź zapisz, bo jutro zderzysz ją z dokumentami, miernikiem i licznikiem.
+
+### Zanim zadzwonisz
+
+- Ogłoszenie otwarte przed sobą: cena, rocznik, przebieg, opis — każdą odpowiedź porównujesz z tym, co sprzedawca sam napisał.
+- Jeśli masz już VIN, nr rejestracyjny i datę pierwszej rejestracji — raport z historiapojazdu.gov.pl z ostatnim odczytem licznika pod ręką. Jeśli nie masz, to pierwsza rzecz, o którą prosisz.
+- Kalendarz: 2–3 terminy, w które możesz przyjechać rano lub przed południem (za dnia, na zimny silnik).
+- Czas: 8–12 minut, ciche miejsce, ta aplikacja otwarta na skrypcie — odhaczasz pytania w trakcie, nie po.
+- Zapisuj dosłownie cztery rzeczy: przebieg, co było lakierowane, od kiedy ma auto, powód sprzedaży. Jutro te cztery zdania zderzysz z faktami.
+
+### Otwarcie — zdania do wyboru
+
+- Dzień dobry, dzwonię w sprawie [auto] z ogłoszenia — ma Pan/Pani chwilę na kilka pytań, zanim przyjadę?
+- Dzień dobry, w sprawie auta z ogłoszenia — jest jeszcze aktualne? (Celowo bez nazwy modelu: jeśli usłyszysz „którego?”, rozmawiasz z handlarzem.)
+- Dzień dobry, oglądam Pana/Pani ogłoszenie [auto] za [cena]. Nie chcę jechać [X] km na darmo, więc dopytam o kilka rzeczy — zajmie to może dziesięć minut, dobrze?
+
+### 12 pytań
 
 1. **Czy jest Pan/Pani właścicielem wpisanym w dowodzie rejestracyjnym? Czy jest współwłaściciel? Może mi Pan/Pani wysłać zdjęcie dowodu (VIN, nr rejestracyjny, data pierwszej rejestracji)?**  
-   Na co uważać: „Sprzedaję dla brata/znajomego” bez słowa o pełnomocnictwie; „firma, ale sprzedaję prywatnie”; odmowa zdjęcia dowodu lub VIN — to koniec rozmowy.
+   Na co uważać: „Sprzedaję dla brata/znajomego” bez słowa o pełnomocnictwie; „firma, ale sprzedaję prywatnie”; odmowa zdjęcia dowodu lub VIN — to koniec rozmowy.  
+   Gdy kręci: „Rozumiem, to zapytam wprost: czyje nazwisko jest w dowodzie rejestracyjnym i czy ta osoba będzie przy podpisaniu umowy?” Jeśli i teraz nie pada nazwisko ani zgoda na zdjęcie dowodu — nie jedziesz.
 2. **Od kiedy ma Pan/Pani to auto i od kogo je Pan/Pani kupił(a)? Jest umowa lub faktura z tamtego zakupu?**  
-   Na co uważać: Kilka tygodni lub miesięcy posiadania = handel; „z Niemiec od znajomego” bez dokumentów; brak poprzedniej umowy.
+   Na co uważać: Kilka tygodni lub miesięcy posiadania = handel; „z Niemiec od znajomego” bez dokumentów; brak poprzedniej umowy.  
+   Gdy kręci: „Rozumiem, to zapytam wprost: w którym roku kupił(a) Pan/Pani to auto i czy pokaże mi Pan/Pani tamtą umowę na miejscu?” Brak roku albo „umowa gdzieś jest” znaczy, że sprzedawca zna to auto krócej, niż mówi — traktuj je jak auto z handlu i pytaj dalej o papiery.
 3. **Jaki jest dokładny przebieg na dziś i czym jest udokumentowany (książka, faktury, badania)?**  
-   Na co uważać: Zaokrąglenia („koło 180”), przebieg inny niż w ogłoszeniu, „książka się zgubiła”, brak faktur z przebiegami.
+   Na co uważać: Zaokrąglenia („koło 180”), przebieg inny niż w ogłoszeniu, „książka się zgubiła”, brak faktur z przebiegami.  
+   Gdy kręci: „Rozumiem, to zapytam wprost: jaką dokładnie liczbę pokaże licznik, kiedy przyjadę?” Jeśli zamiast liczby pada „koło” albo „mniej więcej”, zapisz to dosłownie — jutro pierwsze, co robisz, to licznik kontra Historia pojazdu.
 4. **Które elementy były lakierowane lub wymieniane i z jakiego powodu?**  
-   Na co uważać: „Nic, bezwypadkowy” przy kilkuletnim aucie — zapisz dosłownie, porównasz z miernikiem; „tylko zderzak” bez powodu; irytacja przy pytaniu.
+   Na co uważać: „Nic, bezwypadkowy” przy kilkuletnim aucie — zapisz dosłownie, porównasz z miernikiem; „tylko zderzak” bez powodu; irytacja przy pytaniu.  
+   Gdy kręci: „Rozumiem, to zapytam wprost: czy jest choć jeden element, który był lakierowany albo wymieniany — choćby zderzak?” „Nic, na sto procent” przy kilkuletnim aucie zapisz dosłownie; jutro odpowie miernik, a Ty dowiesz się, ile są warte pozostałe zapewnienia.
 5. **Czy auto miało jakąkolwiek szkodę — także parkingową, likwidowaną z OC lub AC, w Polsce albo za granicą?**  
-   Na co uważać: Rozróżnianie „wypadek” od „stłuczka”; „to nie była szkoda, tylko otarcie”; brak jasnego „nie”.
+   Na co uważać: Rozróżnianie „wypadek” od „stłuczka”; „to nie była szkoda, tylko otarcie”; brak jasnego „nie”.  
+   Gdy kręci: „Rozumiem, to zapytam wprost: czy była jakakolwiek szkoda zgłaszana do ubezpieczyciela — z Pana/Pani OC, z cudzego OC albo z AC?” Jeśli zamiast „nie” słyszysz wykład, co jest szkodą, a co „tylko otarciem”, przyjmij, że szkoda była, i jutro szukaj jej miernikiem.
 6. **Czy auto jest sprowadzone? Kiedy zarejestrowano je w Polsce i jakie są dokumenty z zagranicy?**  
-   Na co uważać: „Krajowe” przy dacie pierwszej rejestracji w Polsce sprzed kilku lat dla starszego auta; brak zagranicznych papierów; „tłumaczenie gdzieś jest”.
+   Na co uważać: „Krajowe” przy dacie pierwszej rejestracji w Polsce sprzed kilku lat dla starszego auta; brak zagranicznych papierów; „tłumaczenie gdzieś jest”.  
+   Gdy kręci: „Rozumiem, to zapytam wprost: w którym roku auto zostało po raz pierwszy zarejestrowane w Polsce i z jakiego kraju przyjechało?” Jeśli sprzedawca nie zna tej daty ani kraju, historia sprzed importu jest dla Ciebie pusta — to auto oglądasz tylko z płatnym raportem VIN i z planem na mechanika.
 7. **Kiedy był ostatni serwis olejowy, wymiana rozrządu, sprzęgła lub oleju w automacie — i czy są na to faktury?**  
-   Na co uważać: „Niedawno”, „w zeszłym roku u znajomego”; wszystko „robione”, nic udokumentowane.
+   Na co uważać: „Niedawno”, „w zeszłym roku u znajomego”; wszystko „robione”, nic udokumentowane.  
+   Gdy kręci: „Rozumiem, to zapytam wprost: na co z tego ma Pan/Pani fakturę albo wpis w książce, a co było robione bez papieru?” Co nie ma dokumentu, traktuj jako niezrobione — i od razu wpisz na listę do rozmowy o cenie.
 8. **Czy jakaś kontrolka świeci lub świeciła w ostatnich miesiącach? Były kasowane błędy?**  
-   Na co uważać: „Tylko czujnik”; „mechanik skasował i jest ok”; pytanie zwrotne „a czemu Pan pyta?”.
+   Na co uważać: „Tylko czujnik”; „mechanik skasował i jest ok”; pytanie zwrotne „a czemu Pan pyta?”.  
+   Gdy kręci: „Rozumiem, to zapytam wprost: czy w ostatnim roku ktoś podłączał komputer do auta i kasował błędy — i po co?” Odpowiedź pytaniem („a czemu Pan pyta?”) to też odpowiedź: jutro sprawdzasz wszystkie kontrolki na zapłonie, a jeśli masz czytnik — monitory gotowości OBD2.
 9. **Czy auto ma ważne badanie techniczne i OC? Czy jest wolne od zastawu, kredytu i leasingu?**  
-   Na co uważać: „Badanie zrobię przed sprzedażą”; „kredyt spłacony, tylko jeszcze nie wykreślony”; „OC się skończyło, bo stało”.
+   Na co uważać: „Badanie zrobię przed sprzedażą”; „kredyt spłacony, tylko jeszcze nie wykreślony”; „OC się skończyło, bo stało”.  
+   Gdy kręci: „Rozumiem, to zapytam wprost: do kiedy jest ważne badanie techniczne i czy w dowodzie rejestracyjnym jest jakakolwiek adnotacja albo współwłaściciel?” Jeśli sprzedawca musi „sprawdzić” daty we własnym aucie albo kluczy przy słowie „zastaw”, nie umawiaj się, dopóki nie przyśle zdjęcia dowodu.
 10. **Ile jest kluczyków i czy wszystkie działają (pilot, rozruch)?**  
-   Na co uważać: Jeden kluczyk, „drugi został u poprzedniego właściciela”; pilot „tylko bateria”.
+   Na co uważać: Jeden kluczyk, „drugi został u poprzedniego właściciela”; pilot „tylko bateria”.  
+   Gdy kręci: „Rozumiem, to zapytam wprost: ile kluczyków dostanę do ręki przy umowie — jeden czy dwa?” Jeden kluczyk to nie powód, żeby nie jechać, ale „drugi się znajdzie” zapisz jako „jeden” i wróć do tego przy cenie.
 11. **Czy mogę przyjechać na zimny silnik (proszę nie odpalać przed moim przyjazdem), sam poprowadzić na jeździe próbnej i podjechać na SKP lub do mechanika?**  
-   Na co uważać: Warunki lub wykręty przy którymkolwiek punkcie: „nie mam czasu”, „już było sprawdzane”, „jazda tylko ze mną za kierownicą”.
+   Na co uważać: Warunki lub wykręty przy którymkolwiek punkcie: „nie mam czasu”, „już było sprawdzane”, „jazda tylko ze mną za kierownicą”.  
+   Gdy kręci: „Rozumiem, to zapytam wprost: czy auto będzie stało nieodpalane od rana, czy poprowadzę sam(a) i czy możemy podjechać na stację diagnostyczną — tak czy nie na każde z trzech?” „Nie” albo warunek przy którymkolwiek („tylko ze mną za kierownicą”) kończy rozmowę — bez tych trzech rzeczy nie sprawdzisz auta.
 12. **Dlaczego sprzedaje Pan/Pani to auto i czy cena jest do rozmowy po oględzinach?**  
-   Na co uważać: Powód niespójny z resztą („kupiłem 2 miesiące temu, ale zmieniam na większe”); „cena ostateczna, dużo chętnych, dziś decyzja”.
+   Na co uważać: Powód niespójny z resztą („kupiłem 2 miesiące temu, ale zmieniam na większe”); „cena ostateczna, dużo chętnych, dziś decyzja”.  
+   Gdy kręci: „Rozumiem, to zapytam wprost: jeśli po oględzinach pokażę konkretne uwagi, czy cena jest do rozmowy?” „Cena ostateczna, dużo chętnych, decyzja dziś” to presja, nie informacja — jeśli mimo to jedziesz, jedź z założeniem, że możesz wrócić bez auta.
+
+### Zamknięcie rozmowy
+
+- Podsumuję, żebyśmy się dobrze rozumieli: przyjeżdżam [dzień] o [godzina], auto stoi nieodpalane od rana, na stole dowód rejestracyjny, Pana/Pani dowód osobisty, poprzednia umowa, książka serwisowa i faktury, wszystkie kluczyki; jazdę próbną robię ja, 20–30 minut. Zgadza się?
+- Dziękuję, wyślę SMS-a z potwierdzeniem godziny. Gdyby coś się zmieniło, proszę dać znać wcześniej — jadę [X] km specjalnie do Pana/Pani.
+- Gdy odpowiedzi dyskwalifikują: „Dziękuję za rozmowę i za szczerość. Na tym etapie to nie jest auto dla mnie — powodzenia ze sprzedażą.” Bez tłumaczenia się i bez wykładu, co jest nie tak.
+
+### Szablony wiadomości (do skopiowania)
+
+#### Pierwsza wiadomość (OLX/Otomoto)
+
+> Dzień dobry, interesuje mnie [auto] z Pana/Pani ogłoszenia. Zanim umówię się na oględziny, poproszę o kilka rzeczy:
+> – numer VIN (może być zdjęcie dowodu rejestracyjnego, dane adresowe można zasłonić),
+> – aktualny przebieg i zdjęcie licznika,
+> – informację, które elementy były lakierowane lub wymieniane i dlaczego,
+> – jakie są faktury z serwisu (olej, rozrząd, sprzęgło/skrzynia).
+> Czy auto będzie dostępne [dzień] przed południem? Chciał(a)bym zobaczyć je na zimnym silniku i przejechać się 20–30 minut. Z góry dziękuję i pozdrawiam, [imię]
+
+#### Gdy sprzedawca nie podaje VIN
+
+> Rozumiem, że nie chce Pan/Pani wysyłać zdjęcia dowodu. Wystarczą mi trzy dane: VIN, numer rejestracyjny i data pierwszej rejestracji — potrzebuję ich wyłącznie do bezpłatnego raportu na historiapojazdu.gov.pl (badania techniczne, odczyty licznika, status). VIN widać też przez przednią szybę na podszybiu, wystarczy zdjęcie tej tabliczki. Bez tych danych nie mogę umówić się na oględziny — nie mam jak sprawdzić auta przed dojazdem [X] km. Dziękuję z góry, [imię]
+
+#### Potwierdzenie przed przyjazdem
+
+> Dzień dobry, potwierdzam: [dzień] o [godzina], [adres]. Proszę nie odpalać auta przed moim przyjazdem — chcę zobaczyć zimny start. Poproszę o przygotowanie: dowodu rejestracyjnego, dowodu osobistego właściciela, poprzedniej umowy zakupu, książki serwisowej i faktur, wszystkich kluczyków oraz dokumentów z importu, jeśli auto było sprowadzone. Planuję jazdę próbną 20–30 minut za moją kierownicą, a jeśli auto mi się spodoba — krótkie sprawdzenie na stacji diagnostycznej lub u mechanika w okolicy, za moje pieniądze. Gdyby coś się zmieniło, proszę o wiadomość wcześniej. Do zobaczenia, [imię]
+
+#### Po oględzinach — oferta z listą uwag
+
+> Dzień dobry, dziękuję za dzisiejsze oględziny [auto]. Auto mi się podoba, ale mam spisane rzeczy, które po zakupie biorę na siebie:
+> [WKLEJ LISTĘ UWAG Z RAPORTU]
+> Dlatego proponuję [KWOTA] zł, odbiór [dzień]: płatność przy podpisaniu umowy, komplet kluczyków i dokumentów w tym samym momencie. Jeśli obniżka nie wchodzi w grę, mogę rozważyć cenę bliższą Pana/Pani oczekiwaniom przy [np. komplecie opon / świeżym badaniu technicznym] przed odbiorem, wpisanym do umowy. Proszę o odpowiedź do [dzień, godzina]. Pozdrawiam, [imię]
+
+### Gdy nie chcesz dzwonić
+
+Nie lubisz dzwonić? Wiadomość daje mniej sygnałów niż telefon (nie słychać wahania ani zmyślania na bieżąco), ale jest lepsza niż nic — zadaj pisemnie koniecznie pytania 1, 3, 4, 5 i 11 (właściciel i VIN, dokładny przebieg, co lakierowane, szkody, zimny silnik i jazda próbna) i zachowaj odpowiedzi jako zrzut ekranu: jutro to Twój punkt odniesienia.
 
 ## Reguły podsumowania
 
