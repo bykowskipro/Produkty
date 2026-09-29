@@ -46,7 +46,7 @@ Cztery karty (mobile: pionowo; od 720 px: 2×2) — cztery realne przewagi:
 
 ## 5. CO DOKŁADNIE DOSTAJESZ — 7 etapów
 Nagłówek: **7 etapów. Prowadzimy Cię od ogłoszenia do negocjacji.**
-Zdanie pod nagłówkiem (dowód kompletności): W sumie 160 punktów — każdy z instrukcją, jak to sprawdzić bez bycia mechanikiem.
+Zdanie pod nagłówkiem (dowód kompletności): W sumie 160 punktów oględzin i 12 pytań do sprzedawcy — każdy z instrukcją, jak to sprawdzić bez bycia mechanikiem.
 | Etap | Czas | Co w środku |
 |---|---|---|
 | Zanim pojedziesz | 15 min | czerwone flagi w ogłoszeniu, VIN i historia, skrypt rozmowy telefonicznej ze sprzedawcą, co zabrać |
@@ -74,7 +74,7 @@ Interaktywny fragment (5 punktów: grubość lakieru maski z polem µm, spasowan
 ## 8. TAK WYGLĄDA RAPORT (nowa, statyczna makieta wyniku — nie demo)
 Kicker: Przykładowy raport · H2: **Tak wygląda raport.** · Podtytuł: Jedno auto po pełnych oględzinach. Wszystko poniżej to przykład — ale dokładnie w tej formie dostajesz swój wynik.
 Karta raportu (oznaczona plakietką „przykładowy raport”):
-- Nagłówek: Raport z oględzin · **Auto 1 · Octavia 2016** · 160 punktów, 30 pominiętych (nie dotyczy tego auta) · 68 min przy aucie · 4 zdjęcia
+- Nagłówek: Raport z oględzin · **Auto 1 · Octavia 2016** · 172 punkty (160 oględzin + 12 w rozmowie), 30 pominiętych (nie dotyczy tego auta) · 68 min przy aucie · 4 zdjęcia
 - Liczniki: **OK 121 · Uwaga 7 · Problem 2 · Dealbreaker 0**
 - Decyzja („Co z tym zrobić”): chip **Negocjuj** — „2 problemy i 7 uwag. Nic z tego nie przekreśla auta, ale każda pozycja to argument w rozmowie o cenie.” Dwa powody: (1) Bez dealbreakerów: VIN zgodny w 3 miejscach, zimny start czysty, kontrolka airbag zgasła po autoteście. (2) Pokaż sprzedawcy listę poniżej — punkt po punkcie, bez wyceniania napraw. *(spójne z logiką decyzji w aplikacji: 0 dealbreakerów, <3 problemy, brak czerwonych flag → „Negocjuj”)*
 - Mapa lakieru (inline SVG, widok z góry, µm względem dachu): dach **110** = odniesienie; 12 elementów z odczytami: maska 115, błotniki przednie 112/118, drzwi przednie 108/114, drzwi tylne **lewe 380 (Problem, czerwone)** / prawe 121, błotniki tylne 119/116, klapa **210 (Uwaga, żółte)**, progi 122/119. Legenda: jak dach · grubiej: element malowany · dużo grubiej: pytaj o szpachlę.
@@ -134,7 +134,7 @@ Wyróżnione zdanie (ciemny pasek z Haczem „uwaga”): **Narzędzie nie widzi 
 ## 13. CENA
 Karta:
 - **Odhacz Auto — 39 zł** · raz · dostęp od razu · kilka aut
-- Punkty (najpierw rezultaty): ✓ raport z oględzin: decyzja + lista problemów i argumentów do negocjacji (PDF, kopiuj, wyślij) ✓ mapa lakieru: 12 elementów auta z Twoimi odczytami ✓ porównanie kilku aut obok siebie ✓ scenariusz rozmowy ze sprzedawcą — także jako wiadomość, jeśli nie dzwonisz ✓ dealbreakery z wyjaśnieniem i Szybki filtr 10 minut ✓ 7 etapów, 160 punktów z instrukcjami; zdjęcia i notatki przy punktach ✓ dostęp od razu po płatności, 24 miesiące ✓ gwarancja 14 dni
+- Punkty (najpierw rezultaty): ✓ raport z oględzin: decyzja + lista problemów i argumentów do negocjacji (PDF, kopiuj, wyślij) ✓ mapa lakieru: 12 elementów auta z Twoimi odczytami ✓ porównanie kilku aut obok siebie ✓ scenariusz rozmowy ze sprzedawcą — także jako wiadomość, jeśli nie dzwonisz ✓ dealbreakery z wyjaśnieniem i Szybki filtr 10 minut ✓ 7 etapów, 160 punktów oględzin i 12 pytań do sprzedawcy, z instrukcjami; zdjęcia i notatki przy punktach ✓ dostęp od razu po płatności, 24 miesiące ✓ gwarancja 14 dni
 - Dopisek: W koszyku możesz dodać **„Po zakupie”** (umowa, PCC-3, rejestracja, OC, pierwsze 30 dni) za **19 zł**.
 - Kotwice (drabinka, prawdziwe): sprawdzenie ogłoszenia i VIN w gov.pl: 0 zł → Odhacz przy aucie: 39 zł (kilka aut) → raport historii VIN: ok. 90 zł, gdy auto przeszło oględziny → mechanik/inspekcja: 350–750 zł, gdy chcesz kupić. Odhacz mówi Ci, kiedy wejść na kolejny szczebel. (PDF za 19 zł nie jest kotwicą.)
 - CTA: **Kupuję za 39 zł**

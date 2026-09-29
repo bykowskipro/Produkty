@@ -1,0 +1,424 @@
+{
+ "base": "http://127.0.0.1:3777",
+ "date": "2026-09-29T12:04:27.228Z",
+ "failed": 0,
+ "results": [
+  {
+   "name": "onboarding last button leads to #/start",
+   "ok": true,
+   "extra": "Zaczynam → http://127.0.0.1:3777/app/#/start"
+  },
+  {
+   "name": "#/start first screen has .item .ans--ok",
+   "ok": true
+  },
+  {
+   "name": "#/start resumes at step 1",
+   "ok": true,
+   "extra": "Krok 1/5 · Ogłoszenie"
+  },
+  {
+   "name": "home shows „Kontynuuj”",
+   "ok": true,
+   "extra": "Zanim pojedziesz · kreatorKontynuuj: krok 1/5 · OgłoszeniePołowę wtop widać jeszcze z kana"
+  },
+  {
+   "name": "home: no quick-start card",
+   "ok": true
+  },
+  {
+   "name": "home: filtr card present",
+   "ok": true
+  },
+  {
+   "name": "home: phase row 1 = kreator, 5 kroków",
+   "ok": true,
+   "extra": "1Zanim pojedzieszkreator, 5 kroków · wieczór przed oględzinami, w domu0/5 kroków"
+  },
+  {
+   "name": "home: 7 phase rows",
+   "ok": true
+  },
+  {
+   "name": "home: no tiles",
+   "ok": true
+  },
+  {
+   "name": "home: Raport + Porównaj buttons",
+   "ok": true
+  },
+  {
+   "name": "Więcej sheet: Scenariusz rozmowy, Słowniczek, Skąd to wiemy, Ustawienia",
+   "ok": true
+  },
+  {
+   "name": "Więcej → Scenariusz rozmowy opens step 3",
+   "ok": true
+  },
+  {
+   "name": "phase row 1 opens the wizard",
+   "ok": true,
+   "extra": "http://127.0.0.1:3777/app/#/start"
+  },
+  {
+   "name": "step 1 progress chip updates",
+   "ok": true,
+   "extra": "4/7"
+  },
+  {
+   "name": "step 1 done 7/7 + indicator",
+   "ok": true
+  },
+  {
+   "name": "step 2 title",
+   "ok": true,
+   "extra": "Krok 2/5 · VIN i historia"
+  },
+  {
+   "name": "VIN normalized to 17 chars",
+   "ok": true,
+   "extra": "WVWZZZ1KZ5W123456"
+  },
+  {
+   "name": "historiapojazdu link opens in new tab",
+   "ok": true
+  },
+  {
+   "name": "step 2 done 6/6",
+   "ok": true,
+   "extra": "6/6"
+  },
+  {
+   "name": "step 3: seller type prompt visible",
+   "ok": true
+  },
+  {
+   "name": "step 3: rest hidden before choosing",
+   "ok": true
+  },
+  {
+   "name": "step 3: unknown_type_note shown",
+   "ok": true
+  },
+  {
+   "name": "private: exactly one opening line",
+   "ok": true
+  },
+  {
+   "name": "private: opening text",
+   "ok": true
+  },
+  {
+   "name": "private: dealer check card with 3 questions",
+   "ok": true
+  },
+  {
+   "name": "private: no dealer extra questions",
+   "ok": true
+  },
+  {
+   "name": "private: 12 question cards",
+   "ok": true
+  },
+  {
+   "name": "private: verdict + switch button",
+   "ok": true
+  },
+  {
+   "name": "private: 3 check questions ticked",
+   "ok": true
+  },
+  {
+   "name": "„Zanim zadzwonisz” collapsed",
+   "ok": true
+  },
+  {
+   "name": "„Zanim zadzwonisz” expands with the before list",
+   "ok": true
+  },
+  {
+   "name": "dealer: seg shows dealer on",
+   "ok": true
+  },
+  {
+   "name": "dealer: exactly one opening line",
+   "ok": true
+  },
+  {
+   "name": "dealer: opening text",
+   "ok": true
+  },
+  {
+   "name": "dealer: 3 extra questions",
+   "ok": true
+  },
+  {
+   "name": "dealer: no private check card",
+   "ok": true
+  },
+  {
+   "name": "dealer: type hint shown",
+   "ok": true
+  },
+  {
+   "name": "„Jeśli kręci” expands",
+   "ok": true
+  },
+  {
+   "name": "12/12 answered chip",
+   "ok": true,
+   "extra": "12/12 odpowiedzi"
+  },
+  {
+   "name": "note badge on q1",
+   "ok": true
+  },
+  {
+   "name": "call answers stored as car.a[\"call:qN\"]",
+   "ok": true,
+   "extra": "{\"q1\":[\"problem\",null,\"„Sprzedaję dla szwagra, on jest w dowodzie”\"],\"q2\":[\"uwaga\"],\"q3\":[\"problem\"],\"q12\":[\"ok\"],\"script\":[\"ok\"],\"st\":\"dealer\",\"vin\":\"WVWZZZ1KZ5W123456\"}"
+  },
+  {
+   "name": "script item auto-marked ok after 12/12",
+   "ok": true
+  },
+  {
+   "name": "seller_type + vin persisted per car",
+   "ok": true
+  },
+  {
+   "name": "counts() includes call answers (total 160+12, phase 1 28+12)",
+   "ok": true,
+   "extra": "{\"problem\":2,\"uwaga\":2,\"call\":{\"answered\":12,\"total\":12,\"ok\":9,\"uwaga\":1,\"problem\":2,\"pomin\":0},\"total\":172,\"p1\":{\"answered\":26,\"total\":40,\"problem\":2,\"uwaga\":2,\"db\":0}}"
+  },
+  {
+   "name": "agreements: 5 items rendered inline",
+   "ok": true,
+   "extra": 7
+  },
+  {
+   "name": "agreements: „Powiedz:” quotes",
+   "ok": true
+  },
+  {
+   "name": "agreements answered",
+   "ok": true
+  },
+  {
+   "name": "„Jak zakończyć” with copy buttons",
+   "ok": true
+  },
+  {
+   "name": "templates hidden until toggle",
+   "ok": true
+  },
+  {
+   "name": "templates revealed with no_call_note + 4 copy buttons",
+   "ok": true
+  },
+  {
+   "name": "„Po rozmowie oceń” = 2 items (ogólniki, lakier)",
+   "ok": true
+  },
+  {
+   "name": "step 3 complete 20/20",
+   "ok": true,
+   "extra": "20/20"
+  },
+  {
+   "name": "step indicator marks step 3 done",
+   "ok": true
+  },
+  {
+   "name": "step 4 title",
+   "ok": true,
+   "extra": "Krok 4/5 · Co zabrać"
+  },
+  {
+   "name": "step 5 title",
+   "ok": true,
+   "extra": "Krok 5/5 · Plan B"
+  },
+  {
+   "name": "last step button „Jadę oglądać → Dokumenty i tożsamość”",
+   "ok": true,
+   "extra": "Jadę oglądać→ Dokumenty i tożsamość"
+  },
+  {
+   "name": "wizard complete 5/5",
+   "ok": true
+  },
+  {
+   "name": "„Jadę oglądać” opens phase 2",
+   "ok": true,
+   "extra": "http://127.0.0.1:3777/app/#/phase/p2"
+  },
+  {
+   "name": "home: Kontynuuj now points at phase 2",
+   "ok": true,
+   "extra": "Etap 2 z 7Kontynuuj: Dokumenty i tożsamośćKiedy: Pierwsze 5 minut na miejscu — z"
+  },
+  {
+   "name": "home: row 1 is done (5/5 kroków)",
+   "ok": true
+  },
+  {
+   "name": "summary: group „Rozmowa ze sprzedawcą” exists",
+   "ok": true
+  },
+  {
+   "name": "summary: group has 3 rows (2 problems + 1 uwaga)",
+   "ok": true
+  },
+  {
+   "name": "summary: rows use flag_label",
+   "ok": true
+  },
+  {
+   "name": "summary: note shown in the row",
+   "ok": true
+  },
+  {
+   "name": "summary: Rozmowa group right after phase 1",
+   "ok": true,
+   "extra": "Zanim pojedziesz | Rozmowa ze sprzedawcą"
+  },
+  {
+   "name": "summary → otwórz punkt → step 3 with the card",
+   "ok": true
+  },
+  {
+   "name": "negoText includes ROZMOWA group",
+   "ok": true
+  },
+  {
+   "name": "report: group Rozmowa + VIN + seller type in header",
+   "ok": true,
+   "extra": "Odhacz Auto · Raport z oględzinAuto 129 września 2026 · 40/172 punkty odhaczonych · VIN WVWZZZ1KZ5W123456 · sprzedawca: handlarz / komis34OK3Uwaga2Problem0Dealb"
+  },
+  {
+   "name": "report: 3 Rozmowa items on screen",
+   "ok": true,
+   "extra": 3
+  },
+  {
+   "name": "report: print copy prepared too",
+   "ok": true
+  },
+  {
+   "name": "reportText includes Rozmowa group + VIN",
+   "ok": true
+  },
+  {
+   "name": "reload: seller type, VIN, answers, ticks persisted",
+   "ok": true,
+   "extra": "{\"st\":\"dealer\",\"vin\":\"WVWZZZ1KZ5W123456\",\"q1\":[\"problem\",null,\"„Sprzedaję dla szwagra, on jest w dowodzie”\"],\"problems\":2,\"uwaga\":1,\"ticks\":{\"c0\":1,\"c1\":1,\"c2\":1,\"d0\":1},\"dealerOn\":true}"
+  },
+  {
+   "name": "sync payload carries st, vin, call:q* and ticks",
+   "ok": true,
+   "extra": "{\"st\":\"dealer\",\"vin\":\"WVWZZZ1KZ5W123456\",\"q1\":[\"problem\",null,\"„Sprzedaję dla szwagra, on jest w dowodzie”\"],\"q\":{\"c0\":1,\"c1\":1,\"c2\":1,\"d0\":1},\"bytes\":945}"
+  },
+  {
+   "name": "sync payload well under 32 KB",
+   "ok": true,
+   "extra": "945 bytes"
+  },
+  {
+   "name": "new device: pullRemote restores st + vin + answers",
+   "ok": true,
+   "extra": "{\"st\":\"dealer\",\"vin\":\"WVWZZZ1KZ5W123456\",\"n\":40}"
+  },
+  {
+   "name": "#/call opens step 3",
+   "ok": true,
+   "extra": "http://127.0.0.1:3777/app/#/start/3"
+  },
+  {
+   "name": "#/quick redirects to #/start",
+   "ok": true,
+   "extra": "http://127.0.0.1:3777/app/#/start"
+  },
+  {
+   "name": "#/phase/p1 redirects to #/start",
+   "ok": true,
+   "extra": "http://127.0.0.1:3777/app/#/start"
+  },
+  {
+   "name": "phase 2 back-nav lands in the wizard",
+   "ok": true
+  },
+  {
+   "name": "compare: „Rozmowa: X uwag, Y problemów” per car",
+   "ok": true,
+   "extra": "1 uwaga, 1 problem | 1 uwaga, 2 problemy"
+  },
+  {
+   "name": "compare: Rozmowa label row",
+   "ok": true
+  },
+  {
+   "name": "filtr renders with items",
+   "ok": true
+  },
+  {
+   "name": "filtr: no „say” quotes outside the wizard",
+   "ok": true
+  },
+  {
+   "name": "paint map renders in phase 3",
+   "ok": true
+  },
+  {
+   "name": "reset clears st, vin, answers",
+   "ok": true,
+   "extra": "{\"n\":0}"
+  },
+  {
+   "name": "no horizontal overflow at 360/390/430",
+   "ok": true,
+   "extra": "ok"
+  },
+  {
+   "name": "dodatek home: Kontynuuj → first phase, quick-start link",
+   "ok": true,
+   "extra": "Etap 1 z 4Kontynuuj: Zanim zapłaciszKiedy: Przy podpisywaniu umowy, PRZED przekazaniem pieniędzyKont"
+  },
+  {
+   "name": "dodatek home: phase rows clickable (no wizard)",
+   "ok": true
+  },
+  {
+   "name": "dodatek home: Terminy + Wzór umowy buttons",
+   "ok": true,
+   "extra": "Raport | Terminy | Wzór umowy | Porównaj auta"
+  },
+  {
+   "name": "dodatek Więcej: Zacznij tu entry, no Scenariusz",
+   "ok": true
+  },
+  {
+   "name": "dodatek #/quick still renders the quick start",
+   "ok": true,
+   "extra": 6
+  },
+  {
+   "name": "dodatek phase view works",
+   "ok": true
+  },
+  {
+   "name": "dodatek #/start shows a locked card, no crash",
+   "ok": true
+  },
+  {
+   "name": "no page errors",
+   "ok": true,
+   "extra": ""
+  },
+  {
+   "name": "no console errors",
+   "ok": true,
+   "extra": ""
+  }
+ ]
+}

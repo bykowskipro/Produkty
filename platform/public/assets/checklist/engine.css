@@ -148,8 +148,8 @@ img { max-width: 100%; }
 }
 .phase-row__n { width: 40px; height: 40px; border-radius: 12px; background: var(--surface-2); font-family: var(--font-head); font-weight: 700; display: inline-flex; align-items: center; justify-content: center; font-size: 18px; }
 .phase-row.is-done .phase-row__n { background: var(--lime); color: var(--ink); }
-.phase-row__t { font-family: var(--font-head); font-weight: 700; font-size: 17px; line-height: 1.2; }
-.phase-row__s { color: var(--muted); font-size: 16px; margin-top: 2px; }
+.phase-row__t { display: block; font-family: var(--font-head); font-weight: 700; font-size: 17px; line-height: 1.2; }
+.phase-row__s { display: block; color: var(--muted); font-size: 16px; margin-top: 2px; }
 .phase-row__meta { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; color: var(--muted); font-size: 16px; white-space: nowrap; }
 .phase-row__flags { color: var(--bad); font-weight: 700; }
 .progress { height: 6px; background: var(--surface-2); border-radius: 999px; overflow: hidden; margin-top: 8px; grid-column: 2 / -1; }
@@ -623,3 +623,90 @@ button.paint-row:hover { background: var(--surface); }
   #print-root .report .rep-q, #print-root .report .rules { font-size: 10pt; }
   #print-root .report .report__foot { margin-top: 12pt; color: #555; font-size: 9pt; border-top: 1px solid #999; padding-top: 4pt; }
 }
+
+/* ================================================================== v1.2: wizard „Zanim pojedziesz”, embedded call script, home „Kontynuuj” */
+
+/* Home: primary card, wizard phase row, action buttons, „Więcej” sheet */
+.kontynuuj { border: 2px solid var(--violet); }
+.kontynuuj__eyebrow { font-family: var(--font-head); text-transform: uppercase; letter-spacing: .06em; font-size: 16px; font-weight: 700; color: var(--violet); }
+.kontynuuj h2 { font-size: 24px; margin: 4px 0 6px; }
+.kontynuuj .btn--primary { min-height: 56px; font-size: 18px; }
+.phase-row--wiz .phase-row__n { background: var(--violet); color: #fff; }
+.phase-row--wiz.is-done .phase-row__n { background: var(--lime); color: var(--ink); }
+.grid2 .btn { min-height: 52px; min-width: 0; padding-left: 10px; padding-right: 10px; }
+.more-list { list-style: none; margin: 0; padding: 0; }
+.more-row { display: flex; align-items: center; gap: 12px; width: 100%; min-height: 52px; padding: 6px 4px; background: none; border: 0; border-top: 1px solid var(--card-border); text-align: left; font-weight: 600; font-size: 17px; cursor: pointer; color: inherit; }
+.more-list li:first-child .more-row { border-top: 0; }
+.more-row__i { display: inline-flex; width: 24px; height: 24px; flex: none; color: var(--violet); }
+.more-row__i svg { width: 24px; height: 24px; }
+.more-row__c { display: inline-flex; width: 22px; height: 22px; flex: none; color: var(--faint); transform: rotate(-90deg); }
+.more-row__c svg { width: 22px; height: 22px; }
+
+/* Wizard: step indicator, header, progress, nav */
+.wiz-steps { display: grid; grid-template-columns: repeat(var(--n, 5), minmax(0, 1fr)); gap: 6px; margin: 2px 0 12px; }
+.wiz-step { min-height: 44px; border-radius: 12px; border: 1.5px solid var(--card-border); background: var(--card); color: var(--muted); font-family: var(--font-head); font-weight: 700; font-size: 17px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; padding: 0 4px; min-width: 0; }
+.wiz-step svg { width: 20px; height: 20px; }
+.wiz-step.is-done { border-color: var(--ok); color: var(--ok); }
+.wiz-step.is-on { background: var(--primary); border-color: var(--primary); color: var(--primary-fg); }
+.wiz-head { display: flex; align-items: center; gap: 10px; }
+.wiz-head h1 { font-size: 24px; margin: 0; flex: 1 1 auto; min-width: 0; }
+.wiz-head .chip { flex: none; }
+.wiz-bar { margin: 8px 0 14px; }
+.wiznav { display: grid; gap: 10px; margin: 22px 0 8px; }
+.wiznav__next { min-height: 64px; font-size: 20px; flex-direction: column; gap: 2px; line-height: 1.15; }
+.wiznav__next small { font-size: 16px; font-weight: 500; opacity: .85; }
+.wiznav__back { justify-self: start; max-width: 100%; }
+
+/* VIN */
+.vin input { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; letter-spacing: .08em; text-transform: uppercase; }
+.vin .btnrow .btn { font-size: 16px; }
+
+/* Rozmowa: seller type, opening line, dealer check, question cards, agreements, folds */
+.seg--type { display: grid; grid-template-columns: 1fr 1fr; width: 100%; border-radius: 14px; margin-top: 4px; }
+.seg--type button { min-height: 52px; font-size: 17px; padding: 6px 8px; line-height: 1.15; color: var(--fg); min-width: 0; }
+.seg--type button.is-on { color: var(--primary-fg); }
+.typecard__hint { margin: 10px 0 0; color: var(--muted); font-size: 16px; }
+.opening { font-size: 18px; font-style: normal; font-weight: 500; line-height: 1.45; }
+.chk { display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 10px; padding: 10px 0; border-top: 1px solid var(--card-border); cursor: pointer; }
+.checkcard .chk:first-of-type { border-top: 0; }
+.chk input { width: 26px; height: 26px; margin: 1px 0 0; accent-color: var(--violet); }
+.chk__q { display: block; font-weight: 600; }
+.chk .watch { display: block; margin: 6px 0 0; padding: 8px 12px; background: var(--warn-soft); border-radius: 10px; font-size: 16px; font-weight: 400; }
+.chk .watch b, .qitem .watch b { color: #92400E; }
+.chk.is-done .chk__q { text-decoration: line-through; color: var(--muted); }
+.verdict { margin: 10px 0 12px; padding: 10px 12px; background: var(--primary-soft); border-radius: var(--radius-s); font-size: 16px; }
+.qitem__head { display: grid; grid-template-columns: 48px minmax(0, 1fr); gap: 10px; padding: 14px 14px 8px; align-items: start; }
+.qitem__n { width: 48px; height: 40px; border-radius: 12px; background: var(--surface-2); font-family: var(--font-head); font-weight: 700; font-size: 16px; display: inline-flex; align-items: center; justify-content: center; }
+.qitem__q { font-weight: 600; font-size: 18px; line-height: 1.35; }
+.qitem .watch { margin: 0 14px 8px; padding: 8px 12px; background: var(--warn-soft); border-radius: 10px; font-size: 16px; }
+.qitem .dodge { margin: 0 14px 8px; }
+.qitem .toolbtn { margin: 0 0 4px 8px; }
+.qitem .toolbtn svg { transition: transform .2s ease; }
+.qitem .toolbtn[aria-expanded="true"] svg { transform: rotate(180deg); }
+.qitem .item__badges { margin-top: 4px; }
+.say { margin: 0 14px 6px; padding: 10px 12px; border-left: 4px solid var(--violet); background: var(--primary-soft); border-radius: 0 10px 10px 0; font-size: 16px; font-style: italic; }
+.say b { display: block; font-family: var(--font-head); font-style: normal; font-size: 16px; color: var(--muted); margin-bottom: 2px; }
+.fold__head { display: flex; align-items: center; gap: 10px; width: 100%; min-height: 44px; padding: 0; background: none; border: 0; text-align: left; cursor: pointer; color: inherit; }
+.fold__head h2 { margin: 0; flex: 1 1 auto; min-width: 0; }
+.fold__head .chev { margin: 0; }
+.fold.is-open .fold__head .chev { transform: rotate(180deg); }
+.fold__body { display: none; margin-top: 10px; }
+.fold.is-open .fold__body { display: block; }
+
+/* Dark mode: violet accents become lime, amber texts lighter */
+:root[data-theme="dark"] .kontynuuj { border-color: var(--lime); }
+:root[data-theme="dark"] .kontynuuj__eyebrow, :root[data-theme="dark"] .more-row__i { color: var(--lime); }
+:root[data-theme="dark"] .phase-row--wiz .phase-row__n { background: var(--lime); color: var(--ink); }
+:root[data-theme="dark"] .chk .watch b, :root[data-theme="dark"] .qitem .watch b { color: #FCD34D; }
+:root[data-theme="dark"] .say { border-left-color: var(--lime); }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .kontynuuj { border-color: var(--lime); }
+  :root:not([data-theme="light"]) .kontynuuj__eyebrow, :root:not([data-theme="light"]) .more-row__i { color: var(--lime); }
+  :root:not([data-theme="light"]) .phase-row--wiz .phase-row__n { background: var(--lime); color: var(--ink); }
+  :root:not([data-theme="light"]) .chk .watch b, :root:not([data-theme="light"]) .qitem .watch b { color: #FCD34D; }
+  :root:not([data-theme="light"]) .say { border-left-color: var(--lime); }
+}
+/* Quote + copy button stacked (one opening line, closing lines): the sentence gets the full width on a phone */
+.line--stack { flex-direction: column; align-items: flex-end; gap: 4px; margin-bottom: 10px; }
+.line--stack .phrase { width: 100%; margin: 4px 0 0; }
+.line--stack .copybtn { min-height: 40px; }

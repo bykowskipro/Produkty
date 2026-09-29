@@ -4,6 +4,10 @@
  * red-flag counter, negotiation list, print/PDF, .ics deadlines, local photos (IndexedDB) and cross-device
  * progress sync via window.Access (platform contract, README §b). v1.1: quick filter (#/filtr), paint map (SVG),
  * inspection report (#/raport/<carId>), car comparison (#/porownaj), extended seller call script.
+ * v1.2: phase 1 becomes the wizard „Zanim pojedziesz” (#/start, one screen per step) with the seller call script embedded
+ * in the „Rozmowa” step (seller type, one opening line per type, 12 answerable questions counted as the group
+ * „Rozmowa ze sprzedawcą”, agreements with `say` lines); home = one „Kontynuuj” card + phase list + „Więcej” sheet.
+ * Everything wizard/script-related is conditional on the content (`seller_call_script`), so the upsell app keeps the classic views.
  *
  * Usage: Checklist.mount({ root:'#app', content:'/app/content/auto.json', product:'auto', kind:'main', sw:'/app/sw.js', shopUrl:'/' })
  */
@@ -85,6 +89,7 @@
     home: svg('<path d="M3 11l9-8 9 8v10h-6v-6H9v6H3z"/>'),
     bolt: svg('<path d="M13 2L4 14h7l-1 8 9-12h-7z"/>'),
     alert: svg('<circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/>'),
+    ext: svg('<path d="M14 4h6v6M20 4l-9 9M19 14v6H4V5h6"/>'),
   };
 
   /* ------------------------------------------------------------------ mascot (Hacz) */
@@ -264,7 +269,51 @@
       c.deadlineRows.push(row);
     });
     c.deadlineRows.sort((a, b) => (a.anchor === b.anchor ? a.days - b.days : a.anchor === 'pd' ? -1 : 1));
+    // Seller call script → virtual items `call:qN` (one per question). They are answered like any item, live in car.a, and are
+    // counted/reported as the group „Rozmowa ze sprzedawcą”. Not in c.items (no inputs, no photos, no quick filter).
+    c.callItems = []; c.callById = {};
+    const scr = c.seller_call_script && typeof c.seller_call_script === 'object' ? c.seller_call_script : null;
+    if (scr && Array.isArray(scr.questions)) {
+      scr.questions.forEach((q, i) => {
+        if (!q || typeof q.q !== 'string' || !q.q.trim()) return;
+        const it = { id: 'call:q' + (i + 1), n: c.callItems.length + 1, call: true, text: q.q, watch_for: q.watch_for || '', if_dodges: q.if_dodges || '', flag_label: q.flag_label || ('Rozmowa: ' + q.q), severity: 'yellow', tags: ['rozmowa'], photo: false, input: null };
+        c.callItems.push(it); c.callById[it.id] = it; c.itemById[it.id] = it;
+        if (c.phases[0]) c.phaseOfItem[it.id] = c.phases[0];
+      });
+    }
+    c.callPhase = { id: 'call', title: 'Rozmowa ze sprzedawcą', items: c.callItems, virtual: true };
+    c.wizard = buildWizard(c, scr);
     return c;
+  }
+  /** Wizard „Zanim pojedziesz”: phase 1 split into one screen per section; the call-script section merges with the agreements
+   * section into the „Rozmowa” step. Content without a call script (the upsell) gets no wizard and keeps the classic phase view. */
+  function buildWizard(c, scr) {
+    const ph = c.phases[0];
+    if (!scr || !ph || !ph.sections.length) return null;
+    const agreeIds = (Array.isArray(scr.agreements) ? scr.agreements : []).filter((id) => typeof id === 'string' && c.itemById[id]);
+    const agreeSec = ph.sections.find((sec) => sec.items.some((it) => agreeIds.indexOf(it.id) >= 0)) || null;
+    const callSec = ph.sections.find((sec) => sec !== agreeSec && /telefon|rozmow|zadzwo/i.test(sec.title || ''))
+      || ph.sections.find((sec) => sec !== agreeSec && sec.items.some((it) => /skrypt|zadzwo/i.test(it.text || ''))) || null;
+    const shortTitle = (sec) => { const t = String(sec.title || '').replace(/\s*[(:—–].*$/, '').trim(); return /\bVIN\b/i.test(t) ? 'VIN i historia' : (t || 'Krok'); };
+    const steps = []; const stepOfItem = {};
+    const isAgree = (it) => agreeIds.indexOf(it.id) >= 0;
+    ph.sections.forEach((sec) => {
+      if (sec === agreeSec && callSec && sec !== callSec) return; // merged into the call step
+      const st = { sections: [sec], title: shortTitle(sec), hint: sec.hint || '', items: sec.items.slice(), call: sec === callSec, vin: /\bVIN\b/i.test(sec.title || '') };
+      if (st.call) {
+        st.title = 'Rozmowa';
+        st.scriptItem = sec.items.find((it) => /skrypt/i.test(it.text || '')) || null; // represented by the embedded script itself
+        st.afterItems = sec.items.filter((it) => it !== st.scriptItem && !isAgree(it)); // „Po rozmowie oceń”
+        st.agreeItems = agreeIds.map((id) => c.itemById[id]);
+        st.agreeSec = agreeSec && agreeSec !== sec ? agreeSec : null;
+        if (st.agreeSec) { st.sections.push(agreeSec); st.items = st.items.concat(agreeSec.items); }
+        st.items = st.items.concat(c.callItems);
+      }
+      steps.push(st);
+    });
+    if (!callSec) steps.push({ sections: [], title: 'Rozmowa', hint: scr.intro || '', items: c.callItems.slice(), call: true, scriptItem: null, afterItems: [], agreeItems: agreeSec ? [] : agreeIds.map((id) => c.itemById[id]), agreeSec: null });
+    steps.forEach((st, i) => { st.n = i + 1; st.items.forEach((it) => { stepOfItem[it.id] = st; }); });
+    return { phase: ph, steps: steps, callStep: steps.find((st) => st.call) || null, stepOfItem: stepOfItem, script: scr };
   }
   const HEAVY_RE = /silnik|mask|jazd|prób|napęd|naped|skrzyn|engine|drive|gearbox|turbo|rozrz|sprzęg|sprzeg|głowic|glowic/i;
   const DATE_TYPES = { date: 1, datetime: 1 };
@@ -288,7 +337,7 @@
   /* ------------------------------------------------------------------ mount */
   const Checklist = {
     mount(opts) { const app = new App(opts); app.init(); Checklist.app = app; window.OdhaczApp = app; return app; },
-    version: '1.1.0',
+    version: '1.2.0',
   };
   window.Checklist = Checklist;
 
@@ -379,7 +428,36 @@
       if (st === 'problem') { ph.problem++; c.problems.push(it); if (it.dealbreaker) { c.db++; ph.db++; c.dbItems.push(it); } }
       if (st === 'uwaga') { ph.uwaga++; c.uwagi.push(it); }
     });
+    // Call-script questions count like items: globally, in the wizard phase (phase 1) and in their own `call` bucket.
+    const calls = this.content.callItems || []; const wph = this.content.phases[0];
+    c.call = null;
+    if (calls.length && wph) {
+      const ph = c.phases[wph.id]; ph.total += calls.length; c.total += calls.length;
+      c.call = { answered: 0, total: calls.length, ok: 0, uwaga: 0, problem: 0, pomin: 0 };
+      calls.forEach((it) => {
+        const st = a[it.id] && a[it.id][0]; if (!st) return;
+        c.answered++; ph.answered++; c.call.answered++;
+        if (c[st] !== undefined) c[st]++; if (c.call[st] !== undefined) c.call[st]++;
+        if (st === 'problem') { ph.problem++; c.problems.push(it); }
+        if (st === 'uwaga') { ph.uwaga++; c.uwagi.push(it); }
+      });
+    }
     return c;
+  };
+  /** Seller call state for a car: chosen seller type, whether the call started (type chosen or any answer) and whether all questions are answered. */
+  App.prototype.callState = function (carId) {
+    const car = carId ? this.state.cars[carId] : this.car(); const a = (car && car.a) || {}; const items = this.content.callItems || [];
+    let answered = 0; items.forEach((it) => { if (a[it.id] && a[it.id][0]) answered++; });
+    const type = car && (car.st === 'private' || car.st === 'dealer') ? car.st : null;
+    return { type: type, started: !!type || answered > 0, answered: answered, total: items.length, done: items.length > 0 && answered === items.length };
+  };
+  /** Wizard progress per step + the step to resume at (first with an unanswered item). */
+  App.prototype.wizardProgress = function (carId) {
+    const w = this.content.wizard; if (!w) return null;
+    const car = carId ? this.state.cars[carId] : this.car(); const a = (car && car.a) || {};
+    const steps = w.steps.map((st) => { let answered = 0; st.items.forEach((it) => { if (a[it.id] && a[it.id][0]) answered++; }); return { step: st, answered: answered, total: st.items.length, done: st.items.length > 0 && answered === st.items.length }; });
+    const next = steps.find((s) => !s.done) || null;
+    return { steps: steps, next: next ? next.step : null, complete: !next, doneCount: steps.filter((s) => s.done).length, count: steps.length };
   };
 
   /* ------------------------------------------------------------------ sync (Access.*) */
@@ -406,6 +484,8 @@
         const row = { name: car.name, created: car.created, a: a };
         if (car.q && Object.keys(car.q).length) row.q = car.q;
         if (car.pd) row.pd = car.pd;
+        if (car.st) row.st = car.st; // seller type (private | dealer)
+        if (car.vin) row.vin = String(car.vin).slice(0, 17);
         out.cars[id] = row;
       });
       return out;
@@ -443,7 +523,7 @@
       const localT = this.state.t || ''; const remoteT = remote.t || '';
       if (remoteT && remoteT > localT) {
         const merged = {}; let keptLocal = false;
-        Object.keys(remote.cars).forEach((id) => { const rc = remote.cars[id]; merged[id] = { name: rc.name || 'Auto', created: rc.created || remoteT, a: rc.a || {}, q: rc.q, pd: rc.pd }; });
+        Object.keys(remote.cars).forEach((id) => { const rc = remote.cars[id]; merged[id] = { name: rc.name || 'Auto', created: rc.created || remoteT, a: rc.a || {}, q: rc.q, pd: rc.pd, st: rc.st, vin: rc.vin }; });
         Object.keys(this.state.cars).forEach((id) => { const lc = this.state.cars[id]; if (!merged[id] && lc.created && lc.created > remoteT && Object.keys(lc.a || {}).length) { merged[id] = lc; keptLocal = true; } });
         this.state.cars = merged; this.state.t = remoteT; this.state.dirty = keptLocal ? 1 : 0;
         if (remote.active && merged[remote.active]) this.state.active = remote.active;
@@ -499,12 +579,22 @@
   App.prototype.render = function () {
     if (!this.content) return;
     const prev = this.route; this.route = this.parseRoute();
+    // Wizard content: the old entry points fold into #/start (quick start → step 1/resume, call script → the „Rozmowa” step, phase 1 → wizard).
+    const w = this.content.wizard;
+    if (w) {
+      let to = null;
+      if (this.route.view === 'quick') to = 'start';
+      else if (this.route.view === 'call') to = 'start/' + (w.callStep ? w.callStep.n : 1);
+      else if (this.route.view === 'phase' && this.route.id === w.phase.id) to = 'start';
+      if (to) { try { history.replaceState(null, '', '#/' + to); } catch (e) { location.hash = '#/' + to; } this.route = this.parseRoute(); }
+    }
     const wrap = el('div', { class: 'app' });
     let body;
     switch (this.route.view) {
       case 'phase': body = this.viewPhase(this.route.id); break;
       case 'summary': body = this.viewSummary(); break;
-      case 'call': body = this.viewCall(); break;
+      case 'start': body = this.viewStart(this.route.id); break;
+      case 'call': body = this.viewStart(null); break;
       case 'glossary': body = this.viewGlossary(); break;
       case 'sources': body = this.viewSources(); break;
       case 'settings': body = this.viewSettings(); break;
@@ -525,6 +615,7 @@
   App.prototype.routeTitle = function () {
     const r = this.route;
     if (r.view === 'phase') { const ph = this.content.phases.find((p) => p.id === r.id); return ph ? ph.title : 'Etap'; }
+    if (r.view === 'start') { const w = this.content.wizard; return w ? w.phase.title + (r.id ? ' · krok ' + r.id : '') : 'Kreator'; }
     return { summary: 'Podsumowanie', call: 'Scenariusz rozmowy', glossary: 'Słowniczek', sources: 'Skąd to wiemy', settings: 'Ustawienia', quick: 'Quick start', deadlines: 'Terminy', contract: 'Wzór umowy', filtr: 'Szybki filtr', raport: this.reportTitle, porownaj: 'Porównaj auta' }[r.view] || '';
   };
   App.prototype.topbar = function (title, back, right) {
@@ -578,62 +669,84 @@
     }
     out.push(el('div', { class: 'hero' }, mascot(), el('div', null, el('h1', { text: c.meta.title || 'Odhacz' }), el('p', { class: 'tagline' }, this.opts.kind === 'upsell' ? 'Odhaczasz punkt po punkcie. Zero zgadywania.' : 'Prowadzimy Cię przy aucie. Wychodzisz z raportem i argumentami.'))));
     const total = c.meta.est_minutes_total;
-    const haczLine = cnt.answered === 0 ? (this.filterEnabled() ? 'Cześć, tu Hacz. Quick start – 3 minuty i wiesz, jak to działa. Potem Szybki filtr: 10 minut, które mówią, czy warto zostać przy tym aucie dłużej.' : 'Cześć, tu Hacz. Zacznij od Quick startu – 3 minuty i wiesz, jak to działa. Potem etapy po kolei, najlepiej w tej kolejności.')
-      : cnt.answered < cnt.total ? 'Masz ' + cnt.answered + ' z ' + cnt.total + ' punktów. ' + (cnt.problem ? 'Już ' + cnt.problem + ' ' + plural(cnt.problem, 'czerwona flaga', 'czerwone flagi', 'czerwonych flag') + ' – zapisuj notatki, przydadzą się w negocjacji.' : 'Na razie czysto. Nie zwalniaj przy silniku i jeździe próbnej.')
-        : 'Wszystko odhaczone. Sprawdź podsumowanie i zabierz listę uwag do rozmowy.';
+    const w = c.wizard; const wp = w ? this.wizardProgress() : null; const nextTarget = this.nextTarget(cnt, wp);
+    let haczLine;
+    if (cnt.answered === 0) haczLine = w ? 'Cześć, tu Hacz. Zacznij od kreatora „' + w.phase.title + '”: ' + wp.count + ' ' + plural(wp.count, 'krok', 'kroki', 'kroków') + ' wieczorem przed oględzinami, z rozmową ze sprzedawcą zdanie po zdaniu. Przy aucie odpalisz Szybki filtr.'
+      : (c.quick_start && c.quick_start.steps && c.quick_start.steps.length ? 'Cześć, tu Hacz. Zacznij od „' + (c.quick_start.title || 'Zacznij tu') + '” – kilka minut i wiesz, jak to działa. Potem etapy po kolei.' : 'Cześć, tu Hacz. Etapy po kolei, najlepiej w tej kolejności.');
+    else if (wp && !wp.complete) haczLine = 'Jesteś na kroku ' + nextTarget.stepN + '/' + wp.count + ' kreatora. ' + (cnt.problem ? 'Już ' + cnt.problem + ' ' + plural(cnt.problem, 'czerwona flaga', 'czerwone flagi', 'czerwonych flag') + ' – zapisuj notatki, przydadzą się w negocjacji.' : 'Dokończ go w domu – przy aucie nie będzie na to czasu.');
+    else if (cnt.answered < cnt.total) haczLine = 'Masz ' + cnt.answered + ' z ' + cnt.total + ' punktów. ' + (cnt.problem ? 'Już ' + cnt.problem + ' ' + plural(cnt.problem, 'czerwona flaga', 'czerwone flagi', 'czerwonych flag') + ' – zapisuj notatki, przydadzą się w negocjacji.' : 'Na razie czysto. Nie zwalniaj przy silniku i jeździe próbnej.');
+    else haczLine = 'Wszystko odhaczone. Sprawdź podsumowanie i zabierz listę uwag do rozmowy.';
     out.push(el('div', { class: 'bubble' }, el('b', null, 'Hacz: '), haczLine, el('span', { class: 'sign' }, 'Hacz – asystent AI marki Odhacz')));
-    // Quick start
-    if (c.quick_start && c.quick_start.steps && c.quick_start.steps.length) {
-      const done = !!this.state.ui.qs;
-      out.push(el('div', { class: 'card quick' },
-        el('div', { class: 'card__title' }, el('span', { class: 'quick__meta' }, el('span', { html: ICON.bolt, style: 'width:16px;height:16px;display:inline-flex' }), done ? 'zrobione' : '3 minuty'), el('h2', { class: 'grow', text: c.quick_start.title || 'Quick start' })),
-        el('p', { class: 'muted' }, done ? 'Wiesz już, jak to działa. Możesz wrócić do Quick startu w każdej chwili.' : 'Zacznij tu. Szybki przegląd, żeby pierwszy postęp był natychmiast.'),
-        el('button', { class: 'btn ' + (done ? '' : 'btn--primary') + ' btn--block', type: 'button', onclick: () => self.go('quick') }, done ? 'Otwórz Quick start' : 'Zacznij (3 min)')));
-    }
-    // Quick filter („Szybki filtr”): odsiej, zanim zaczniesz pełne oględziny
+    // ONE primary card: „Kontynuuj: <następny krok>” (wizard step → next phase with unanswered items → summary)
+    const kont = el('div', { class: 'card kontynuuj', 'data-testid': 'kontynuuj' },
+      el('div', { class: 'kontynuuj__eyebrow' }, nextTarget.eyebrow),
+      el('h2', { text: 'Kontynuuj: ' + nextTarget.title }),
+      nextTarget.sub ? el('p', { class: 'muted' }, nextTarget.sub) : null,
+      el('button', { class: 'btn btn--primary btn--block', type: 'button', 'data-testid': 'kontynuuj-btn', onclick: () => self.go(nextTarget.path) }, nextTarget.label, el('span', { html: ICON.chev, style: 'transform:rotate(-90deg);display:inline-flex' })));
+    if (!w && c.quick_start && c.quick_start.steps && c.quick_start.steps.length && !this.state.ui.qs) kont.append(el('p', { class: 'small muted center', style: 'margin:10px 0 0' }, 'Pierwszy raz? ', el('button', { class: 'linkbtn', type: 'button', style: 'min-height:32px;padding:2px 0;font-size:16px', onclick: () => self.go('quick') }, c.quick_start.title || 'Zacznij tu')));
+    out.push(kont);
+    // Quick filter („Szybki filtr”): odsiej, zanim zaczniesz pełne oględziny – useful at the car, stays between the primary card and the phases
     if (this.filterEnabled()) {
       const s = this.quickStats(); const pct = s.total ? Math.round(100 * s.answered / s.total) : 0;
       out.push(el('div', { class: 'card filtr', 'data-testid': 'filtr-card' },
         el('div', { class: 'card__title' }, el('span', { class: 'quick__meta filtr__meta' }, el('span', { html: ICON.bolt, style: 'width:16px;height:16px;display:inline-flex' }), s.done ? (s.verdict === 'walk' ? 'werdykt: odpuść' : 'zaliczony') : '10 minut'), el('h2', { class: 'grow', text: 'Szybki filtr' })),
-        el('p', { class: 'muted' }, 'Najpierw odsiej. Potem sprawdzaj dokładnie. ' + s.total + ' ' + plural(s.total, 'punkt, który najczęściej kończy', 'punkty, które najczęściej kończą', 'punktów, które najczęściej kończą') + ' oglądanie.'),
+        el('p', { class: 'muted' }, 'Przy aucie: najpierw odsiej, potem sprawdzaj dokładnie. ' + s.total + ' ' + plural(s.total, 'punkt, który najczęściej kończy', 'punkty, które najczęściej kończą', 'punktów, które najczęściej kończą') + ' oglądanie.'),
         el('div', { class: 'row', style: 'justify-content:space-between' }, el('span', { class: 'chip' }, s.answered + '/' + s.total + ' odhaczone'), s.db.length ? el('span', { class: 'filtr__db' }, s.db.length + ' ' + plural(s.db.length, 'dealbreaker', 'dealbreakery', 'dealbreakerów')) : null),
         el('div', { class: 'progress' }, el('i', { style: 'width:' + pct + '%' })),
-        el('button', { class: 'btn ' + (s.done || !this.state.ui.qs ? '' : 'btn--primary') + ' btn--block', type: 'button', onclick: () => self.go('filtr') }, s.done ? 'Otwórz filtr' : s.answered ? 'Dokończ filtr (zostało ' + (s.total - s.answered) + ')' : 'Odsiej (10 min)')));
+        el('button', { class: 'btn btn--block', type: 'button', onclick: () => self.go('filtr') }, s.done ? 'Otwórz filtr' : s.answered ? 'Dokończ filtr (zostało ' + (s.total - s.answered) + ')' : 'Odsiej (10 min)')));
     }
-    // Continue
-    const next = c.phases.find((ph) => cnt.phases[ph.id].answered < cnt.phases[ph.id].total);
-    if (cnt.answered > 0 && next) out.push(el('button', { class: 'btn btn--lime btn--block', type: 'button', onclick: () => self.go('phase/' + encodeURIComponent(next.id)) }, 'Kontynuuj: ' + next.title));
-    // Phases
-    out.push(el('div', { class: 'row', style: 'justify-content:space-between;margin:18px 0 8px' }, el('h2', { style: 'margin:0' }, 'Etapy'), el('span', { class: 'chip' }, el('span', { html: ICON.list }), c.items.length + ' ' + plural(c.items.length, 'punkt', 'punkty', 'punktów') + (total ? ' · ~' + total + ' min' : ''))));
+    // Phases (row 1 = the wizard when the content has one)
+    out.push(el('div', { class: 'row', style: 'justify-content:space-between;margin:18px 0 8px' }, el('h2', { style: 'margin:0' }, 'Etapy'), el('span', { class: 'chip' }, el('span', { html: ICON.list }), cnt.total + ' ' + plural(cnt.total, 'punkt', 'punkty', 'punktów') + (total ? ' · ~' + total + ' min' : ''))));
     const list = el('ul', { class: 'phases' });
     c.phases.forEach((ph, i) => {
-      const p = cnt.phases[ph.id]; const done = p.total > 0 && p.answered === p.total;
-      const meta = el('div', { class: 'phase-row__meta' }, el('span', { text: p.answered + '/' + p.total }), ph.est_minutes ? el('span', { text: '~' + ph.est_minutes + ' min' }) : null, p.problem ? el('span', { class: 'phase-row__flags', text: p.problem + ' ' + plural(p.problem, 'flaga', 'flagi', 'flag') }) : null);
-      const row = el('button', { class: 'phase-row' + (done ? ' is-done' : ''), type: 'button', onclick: () => self.go('phase/' + encodeURIComponent(ph.id)) },
+      const p = cnt.phases[ph.id]; const done = p.total > 0 && p.answered === p.total; const isWiz = w && ph === w.phase;
+      const meta = el('div', { class: 'phase-row__meta' }, el('span', { text: isWiz ? wp.doneCount + '/' + wp.count + ' ' + plural(wp.count, 'krok', 'kroki', 'kroków') : p.answered + '/' + p.total }), ph.est_minutes ? el('span', { text: '~' + ph.est_minutes + ' min' }) : null, p.problem ? el('span', { class: 'phase-row__flags', text: p.problem + ' ' + plural(p.problem, 'flaga', 'flagi', 'flag') }) : null);
+      const row = el('button', { class: 'phase-row' + (done ? ' is-done' : '') + (isWiz ? ' phase-row--wiz' : ''), type: 'button', 'data-phase': ph.id, onclick: () => self.go(isWiz ? 'start' : 'phase/' + encodeURIComponent(ph.id)) },
         el('span', { class: 'phase-row__n', html: done ? ICON.check : String(i + 1) }),
-        el('span', null, el('span', { class: 'phase-row__t', text: ph.title }), ph.subtitle ? el('span', { class: 'phase-row__s', text: ph.subtitle }) : null),
+        el('span', null, el('span', { class: 'phase-row__t', text: ph.title }), el('span', { class: 'phase-row__s', text: isWiz ? 'kreator, ' + wp.count + ' ' + plural(wp.count, 'krok', 'kroki', 'kroków') + (ph.when ? ' · ' + ph.when.toLowerCase() : '') : (ph.subtitle || '') })),
         meta,
         el('span', { class: 'progress' }, el('i', { style: 'width:' + (p.total ? Math.round(100 * p.answered / p.total) : 0) + '%' })));
       list.append(el('li', null, row));
     });
     out.push(list);
-    // Tiles
-    const tiles = el('div', { class: 'grid2 mt' });
-    const tile = (icon, label, path) => el('button', { class: 'tile', type: 'button', onclick: () => self.go(path) }, el('span', { html: icon }), el('span', { text: label }));
-    tiles.append(tile(ICON.list, 'Podsumowanie i negocjacja', 'summary'));
-    tiles.append(tile(ICON.doc, this.reportTitle, 'raport/' + encodeURIComponent(this.state.active)));
-    if (c.seller_call_script) tiles.append(tile(ICON.phone, 'Scenariusz rozmowy ze sprzedawcą', 'call'));
-    if (Object.keys(this.state.cars).length >= 2) tiles.append(tile(ICON.car, 'Porównaj auta', 'porownaj'));
-    if (c.deadlineRows.length) tiles.append(tile(ICON.calendar, 'Terminy po zakupie', 'deadlines'));
-    if (c.contract_template) tiles.append(tile(ICON.doc, c.contract_template.title || 'Wzór umowy', 'contract'));
-    if (c.glossary && c.glossary.length) tiles.append(tile(ICON.book, 'Słowniczek', 'glossary'));
-    if (c.sources && c.sources.length) tiles.append(tile(ICON.info, 'Skąd to wiemy', 'sources'));
-    tiles.append(tile(ICON.gear, 'Ustawienia i kopia', 'settings'));
-    out.push(tiles);
+    // Two buttons + „Więcej” sheet instead of the tile grid
+    const acts = el('div', { class: 'grid2 mt' });
+    acts.append(el('button', { class: 'btn', type: 'button', onclick: () => self.go('raport/' + encodeURIComponent(this.state.active)) }, el('span', { html: ICON.doc }), 'Raport'));
+    if (c.deadlineRows.length) acts.append(el('button', { class: 'btn', type: 'button', onclick: () => self.go('deadlines') }, el('span', { html: ICON.calendar }), 'Terminy'));
+    if (c.contract_template) acts.append(el('button', { class: 'btn', type: 'button', onclick: () => self.go('contract') }, el('span', { html: ICON.doc }), c.contract_template.title && c.contract_template.title.length <= 14 ? c.contract_template.title : 'Wzór umowy'));
+    acts.append(el('button', { class: 'btn', type: 'button', 'data-testid': 'home-compare', onclick: () => self.go('porownaj') }, el('span', { html: ICON.car }), 'Porównaj auta'));
+    out.push(acts);
+    out.push(el('button', { class: 'btn btn--ghost btn--block', type: 'button', style: 'margin-top:10px', 'data-testid': 'home-more', onclick: () => self.sheetMore() }, el('span', { html: ICON.list }), 'Więcej', el('span', { html: ICON.chev, style: 'display:inline-flex' })));
     out.push(el('div', { id: 'upsell-slot', class: 'mt' }, this.upsellCard()));
     out.push(this.disclaimer());
     out.push(el('p', { class: 'small muted center', style: 'margin-top:12px' }, 'Auto: ' + car.name + ' · treść v' + (c.meta.version || '1') + ' · ilustracje i awatar wygenerowane cyfrowo'));
     return out;
+  };
+  /** Where „Kontynuuj” leads: the wizard step to resume → the first later phase with unanswered items → the summary. */
+  App.prototype.nextTarget = function (cnt, wp) {
+    const c = this.content; const w = c.wizard;
+    if (w && wp && !wp.complete) { const st = wp.next; return { kind: 'wizard', stepN: st.n, path: 'start/' + st.n, eyebrow: w.phase.title + ' · kreator', title: 'krok ' + st.n + '/' + wp.count + ' · ' + st.title, sub: st.hint || w.phase.when || '', label: 'Kontynuuj' }; }
+    const next = c.phases.find((ph) => !(w && ph === w.phase) && cnt.phases[ph.id].answered < cnt.phases[ph.id].total);
+    if (next) return { kind: 'phase', path: 'phase/' + encodeURIComponent(next.id), eyebrow: 'Etap ' + (next.index + 1) + ' z ' + c.phases.length, title: next.title, sub: next.when ? 'Kiedy: ' + next.when : (next.subtitle || ''), label: 'Kontynuuj' };
+    return { kind: 'summary', path: 'summary', eyebrow: 'Ostatni krok', title: 'Podsumowanie', sub: 'Wszystko odhaczone: decyzja, lista uwag i raport z oględzin.', label: 'Zobacz podsumowanie' };
+  };
+  /** „Więcej” sheet: the secondary entries that used to be tiles. */
+  App.prototype.sheetMore = function () {
+    const self = this; const c = this.content; const w = c.wizard;
+    this.sheet((sh, close) => {
+      sh.append(el('h2', null, 'Więcej'));
+      const ul = el('ul', { class: 'more-list' });
+      const row = (icon, label, path, testid) => ul.append(el('li', null, el('button', { class: 'more-row', type: 'button', 'data-testid': testid || null, onclick: () => { close(); self.go(path); } }, el('span', { class: 'more-row__i', html: icon }), el('span', { class: 'grow', text: label }), el('span', { class: 'more-row__c', html: ICON.chev }))));
+      if (w && w.callStep) row(ICON.phone, 'Scenariusz rozmowy ze sprzedawcą', 'start/' + w.callStep.n, 'more-call');
+      if (!w && c.quick_start && c.quick_start.steps && c.quick_start.steps.length) row(ICON.bolt, c.quick_start.title || 'Zacznij tu', 'quick', 'more-quick');
+      row(ICON.list, 'Podsumowanie i negocjacja', 'summary');
+      if (c.deadlineRows.length) row(ICON.calendar, 'Terminy po zakupie', 'deadlines');
+      if (c.contract_template) row(ICON.doc, c.contract_template.title || 'Wzór umowy', 'contract');
+      if (c.glossary && c.glossary.length) row(ICON.book, 'Słowniczek', 'glossary');
+      if (c.sources && c.sources.length) row(ICON.info, 'Skąd to wiemy', 'sources');
+      row(ICON.gear, 'Ustawienia i kopia', 'settings', 'more-settings');
+      sh.append(ul, el('div', { class: 'btnrow' }, el('button', { class: 'btn', type: 'button', onclick: close }, 'Zamknij')));
+    });
   };
   App.prototype.upsellCard = function () {
     if (this.opts.kind !== 'main' || !this.access) return null;
@@ -702,9 +815,13 @@
     return null;
   };
   App.prototype.photoKey = function (itemId) { return this.opts.product + '|' + this.state.active + '|' + itemId; };
-  App.prototype.itemRow = function (it) {
+  /** opts.say: show the item's `say` sentence („Powiedz: …”) above the answer buttons (wizard „Rozmowa” step). */
+  App.prototype.itemRow = function (it, opts) {
+    if (it.call) return this.callCard(it);
+    opts = opts || {};
     const self = this; const a = this.ans(it.id) || [];
     const row = el('article', { class: 'item' + (a[0] ? ' is-' + a[0] : '') + (this.openItems[it.id] ? ' is-open' : ''), 'data-item': it.id });
+    if (opts.say) row._opts = opts;
     // head
     const badges = el('div', { class: 'item__badges' });
     if (it.dealbreaker) badges.append(el('span', { class: 'badge badge--db' }, el('span', { html: ICON.warn, style: 'width:16px;height:16px;display:inline-flex' }), 'dealbreaker'));
@@ -728,6 +845,8 @@
     row.append(body);
     // input (number | text | date | datetime | choice | log; unknown -> text)
     if (it.input && typeof it.input === 'object') row.append(this.inputField(it, a, row));
+    // „Powiedz: …” – the exact sentence for the seller (agreements in the wizard)
+    if (opts.say && typeof it.say === 'string' && it.say.trim()) row.append(el('blockquote', { class: 'say' }, el('b', null, 'Powiedz:'), '„' + it.say.trim() + '”'));
     // answers
     const answers = el('div', { class: 'answers' });
     this.content.answer_states.forEach((st) => {
@@ -829,7 +948,7 @@
     this.root.querySelectorAll('.item[data-item]').forEach((rowEl) => { const it = self.content.itemById[rowEl.getAttribute('data-item')]; const n = $('.dl-inline', rowEl); if (it && it.deadlineRow && n) { n.innerHTML = ''; n.append(el('b', null, 'Termin: '), self.deadlineText(it.deadlineRow)); } });
   };
   App.prototype.refreshBadges = function (it, row) {
-    const fresh = this.itemRow(it); const oldB = $('.item__badges', row); const newB = $('.item__badges', fresh);
+    const fresh = this.itemRow(it, row._opts); const oldB = $('.item__badges', row); const newB = $('.item__badges', fresh);
     // keep thumbs already loaded
     const oldThumbs = $('.item__badges > .row', row); const newThumbs = $('.item__badges > .row', fresh);
     if (oldThumbs && newThumbs) newThumbs.replaceWith(oldThumbs);
@@ -839,12 +958,14 @@
     const cur = this.stateOf(it.id); const next = cur === st ? null : st;
     const wasComplete = this.phaseComplete(it);
     this.setAnswer(it.id, { state: next });
+    if (it.call) this.afterCallAnswer();
     row.className = row.className.replace(/\bis-(ok|uwaga|problem|pomin)\b/g, '').trim(); if (next) row.classList.add('is-' + next);
     row.querySelectorAll('.ans').forEach((b) => { const on = next && b.classList.contains('ans--' + next); b.classList.toggle('is-on', !!on); b.setAttribute('aria-pressed', on ? 'true' : 'false'); });
     this.updateFlagbar();
     const cnt = this.counts(); const ph = this.content.phaseOfItem[it.id]; const p = cnt.phases[ph.id];
     const chip = $('#phase-progress', this.root); if (chip) chip.textContent = p.answered + '/' + p.total + ' odhaczone';
     if (this.route.view === 'filtr') this.refreshFilter();
+    if (this.route.view === 'start') this.refreshWizard();
     if (next === 'problem' && it.dealbreaker) this.sheetDealbreaker(it, row);
     else if (next === 'problem' && navigator.vibrate) { try { navigator.vibrate(30); } catch (e) { /* ignore */ } }
     if (!wasComplete && p.total && p.answered === p.total) { this.toast('Etap odhaczony ✓'); track('phase_done', { phase_id: ph.id, answered: p.answered, problems: p.problem, uwagi: p.uwaga }); }
@@ -903,11 +1024,12 @@
     return { kind: kind, title: title, lead: lead, reasons: reasons, rules: Array.isArray(ruleText) ? ruleText : [] };
   };
   App.prototype.negoGroups = function (carId) {
-    const car = carId ? this.state.cars[carId] : this.car(); const a = (car && car.a) || {}; const groups = [];
-    this.content.phases.forEach((ph) => {
-      const rows = [];
-      ph.items.forEach((it) => { const v = a[it.id]; if (v && (v[0] === 'uwaga' || v[0] === 'problem')) rows.push({ item: it, state: v[0], input: v[1], note: v[2] }); });
+    const car = carId ? this.state.cars[carId] : this.car(); const a = (car && car.a) || {}; const groups = []; const c = this.content;
+    const pick = (items) => { const rows = []; items.forEach((it) => { const v = a[it.id]; if (v && (v[0] === 'uwaga' || v[0] === 'problem')) rows.push({ item: it, state: v[0], input: v[1], note: v[2] }); }); return rows; };
+    c.phases.forEach((ph, i) => {
+      const rows = pick(ph.items);
       if (rows.length) groups.push({ phase: ph, rows: rows });
+      if (i === 0 && c.callItems.length) { const cr = pick(c.callItems); if (cr.length) groups.push({ phase: c.callPhase, rows: cr }); } // „Rozmowa ze sprzedawcą” right after phase 1
     });
     return groups;
   };
@@ -968,7 +1090,7 @@
           li.append(el('div', { class: 'negoitem s-' + r.state }, el('span', { class: 'dot' }), el('div', null,
             el('div', null, el('b', { text: (STATE_LABEL[r.state] || r.state) + ': ' }), r.state === 'problem' && r.item.flag_label ? r.item.flag_label : r.item.text, r.item.dealbreaker && r.state === 'problem' ? el('span', { class: 'db' }, ' · dealbreaker') : null),
             meta.length ? el('div', { class: 'meta', text: meta.join(' · ') }) : null,
-            el('button', { class: 'linkbtn', style: 'min-height:32px;padding:2px 0;font-size:16px', type: 'button', onclick: () => { self.openItems[r.item.id] = true; self.go('phase/' + encodeURIComponent(g.phase.id)); setTimeout(() => { const n = self.itemEl(r.item.id); if (n) n.scrollIntoView({ block: 'center' }); }, 50); } }, 'otwórz punkt'))));
+            el('button', { class: 'linkbtn', style: 'min-height:32px;padding:2px 0;font-size:16px', type: 'button', onclick: () => self.openItem(r.item.id) }, 'otwórz punkt'))));
         });
         ul.append(li);
       });
@@ -1030,53 +1152,200 @@
     root.append(el('div', { class: 'p-foot' }, (c.meta.disclaimer || '') + ' Wygenerowano w ' + (c.meta.title || 'Odhacz') + ' (Odhacz).'));
   };
 
-  /* ------------------------------------------------------------------ view: call script (Scenariusz rozmowy) */
-  // Renders whatever the content has: intro, before[], opening[], questions[{q, watch_for, if_dodges?}], closing[], message_templates[{title,text}], no_call_note.
-  App.prototype.viewCall = function () {
-    const self = this; const s = this.content.seller_call_script;
-    if (!s) return [this.topbar('Scenariusz rozmowy', ''), this.lockedCard('Ta wersja nie zawiera scenariusza rozmowy.')];
-    const car = this.car(); car.q = car.q || {};
-    const strList = (arr) => (Array.isArray(arr) ? arr.filter((x) => typeof x === 'string' && x.trim()) : []);
-    const qs = Array.isArray(s.questions) ? s.questions.filter((q) => q && q.q) : [];
-    const before = strList(s.before), opening = strList(s.opening), closing = strList(s.closing);
-    const tpls = Array.isArray(s.message_templates) ? s.message_templates.filter((t) => t && typeof t.text === 'string' && t.text.trim()) : [];
-    const ticked = () => Object.keys(car.q).filter((k) => car.q[k]).length;
-    const copyBtn = (text, label, ev) => el('button', { class: 'copybtn', type: 'button', 'aria-label': label, onclick: async () => { const ok = await copyText(text); self.toast(ok ? 'Skopiowane' : 'Nie udało się skopiować', !ok); if (ok && ev) track(ev.name, ev.props); } }, el('span', { html: ICON.copy }), 'Kopiuj');
-    const out = [this.topbar('Scenariusz rozmowy', '')];
-    out.push(el('h1', { style: 'font-size:26px;margin-top:4px' }, 'Zadzwoń, zanim pojedziesz'));
-    if (s.intro) out.push(el('div', { class: 'bubble bubble--inline' }, mascot(), el('div', null, el('b', null, 'Hacz: '), s.intro, el('span', { class: 'sign' }, 'Hacz – asystent AI marki Odhacz'))));
-    if (before.length) out.push(el('div', { class: 'card' }, el('h2', null, 'Zanim zadzwonisz'), el('ul', { class: 'rules' }, before.map((t) => el('li', null, t)))));
-    if (opening.length) {
-      const card = el('div', { class: 'card' }, el('h2', null, 'Jak zacząć'), el('p', { class: 'muted' }, 'Jedno zdanie na start. Nie tłumacz, po co dzwonisz.'));
-      opening.forEach((t) => card.append(el('div', { class: 'line' }, el('blockquote', { class: 'phrase grow' }, t), copyBtn(t, 'Kopiuj zdanie'))));
-      out.push(card);
+  /* ------------------------------------------------------------------ view: wizard „Zanim pojedziesz” (#/start, #/start/<k>) */
+  // Phase 1 as one screen per step; #/phase/<phase1>, #/quick and #/call redirect here (render()). The „Rozmowa” step embeds the
+  // seller call script: seller type → one opening line → dealer check / extra questions → 12 answerable questions → agreements
+  // (with „Powiedz: …”) → closing → message templates → the remaining items of the call section („Po rozmowie oceń”).
+  App.prototype.copyBtn = function (text, label, ev) {
+    const self = this;
+    return el('button', { class: 'copybtn', type: 'button', 'aria-label': label || 'Kopiuj', onclick: async () => { const ok = await copyText(text); self.toast(ok ? 'Skopiowane' : 'Nie udało się skopiować', !ok); if (ok && ev) track(ev.name, ev.props); } }, el('span', { html: ICON.copy }), 'Kopiuj');
+  };
+  App.prototype.viewStart = function (stepArg) {
+    const self = this; const c = this.content; const w = c.wizard;
+    if (!w) return [this.topbar('Kreator', ''), this.lockedCard('Ta wersja nie ma kreatora „Zanim pojedziesz”.')];
+    const wp = this.wizardProgress(); const N = w.steps.length; const car = this.car();
+    let n = parseInt(stepArg, 10);
+    if (!(n >= 1 && n <= N)) n = wp.next ? wp.next.n : N; // #/start resumes at the first step with unanswered items
+    const step = w.steps[n - 1]; const sp = wp.steps[n - 1];
+    track('wizard_step_viewed', { step: n, answered: sp.answered, total: sp.total });
+    const out = [this.topbar(w.phase.title, '')];
+    const ind = el('div', { class: 'wiz-steps', role: 'group', 'aria-label': 'Kroki kreatora', style: '--n:' + N });
+    wp.steps.forEach((s) => ind.append(el('button', { class: 'wiz-step' + (s.step.n === n ? ' is-on' : '') + (s.done ? ' is-done' : ''), type: 'button', 'aria-current': s.step.n === n ? 'step' : null, 'aria-label': 'Krok ' + s.step.n + ': ' + s.step.title + (s.done ? ' (gotowe)' : ''), 'data-step': String(s.step.n), onclick: () => self.go('start/' + s.step.n) }, s.done && s.step.n !== n ? el('span', { html: ICON.check }) : String(s.step.n))));
+    out.push(ind);
+    out.push(el('div', { class: 'wiz-head' }, el('h1', { 'data-testid': 'wiz-title' }, 'Krok ' + n + '/' + N + ' · ' + step.title), el('span', { class: 'chip', id: 'wiz-progress', 'aria-label': 'Odhaczone w tym kroku' }, sp.answered + '/' + sp.total)));
+    out.push(el('div', { class: 'progress wiz-bar' }, el('i', { id: 'wiz-bar', style: 'width:' + (sp.total ? Math.round(100 * sp.answered / sp.total) : 0) + '%' })));
+    if (n === 1 && w.phase.when) out.push(el('p', { class: 'when' }, el('span', { html: ICON.pin }), el('span', null, el('b', null, 'Kiedy: '), w.phase.when)));
+    if (step.hint) out.push(el('div', { class: 'bubble bubble--inline', 'data-testid': 'wiz-hint' }, mascot(), el('div', null, el('b', null, 'Hacz: '), step.hint, el('span', { class: 'sign' }, 'Hacz – asystent AI marki Odhacz'))));
+    if (step.call) this.callStepBody(step, out);
+    else {
+      if (step.vin) out.push(this.vinCard(car));
+      step.sections.forEach((sec) => { if (step.sections.length > 1 && sec.title) out.push(el('div', { class: 'section-title' }, sec.title)); sec.items.forEach((it) => out.push(this.itemRow(it))); });
     }
-    if (qs.length) {
-      out.push(el('div', { class: 'row', style: 'justify-content:space-between;margin:18px 0 8px' }, el('h2', { style: 'margin:0' }, qs.length + ' ' + plural(qs.length, 'pytanie', 'pytania', 'pytań')), el('span', { class: 'chip', id: 'call-progress' }, ticked() + '/' + qs.length + ' zadane')));
-      qs.forEach((q, i) => {
-        const id = 'q-' + i; const cb = el('input', { type: 'checkbox', id: id, checked: !!car.q[i] });
-        const card = el('article', { class: 'card qcard' + (car.q[i] ? ' is-done' : ''), 'data-q': String(i) });
-        card.append(el('div', { class: 'check' }, cb, el('label', { for: id, class: 'grow check__text' }, el('span', { class: 'qcard__n', text: (i + 1) + '/' + qs.length }), q.q)));
-        if (q.watch_for) card.append(el('div', { class: 'watch' }, el('b', null, 'Uważaj na: '), q.watch_for));
-        if (q.if_dodges) {
-          const dodge = el('div', { class: 'dodge', hidden: true }, el('b', null, 'Jeśli kręci: '), q.if_dodges);
-          const tb = el('button', { class: 'toolbtn', type: 'button', 'aria-expanded': 'false' }, el('span', { html: ICON.chev }), 'Jeśli kręci');
-          tb.addEventListener('click', () => { dodge.hidden = !dodge.hidden; tb.setAttribute('aria-expanded', dodge.hidden ? 'false' : 'true'); });
-          card.append(tb, dodge);
-        }
-        cb.addEventListener('change', () => { if (cb.checked) car.q[i] = 1; else delete car.q[i]; card.classList.toggle('is-done', cb.checked); self.persist(); const chip = $('#call-progress', self.root); if (chip) chip.textContent = ticked() + '/' + qs.length + ' zadane'; });
-        out.push(card);
-      });
+    const nav = el('div', { class: 'wiznav' });
+    const nextPh = c.phases[w.phase.index + 1];
+    if (n < N) {
+      const nx = w.steps[n];
+      nav.append(el('button', { class: 'btn btn--primary btn--block wiznav__next', type: 'button', 'data-testid': 'wiz-next', onclick: () => self.go('start/' + nx.n) }, el('span', null, 'Dalej'), el('small', null, 'Krok ' + nx.n + ': ' + nx.title)));
+    } else {
+      nav.append(el('button', { class: 'btn btn--primary btn--block wiznav__next', type: 'button', 'data-testid': 'wiz-next', onclick: () => { track('wizard_done', { answered: self.wizardProgress().steps.reduce((sum, x) => sum + x.answered, 0) }); self.go(nextPh ? 'phase/' + encodeURIComponent(nextPh.id) : 'summary'); } }, el('span', null, 'Jadę oglądać'), el('small', null, '→ ' + (nextPh ? nextPh.title : 'Podsumowanie'))));
     }
-    if (closing.length) out.push(el('div', { class: 'card' }, el('h2', null, 'Jak zakończyć'), el('ul', { class: 'rules' }, closing.map((t) => el('li', null, t)))));
-    if (tpls.length) {
-      const card = el('div', { class: 'card card--soft msgs', 'data-testid': 'msg-templates' }, el('h2', null, 'Nie lubisz dzwonić? Wyślij wiadomość'));
-      if (s.no_call_note) card.append(el('p', { class: 'muted' }, s.no_call_note));
-      tpls.forEach((t, i) => card.append(el('div', { class: 'tpl' }, el('div', { class: 'tpl__head' }, el('h3', { class: 'grow', text: t.title || 'Wiadomość ' + (i + 1) }), copyBtn(t.text, 'Kopiuj wiadomość: ' + (t.title || i + 1), { name: 'script_message_copied', props: { index: i, title: String(t.title || '').slice(0, 40) } })), el('pre', { class: 'tpl__text', text: t.text }))));
-      out.push(card);
-    }
-    if (qs.length) out.push(el('button', { class: 'btn btn--ghost btn--block', type: 'button', onclick: () => { car.q = {}; self.persist(); self.render(); } }, 'Wyczyść odpowiedzi'));
+    if (n > 1) nav.append(el('button', { class: 'btn btn--ghost wiznav__back', type: 'button', onclick: () => self.go('start/' + (n - 1)) }, el('span', { html: ICON.back }), 'Wstecz: ' + w.steps[n - 2].title));
+    else nav.append(el('button', { class: 'btn btn--ghost wiznav__back', type: 'button', onclick: () => self.go('') }, el('span', { html: ICON.home }), 'Start'));
+    out.push(nav);
     return out;
+  };
+  /** VIN per car (step „VIN i historia”): saved in car.vin, synced, printed in the report; link to the free government history check. */
+  App.prototype.vinCard = function (car) {
+    const self = this;
+    const card = el('div', { class: 'card vin', 'data-testid': 'vin-card' });
+    card.append(el('h2', null, 'VIN tego auta'));
+    card.append(el('p', { class: 'muted' }, '17 znaków z dowodu rejestracyjnego (pole E) albo z podszybia. Zapisz go tu – trafi do raportu, a link niżej otwiera bezpłatną Historię pojazdu.'));
+    const inp = el('input', { type: 'text', id: 'vin-input', 'data-testid': 'vin-input', autocapitalize: 'characters', autocomplete: 'off', spellcheck: 'false', maxlength: '17', placeholder: 'np. WVWZZZ1KZ5W000000', 'aria-label': 'VIN', value: car.vin || '' });
+    const status = el('span', { class: 'hint', id: 'vin-status' });
+    const upd = () => { const v = String(inp.value || ''); const bad = /[IOQ]/i.test(v); status.textContent = !v ? 'Wpisz 17 znaków bez spacji.' : v.length === 17 && !bad ? '17/17 – komplet' : v.length + '/17' + (bad ? ' · VIN nie zawiera liter I, O ani Q' : ''); };
+    inp.addEventListener('input', () => { const v = inp.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 17); if (v !== inp.value) inp.value = v; const cur = self.car(); if (v) cur.vin = v; else delete cur.vin; cur.u = nowIso(); self.persist(); upd(); });
+    upd();
+    card.append(el('div', { class: 'field', style: 'margin:0 0 10px' }, el('div', { class: 'inwrap', style: 'grid-column:1/-1' }, inp), status));
+    card.append(el('div', { class: 'btnrow' },
+      el('a', { class: 'btn btn--primary', href: 'https://historiapojazdu.gov.pl/', target: '_blank', rel: 'noopener noreferrer', 'data-testid': 'vin-gov' }, 'Otwórz historiapojazdu.gov.pl', el('span', { html: ICON.ext, style: 'width:18px;height:18px;display:inline-flex' })),
+      el('button', { class: 'btn', type: 'button', onclick: async () => { const v = self.car().vin; if (!v) { self.toast('Najpierw wpisz VIN', true); return; } const ok = await copyText(v); self.toast(ok ? 'VIN skopiowany' : 'Nie udało się skopiować', !ok); } }, el('span', { html: ICON.copy }), 'Kopiuj VIN')));
+    return card;
+  };
+  /** The „Rozmowa” step body, appended to `out`. */
+  App.prototype.callStepBody = function (step, out) {
+    const self = this; const c = this.content; const s = c.wizard.script; const car = this.car(); car.q = car.q || {};
+    const strList = (arr) => (Array.isArray(arr) ? arr.filter((x) => typeof x === 'string' && x.trim()) : []);
+    const types = (Array.isArray(s.seller_types) ? s.seller_types : []).filter((t) => t && t.id);
+    const cs = this.callState(); const type = types.find((t) => t.id === cs.type) || null;
+    const ticks = car.q;
+    const tickRow = (key, q, watch) => {
+      const cb = el('input', { type: 'checkbox', checked: !!ticks[key], 'aria-label': 'Zadane' });
+      const row = el('label', { class: 'chk' + (ticks[key] ? ' is-done' : ''), 'data-tick': key }, cb, el('span', { class: 'grow' }, el('span', { class: 'chk__q', text: q }), watch ? el('span', { class: 'watch' }, el('b', null, 'Uważaj na: '), watch) : null));
+      cb.addEventListener('change', () => { if (cb.checked) ticks[key] = 1; else delete ticks[key]; row.classList.toggle('is-done', cb.checked); car.u = nowIso(); self.persist(); });
+      return row;
+    };
+    // (a) seller type – nothing else shows until it is chosen
+    const typeCard = el('div', { class: 'card typecard', 'data-testid': 'seller-type' });
+    typeCard.append(el('h2', null, s.seller_type_prompt || 'Do kogo dzwonisz?'));
+    if (types.length) {
+      const seg = el('div', { class: 'seg seg--type', role: 'group', 'aria-label': s.seller_type_prompt || 'Typ sprzedawcy' });
+      types.forEach((t) => seg.append(el('button', { type: 'button', class: cs.type === t.id ? 'is-on' : '', 'aria-pressed': cs.type === t.id ? 'true' : 'false', 'data-type': t.id, onclick: () => self.setSellerType(t.id) }, t.label || t.id)));
+      typeCard.append(seg);
+    }
+    if (type && type.hint) typeCard.append(el('p', { class: 'typecard__hint' }, type.hint));
+    if (!type && s.unknown_type_note) typeCard.append(el('p', { class: 'small muted', style: 'margin:10px 0 0' }, s.unknown_type_note));
+    out.push(typeCard);
+    if (!type) { out.push(el('p', { class: 'muted center', style: 'margin:16px 0' }, 'Wybierz, a poniżej pojawi się skrypt: zdanie na start, ' + (c.callItems.length || '') + ' pytań i ustalenia przed spotkaniem.')); return; }
+    // (b) before the call – collapsed
+    const before = strList(s.before);
+    if (before.length || s.intro) out.push(this.foldCard('call:before', 'Zanim zadzwonisz', [s.intro ? el('p', { class: 'muted' }, s.intro) : null, before.length ? el('ul', { class: 'rules' }, before.map((t) => el('li', null, t))) : null]));
+    // (c) exactly one opening line for the chosen type
+    const opening = strList(type.opening)[0];
+    if (opening) out.push(el('div', { class: 'card card--accent', 'data-testid': 'opening' }, el('h2', null, 'Powiedz:'), el('div', { class: 'line line--stack' }, el('blockquote', { class: 'phrase opening' }, opening), this.copyBtn(opening, 'Kopiuj zdanie na start', { name: 'script_opening_copied', props: { type: type.id } }))));
+    // (d) private → „czy to nie handlarz” (3 questions + verdict + switch); dealer → 3 extra questions
+    if (type.check && Array.isArray(type.check.questions) && type.check.questions.length) {
+      const ch = type.check; const card = el('div', { class: 'card checkcard', 'data-testid': 'dealer-check' }, el('h2', null, ch.title || 'Sprawdź, czy to nie handlarz'));
+      if (ch.intro) card.append(el('p', { class: 'muted' }, ch.intro));
+      ch.questions.forEach((q, i) => { if (q && q.q) card.append(tickRow('c' + i, q.q, q.watch_for)); });
+      if (ch.verdict) card.append(el('p', { class: 'verdict' }, ch.verdict));
+      const dealer = types.find((t) => t.id === 'dealer') || types.find((t) => t !== type);
+      if (dealer) card.append(el('button', { class: 'btn btn--block', type: 'button', 'data-testid': 'switch-dealer', onclick: () => self.setSellerType(dealer.id, true) }, 'To handlarz → przełącz'));
+      out.push(card);
+    }
+    if (Array.isArray(type.extra_questions) && type.extra_questions.length) {
+      const card = el('div', { class: 'card checkcard', 'data-testid': 'dealer-extra' }, el('h2', null, 'Najpierw trzy pytania do firmy'), el('p', { class: 'muted' }, 'Zaznacz, gdy zadasz. Odpowiedzi zapisz w notatce przy pytaniach niżej.'));
+      type.extra_questions.forEach((q, i) => { if (q && q.q) card.append(tickRow('d' + i, q.q, q.watch_for)); });
+      out.push(card);
+    }
+    // (e) the questions – answered like items, counted as „Rozmowa ze sprzedawcą”
+    const items = c.callItems;
+    if (items.length) {
+      out.push(el('div', { class: 'row', style: 'justify-content:space-between;margin:18px 0 6px' }, el('h2', { style: 'margin:0' }, items.length + ' ' + plural(items.length, 'pytanie', 'pytania', 'pytań')), el('span', { class: 'chip', id: 'call-progress' }, cs.answered + '/' + items.length + ' odpowiedzi')));
+      out.push(el('p', { class: 'muted' }, 'Zaznaczaj w trakcie: OK, Uwaga albo Problem. Notatka = dosłowny cytat; jutro zderzysz go z faktami.'));
+      items.forEach((it) => out.push(this.callCard(it)));
+    }
+    // (f) agreements with „Powiedz: …”
+    if (step.agreeItems && step.agreeItems.length) {
+      out.push(el('div', { class: 'section-title', 'data-testid': 'agreements' }, 'Zanim się rozłączysz, ustal'));
+      if (s.agreements_intro) out.push(el('p', { class: 'muted' }, s.agreements_intro));
+      step.agreeItems.forEach((it) => out.push(this.itemRow(it, { say: true })));
+    }
+    // (g) closing lines
+    const closing = strList(s.closing);
+    if (closing.length) { const card = el('div', { class: 'card' }, el('h2', null, 'Jak zakończyć')); closing.forEach((t) => card.append(el('div', { class: 'line line--stack' }, el('blockquote', { class: 'phrase' }, t), this.copyBtn(t, 'Kopiuj zdanie')))); out.push(card); }
+    // (h) prefer writing → note + message templates
+    const tpls = Array.isArray(s.message_templates) ? s.message_templates.filter((t) => t && typeof t.text === 'string' && t.text.trim()) : [];
+    if (tpls.length || s.no_call_note) {
+      const open = !!this.openItems['call:msgs'];
+      const box = el('div', { class: 'card card--soft msgs', 'data-testid': 'msg-templates', hidden: !open });
+      if (s.no_call_note) box.append(el('p', { class: 'muted' }, s.no_call_note));
+      tpls.forEach((t, i) => box.append(el('div', { class: 'tpl' }, el('div', { class: 'tpl__head' }, el('h3', { class: 'grow', text: t.title || 'Wiadomość ' + (i + 1) }), this.copyBtn(t.text, 'Kopiuj wiadomość: ' + (t.title || i + 1), { name: 'script_message_copied', props: { index: i, title: String(t.title || '').slice(0, 40) } })), el('pre', { class: 'tpl__text', text: t.text }))));
+      const tb = el('button', { class: 'btn btn--ghost btn--block', type: 'button', 'aria-expanded': open ? 'true' : 'false', 'data-testid': 'prefer-write', onclick: () => { const o = box.hidden; box.hidden = !o; self.openItems['call:msgs'] = o; tb.setAttribute('aria-expanded', o ? 'true' : 'false'); } }, el('span', { html: ICON.note }), 'Wolę napisać, nie dzwonić');
+      out.push(tb, box);
+    }
+    // (i) the remaining items of the call section
+    if (step.afterItems && step.afterItems.length) {
+      out.push(el('div', { class: 'section-title' }, 'Po rozmowie oceń'));
+      step.afterItems.forEach((it) => out.push(this.itemRow(it)));
+    }
+    out.push(el('button', { class: 'btn btn--ghost btn--block', type: 'button', style: 'margin-top:6px', onclick: () => self.sheetConfirm('Wyczyścić rozmowę?', 'Usuniesz odpowiedzi na pytania z rozmowy, zaznaczenia i typ sprzedawcy dla tego auta. Ustalenia i inne punkty zostają.', 'Wyczyść', () => { const cur = self.car(); c.callItems.forEach((it) => { delete cur.a[it.id]; }); cur.q = {}; delete cur.st; delete cur.cd; cur.u = nowIso(); self.persist(); self.toast('Wyczyszczono'); self.render(); }) }, 'Wyczyść odpowiedzi z rozmowy'));
+  };
+  /** One question of the call script as an answerable card (same states, note and badges as an item row). */
+  App.prototype.callCard = function (it) {
+    const self = this; const a = this.ans(it.id) || []; const n = this.content.callItems.length;
+    const row = el('article', { class: 'item qitem' + (a[0] ? ' is-' + a[0] : ''), 'data-item': it.id });
+    const badges = el('div', { class: 'item__badges' });
+    if (a[2]) badges.append(el('span', { class: 'badge badge--note' }, el('span', { html: ICON.note, style: 'width:14px;height:14px;display:inline-flex' }), el('span', { text: a[2] })));
+    row.append(el('div', { class: 'qitem__head' }, el('span', { class: 'qitem__n', text: it.n + '/' + n }), el('div', { class: 'grow' }, el('div', { class: 'qitem__q', text: it.text }), badges)));
+    if (it.watch_for) row.append(el('div', { class: 'watch' }, el('b', null, 'Uważaj na: '), it.watch_for));
+    if (it.if_dodges) {
+      const dodge = el('div', { class: 'dodge', hidden: true }, el('b', null, 'Jeśli kręci: '), it.if_dodges);
+      const tb = el('button', { class: 'toolbtn', type: 'button', 'aria-expanded': 'false' }, el('span', { html: ICON.chev }), 'Jeśli kręci');
+      tb.addEventListener('click', () => { dodge.hidden = !dodge.hidden; tb.setAttribute('aria-expanded', dodge.hidden ? 'false' : 'true'); });
+      row.append(tb, dodge);
+    }
+    const answers = el('div', { class: 'answers' });
+    this.content.answer_states.forEach((st) => { const b = el('button', { class: 'ans ans--' + st + (a[0] === st ? ' is-on' : ''), type: 'button', 'aria-pressed': a[0] === st ? 'true' : 'false', text: STATE_LABEL[st] || st }); b.addEventListener('click', () => self.tapState(it, st, row)); answers.append(b); });
+    row.append(answers);
+    const tools = el('div', { class: 'item__tools' });
+    const noteBox = el('div', { class: 'note', hidden: !a[2] });
+    const ta = el('textarea', { placeholder: 'Zapisz dosłownie, co powiedział sprzedawca…', 'aria-label': 'Notatka' }); ta.value = a[2] || '';
+    ta.addEventListener('input', () => { self.setAnswer(it.id, { note: ta.value.trim() }); self.refreshBadges(it, row); });
+    noteBox.append(ta);
+    tools.append(el('button', { class: 'toolbtn', type: 'button', onclick: () => { noteBox.hidden = !noteBox.hidden; if (!noteBox.hidden) ta.focus(); } }, el('span', { html: ICON.note }), a[2] ? 'Notatka' : 'Dodaj notatkę'));
+    row.append(tools, noteBox);
+    return row;
+  };
+  /** After a call question changes: progress chip; when all are answered the script item („Zadzwoń i przejdź skrypt”) is done by definition. */
+  App.prototype.afterCallAnswer = function () {
+    const w = this.content.wizard; const car = this.car(); const cs = this.callState();
+    const chip = $('#call-progress', this.root); if (chip) chip.textContent = cs.answered + '/' + cs.total + ' odpowiedzi';
+    if (!cs.done) return;
+    if (!car.cd) { car.cd = 1; this.persist(false); const cc = this.counts().call || {}; track('call_done', { type: cs.type || '', problems: cc.problem || 0, uwagi: cc.uwaga || 0 }); }
+    const si = w && w.callStep && w.callStep.scriptItem;
+    if (si && !this.stateOf(si.id)) { this.setAnswer(si.id, { state: 'ok' }); this.toast('Rozmowa odhaczona ✓'); }
+  };
+  App.prototype.refreshWizard = function () {
+    const w = this.content.wizard; if (!w) return; const wp = this.wizardProgress();
+    const cur = this.root.querySelector('.wiz-step.is-on'); const n = cur ? parseInt(cur.getAttribute('data-step'), 10) : 0; const sp = wp.steps[n - 1]; if (!sp) return;
+    const chip = $('#wiz-progress', this.root); if (chip) chip.textContent = sp.answered + '/' + sp.total;
+    const bar = $('#wiz-bar', this.root); if (bar) bar.style.width = (sp.total ? Math.round(100 * sp.answered / sp.total) : 0) + '%';
+    this.root.querySelectorAll('.wiz-step').forEach((b) => { const s = wp.steps[parseInt(b.getAttribute('data-step'), 10) - 1]; if (!s) return; b.classList.toggle('is-done', s.done); if (s.step.n !== n) { b.innerHTML = ''; b.append(s.done ? el('span', { html: ICON.check }) : document.createTextNode(String(s.step.n))); } });
+  };
+  App.prototype.setSellerType = function (type, switched) {
+    const car = this.car(); if (car.st === type) return;
+    const first = !car.st; car.st = type; car.u = nowIso(); this.persist();
+    track(first ? 'call_started' : 'call_type_switched', { type: type });
+    if (switched) this.toast('Przełączono: pytaj jak firmę');
+    this.render();
+  };
+  /** Collapsible card (state kept per session in openItems[key]). */
+  App.prototype.foldCard = function (key, title, body) {
+    const self = this; const open = !!this.openItems[key];
+    const card = el('div', { class: 'card fold' + (open ? ' is-open' : ''), 'data-fold': key });
+    const head = el('button', { class: 'fold__head', type: 'button', 'aria-expanded': open ? 'true' : 'false', onclick: () => { const o = !card.classList.contains('is-open'); card.classList.toggle('is-open', o); head.setAttribute('aria-expanded', o ? 'true' : 'false'); self.openItems[key] = o; } }, el('h2', { text: title }), el('span', { class: 'chev', html: ICON.chev }));
+    card.append(head, el('div', { class: 'fold__body' }, body));
+    return card;
   };
 
   /* ------------------------------------------------------------------ paint map (Mapa lakieru) */
@@ -1254,7 +1523,7 @@
     opts = opts || {}; const c = this.content; const car = this.state.cars[id]; const cnt = this.counts(id); const d = this.decide(cnt); const groups = this.negoGroups(id); const rules = c.summary_rules || {}; const photos = opts.photos || null;
     const doc = el('article', { class: 'report', 'data-testid': 'report' });
     doc.append(el('header', { class: 'report__head' }, el('div', { class: 'report__eyebrow' }, this.appName + ' · ' + this.reportTitle), el('h1', { class: 'report__title', text: car.name }),
-      el('div', { class: 'report__meta' }, fmtPl(this.carDate(car)) + ' · ' + cnt.answered + '/' + cnt.total + ' ' + plural(cnt.total, 'punkt', 'punkty', 'punktów') + ' odhaczonych')));
+      el('div', { class: 'report__meta' }, fmtPl(this.carDate(car)) + ' · ' + cnt.answered + '/' + cnt.total + ' ' + plural(cnt.total, 'punkt', 'punkty', 'punktów') + ' odhaczonych' + this.carMetaText(id))));
     doc.append(el('div', { class: 'counts' },
       el('div', { class: 'count count--ok' }, el('b', { text: String(cnt.ok) }), el('span', null, 'OK')),
       el('div', { class: 'count count--uwaga' }, el('b', { text: String(cnt.uwaga) }), el('span', null, 'Uwaga')),
@@ -1303,14 +1572,14 @@
     const pd = c.hasPaint ? this.paintData(id) : null;
     if (pd && pd.flagged.length) out.push('Które elementy były lakierowane i dlaczego? Miernik pokazuje: ' + pd.flagged.slice(0, 3).map((f) => PANEL_INDEX[f.key].label.toLowerCase() + ' ' + fmtNum(f.value) + ' µm').join(', ') + (pd.baseline ? ' przy bazie ' + fmtNum(pd.baseline) + ' µm' : '') + '.');
     if (d.kind === 'mech') out.push('Zgoda na sprawdzenie u mechanika lub na stacji diagnostycznej przed decyzją — na mój koszt, w tym tygodniu?');
-    const s = c.seller_call_script; const qs = (s && Array.isArray(s.questions)) ? s.questions : []; const asked = car.q || {};
-    if (qs.length && Object.keys(asked).some((k) => asked[k])) qs.forEach((q, i) => { if (!asked[i] && q && q.q && out.length < 9) out.push(q.q); });
+    const cs = this.callState(id); // call-script questions still unanswered – only once the call was started
+    if (cs.started && !cs.done) c.callItems.forEach((it) => { const v = car.a && car.a[it.id]; if (!(v && v[0]) && out.length < 9) out.push(it.text); });
     return out.slice(0, 9);
   };
   /** Plain-text report (clipboard / share). */
   App.prototype.reportText = function (id) {
     const c = this.content; const car = this.state.cars[id]; const cnt = this.counts(id); const d = this.decide(cnt); const groups = this.negoGroups(id); const rules = c.summary_rules || {};
-    const L = [this.appName.toUpperCase() + ' · ' + this.reportTitle.toUpperCase(), car.name, fmtPl(this.carDate(car)) + ' · ' + cnt.answered + '/' + cnt.total + ' punktów', '',
+    const L = [this.appName.toUpperCase() + ' · ' + this.reportTitle.toUpperCase(), car.name, fmtPl(this.carDate(car)) + ' · ' + cnt.answered + '/' + cnt.total + ' punktów' + this.carMetaText(id), '',
       'OK: ' + cnt.ok + ' · Uwaga: ' + cnt.uwaga + ' · Problem: ' + cnt.problem + ' · Dealbreakery: ' + cnt.db, '', 'DECYZJA: ' + d.title, d.lead];
     d.reasons.forEach((r) => L.push('- ' + r)); L.push('');
     if (c.hasPaint) { const pd = this.paintData(id); if (pd.count) { L.push('MAPA LAKIERU — ' + this.paintBaseText(pd)); PANELS.forEach((p) => { if (!c.panelItem[p.key]) return; const v = pd.readings[p.key]; L.push('- ' + p.label + ': ' + (v != null ? fmtNum(v) + ' µm' + (pd.baseline ? ' (' + ratioText(v / pd.baseline) + ', ' + PAINT_LEVEL[pd.levels[p.key]] + ')' : '') : 'brak odczytu')); }); L.push(this.paintInterpretation(pd), ''); } }
@@ -1372,6 +1641,7 @@
     card.append(row('Dealbreakery', el('b', { class: cnt.db ? 'is-bad' : '', text: String(cnt.db) })));
     card.append(row('Problemy', el('b', { class: cnt.problem ? 'is-bad' : '', text: String(cnt.problem) })));
     card.append(row('Uwagi', el('b', { class: cnt.uwaga ? 'is-warn' : '', text: String(cnt.uwaga) })));
+    if (cnt.call) card.append(row('Rozmowa', cnt.call.answered ? el('span', { 'data-testid': 'cmp-call', class: cnt.call.problem ? 'is-bad' : (cnt.call.uwaga ? 'is-warn' : '') }, cnt.call.uwaga + ' ' + plural(cnt.call.uwaga, 'uwaga', 'uwagi', 'uwag') + ', ' + cnt.call.problem + ' ' + plural(cnt.call.problem, 'problem', 'problemy', 'problemów')) : dash()));
     card.append(row('Postęp', el('span', null, el('b', { text: cnt.answered + '/' + cnt.total }), el('span', { class: 'progress', style: 'display:block;margin-top:6px' }, el('i', { style: 'width:' + Math.round(100 * cnt.answered / Math.max(1, cnt.total)) + '%' })))));
     if (c.hasPaint) { const pd = f.pd; card.append(row('Lakier: max / dach', pd && pd.count && pd.max ? el('span', { class: 'chip chip--lv lv-' + pd.max.level, 'data-testid': 'cmp-paint' }, el('i', { class: 'dot' }), fmtNum(pd.max.value) + ' / ' + (pd.readings.roof ? fmtNum(pd.readings.roof) : '–') + ' µm') : dash())); }
     if (fi.odo) card.append(row('Przebieg', f.odo != null ? fmtInput(fi.odo, f.odo) : dash()));
@@ -1445,10 +1715,22 @@
     out.push(this.disclaimer());
     return out;
   };
+  /** Navigate to the screen that holds an item (wizard step for phase-1 and call items, else its phase) and scroll to it. */
   App.prototype.openItem = function (itemId) {
-    const ph = this.content.phaseOfItem[itemId]; if (!ph) return;
-    this.openItems[itemId] = true; this.go('phase/' + encodeURIComponent(ph.id));
+    const c = this.content; const it = c.itemById[itemId]; const ph = c.phaseOfItem[itemId]; const w = c.wizard;
+    let path = null;
+    if (w && it && (it.call || ph === w.phase)) { const st = w.stepOfItem[itemId] || w.callStep; path = 'start/' + (st ? st.n : 1); }
+    else if (ph) path = 'phase/' + encodeURIComponent(ph.id);
+    if (!path) return;
+    this.openItems[itemId] = true; this.go(path);
     setTimeout(() => { const n = this.itemEl(itemId); if (n) n.scrollIntoView({ block: 'center' }); }, 60);
+  };
+  /** „ · VIN … · sprzedawca: …” for report headers. */
+  App.prototype.carMetaText = function (carId) {
+    const car = this.state.cars[carId]; if (!car) return '';
+    const w = this.content.wizard; const types = w && Array.isArray(w.script.seller_types) ? w.script.seller_types : [];
+    const t = car.st ? types.find((x) => x && x.id === car.st) : null;
+    return (car.vin ? ' · VIN ' + car.vin : '') + (t ? ' · sprzedawca: ' + String(t.label || t.id).toLowerCase() : '');
   };
   App.prototype.buildIcs = function (rows) {
     const c = this.content; const stamp = nowIso().replace(/[-:]/g, '').replace(/\.\d+Z$/, 'Z');
@@ -1518,7 +1800,7 @@
     const card2 = el('div', { class: 'card' }, el('h3', null, 'To auto: ' + car.name),
       el('div', { class: 'btnrow' },
         el('button', { class: 'btn', type: 'button', onclick: () => self.sheetRename(car) }, el('span', { html: ICON.edit }), 'Zmień nazwę'),
-        el('button', { class: 'btn btn--danger', type: 'button', onclick: () => self.sheetConfirm('Wyzerować „' + car.name + '”?', 'Usuniesz odpowiedzi, pomiary, notatki i zdjęcia tego auta. Inne auta zostają.', 'Wyzeruj', async () => { car.a = {}; car.q = {}; delete car.pd; delete car.qf; car.u = nowIso(); await Photos.delPrefix(self.opts.product + '|' + self.state.active + '|'); self.persist(); self.toast('Wyzerowano'); self.render(); }) }, el('span', { html: ICON.trash }), 'Wyzeruj to auto')),
+        el('button', { class: 'btn btn--danger', type: 'button', onclick: () => self.sheetConfirm('Wyzerować „' + car.name + '”?', 'Usuniesz odpowiedzi, pomiary, notatki i zdjęcia tego auta. Inne auta zostają.', 'Wyzeruj', async () => { car.a = {}; car.q = {}; delete car.pd; delete car.qf; delete car.st; delete car.vin; delete car.cd; car.u = nowIso(); await Photos.delPrefix(self.opts.product + '|' + self.state.active + '|'); self.persist(); self.toast('Wyzerowano'); self.render(); }) }, el('span', { html: ICON.trash }), 'Wyzeruj to auto')),
       el('button', { class: 'btn btn--ghost btn--block mt', type: 'button', onclick: () => self.sheetCars() }, el('span', { html: ICON.car }), 'Zarządzaj autami'));
     out.push(card2);
     const fileInp = el('input', { type: 'file', accept: 'application/json,.json', style: 'display:none' });
@@ -1628,8 +1910,8 @@
         : { title: 'Na końcu dostajesz raport', text: 'Licznik czerwonych flag cały czas na dole. Na końcu: decyzja z uzasadnieniem, mapa lakieru i raport z oględzin – do PDF, do skopiowania, do porównania z kolejnym autem.', demo: 'flags' },
     ];
     const ov = el('div', { class: 'onb', role: 'dialog', 'aria-modal': 'true' });
-    // Returning user on a new device (progress pulled from the server): land on Home, not Quick start.
-    const finish = () => { self.state.ui.onb = 1; self.persist(false); ov.remove(); self.go(self.counts().answered > 0 ? '' : 'quick'); };
+    // Returning user on a new device (progress pulled from the server): land on Home. New user: the wizard (or the quick start without one).
+    const finish = () => { self.state.ui.onb = 1; self.persist(false); ov.remove(); self.go(self.counts().answered > 0 ? '' : (self.content.wizard ? 'start' : 'quick')); };
     const render = () => {
       const s = screens[step]; ov.innerHTML = '';
       ov.append(el('button', { class: 'onb__skip', type: 'button', onclick: finish }, 'Pomiń'));
