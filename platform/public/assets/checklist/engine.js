@@ -2,7 +2,8 @@
  * Renders any content JSON in the Odhacz schema (meta, quick_start, phases/sections/items, seller_call_script,
  * summary_rules, contract_template, deadlines, glossary, sources) as a mobile-first tool with per-car state,
  * red-flag counter, negotiation list, print/PDF, .ics deadlines, local photos (IndexedDB) and cross-device
- * progress sync via window.Access (platform contract, README §b).
+ * progress sync via window.Access (platform contract, README §b). v1.1: quick filter (#/filtr), paint map (SVG),
+ * inspection report (#/raport/<carId>), car comparison (#/porownaj), extended seller call script.
  *
  * Usage: Checklist.mount({ root:'#app', content:'/app/content/auto.json', product:'auto', kind:'main', sw:'/app/sw.js', shopUrl:'/' })
  */
@@ -168,6 +169,32 @@
     return canvas.toDataURL('image/jpeg', 0.4);
   }
 
+  /* ------------------------------------------------------------------ paint map: body panels */
+  // Top view, front up. `panel` on a numeric item maps it to one of these keys; Auto content without the field falls back to ids.
+  const PANELS = [
+    { key: 'roof', label: 'Dach' }, { key: 'hood', label: 'Maska' }, { key: 'trunk', label: 'Klapa bagażnika' },
+    { key: 'fl_fender', label: 'Błotnik przedni lewy' }, { key: 'fr_fender', label: 'Błotnik przedni prawy' },
+    { key: 'fl_door', label: 'Drzwi przednie lewe' }, { key: 'fr_door', label: 'Drzwi przednie prawe' },
+    { key: 'rl_door', label: 'Drzwi tylne lewe' }, { key: 'rr_door', label: 'Drzwi tylne prawe' },
+    { key: 'rl_quarter', label: 'Ćwiartka tylna lewa' }, { key: 'rr_quarter', label: 'Ćwiartka tylna prawa' },
+    { key: 'sills', label: 'Słupki i progi' },
+  ];
+  const PANEL_INDEX = {}; PANELS.forEach((p) => { PANEL_INDEX[p.key] = p; });
+  const PANEL_FALLBACK = { p3s2i1: 'roof', p3s2i2: 'hood', p3s2i3: 'fl_fender', p3s2i4: 'fl_door', p3s2i5: 'rl_door', p3s2i6: 'rl_quarter', p3s2i7: 'trunk', p3s2i8: 'rr_quarter', p3s2i9: 'rr_door', p3s2i10: 'fr_door', p3s2i11: 'fr_fender', p3s2i12: 'sills' };
+  const PAINT_LEVEL = { ok: 'w normie', warn: 'podwyższony', bad: 'wyraźnie wyższy', none: 'brak odczytu', na: 'nie dotyczy' };
+  // viewBox 0 0 240 440 – [x, y, w, h] per panel (sills = two strips, value drawn on the left one).
+  const PANEL_GEOM = {
+    hood: [[68, 26, 104, 86]], roof: [[68, 154, 104, 108]], trunk: [[68, 300, 104, 92]],
+    fl_fender: [[42, 26, 24, 100]], fr_fender: [[174, 26, 24, 100]],
+    fl_door: [[42, 128, 24, 84]], fr_door: [[174, 128, 24, 84]],
+    rl_door: [[42, 214, 24, 84]], rr_door: [[174, 214, 24, 84]],
+    rl_quarter: [[42, 300, 24, 92]], rr_quarter: [[174, 300, 24, 92]],
+    sills: [[30, 128, 10, 170], [200, 128, 10, 170]],
+  };
+  const fmtNum = (n) => { const r = Math.round(n * 10) / 10; try { return r.toLocaleString('pl-PL'); } catch (e) { return String(r); } };
+  const ratioText = (r) => fmtNum(r) + '×';
+  const NO_FLAGBAR = ['settings', 'sources', 'glossary', 'raport', 'porownaj'];
+
   /* ------------------------------------------------------------------ content */
   const STATE_LABEL = { ok: 'OK', uwaga: 'Uwaga', problem: 'Problem', pomin: 'Pomiń' };
   const DEFAULT_STATES = ['ok', 'uwaga', 'problem', 'pomin'];
@@ -189,6 +216,24 @@
         });
       });
     });
+    // Quick filter („Szybki filtr”): items flagged `quick`; without any, the dealbreakers. One source of truth: same ids, same answers.
+    c.quickExplicit = c.items.some((it) => it.quick === true);
+    c.quickItems = c.quickExplicit ? c.items.filter((it) => it.quick === true) : c.items.filter((it) => it.dealbreaker);
+    c.isQuick = {}; c.quickItems.forEach((it) => { c.isQuick[it.id] = true; });
+    c.quickByPhase = c.phases.map((ph) => ({ phase: ph, items: ph.items.filter((it) => c.isQuick[it.id]) })).filter((g) => g.items.length);
+    // Paint map: numeric items mapped to body panels (`panel`, fallback by well-known Auto ids). First item wins per panel.
+    c.panelItem = {}; c.panelOfItem = {}; c.paintSection = null;
+    c.items.forEach((it) => {
+      if (!it.input || it.input.type !== 'number') return;
+      const key = PANEL_INDEX[it.panel] ? it.panel : PANEL_FALLBACK[it.id];
+      if (!key || c.panelItem[key]) return;
+      c.panelItem[key] = it; c.panelOfItem[it.id] = key;
+    });
+    c.hasPaint = Object.keys(c.panelItem).length > 0;
+    if (c.hasPaint) {
+      const first = c.panelItem.roof || c.panelItem[Object.keys(c.panelItem)[0]];
+      c.phases.some((ph) => ph.sections.some((sec) => { if (sec.items.indexOf(first) >= 0) { c.paintSection = sec; return true; } return false; }));
+    }
     if (c.quick_start && Array.isArray(c.quick_start.steps)) c.quick_start.steps = c.quick_start.steps.map((s) => (typeof s === 'string' ? { text: s } : (s || {})));
     // Deadlines: top-level entries (days_from_purchase | date_from_input(+remind_days_before) | days_from_input(+days)) and
     // item-level ones (days_from_purchase | days_before_input+input_ref | days_from_input+input_ref). Item rows duplicating a
@@ -243,7 +288,7 @@
   /* ------------------------------------------------------------------ mount */
   const Checklist = {
     mount(opts) { const app = new App(opts); app.init(); Checklist.app = app; window.OdhaczApp = app; return app; },
-    version: '1.0.0',
+    version: '1.1.0',
   };
   window.Checklist = Checklist;
 
@@ -257,6 +302,8 @@
     this.syncStatus = 'idle'; this.syncTimer = null; this.syncInflight = false; this.syncPending = false;
     this.access = null; this.installEvt = null; this.printRoot = null;
     this.openItems = {}; // itemId -> expanded (per session)
+    this.appName = this.opts.appName || String(document.title || '').trim() || 'Odhacz'; // captured before render() rewrites the title
+    this.reportTitle = this.opts.kind === 'upsell' ? 'Raport z checklisty' : 'Raport z oględzin';
   }
 
   App.prototype.init = async function () {
@@ -464,18 +511,21 @@
       case 'quick': body = this.viewQuick(); break;
       case 'deadlines': body = this.viewDeadlines(); break;
       case 'contract': body = this.viewContract(); break;
+      case 'filtr': body = this.viewFilter(); break;
+      case 'raport': body = this.viewReport(this.route.id); break;
+      case 'porownaj': body = this.viewCompare(); break;
       default: this.route.view = 'home'; body = this.viewHome();
     }
     append(wrap, body);
     this.root.innerHTML = ''; this.root.append(wrap);
-    if (this.route.view !== 'settings' && this.route.view !== 'sources' && this.route.view !== 'glossary') this.root.append(this.flagbar());
+    if (NO_FLAGBAR.indexOf(this.route.view) < 0) this.root.append(this.flagbar());
     if (prev.view !== this.route.view || prev.id !== this.route.id) window.scrollTo(0, 0);
     document.title = (this.content.meta.title || 'Odhacz') + (this.route.view === 'home' ? '' : ' – ' + this.routeTitle());
   };
   App.prototype.routeTitle = function () {
     const r = this.route;
     if (r.view === 'phase') { const ph = this.content.phases.find((p) => p.id === r.id); return ph ? ph.title : 'Etap'; }
-    return { summary: 'Podsumowanie', call: 'Skrypt rozmowy', glossary: 'Słowniczek', sources: 'Skąd to wiemy', settings: 'Ustawienia', quick: 'Quick start', deadlines: 'Terminy', contract: 'Wzór umowy' }[r.view] || '';
+    return { summary: 'Podsumowanie', call: 'Scenariusz rozmowy', glossary: 'Słowniczek', sources: 'Skąd to wiemy', settings: 'Ustawienia', quick: 'Quick start', deadlines: 'Terminy', contract: 'Wzór umowy', filtr: 'Szybki filtr', raport: this.reportTitle, porownaj: 'Porównaj auta' }[r.view] || '';
   };
   App.prototype.topbar = function (title, back, right) {
     const self = this;
@@ -489,15 +539,23 @@
     return el('button', { class: 'carchip', type: 'button', 'aria-label': 'Zmień auto: ' + car.name, onclick: () => self.sheetCars() }, el('span', { html: ICON.car }), el('span', { text: car.name }), el('span', { html: ICON.chev, style: 'width:16px;height:16px;display:inline-flex' }));
   };
   App.prototype.flagbar = function () {
-    const self = this; const c = this.counts();
-    const bar = el('div', { class: 'flagbar', role: 'status' });
+    const self = this; const c = this.counts(); const filt = this.route.view === 'filtr';
+    const bar = el('div', { class: 'flagbar' + (filt ? ' flagbar--filtr' : ''), role: 'status' });
     const inner = el('div', { class: 'flagbar__in' });
     const fc = (cls, icon, n, word, aria) => el('span', { class: 'fc fc--' + cls + (n ? ' is-on' : ''), role: 'img', 'aria-label': aria, title: aria }, el('span', { class: 'fc__i', html: icon }), el('b', { text: String(n) }), el('small', { text: word }));
     inner.append(el('div', { class: 'flagbar__counts' },
       fc('bad', ICON.flag, c.problem, plural(c.problem, 'flaga', 'flagi', 'flag'), c.problem + ' ' + plural(c.problem, 'czerwona flaga', 'czerwone flagi', 'czerwonych flag')),
       fc('warn', ICON.alert, c.uwaga, plural(c.uwaga, 'uwaga', 'uwagi', 'uwag'), c.uwaga + ' ' + plural(c.uwaga, 'uwaga', 'uwagi', 'uwag')),
-      c.db ? fc('db', ICON.warn, c.db, 'dealbreaker', c.db + ' ' + plural(c.db, 'dealbreaker', 'dealbreakery', 'dealbreakerów')) : null));
-    if (this.route.view !== 'summary') inner.append(el('button', { class: 'btn', type: 'button', onclick: () => self.go('summary') }, 'Podsumowanie', el('span', { html: ICON.chev, style: 'transform:rotate(-90deg);display:inline-flex' })));
+      (c.db || filt) ? fc('db', ICON.warn, c.db, plural(c.db, 'dealbreaker', 'dealbreakery', 'dealbreakerów'), c.db + ' ' + plural(c.db, 'dealbreaker', 'dealbreakery', 'dealbreakerów')) : null));
+    if (filt) {
+      // Quick filter: the bar tracks the filter itself – progress, then the verdict.
+      const s = this.quickStats();
+      inner.append(el('button', { class: 'btn', type: 'button', 'data-testid': 'filtr-bar-btn', 'aria-label': s.done ? 'Pokaż werdykt' : 'Następny punkt filtra (' + s.answered + ' z ' + s.total + ')', onclick: () => {
+        if (s.done) { const v = $('#filtr-verdict', self.root); if (v) v.scrollIntoView({ block: 'center', behavior: 'smooth' }); return; }
+        const rows = self.root.querySelectorAll('.item[data-item]');
+        for (let i = 0; i < rows.length; i++) { if (!/\bis-(ok|uwaga|problem|pomin)\b/.test(rows[i].className)) { rows[i].scrollIntoView({ block: 'center', behavior: 'smooth' }); return; } }
+      } }, s.done ? 'Werdykt' : s.answered + '/' + s.total, el('span', { html: ICON.chev, style: 'transform:rotate(-90deg);display:inline-flex' })));
+    } else if (this.route.view !== 'summary') inner.append(el('button', { class: 'btn', type: 'button', onclick: () => self.go('summary') }, 'Podsumowanie', el('span', { html: ICON.chev, style: 'transform:rotate(-90deg);display:inline-flex' })));
     else inner.append(el('button', { class: 'btn', type: 'button', onclick: () => self.go('') }, el('span', { html: ICON.home }), 'Start'));
     bar.append(inner);
     return bar;
@@ -518,9 +576,9 @@
         this.installEvt ? el('button', { class: 'btn btn--small btn--primary', type: 'button', onclick: () => { try { self.installEvt.prompt(); } catch (e) { /* ignore */ } self.state.ui.a2hs = 1; self.persist(false); self.render(); } }, 'Zainstaluj') : null,
         el('button', { class: 'iconbtn', type: 'button', 'aria-label': 'Zamknij', onclick: () => { self.state.ui.a2hs = 1; self.persist(false); self.render(); } }, el('span', { html: ICON.close }))));
     }
-    out.push(el('div', { class: 'hero' }, mascot(), el('div', null, el('h1', { text: c.meta.title || 'Odhacz' }), el('p', { class: 'tagline' }, 'Odhaczasz punkt po punkcie. Zero zgadywania.'))));
+    out.push(el('div', { class: 'hero' }, mascot(), el('div', null, el('h1', { text: c.meta.title || 'Odhacz' }), el('p', { class: 'tagline' }, this.opts.kind === 'upsell' ? 'Odhaczasz punkt po punkcie. Zero zgadywania.' : 'Prowadzimy Cię przy aucie. Wychodzisz z raportem i argumentami.'))));
     const total = c.meta.est_minutes_total;
-    const haczLine = cnt.answered === 0 ? 'Cześć, tu Hacz. Zacznij od Quick startu – 3 minuty i wiesz, jak to działa. Potem etapy po kolei, najlepiej w tej kolejności.'
+    const haczLine = cnt.answered === 0 ? (this.filterEnabled() ? 'Cześć, tu Hacz. Quick start – 3 minuty i wiesz, jak to działa. Potem Szybki filtr: 10 minut, które mówią, czy warto zostać przy tym aucie dłużej.' : 'Cześć, tu Hacz. Zacznij od Quick startu – 3 minuty i wiesz, jak to działa. Potem etapy po kolei, najlepiej w tej kolejności.')
       : cnt.answered < cnt.total ? 'Masz ' + cnt.answered + ' z ' + cnt.total + ' punktów. ' + (cnt.problem ? 'Już ' + cnt.problem + ' ' + plural(cnt.problem, 'czerwona flaga', 'czerwone flagi', 'czerwonych flag') + ' – zapisuj notatki, przydadzą się w negocjacji.' : 'Na razie czysto. Nie zwalniaj przy silniku i jeździe próbnej.')
         : 'Wszystko odhaczone. Sprawdź podsumowanie i zabierz listę uwag do rozmowy.';
     out.push(el('div', { class: 'bubble' }, el('b', null, 'Hacz: '), haczLine, el('span', { class: 'sign' }, 'Hacz – asystent AI marki Odhacz')));
@@ -532,11 +590,21 @@
         el('p', { class: 'muted' }, done ? 'Wiesz już, jak to działa. Możesz wrócić do Quick startu w każdej chwili.' : 'Zacznij tu. Szybki przegląd, żeby pierwszy postęp był natychmiast.'),
         el('button', { class: 'btn ' + (done ? '' : 'btn--primary') + ' btn--block', type: 'button', onclick: () => self.go('quick') }, done ? 'Otwórz Quick start' : 'Zacznij (3 min)')));
     }
+    // Quick filter („Szybki filtr”): odsiej, zanim zaczniesz pełne oględziny
+    if (this.filterEnabled()) {
+      const s = this.quickStats(); const pct = s.total ? Math.round(100 * s.answered / s.total) : 0;
+      out.push(el('div', { class: 'card filtr', 'data-testid': 'filtr-card' },
+        el('div', { class: 'card__title' }, el('span', { class: 'quick__meta filtr__meta' }, el('span', { html: ICON.bolt, style: 'width:16px;height:16px;display:inline-flex' }), s.done ? (s.verdict === 'walk' ? 'werdykt: odpuść' : 'zaliczony') : '10 minut'), el('h2', { class: 'grow', text: 'Szybki filtr' })),
+        el('p', { class: 'muted' }, 'Najpierw odsiej. Potem sprawdzaj dokładnie. ' + s.total + ' ' + plural(s.total, 'punkt, który najczęściej kończy', 'punkty, które najczęściej kończą', 'punktów, które najczęściej kończą') + ' oglądanie.'),
+        el('div', { class: 'row', style: 'justify-content:space-between' }, el('span', { class: 'chip' }, s.answered + '/' + s.total + ' odhaczone'), s.db.length ? el('span', { class: 'filtr__db' }, s.db.length + ' ' + plural(s.db.length, 'dealbreaker', 'dealbreakery', 'dealbreakerów')) : null),
+        el('div', { class: 'progress' }, el('i', { style: 'width:' + pct + '%' })),
+        el('button', { class: 'btn ' + (s.done || !this.state.ui.qs ? '' : 'btn--primary') + ' btn--block', type: 'button', onclick: () => self.go('filtr') }, s.done ? 'Otwórz filtr' : s.answered ? 'Dokończ filtr (zostało ' + (s.total - s.answered) + ')' : 'Odsiej (10 min)')));
+    }
     // Continue
     const next = c.phases.find((ph) => cnt.phases[ph.id].answered < cnt.phases[ph.id].total);
     if (cnt.answered > 0 && next) out.push(el('button', { class: 'btn btn--lime btn--block', type: 'button', onclick: () => self.go('phase/' + encodeURIComponent(next.id)) }, 'Kontynuuj: ' + next.title));
     // Phases
-    out.push(el('div', { class: 'row', style: 'justify-content:space-between;margin:18px 0 8px' }, el('h2', { style: 'margin:0' }, 'Etapy'), total ? el('span', { class: 'chip' }, el('span', { html: ICON.clock }), '~' + total + ' min łącznie') : null));
+    out.push(el('div', { class: 'row', style: 'justify-content:space-between;margin:18px 0 8px' }, el('h2', { style: 'margin:0' }, 'Etapy'), el('span', { class: 'chip' }, el('span', { html: ICON.list }), c.items.length + ' ' + plural(c.items.length, 'punkt', 'punkty', 'punktów') + (total ? ' · ~' + total + ' min' : ''))));
     const list = el('ul', { class: 'phases' });
     c.phases.forEach((ph, i) => {
       const p = cnt.phases[ph.id]; const done = p.total > 0 && p.answered === p.total;
@@ -553,7 +621,9 @@
     const tiles = el('div', { class: 'grid2 mt' });
     const tile = (icon, label, path) => el('button', { class: 'tile', type: 'button', onclick: () => self.go(path) }, el('span', { html: icon }), el('span', { text: label }));
     tiles.append(tile(ICON.list, 'Podsumowanie i negocjacja', 'summary'));
-    if (c.seller_call_script) tiles.append(tile(ICON.phone, 'Skrypt rozmowy ze sprzedawcą', 'call'));
+    tiles.append(tile(ICON.doc, this.reportTitle, 'raport/' + encodeURIComponent(this.state.active)));
+    if (c.seller_call_script) tiles.append(tile(ICON.phone, 'Scenariusz rozmowy ze sprzedawcą', 'call'));
+    if (Object.keys(this.state.cars).length >= 2) tiles.append(tile(ICON.car, 'Porównaj auta', 'porownaj'));
     if (c.deadlineRows.length) tiles.append(tile(ICON.calendar, 'Terminy po zakupie', 'deadlines'));
     if (c.contract_template) tiles.append(tile(ICON.doc, c.contract_template.title || 'Wzór umowy', 'contract'));
     if (c.glossary && c.glossary.length) tiles.append(tile(ICON.book, 'Słowniczek', 'glossary'));
@@ -613,6 +683,7 @@
     if (ph.intro) out.push(el('div', { class: 'phase-intro' }, mascot(), el('div', { class: 'bubble' }, el('b', null, 'Hacz: '), ph.intro, el('span', { class: 'sign' }, 'Hacz – asystent AI marki Odhacz'))));
     ph.sections.forEach((sec) => {
       if (sec.title) out.push(el('div', { class: 'section-title' }, sec.title));
+      if (c.paintSection === sec) out.push(this.paintCard({ interactive: true, live: true }));
       sec.items.forEach((it) => out.push(this.itemRow(it)));
     });
     // nav
@@ -683,7 +754,7 @@
   App.prototype.inputField = function (it, a, row) {
     const self = this; const inp = it.input; const type = inp.type || 'text'; const val = a[1];
     const wrap = el('div', { class: 'field' }); if (inp.label) wrap.append(el('label', { text: inp.label }));
-    const save = (v) => { self.setAnswer(it.id, { input: v }); self.refreshBadges(it, row); if (DATE_TYPES[type]) self.refreshDeadlineTexts(); };
+    const save = (v) => { self.setAnswer(it.id, { input: v }); self.refreshBadges(it, row); if (DATE_TYPES[type]) self.refreshDeadlineTexts(); if (self.content.panelOfItem[it.id]) self.refreshPaintMaps(); };
     if (type === 'choice' && Array.isArray(inp.options) && inp.options.length) {
       const box = el('div', { class: 'choices', role: 'group', 'aria-label': inp.label || 'Wybór' });
       inp.options.forEach((opt) => {
@@ -773,6 +844,7 @@
     this.updateFlagbar();
     const cnt = this.counts(); const ph = this.content.phaseOfItem[it.id]; const p = cnt.phases[ph.id];
     const chip = $('#phase-progress', this.root); if (chip) chip.textContent = p.answered + '/' + p.total + ' odhaczone';
+    if (this.route.view === 'filtr') this.refreshFilter();
     if (next === 'problem' && it.dealbreaker) this.sheetDealbreaker(it, row);
     else if (next === 'problem' && navigator.vibrate) { try { navigator.vibrate(30); } catch (e) { /* ignore */ } }
     if (!wasComplete && p.total && p.answered === p.total) { this.toast('Etap odhaczony ✓'); track('phase_done', { phase_id: ph.id, answered: p.answered, problems: p.problem, uwagi: p.uwaga }); }
@@ -828,8 +900,8 @@
     const ruleText = kind === 'walk' ? rules.walk_away_if : kind === 'mech' ? rules.get_mechanic_if : kind === 'nego' ? rules.negotiate_if : null;
     return { kind: kind, title: title, lead: lead, reasons: reasons, rules: Array.isArray(ruleText) ? ruleText : [] };
   };
-  App.prototype.negoGroups = function () {
-    const a = this.car().a; const groups = [];
+  App.prototype.negoGroups = function (carId) {
+    const car = carId ? this.state.cars[carId] : this.car(); const a = (car && car.a) || {}; const groups = [];
     this.content.phases.forEach((ph) => {
       const rows = [];
       ph.items.forEach((it) => { const v = a[it.id]; if (v && (v[0] === 'uwaga' || v[0] === 'problem')) rows.push({ item: it, state: v[0], input: v[1], note: v[2] }); });
@@ -875,6 +947,11 @@
     if (d.reasons.length) dec.append(el('p', { style: 'margin:8px 0 0;font-weight:600' }, 'Dlaczego:'), el('ul', null, d.reasons.map((r) => el('li', null, r))));
     if (d.rules.length) dec.append(el('p', { style: 'margin:10px 0 0;font-weight:600' }, d.kind === 'walk' ? 'Zasada: odpuść, gdy…' : d.kind === 'mech' ? 'Zasada: mechanik, gdy…' : 'Zasada: negocjuj, gdy…'), el('ul', null, d.rules.map((r) => el('li', null, r))));
     out.push(dec);
+    // Report CTA + paint map (the report is the shareable artefact; the list below stays)
+    out.push(el('div', { class: 'card card--accent' }, el('div', { class: 'card__title' }, el('span', { class: 'reportcta__i', html: ICON.doc }), el('h2', { class: 'grow', style: 'margin:0' }, this.reportTitle)),
+      el('p', { class: 'muted' }, 'Jeden dokument: decyzja, ' + (c.hasPaint ? 'mapa lakieru, ' : '') + 'wszystkie uwagi z pomiarami, notatkami i zdjęciami. Do PDF, do wysłania, do porównania.'),
+      el('button', { class: 'btn btn--primary btn--block', type: 'button', 'data-testid': 'open-report', onclick: () => self.go('raport/' + encodeURIComponent(self.state.active)) }, 'Zobacz raport')));
+    if (c.hasPaint && this.paintData().count) out.push(this.paintCard({ interactive: true, compact: true }));
     // list
     const listCard = el('div', { class: 'card' }, el('h2', null, this.listTitle()));
     if (!groups.length) listCard.append(el('p', { class: 'empty' }, 'Jeszcze pusto. Każdy punkt oznaczony „Uwaga” lub „Problem” trafi tu automatycznie.'));
@@ -914,12 +991,18 @@
   function fallbackCopy(text) {
     try { const ta = el('textarea', { style: 'position:fixed;opacity:0;top:0;left:0' }); ta.value = text; document.body.append(ta); ta.select(); const ok = document.execCommand('copy'); ta.remove(); return ok; } catch (e) { return false; }
   }
+  async function copyText(text) { try { await navigator.clipboard.writeText(text); return true; } catch (e) { return fallbackCopy(text); } }
 
   /* ------------------------------------------------------------------ print */
-  App.prototype.preparePrint = async function (what) {
+  App.prototype.preparePrint = async function (what, carId) {
     const c = this.content; const car = this.car(); const root = this.printRoot; root.innerHTML = '';
     if (what === 'contract' && c.contract_template) {
       root.append(this.contractDom(true)); return;
+    }
+    if (what === 'report') {
+      const id = carId && this.state.cars[carId] ? carId : this.state.active;
+      const photos = await Photos.map(this.opts.product + '|' + id + '|');
+      root.append(this.reportDom(id, { photos: photos, print: true })); return;
     }
     const cnt = this.counts(); const d = this.decide(cnt); const groups = this.negoGroups(); const rules = c.summary_rules || {};
     root.append(el('h1', { text: (c.meta.title || 'Odhacz') + ' – ' + this.listTitle().toLowerCase() }));
@@ -945,28 +1028,360 @@
     root.append(el('div', { class: 'p-foot' }, (c.meta.disclaimer || '') + ' Wygenerowano w ' + (c.meta.title || 'Odhacz') + ' (Odhacz).'));
   };
 
-  /* ------------------------------------------------------------------ view: call script */
+  /* ------------------------------------------------------------------ view: call script (Scenariusz rozmowy) */
+  // Renders whatever the content has: intro, before[], opening[], questions[{q, watch_for, if_dodges?}], closing[], message_templates[{title,text}], no_call_note.
   App.prototype.viewCall = function () {
     const self = this; const s = this.content.seller_call_script;
-    if (!s) return [this.topbar('Skrypt rozmowy', ''), this.lockedCard('Ta wersja nie zawiera skryptu rozmowy.')];
+    if (!s) return [this.topbar('Scenariusz rozmowy', ''), this.lockedCard('Ta wersja nie zawiera scenariusza rozmowy.')];
     const car = this.car(); car.q = car.q || {};
-    const out = [this.topbar('Skrypt rozmowy', '')];
+    const strList = (arr) => (Array.isArray(arr) ? arr.filter((x) => typeof x === 'string' && x.trim()) : []);
+    const qs = Array.isArray(s.questions) ? s.questions.filter((q) => q && q.q) : [];
+    const before = strList(s.before), opening = strList(s.opening), closing = strList(s.closing);
+    const tpls = Array.isArray(s.message_templates) ? s.message_templates.filter((t) => t && typeof t.text === 'string' && t.text.trim()) : [];
+    const ticked = () => Object.keys(car.q).filter((k) => car.q[k]).length;
+    const copyBtn = (text, label, ev) => el('button', { class: 'copybtn', type: 'button', 'aria-label': label, onclick: async () => { const ok = await copyText(text); self.toast(ok ? 'Skopiowane' : 'Nie udało się skopiować', !ok); if (ok && ev) track(ev.name, ev.props); } }, el('span', { html: ICON.copy }), 'Kopiuj');
+    const out = [this.topbar('Scenariusz rozmowy', '')];
     out.push(el('h1', { style: 'font-size:26px;margin-top:4px' }, 'Zadzwoń, zanim pojedziesz'));
     if (s.intro) out.push(el('div', { class: 'bubble bubble--inline' }, mascot(), el('div', null, el('b', null, 'Hacz: '), s.intro, el('span', { class: 'sign' }, 'Hacz – asystent AI marki Odhacz'))));
-    const card = el('div', { class: 'card' });
-    (s.questions || []).forEach((q, i) => {
-      const id = 'q-' + i; const cb = el('input', { type: 'checkbox', id: id, checked: !!car.q[i] });
-      const watch = el('div', { class: 'watch', hidden: true }, el('b', null, 'Uważaj na: '), q.watch_for || '');
-      const wrap = el('div', { class: 'q' },
-        el('div', { class: 'check' + (car.q[i] ? ' is-done' : '') }, cb, el('label', { for: id, class: 'grow check__text', text: q.q || '' })),
-        q.watch_for ? el('button', { class: 'toolbtn', type: 'button', style: 'margin-left:34px', onclick: () => { watch.hidden = !watch.hidden; } }, el('span', { html: ICON.warn }), 'Na co uważać w odpowiedzi') : null,
-        watch);
-      cb.addEventListener('change', () => { if (cb.checked) car.q[i] = 1; else delete car.q[i]; $('.check', wrap).classList.toggle('is-done', cb.checked); self.persist(); });
-      card.append(wrap);
-    });
-    out.push(card);
-    out.push(el('button', { class: 'btn btn--ghost btn--block', type: 'button', onclick: () => { car.q = {}; self.persist(); self.render(); } }, 'Wyczyść odpowiedzi'));
+    if (before.length) out.push(el('div', { class: 'card' }, el('h2', null, 'Zanim zadzwonisz'), el('ul', { class: 'rules' }, before.map((t) => el('li', null, t)))));
+    if (opening.length) {
+      const card = el('div', { class: 'card' }, el('h2', null, 'Jak zacząć'), el('p', { class: 'muted' }, 'Jedno zdanie na start. Nie tłumacz, po co dzwonisz.'));
+      opening.forEach((t) => card.append(el('div', { class: 'line' }, el('blockquote', { class: 'phrase grow' }, t), copyBtn(t, 'Kopiuj zdanie'))));
+      out.push(card);
+    }
+    if (qs.length) {
+      out.push(el('div', { class: 'row', style: 'justify-content:space-between;margin:18px 0 8px' }, el('h2', { style: 'margin:0' }, qs.length + ' ' + plural(qs.length, 'pytanie', 'pytania', 'pytań')), el('span', { class: 'chip', id: 'call-progress' }, ticked() + '/' + qs.length + ' zadane')));
+      qs.forEach((q, i) => {
+        const id = 'q-' + i; const cb = el('input', { type: 'checkbox', id: id, checked: !!car.q[i] });
+        const card = el('article', { class: 'card qcard' + (car.q[i] ? ' is-done' : ''), 'data-q': String(i) });
+        card.append(el('div', { class: 'check' }, cb, el('label', { for: id, class: 'grow check__text' }, el('span', { class: 'qcard__n', text: (i + 1) + '/' + qs.length }), q.q)));
+        if (q.watch_for) card.append(el('div', { class: 'watch' }, el('b', null, 'Uważaj na: '), q.watch_for));
+        if (q.if_dodges) {
+          const dodge = el('div', { class: 'dodge', hidden: true }, el('b', null, 'Jeśli kręci: '), q.if_dodges);
+          const tb = el('button', { class: 'toolbtn', type: 'button', 'aria-expanded': 'false' }, el('span', { html: ICON.chev }), 'Jeśli kręci');
+          tb.addEventListener('click', () => { dodge.hidden = !dodge.hidden; tb.setAttribute('aria-expanded', dodge.hidden ? 'false' : 'true'); });
+          card.append(tb, dodge);
+        }
+        cb.addEventListener('change', () => { if (cb.checked) car.q[i] = 1; else delete car.q[i]; card.classList.toggle('is-done', cb.checked); self.persist(); const chip = $('#call-progress', self.root); if (chip) chip.textContent = ticked() + '/' + qs.length + ' zadane'; });
+        out.push(card);
+      });
+    }
+    if (closing.length) out.push(el('div', { class: 'card' }, el('h2', null, 'Jak zakończyć'), el('ul', { class: 'rules' }, closing.map((t) => el('li', null, t)))));
+    if (tpls.length) {
+      const card = el('div', { class: 'card card--soft msgs', 'data-testid': 'msg-templates' }, el('h2', null, 'Nie lubisz dzwonić? Wyślij wiadomość'));
+      if (s.no_call_note) card.append(el('p', { class: 'muted' }, s.no_call_note));
+      tpls.forEach((t, i) => card.append(el('div', { class: 'tpl' }, el('div', { class: 'tpl__head' }, el('h3', { class: 'grow', text: t.title || 'Wiadomość ' + (i + 1) }), copyBtn(t.text, 'Kopiuj wiadomość: ' + (t.title || i + 1), { name: 'script_message_copied', props: { index: i, title: String(t.title || '').slice(0, 40) } })), el('pre', { class: 'tpl__text', text: t.text }))));
+      out.push(card);
+    }
+    if (qs.length) out.push(el('button', { class: 'btn btn--ghost btn--block', type: 'button', onclick: () => { car.q = {}; self.persist(); self.render(); } }, 'Wyczyść odpowiedzi'));
     return out;
+  };
+
+  /* ------------------------------------------------------------------ paint map (Mapa lakieru) */
+  /** Readings per panel + levels relative to the baseline (roof, else median): ≤1.4× ok, 1.4–2.4× warn, >2.4× bad. */
+  App.prototype.paintData = function (carId) {
+    const c = this.content; const car = carId ? this.state.cars[carId] : this.car(); const a = (car && car.a) || {};
+    const d = { readings: {}, values: [], baseline: null, baseSrc: null, levels: {}, max: null, count: 0, flagged: [], panels: Object.keys(c.panelItem || {}).length };
+    if (!c.hasPaint) return d;
+    PANELS.forEach((p) => { const it = c.panelItem[p.key]; if (!it) return; const v = a[it.id] && a[it.id][1]; const n = typeof v === 'number' ? v : (v != null && v !== '' ? Number(v) : NaN); if (isFinite(n) && n > 0) { d.readings[p.key] = n; d.values.push(n); } });
+    d.count = d.values.length;
+    if (d.readings.roof) { d.baseline = d.readings.roof; d.baseSrc = 'roof'; }
+    else if (d.count) { const s = d.values.slice().sort((x, y) => x - y); const m = s.length >> 1; d.baseline = s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2; d.baseSrc = 'median'; }
+    PANELS.forEach((p) => {
+      const v = d.readings[p.key];
+      if (v == null) { d.levels[p.key] = c.panelItem[p.key] ? 'none' : 'na'; return; }
+      const r = d.baseline ? v / d.baseline : 1; const lv = r > 2.4 ? 'bad' : r > 1.4 ? 'warn' : 'ok';
+      d.levels[p.key] = lv; if (lv !== 'ok') d.flagged.push({ key: p.key, value: v, ratio: r, level: lv });
+      if (!d.max || v > d.max.value) d.max = { key: p.key, value: v, ratio: r, level: lv };
+    });
+    d.flagged.sort((x, y) => y.ratio - x.ratio);
+    return d;
+  };
+  /** Inline SVG top view: 12 tappable panels, value labels, hatched = missing. */
+  App.prototype.paintSvg = function (d, interactive) {
+    const c = this.content; const pid = 'hatch-' + uid();
+    let s = '<svg class="paintmap__svg" viewBox="0 0 240 440" role="img" aria-label="Mapa grubości lakieru – widok auta z góry, przód u góry" focusable="false">';
+    s += '<defs><pattern id="' + pid + '" patternUnits="userSpaceOnUse" width="7" height="7" patternTransform="rotate(45)"><rect class="hatch-bg" width="7" height="7"/><rect class="hatch-fg" width="2.5" height="7"/></pattern></defs>';
+    s += '<rect class="pm-body" x="26" y="16" width="188" height="386" rx="46" ry="46"/>';
+    [[16, 62], [208, 62], [16, 318], [208, 318]].forEach((w) => { s += '<rect class="pm-wheel" x="' + w[0] + '" y="' + w[1] + '" width="16" height="50" rx="6"/>'; });
+    s += '<rect class="pm-glass" x="70" y="114" width="100" height="38" rx="8"/><rect class="pm-glass" x="72" y="264" width="96" height="34" rx="8"/>';
+    PANELS.forEach((p) => {
+      const lv = d.levels[p.key] || 'na'; const v = d.readings[p.key]; const it = c.panelItem[p.key];
+      const label = p.label + ': ' + (v != null ? fmtNum(v) + ' µm, ' + PAINT_LEVEL[lv] + (d.baseline && p.key !== 'roof' ? ' (' + ratioText(v / d.baseline) + ' bazy)' : '') : PAINT_LEVEL[lv]);
+      s += '<g class="pnl lv-' + lv + '" data-panel="' + p.key + '"' + (interactive && it ? ' role="button" tabindex="0"' : '') + ' aria-label="' + esc(label) + '"><title>' + esc(label) + '</title>';
+      PANEL_GEOM[p.key].forEach((g) => { s += '<rect class="pnl__fill" x="' + g[0] + '" y="' + g[1] + '" width="' + g[2] + '" height="' + g[3] + '" rx="7"' + (lv === 'none' || lv === 'na' ? ' fill="url(#' + pid + ')"' : '') + '/>'; });
+      if (v != null) {
+        const g = PANEL_GEOM[p.key][0]; const cx = g[0] + g[2] / 2, cy = g[1] + g[3] / 2; const txt = fmtNum(v);
+        if (p.key === 'sills') s += '<text class="pnl__v" x="' + cx + '" y="' + cy + '" font-size="9" transform="rotate(-90 ' + cx + ' ' + cy + ')">' + esc(txt) + '</text>';
+        else s += '<text class="pnl__v" x="' + cx + '" y="' + cy + '" font-size="' + (g[2] > 60 ? 15 : (txt.length > 3 ? 8.5 : 10.5)) + '">' + esc(txt) + '</text>';
+      }
+      s += '</g>';
+    });
+    s += '<text class="pm-cap" x="120" y="11" font-size="10">przód</text><text class="pm-cap" x="120" y="416" font-size="10">tył</text>';
+    s += '<text class="pm-cap" x="52" y="433" font-size="9">lewa strona</text><text class="pm-cap" x="188" y="433" font-size="9">prawa strona</text></svg>';
+    const wrap = el('div', { class: 'paintmap', html: s });
+    if (interactive) {
+      const self = this;
+      wrap.querySelectorAll('.pnl[role="button"]').forEach((g) => {
+        const it = c.panelItem[g.getAttribute('data-panel')]; if (!it) return;
+        const open = () => { track('paint_panel_tap', { panel: g.getAttribute('data-panel') }); self.revealItem(it.id, true); };
+        g.addEventListener('click', open);
+        g.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); } });
+      });
+    }
+    return wrap;
+  };
+  /** Card: map + legend + baseline + hedged interpretation (+ list of panels unless compact). opts: {carId, interactive, live, compact, title} */
+  App.prototype.paintCard = function (opts) {
+    opts = opts || {}; const c = this.content; if (!c.hasPaint) return null;
+    const self = this; const d = this.paintData(opts.carId);
+    const card = el('section', { class: 'card paintcard', 'aria-label': 'Mapa lakieru', 'data-testid': 'paint-map' });
+    if (opts.live) card.setAttribute('data-live', '1');
+    card._paintOpts = opts;
+    card.append(el('div', { class: 'card__title' }, el('h2', { class: 'grow', style: 'margin:0', text: opts.title || 'Mapa lakieru' }), el('span', { class: 'chip', text: d.count + '/' + d.panels + ' odczytów' })));
+    card.append(this.paintSvg(d, !!opts.interactive));
+    const legend = el('div', { class: 'paint-legend', 'aria-label': 'Legenda' });
+    [['ok', '≤ 1,4× bazy'], ['warn', '1,4–2,4× bazy'], ['bad', '> 2,4× bazy'], ['none', 'brak odczytu']].forEach((x) => legend.append(el('span', { class: 'pl pl--' + x[0] }, el('i'), x[1])));
+    card.append(legend);
+    card.append(el('p', { class: 'paint-base' }, this.paintBaseText(d)));
+    card.append(el('p', { class: 'paint-note', 'data-testid': 'paint-note' }, this.paintInterpretation(d)));
+    if (!opts.compact) {
+      const list = el('div', { class: 'paint-list' });
+      PANELS.forEach((p) => {
+        const it = c.panelItem[p.key]; if (!it) return; const lv = d.levels[p.key]; const v = d.readings[p.key];
+        const props = { class: 'paint-row lv-' + lv, 'data-panel': p.key };
+        if (opts.interactive) { props.type = 'button'; props.onclick = () => self.revealItem(it.id, true); props['aria-label'] = p.label + ': ' + (v != null ? fmtNum(v) + ' µm' : 'brak odczytu') + ' – otwórz punkt'; }
+        list.append(el(opts.interactive ? 'button' : 'div', props, el('i', { class: 'dot' }), el('span', { class: 'grow', text: p.label }), el('b', { text: v != null ? fmtNum(v) + ' µm' : '—' }), el('small', { text: v != null ? (d.baseline ? ratioText(v / d.baseline) : '') : (opts.interactive ? 'wpisz' : 'brak') })));
+      });
+      card.append(list);
+    }
+    return card;
+  };
+  App.prototype.paintBaseText = function (d) {
+    if (!d.count) return 'Baza: dach. Zmierz go pierwszy — do niego porównujemy resztę.';
+    if (d.baseSrc === 'roof') return 'Baza: dach ' + fmtNum(d.baseline) + ' µm. Kolor mówi, ile razy element odstaje od dachu.';
+    return 'Baza: mediana odczytów ' + fmtNum(d.baseline) + ' µm — bez odczytu dachu. Wpisz dach, będzie dokładniej.';
+  };
+  App.prototype.paintInterpretation = function (d) {
+    const fixed = 'Odczyty wyraźnie wyższe niż dach zwykle oznaczają lakierowanie; kilkaset µm — możliwa szpachla. To widełki, nie wyrok.';
+    if (!d.count) return 'Wpisz odczyty przy punktach — mapa pokoloruje się sama. ' + fixed;
+    const bad = d.flagged.filter((f) => f.level === 'bad'), warn = d.flagged.filter((f) => f.level === 'warn');
+    if (bad.length) { const m = bad[0]; return 'Najwyżej: ' + PANEL_INDEX[m.key].label.toLowerCase() + ' ' + fmtNum(m.value) + ' µm (' + ratioText(m.ratio) + ' bazy)' + (d.flagged.length > 1 ? '; łącznie ' + d.flagged.length + ' ' + plural(d.flagged.length, 'element odstaje', 'elementy odstają', 'elementów odstaje') : '') + '. ' + fixed; }
+    if (warn.length) return warn.length + ' ' + plural(warn.length, 'element powyżej bazy', 'elementy powyżej bazy', 'elementów powyżej bazy') + ': ' + warn.map((f) => PANEL_INDEX[f.key].label.toLowerCase()).join(', ') + '. Zapytaj, co tam było. ' + fixed;
+    return 'W zmierzonych miejscach odczyty trzymają się bazy' + (d.count < d.panels ? ' — domierz resztę, zanim uznasz lakier za jednolity' : '') + '. ' + fixed;
+  };
+  App.prototype.refreshPaintMaps = function () {
+    const self = this;
+    this.root.querySelectorAll('.paintcard[data-live]').forEach((old) => { const fresh = self.paintCard(old._paintOpts || { interactive: true, live: true }); if (fresh) old.replaceWith(fresh); });
+  };
+  /** Expand an item in the current view (scroll + optional focus on its input); falls back to navigating to its phase. */
+  App.prototype.revealItem = function (itemId, focusInput) {
+    const row = this.itemEl(itemId); const it = this.content.itemById[itemId];
+    if (!row || !it) { this.openItem(itemId); return; }
+    this.openItems[itemId] = true; row.classList.add('is-open'); const h = $('.item__head', row); if (h) h.setAttribute('aria-expanded', 'true'); this.loadPhotos(it, row);
+    row.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    if (focusInput) { const inp = $('.field input', row); if (inp) setTimeout(() => { try { inp.focus({ preventScroll: true }); } catch (e) { /* ignore */ } }, 350); }
+  };
+
+  /* ------------------------------------------------------------------ view: quick filter (Szybki filtr) */
+  App.prototype.filterEnabled = function () { const c = this.content; return !!(c.quickItems && c.quickItems.length && (c.quickExplicit || this.opts.kind !== 'upsell')); };
+  App.prototype.quickStats = function (carId) {
+    const c = this.content; const car = carId ? this.state.cars[carId] : this.car(); const a = (car && car.a) || {};
+    const s = { total: c.quickItems.length, answered: 0, db: [], problems: [], uwagi: [] };
+    c.quickItems.forEach((it) => { const st = a[it.id] && a[it.id][0]; if (!st) return; s.answered++; if (st === 'problem') { s.problems.push(it); if (it.dealbreaker) s.db.push(it); } else if (st === 'uwaga') s.uwagi.push(it); });
+    s.done = s.total > 0 && s.answered === s.total; s.verdict = !s.done ? null : (s.db.length ? 'walk' : 'pass');
+    return s;
+  };
+  App.prototype.viewFilter = function () {
+    const c = this.content;
+    if (!this.filterEnabled()) return [this.topbar('Szybki filtr', ''), this.lockedCard('Ta wersja nie ma szybkiego filtra.')];
+    const s = this.quickStats();
+    const out = [this.topbar('Szybki filtr', '')];
+    out.push(el('h1', { style: 'font-size:26px;margin-top:4px' }, 'Najpierw odsiej. Potem sprawdzaj dokładnie.'));
+    out.push(el('p', { class: 'muted' }, s.total + ' ' + plural(s.total, 'punkt', 'punkty', 'punktów') + ' z całej checklisty. Te same odpowiedzi co w etapach — nic nie robisz dwa razy.'));
+    out.push(el('div', { class: 'chips' }, el('span', { class: 'chip' }, el('span', { html: ICON.clock }), '~10 min'), el('span', { class: 'chip', id: 'filtr-progress' }, s.answered + '/' + s.total + ' odhaczone')));
+    out.push(el('div', { class: 'bubble bubble--inline' }, mascot(), el('div', null, el('b', null, 'Hacz: '), 'Jeśli tu coś nie gra, reszta nie ma znaczenia — i oszczędzasz godzinę. Jeśli gra, dopiero zaczynasz.', el('span', { class: 'sign' }, 'Hacz – asystent AI marki Odhacz'))));
+    c.quickByPhase.forEach((g) => { out.push(el('div', { class: 'section-title' }, g.phase.title)); g.items.forEach((it) => out.push(this.itemRow(it))); });
+    out.push(el('div', { id: 'filtr-verdict', 'data-testid': 'filtr-verdict' }, this.filterVerdict(s)));
+    return out;
+  };
+  App.prototype.filterVerdict = function (s) {
+    const self = this; const c = this.content; s = s || this.quickStats();
+    if (!s.done) return el('p', { class: 'muted center', style: 'margin:18px 0' }, 'Werdykt pojawi się po ostatnim punkcie (zostało ' + (s.total - s.answered) + ').');
+    const car = this.car();
+    if (!car.qf) { car.qf = 1; this.persist(false); track('quick_filter_done', { verdict: s.verdict, db: s.db.length, problems: s.problems.length, uwagi: s.uwagi.length, total: s.total }); }
+    if (s.verdict === 'walk') {
+      const box = el('section', { class: 'decision decision--walk', 'aria-label': 'Werdykt' }, el('div', { class: 'decision__label' }, 'Werdykt filtra'), el('h2', null, 'Odpuść — nie trać godziny'),
+        el('p', null, s.db.length + ' ' + plural(s.db.length, 'dealbreaker', 'dealbreakery', 'dealbreakerów') + ' na „Problem”. Pełne oględziny tego nie odwrócą.'));
+      box.append(el('p', { style: 'margin:8px 0 0;font-weight:600' }, 'Dlaczego:'), el('ul', null, s.db.map((it) => el('li', null, it.flag_label || it.text))));
+      box.append(el('div', { class: 'btnrow' }, el('button', { class: 'btn', type: 'button', onclick: () => self.go('summary') }, 'Zobacz podsumowanie'), el('button', { class: 'btn', type: 'button', onclick: () => self.sheetCars() }, el('span', { html: ICON.plus }), 'Następne auto')));
+      return box;
+    }
+    const next = c.phases[1] || c.phases[0]; const n = s.problems.length + s.uwagi.length;
+    const box = el('section', { class: 'decision decision--ok', 'aria-label': 'Werdykt' }, el('div', { class: 'decision__label' }, 'Werdykt filtra'), el('h2', null, 'Auto przeszło filtr. Zacznij pełne oględziny'),
+      el('p', null, 'Żaden dealbreaker nie wypadł na „Problem”.' + (n ? ' Masz ' + n + ' ' + plural(n, 'uwagę', 'uwagi', 'uwag') + ' — trafią na listę do negocjacji.' : ' Teraz dokładnie: dokumenty, lakier, silnik na zimno, jazda.')));
+    if (next) box.append(el('button', { class: 'btn btn--primary btn--block', type: 'button', onclick: () => self.go('phase/' + encodeURIComponent(next.id)) }, 'Etap ' + (next.index + 1) + ': ' + next.title, el('span', { html: ICON.chev, style: 'transform:rotate(-90deg);display:inline-flex' })));
+    return box;
+  };
+  App.prototype.refreshFilter = function () {
+    const s = this.quickStats(); const chip = $('#filtr-progress', this.root); if (chip) chip.textContent = s.answered + '/' + s.total + ' odhaczone';
+    const v = $('#filtr-verdict', this.root); if (v) { v.innerHTML = ''; v.append(this.filterVerdict(s)); }
+  };
+
+  /* ------------------------------------------------------------------ view: report (Raport z oględzin) */
+  App.prototype.carDate = function (car) { return String(car.u || car.created || nowIso()).slice(0, 10); };
+  App.prototype.photoKeyFor = function (carId, itemId) { return this.opts.product + '|' + carId + '|' + itemId; };
+  App.prototype.viewReport = function (carId) {
+    const self = this; const id = carId && this.state.cars[carId] ? carId : this.state.active; const car = this.state.cars[id];
+    const out = [this.topbar(this.reportTitle, id === this.state.active ? 'summary' : 'porownaj', false)];
+    if (!car) { out.push(this.lockedCard('Nie ma takiego auta.')); return out; }
+    const cnt = this.counts(id); const many = Object.keys(this.state.cars).length >= 2;
+    track('report_viewed', { answered: cnt.answered, total: cnt.total, problem: cnt.problem, db: cnt.db, decision: this.decide(cnt).kind });
+    const actions = el('div', { class: 'btnrow report-actions' },
+      el('button', { class: 'btn btn--primary', type: 'button', 'data-testid': 'report-pdf', onclick: async () => { await self.preparePrint('report', id); track('report_pdf', { answered: cnt.answered, problem: cnt.problem }); window.print(); } }, el('span', { html: ICON.print }), 'Zapisz jako PDF'),
+      el('button', { class: 'btn', type: 'button', 'data-testid': 'report-copy', onclick: async () => { const ok = await copyText(self.reportText(id)); self.toast(ok ? 'Raport skopiowany' : 'Nie udało się skopiować', !ok); if (ok) track('report_copied', { answered: cnt.answered, problem: cnt.problem }); } }, el('span', { html: ICON.copy }), 'Kopiuj raport'),
+      navigator.share ? el('button', { class: 'btn', type: 'button', 'data-testid': 'report-share', onclick: async () => { try { await navigator.share({ title: self.reportTitle + ' – ' + car.name, text: self.reportText(id) }); track('report_shared', { answered: cnt.answered }); } catch (e) { /* cancelled */ } } }, el('span', { html: ICON.share }), 'Udostępnij') : null);
+    out.push(actions);
+    const doc = this.reportDom(id, {}); out.push(doc); this.fillReportPhotos(doc, id);
+    out.push(el('div', { class: 'btnrow mt' }, el('button', { class: 'btn', type: 'button', onclick: () => { if (id !== self.state.active) { self.state.active = id; self.persist(); } self.go('summary'); } }, 'Podsumowanie'), many ? el('button', { class: 'btn', type: 'button', onclick: () => self.go('porownaj') }, el('span', { html: ICON.car }), 'Porównaj auta') : null));
+    this.preparePrint('report', id); // Ctrl+P / „Drukuj” z menu przeglądarki też daje raport
+    return out;
+  };
+  /** The document itself (screen and print). opts.photos: map from Photos.map() for print; on screen photos load async. */
+  App.prototype.reportDom = function (id, opts) {
+    opts = opts || {}; const c = this.content; const car = this.state.cars[id]; const cnt = this.counts(id); const d = this.decide(cnt); const groups = this.negoGroups(id); const rules = c.summary_rules || {}; const photos = opts.photos || null;
+    const doc = el('article', { class: 'report', 'data-testid': 'report' });
+    doc.append(el('header', { class: 'report__head' }, el('div', { class: 'report__eyebrow' }, this.appName + ' · ' + this.reportTitle), el('h1', { class: 'report__title', text: car.name }),
+      el('div', { class: 'report__meta' }, fmtPl(this.carDate(car)) + ' · ' + cnt.answered + '/' + cnt.total + ' ' + plural(cnt.total, 'punkt', 'punkty', 'punktów') + ' odhaczonych')));
+    doc.append(el('div', { class: 'counts' },
+      el('div', { class: 'count count--ok' }, el('b', { text: String(cnt.ok) }), el('span', null, 'OK')),
+      el('div', { class: 'count count--uwaga' }, el('b', { text: String(cnt.uwaga) }), el('span', null, 'Uwaga')),
+      el('div', { class: 'count count--problem' }, el('b', { text: String(cnt.problem) }), el('span', null, 'Problem')),
+      el('div', { class: 'count count--db' }, el('b', { text: String(cnt.db) }), el('span', null, 'Dealbreakery'))));
+    const dec = el('section', { class: 'decision decision--' + d.kind, 'aria-label': 'Decyzja' }, el('div', { class: 'decision__label' }, 'Decyzja'), el('h2', { text: d.title }), el('p', null, d.lead));
+    if (d.reasons.length) dec.append(el('p', { style: 'margin:8px 0 0;font-weight:600' }, 'Dlaczego:'), el('ul', null, d.reasons.map((r) => el('li', null, r))));
+    doc.append(dec);
+    if (c.hasPaint && this.paintData(id).count) doc.append(this.paintCard({ carId: id, title: 'Mapa lakieru' }));
+    const list = el('section', { class: 'card report__list' }, el('h2', null, 'Uwagi i problemy'));
+    if (!groups.length) list.append(el('p', { class: 'muted' }, cnt.answered ? 'Brak uwag i problemów w odhaczonych punktach.' : 'Jeszcze nic nie odhaczono.'));
+    groups.forEach((g) => {
+      list.append(el('h3', { class: 'report__ph', text: g.phase.title }));
+      g.rows.forEach((r) => {
+        const it = r.item; const box = el('div', { class: 'rep-item s-' + r.state, 'data-item': it.id });
+        box.append(el('div', { class: 'rep-item__t' }, el('span', { class: 'rep-state', text: STATE_LABEL[r.state] || r.state }), el('span', null, r.state === 'problem' && it.flag_label ? it.flag_label : it.text, it.dealbreaker && r.state === 'problem' ? el('span', { class: 'db' }, ' · dealbreaker') : null)));
+        if (r.state === 'problem' && it.flag_label) box.append(el('div', { class: 'rep-item__sub', text: it.text }));
+        if (r.input != null && r.input !== '') box.append(el('div', { class: 'rep-item__meta' }, el('b', null, (it.input && it.input.label ? it.input.label : 'Pomiar') + ': '), inputText(it, r.input)));
+        if (r.note) box.append(el('div', { class: 'rep-item__meta' }, el('b', null, 'Notatka: '), r.note));
+        if (it.photo) { const ph = el('div', { class: 'rep-photos', 'data-photos': it.id }); const l = photos && photos[this.photoKeyFor(id, it.id)]; if (l && l.length) l.forEach((u, i) => ph.append(el('img', { src: u, alt: 'Zdjęcie ' + (i + 1) }))); box.append(ph); }
+        list.append(box);
+      });
+    });
+    doc.append(list);
+    const inputs = []; c.items.forEach((it) => { const v = car.a && car.a[it.id] && car.a[it.id][1]; if (it.input && v != null && v !== '') inputs.push({ it: it, v: v }); });
+    if (inputs.length) doc.append(el('section', { class: 'card' }, el('h2', null, 'Pomiary i dane'), el('dl', { class: 'rep-data' }, inputs.map((x) => [el('dt', { text: x.it.input.label || x.it.text }), el('dd', { text: inputText(x.it, x.v) })]))));
+    const qs = this.reportQuestions(id, cnt, d, groups);
+    if (qs.length) doc.append(el('section', { class: 'card' }, el('h2', null, 'Pytania, które warto zadać przed decyzją'), el('ol', { class: 'rep-q' }, qs.map((q) => el('li', null, q)))));
+    if (Array.isArray(rules.safe_deal_rules) && rules.safe_deal_rules.length) doc.append(el('section', { class: 'card' }, el('h2', null, 'Zasady bezpiecznej transakcji'), el('ul', { class: 'rules' }, rules.safe_deal_rules.map((r) => el('li', null, r)))));
+    doc.append(el('footer', { class: 'report__foot' }, (c.meta.disclaimer || '') + ' Raport wygenerowany w ' + this.appName + ' ' + fmtPl(todayStr()) + '. Odpowiedzi, pomiary, notatki i zdjęcia pochodzą od użytkownika.'));
+    return doc;
+  };
+  App.prototype.fillReportPhotos = async function (doc, id) {
+    const self = this; const map = await Photos.map(this.opts.product + '|' + id + '|');
+    doc.querySelectorAll('[data-photos]').forEach((ph) => { const l = map[self.photoKeyFor(id, ph.getAttribute('data-photos'))]; if (!l || !l.length) return; ph.innerHTML = ''; l.forEach((u, i) => ph.append(el('img', { src: u, alt: 'Zdjęcie ' + (i + 1) }))); });
+  };
+  /** Questions before the decision: from flagged items, the paint map, the decision, and the call script (only questions not yet ticked, if the script was used). */
+  App.prototype.reportQuestions = function (id, cnt, d, groups) {
+    const c = this.content; const car = this.state.cars[id]; const out = [];
+    if (d.kind === 'walk') return ['Dealbreaker to nie temat do negocjacji. Jeśli mimo to rozważasz zakup: „Czy pokaże Pan/Pani dokumenty, które to wyjaśniają?” — i decyzja dopiero po nich.'];
+    const rows = []; groups.forEach((g) => g.rows.forEach((r) => rows.push(r)));
+    rows.filter((r) => r.state === 'problem').concat(rows.filter((r) => r.state === 'uwaga')).slice(0, 5).forEach((r) => {
+      const label = r.state === 'problem' && r.item.flag_label ? r.item.flag_label : r.item.text;
+      out.push(r.state === 'problem' ? 'Skąd „' + label + '”? Jest na to dokument, faktura albo wyjaśnienie, które da się sprawdzić?' : 'Czy cena uwzględnia: ' + label + '?');
+    });
+    const pd = c.hasPaint ? this.paintData(id) : null;
+    if (pd && pd.flagged.length) out.push('Które elementy były lakierowane i dlaczego? Miernik pokazuje: ' + pd.flagged.slice(0, 3).map((f) => PANEL_INDEX[f.key].label.toLowerCase() + ' ' + fmtNum(f.value) + ' µm').join(', ') + (pd.baseline ? ' przy bazie ' + fmtNum(pd.baseline) + ' µm' : '') + '.');
+    if (d.kind === 'mech') out.push('Zgoda na sprawdzenie u mechanika lub na stacji diagnostycznej przed decyzją — na mój koszt, w tym tygodniu?');
+    const s = c.seller_call_script; const qs = (s && Array.isArray(s.questions)) ? s.questions : []; const asked = car.q || {};
+    if (qs.length && Object.keys(asked).some((k) => asked[k])) qs.forEach((q, i) => { if (!asked[i] && q && q.q && out.length < 9) out.push(q.q); });
+    return out.slice(0, 9);
+  };
+  /** Plain-text report (clipboard / share). */
+  App.prototype.reportText = function (id) {
+    const c = this.content; const car = this.state.cars[id]; const cnt = this.counts(id); const d = this.decide(cnt); const groups = this.negoGroups(id); const rules = c.summary_rules || {};
+    const L = [this.appName.toUpperCase() + ' · ' + this.reportTitle.toUpperCase(), car.name, fmtPl(this.carDate(car)) + ' · ' + cnt.answered + '/' + cnt.total + ' punktów', '',
+      'OK: ' + cnt.ok + ' · Uwaga: ' + cnt.uwaga + ' · Problem: ' + cnt.problem + ' · Dealbreakery: ' + cnt.db, '', 'DECYZJA: ' + d.title, d.lead];
+    d.reasons.forEach((r) => L.push('- ' + r)); L.push('');
+    if (c.hasPaint) { const pd = this.paintData(id); if (pd.count) { L.push('MAPA LAKIERU — ' + this.paintBaseText(pd)); PANELS.forEach((p) => { if (!c.panelItem[p.key]) return; const v = pd.readings[p.key]; L.push('- ' + p.label + ': ' + (v != null ? fmtNum(v) + ' µm' + (pd.baseline ? ' (' + ratioText(v / pd.baseline) + ', ' + PAINT_LEVEL[pd.levels[p.key]] + ')' : '') : 'brak odczytu')); }); L.push(this.paintInterpretation(pd), ''); } }
+    L.push('UWAGI I PROBLEMY');
+    if (!groups.length) L.push('- brak');
+    groups.forEach((g) => { L.push(g.phase.title.toUpperCase()); g.rows.forEach((r) => { let l = '- [' + (STATE_LABEL[r.state] || r.state).toUpperCase() + '] ' + (r.item.flag_label && r.state === 'problem' ? r.item.flag_label + ' (' + r.item.text + ')' : r.item.text); if (r.item.dealbreaker && r.state === 'problem') l += ' — DEALBREAKER'; if (r.input != null && r.input !== '') l += ' — ' + (r.item.input && r.item.input.label ? r.item.input.label + ': ' : '') + inputText(r.item, r.input); if (r.note) l += ' — notatka: ' + r.note; L.push(l); }); });
+    L.push('');
+    const inputs = []; c.items.forEach((it) => { const v = car.a && car.a[it.id] && car.a[it.id][1]; if (it.input && v != null && v !== '') inputs.push('- ' + (it.input.label || it.text) + ': ' + inputText(it, v)); });
+    if (inputs.length) { L.push('POMIARY I DANE'); inputs.forEach((x) => L.push(x)); L.push(''); }
+    const qs = this.reportQuestions(id, cnt, d, groups); if (qs.length) { L.push('PYTANIA PRZED DECYZJĄ'); qs.forEach((q, i) => L.push((i + 1) + '. ' + q)); L.push(''); }
+    if (Array.isArray(rules.safe_deal_rules) && rules.safe_deal_rules.length) { L.push('BEZPIECZNA TRANSAKCJA'); rules.safe_deal_rules.forEach((p) => L.push('- ' + p)); L.push(''); }
+    L.push((c.meta.disclaimer || '') + ' Raport wygenerowany w ' + this.appName + ' ' + fmtPl(todayStr()) + '.');
+    return L.join('\n');
+  };
+
+  /* ------------------------------------------------------------------ view: compare cars (Porównaj auta) */
+  App.prototype.findInputItem = function (unitRe, labelRe) { return this.content.items.find((it) => it.input && it.input.type === 'number' && unitRe.test(String(it.input.unit || '')) && labelRe.test((it.input.label || '') + ' ' + it.text)) || null; };
+  App.prototype.factItems = function () {
+    if (!this._facts) this._facts = { odo: this.findInputItem(/km/i, /licznik/i) || this.findInputItem(/km/i, /przebieg/i), dot: this.findInputItem(/rok/i, /DOT|opon/i), tread: this.findInputItem(/mm/i, /bieżnik|biezn/i) };
+    return this._facts;
+  };
+  App.prototype.carFacts = function (id) {
+    const c = this.content; const car = this.state.cars[id]; const cnt = this.counts(id); const d = this.decide(cnt); const f = this.factItems();
+    const val = (it) => { if (!it) return null; const v = car.a && car.a[it.id] && car.a[it.id][1]; return v == null || v === '' ? null : v; };
+    const rows = []; this.negoGroups(id).forEach((g) => g.rows.forEach((r) => rows.push(r)));
+    return { id: id, car: car, cnt: cnt, d: d, pd: c.hasPaint ? this.paintData(id) : null, odo: val(f.odo), dot: val(f.dot), tread: val(f.tread), notes: rows.filter((r) => r.state === 'problem').concat(rows.filter((r) => r.state === 'uwaga')).slice(0, 2), date: this.carDate(car), rank: { ok: 0, nego: 1, todo: 2, mech: 3, walk: 4 }[d.kind] };
+  };
+  App.prototype.viewCompare = function () {
+    const self = this; const ids = Object.keys(this.state.cars);
+    const out = [this.topbar('Porównaj auta', '', false)];
+    out.push(el('h1', { style: 'font-size:26px;margin-top:4px' }, 'Porównaj auta'));
+    if (ids.length < 2) {
+      out.push(el('div', { class: 'card locked', 'data-testid': 'compare-empty' }, mascot(), el('h2', null, 'Na razie jedno auto'), el('p', { class: 'muted' }, 'Dodaj drugie auto, a zobaczysz je obok siebie.'),
+        el('div', { class: 'btnrow' }, el('button', { class: 'btn btn--primary', type: 'button', onclick: () => self.sheetCars() }, el('span', { html: ICON.plus }), 'Dodaj auto'), el('button', { class: 'btn', type: 'button', onclick: () => self.go('') }, 'Wróć na start'))));
+      return out;
+    }
+    const facts = ids.map((id) => this.carFacts(id)); const sort = this.state.ui.cmpSort || 'best';
+    const cmp = (x, y) => (x.rank - y.rank) || (x.cnt.db - y.cnt.db) || (x.cnt.problem - y.cnt.problem) || (x.cnt.uwaga - y.cnt.uwaga) || (y.cnt.answered - x.cnt.answered);
+    if (sort === 'worst') facts.sort((x, y) => cmp(y, x)); else if (sort === 'added') facts.sort((x, y) => String(x.car.created || '').localeCompare(String(y.car.created || ''))); else facts.sort(cmp);
+    track('compare_viewed', { cars: ids.length, sort: sort });
+    out.push(el('p', { class: 'muted' }, ids.length + ' ' + plural(ids.length, 'auto', 'auta', 'aut') + ' obok siebie. Te same odpowiedzi, które odhaczasz w etapach — nic nie przepisujesz.'));
+    const seg = el('div', { class: 'seg seg--wrap', role: 'group', 'aria-label': 'Kolejność' });
+    [['best', 'Najlepsze najpierw'], ['worst', 'Najgorsze najpierw'], ['added', 'Kolejność dodania']].forEach((x) => seg.append(el('button', { type: 'button', class: sort === x[0] ? 'is-on' : '', 'aria-pressed': sort === x[0] ? 'true' : 'false', onclick: () => { self.state.ui.cmpSort = x[0]; self.persist(false); self.render(); } }, x[1])));
+    out.push(el('div', { class: 'row', style: 'margin-bottom:12px' }, seg));
+    const grid = el('div', { class: 'cmp', 'data-testid': 'compare', style: '--n:' + facts.length });
+    facts.forEach((f) => grid.append(this.compareCard(f)));
+    out.push(el('div', { class: 'cmp-scroll' }, grid));
+    out.push(el('p', { class: 'small muted', style: 'margin-top:12px' }, (this.content.hasPaint ? 'Lakier: najwyższy odczyt / dach (baza). ' : '') + 'Data: ostatnia zmiana odpowiedzi tego auta.'));
+    out.push(this.disclaimer());
+    return out;
+  };
+  App.prototype.compareCard = function (f) {
+    const self = this; const c = this.content; const cnt = f.cnt; const d = f.d; const fi = this.factItems();
+    const dash = () => el('span', { class: 'muted', text: '—' });
+    const row = (label, val, cls) => el('div', { class: 'cmp-row' + (cls ? ' ' + cls : '') }, el('span', { class: 'cmp-row__l', text: label }), el('span', { class: 'cmp-row__v' }, val));
+    const card = el('section', { class: 'cmp-car' + (f.id === this.state.active ? ' is-active' : ''), 'aria-label': f.car.name, 'data-car': f.id });
+    card.append(el('h2', { class: 'cmp-car__name' }, el('span', { html: ICON.car }), f.car.name));
+    card.append(el('div', { class: 'cmp-dec cmp-dec--' + d.kind }, el('b', { text: d.title })));
+    card.append(row('Dealbreakery', el('b', { class: cnt.db ? 'is-bad' : '', text: String(cnt.db) })));
+    card.append(row('Problemy', el('b', { class: cnt.problem ? 'is-bad' : '', text: String(cnt.problem) })));
+    card.append(row('Uwagi', el('b', { class: cnt.uwaga ? 'is-warn' : '', text: String(cnt.uwaga) })));
+    card.append(row('Postęp', el('span', null, el('b', { text: cnt.answered + '/' + cnt.total }), el('span', { class: 'progress', style: 'display:block;margin-top:6px' }, el('i', { style: 'width:' + Math.round(100 * cnt.answered / Math.max(1, cnt.total)) + '%' })))));
+    if (c.hasPaint) { const pd = f.pd; card.append(row('Lakier: max / dach', pd && pd.count && pd.max ? el('span', { class: 'chip chip--lv lv-' + pd.max.level, 'data-testid': 'cmp-paint' }, el('i', { class: 'dot' }), fmtNum(pd.max.value) + ' / ' + (pd.readings.roof ? fmtNum(pd.readings.roof) : '–') + ' µm') : dash())); }
+    if (fi.odo) card.append(row('Przebieg', f.odo != null ? fmtInput(fi.odo, f.odo) : dash()));
+    if (fi.dot) card.append(row('Najstarsza opona (DOT)', f.dot != null ? String(f.dot) : dash()));
+    if (fi.tread) card.append(row('Bieżnik', f.tread != null ? fmtInput(fi.tread, f.tread) : dash()));
+    card.append(row('Najważniejsze', f.notes.length ? el('ul', { class: 'cmp-notes' }, f.notes.map((r) => el('li', { class: 's-' + r.state }, (r.state === 'problem' && r.item.flag_label ? r.item.flag_label : r.item.text) + (r.note ? ' — ' + r.note : '')))) : el('span', { class: 'muted', text: cnt.answered ? 'bez uwag' : 'jeszcze nic' }), 'cmp-row--wide'));
+    card.append(row('Oględziny', fmtPl(f.date) || '—'));
+    card.append(el('div', { class: 'cmp-actions' },
+      el('button', { class: 'btn btn--small btn--primary', type: 'button', onclick: () => self.go('raport/' + encodeURIComponent(f.id)) }, el('span', { html: ICON.doc }), 'Otwórz raport'),
+      f.id !== this.state.active ? el('button', { class: 'btn btn--small', type: 'button', onclick: () => { self.state.active = f.id; self.persist(); self.toast('Aktywne auto: ' + f.car.name); self.render(); } }, 'Ustaw jako aktywne') : el('span', { class: 'chip' }, el('span', { html: ICON.check }), 'aktywne')));
+    card.style.setProperty('--rows', String(card.childNodes.length));
+    return card;
   };
 
   /* ------------------------------------------------------------------ view: glossary / sources */
@@ -1101,7 +1516,7 @@
     const card2 = el('div', { class: 'card' }, el('h3', null, 'To auto: ' + car.name),
       el('div', { class: 'btnrow' },
         el('button', { class: 'btn', type: 'button', onclick: () => self.sheetRename(car) }, el('span', { html: ICON.edit }), 'Zmień nazwę'),
-        el('button', { class: 'btn btn--danger', type: 'button', onclick: () => self.sheetConfirm('Wyzerować „' + car.name + '”?', 'Usuniesz odpowiedzi, pomiary, notatki i zdjęcia tego auta. Inne auta zostają.', 'Wyzeruj', async () => { car.a = {}; car.q = {}; delete car.pd; car.u = nowIso(); await Photos.delPrefix(self.opts.product + '|' + self.state.active + '|'); self.persist(); self.toast('Wyzerowano'); self.render(); }) }, el('span', { html: ICON.trash }), 'Wyzeruj to auto')),
+        el('button', { class: 'btn btn--danger', type: 'button', onclick: () => self.sheetConfirm('Wyzerować „' + car.name + '”?', 'Usuniesz odpowiedzi, pomiary, notatki i zdjęcia tego auta. Inne auta zostają.', 'Wyzeruj', async () => { car.a = {}; car.q = {}; delete car.pd; delete car.qf; car.u = nowIso(); await Photos.delPrefix(self.opts.product + '|' + self.state.active + '|'); self.persist(); self.toast('Wyzerowano'); self.render(); }) }, el('span', { html: ICON.trash }), 'Wyzeruj to auto')),
       el('button', { class: 'btn btn--ghost btn--block mt', type: 'button', onclick: () => self.sheetCars() }, el('span', { html: ICON.car }), 'Zarządzaj autami'));
     out.push(card2);
     const fileInp = el('input', { type: 'file', accept: 'application/json,.json', style: 'display:none' });
@@ -1184,11 +1599,12 @@
           const car = self.state.cars[id]; const n = Object.keys(car.a || {}).length; const cnt = self.counts(id);
           ul.append(el('li', null,
             el('button', { class: 'name' + (id === self.state.active ? ' is-active' : ''), type: 'button', onclick: () => { self.state.active = id; self.persist(); close(); self.render(); } }, el('span', { html: id === self.state.active ? ICON.check : ICON.car, style: 'width:22px;height:22px;display:inline-flex;flex:none' }), el('span', { class: 'grow' }, car.name, el('span', { class: 'sub', text: n + ' ' + plural(n, 'odpowiedź', 'odpowiedzi', 'odpowiedzi') + (cnt.problem ? ' · ' + cnt.problem + ' ' + plural(cnt.problem, 'flaga', 'flagi', 'flag') : '') }))),
+            el('button', { class: 'iconbtn', type: 'button', 'aria-label': 'Zobacz raport: ' + car.name, title: 'Raport', onclick: () => { close(); self.go('raport/' + encodeURIComponent(id)); } }, el('span', { html: ICON.doc })),
             el('button', { class: 'iconbtn', type: 'button', 'aria-label': 'Zmień nazwę', onclick: () => { close(); self.sheetRename(car, () => self.sheetCars()); } }, el('span', { html: ICON.edit })),
             el('button', { class: 'iconbtn', type: 'button', 'aria-label': 'Usuń auto', onclick: () => { close(); self.sheetConfirm('Usunąć „' + car.name + '”?', 'Znikną odpowiedzi, notatki i zdjęcia tego auta.', 'Usuń', async () => { await Photos.delPrefix(self.opts.product + '|' + id + '|'); delete self.state.cars[id]; if (self.state.active === id) self.state.active = null; self.ensureCar(); self.persist(); self.toast('Usunięto'); self.render(); }); } }, el('span', { html: ICON.trash }))));
         });
         sh.append(ul);
-        sh.append(el('div', { class: 'btnrow' }, el('button', { class: 'btn btn--primary', type: 'button', onclick: () => { const id = uid(); const n = Object.keys(self.state.cars).length + 1; self.state.cars[id] = { name: 'Auto ' + n, created: nowIso(), a: {} }; self.state.active = id; self.persist(); close(); self.sheetRename(self.state.cars[id]); } }, el('span', { html: ICON.plus }), 'Dodaj auto'), el('button', { class: 'btn', type: 'button', onclick: close }, 'Zamknij')));
+        sh.append(el('div', { class: 'btnrow' }, el('button', { class: 'btn btn--primary', type: 'button', onclick: () => { const id = uid(); const n = Object.keys(self.state.cars).length + 1; self.state.cars[id] = { name: 'Auto ' + n, created: nowIso(), a: {} }; self.state.active = id; self.persist(); close(); self.sheetRename(self.state.cars[id]); } }, el('span', { html: ICON.plus }), 'Dodaj auto'), Object.keys(self.state.cars).length >= 2 ? el('button', { class: 'btn', type: 'button', 'data-testid': 'compare-btn', onclick: () => { close(); self.go('porownaj'); } }, 'Porównaj') : null, el('button', { class: 'btn', type: 'button', onclick: close }, 'Zamknij')));
       };
       render();
     });
@@ -1207,7 +1623,7 @@
       { title: 'Odpowiadasz jednym tapnięciem', text: 'OK, Uwaga, Problem albo Pomiń. Dealbreakery są oznaczone – gdy trafisz, powiemy, że to zwykle koniec' + (upsell ? ' rozmowy o zakupie.' : ' oglądania.'), demo: 'answers' },
       upsell && this.content.deadlineRows.length
         ? { title: 'Terminy liczą się same', text: 'Wpisujesz datę z umowy, dostajesz daty PCC-3, rejestracji i końca OC – z plikiem do kalendarza. Na końcu lista braków do skopiowania lub PDF.', demo: 'flags' }
-        : { title: 'Na końcu dostajesz listę', text: 'Licznik czerwonych flag cały czas na dole. W podsumowaniu: decyzja z uzasadnieniem i gotowa lista uwag do negocjacji – do skopiowania lub PDF.', demo: 'flags' },
+        : { title: 'Na końcu dostajesz raport', text: 'Licznik czerwonych flag cały czas na dole. Na końcu: decyzja z uzasadnieniem, mapa lakieru i raport z oględzin – do PDF, do skopiowania, do porównania z kolejnym autem.', demo: 'flags' },
     ];
     const ov = el('div', { class: 'onb', role: 'dialog', 'aria-modal': 'true' });
     // Returning user on a new device (progress pulled from the server): land on Home, not Quick start.

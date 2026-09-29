@@ -263,7 +263,7 @@
         if (notes > 0) {
           msg = 'Etap odhaczony: ' + notes + ' ' + plural(notes, ['wpis', 'wpisy', 'wpisów']) + ' na liście uwag, w tym ' +
             flags + ' ' + plural(flags, ['czerwona flaga', 'czerwone flagi', 'czerwonych flag']) +
-            '. W pełnej wersji lista składa się sama ze wszystkich 7 etapów — wysyłasz ją sobie jednym tapnięciem.';
+            '. W pełnej wersji raport składa się sam ze wszystkich 7 etapów — zapisujesz PDF albo wysyłasz sobie jednym tapnięciem.';
         } else {
           msg = 'Etap odhaczony bez uwag. Dealbreakery czekają w innych etapach: zimny start, zgodność VIN, kontrolka airbag.';
         }
